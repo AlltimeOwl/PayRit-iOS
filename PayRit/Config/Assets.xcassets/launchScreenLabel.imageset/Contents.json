@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "launchScreenLabel.png",
+      "filename" : "launchScreenLabel.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },

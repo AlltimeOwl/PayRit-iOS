@@ -13,10 +13,10 @@ import KakaoSDKAuth
 import AuthenticationServices
 
 struct SignInView: View {
-    let url = "testImage.png"
     let singInStore: SignInStore
     @State var test = ""
-    @State var logInOK = false
+    @Binding var logInOK: Bool
+    @State var tabBarVisivility: Visibility = .visible
     @Environment(\.dismiss) var dismiss
     var body: some View {
         NavigationStack {
@@ -24,15 +24,14 @@ struct SignInView: View {
                 Image("testImage")
                     .resizable()
                     .frame(height: UIScreen.screenHeight)
-                Text("페이릿")
-                    .font(.santokkiHome)
-                    .foregroundStyle(.white)
+                Image("launchScreenLabel")
                 
                 VStack(spacing: 8) {
                     Spacer()
                     Button {
                         if UserApi.isKakaoTalkLoginAvailable() {
                             UserApi.shared.loginWithKakaoTalk(launchMethod: .CustomScheme) {(oauthToken, error) in
+                                _ = oauthToken
                                 if let error = error {
                                     print(error.localizedDescription)
                                 } else {
@@ -42,7 +41,7 @@ struct SignInView: View {
                             }
                         } else {
                             UserApi.shared.loginWithKakaoAccount {(oauthToken, error) in
-                                //                            print(oauthToken)
+                                _ = oauthToken
                                 if let error = error {
                                     print(error.localizedDescription)
                                 } else {
@@ -54,35 +53,33 @@ struct SignInView: View {
                     } label: {
                         Image("kakaoLoginImage")
                     }
+                    
                     Button {
                         
                     } label: {
                         Image("appleLoginImage")
                     }
                     .frame(width: UIScreen.screenWidth * 0.9, height: 48)
-                    Button {
-                        logInOK = true
-                    } label: {
-                        Text("서비스 둘러보기")
-                            .font(.headline)
-                            .foregroundStyle(.white)
-                    }
-                    .frame(height: 48)
-                    .padding(.horizontal, 20)
                     .padding(.bottom, 58)
+                    
                 }
             }
             .ignoresSafeArea(.all)
             .navigationDestination(isPresented: $logInOK) {
-                TabBarView()
+                TabBarView(tabBarVisivility: $tabBarVisivility)
             }
             .onAppear(perform: {
                 
             })
+            .onDisappear {
+                
+            }
         }
     }
 }
 
 #Preview {
-    SignInView(singInStore: SignInStore())
+    NavigationStack {
+        SignInView(singInStore: SignInStore(), logInOK: .constant(false))
+    }
 }

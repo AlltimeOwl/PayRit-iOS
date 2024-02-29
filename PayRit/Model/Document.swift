@@ -24,17 +24,21 @@ struct Document: Identifiable {
     let endDay: String
     let totalMoney: Int
     let interestRate: Double
+    var state: DocumentState
     var totalAmount: Int {
         return totalMoney + Int((Double(totalMoney) * interestRate) / 100.0)
     }
-    var state: DocumentState
+    var totalMoneyFormatter: String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        return formatter.string(from: (NSNumber(value: totalMoney))) ?? String(totalMoney)
+    }
     var dDay: String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
 
         if let targetDate = dateFormatter.date(from: endDay) {
             let dday = calculateDday(targetDate: targetDate)
-            print("목표일까지의 디데이: \(dday)")
             return dday
         } else {
             print("날짜 변환 중 오류가 발생했습니다.")
@@ -42,7 +46,6 @@ struct Document: Identifiable {
         }
     }
     
-//    static let sampleDocument: Document = Document(sender: "송금인", recipient: "송하인", senderPhoneNumber: "01011111111", recipientPhoneNumber: "01022222222", totalMoney: 100000, interestRate: 5.0, state: "승인 대기중")
     static let samepleDocument: [Document] = [
         Document(sender: "홍길동", senderPhoneNumber: "01050097937", recipient: "빌린이1", recipientPhoneNumber: "01050097937", startDay: "2024.01.01", endDay: "2024-03-01", totalMoney: 30000000, interestRate: 5.0, state: .first),
         Document(sender: "홍길동", senderPhoneNumber: "01050097937", recipient: "빌린이2", recipientPhoneNumber: "01050097937", startDay: "2024.01.01", endDay: "2024-04-01", totalMoney: 20000000, interestRate: 5.0, state: .first),
@@ -64,7 +67,7 @@ func calculateDday(targetDate: Date) -> String {
     // 디데이 결과를 문자열로 반환합니다.
     if let days = components.day {
         if days == 0 {
-            return "오늘이 D-day입니다!"
+            return "D-0"
         } else if days > 0 {
             return "D-\(days)"
         } else {

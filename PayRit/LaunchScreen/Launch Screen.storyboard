@@ -15,15 +15,15 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="launchScreenLabel" translatesAutoresizingMaskIntoConstraints="NO" id="kOg-59-Vao">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="launchScreenLabel" translatesAutoresizingMaskIntoConstraints="NO" id="AaU-5j-M9F">
                                 <rect key="frame" x="134.66666666666666" y="404" width="123.99999999999997" height="44"/>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
                         <color key="backgroundColor" red="0.4196078479" green="0.86666667460000002" blue="0.74901962280000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
-                            <constraint firstItem="kOg-59-Vao" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="LQ1-3j-09f"/>
-                            <constraint firstItem="kOg-59-Vao" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="O6Q-1I-Nvx"/>
+                            <constraint firstItem="AaU-5j-M9F" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="J8D-we-GdL"/>
+                            <constraint firstItem="AaU-5j-M9F" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="gj5-46-oYq"/>
                         </constraints>
                     </view>
                 </viewController>
