@@ -9,20 +9,20 @@ import SwiftUI
 
 struct TabBarView: View {
     @State private var selectedTab = 0
-//    @State var tabBarVisivility: Visibility = .visible
-    init() {
-        UITabBar.appearance().backgroundColor = UIColor.white
+    @Binding var tabBarVisivility: Visibility
+//    init() {
+//        UITabBar.appearance().backgroundColor = UIColor.white
         // 탭 바 모양
 //        let appearance = UITabBarAppearance()
 //        appearance.configureWithDefaultBackground()
         
         // 스크롤될 때의 모양
-        let scrollEdgeAppearance = UITabBarAppearance()
-        scrollEdgeAppearance.configureWithDefaultBackground()
+//        let scrollEdgeAppearance = UITabBarAppearance()
+//        scrollEdgeAppearance.configureWithDefaultBackground()
         
 //        UITabBar.appearance().standardAppearance = appearance
-        UITabBar.appearance().scrollEdgeAppearance = scrollEdgeAppearance
-    }
+//        UITabBar.appearance().scrollEdgeAppearance = scrollEdgeAppearance
+//    }
     var body: some View {
         TabView(selection: $selectedTab) {
             NavigationStack {
@@ -36,7 +36,7 @@ struct TabBarView: View {
             .tag(0)
             
             NavigationStack {
-                Text("작성하기")
+                WritingView()
             }
             .tabItem {
                 Image(systemName: "plus.circle")
@@ -46,7 +46,7 @@ struct TabBarView: View {
             .tag(1)
             
             NavigationStack {
-                Text("마이페이지")
+                MyPageView(tabBarVisivility: $tabBarVisivility)
             }
             .tabItem {
                 Image(systemName: "person")
@@ -54,13 +54,15 @@ struct TabBarView: View {
                 Text("마이페이지")
             }
             .tag(2)
+            .onTapGesture {
+                tabBarVisivility = .hidden
+            }
         }
         .tint(.mainColor)
         .navigationBarBackButtonHidden()
-        
     }
 }
 
 #Preview {
-    TabBarView()
+    TabBarView(tabBarVisivility: .constant(.visible))
 }
