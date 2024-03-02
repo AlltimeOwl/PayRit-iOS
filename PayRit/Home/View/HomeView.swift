@@ -7,64 +7,63 @@
 
 import SwiftUI
 
-enum MenuStateString: String, CodingKey {
-    case recent = "최근 작성일 순"
-    case old = "오래된 순"
-    case expiration = "기간 만료 순"
-}
-
 struct HomeView: View {
-    @State private var selectedButton = true
-    @State private var menuStateString: MenuStateString = .recent
-    @State private var menuBarState = false
+    @State private var segmentButton = true
+    @State private var menuState = false
+    private let menuPadding = 8.0
+    private let sectionTitlePadding = 16.0
     let testDocument = Document.samepleDocument
+    let homeStore = HomeStore()
+    
     var body: some View {
         VStack {
             HStack(spacing: 0) {
                 Button {
-                    if selectedButton { return }
-                    selectedButton.toggle()
+                    if segmentButton { return }
+                    withAnimation(.default) {
+                        segmentButton.toggle()
+                    }
                 } label: {
                     ZStack {
                         UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(topLeading: 12, bottomLeading: 0, bottomTrailing: 0, topTrailing: 12))
                             .frame(height: 50)
-                            .foregroundStyle(selectedButton ? Color.mainColor : Color.buttonCleanColor)
+                            .foregroundStyle(segmentButton ? Color.mainColor : Color.buttonCleanColor)
                         Text("빌려준 기록")
-                            .foregroundStyle(selectedButton ? .black : .gray)
+                            .foregroundStyle(segmentButton ? .black : .gray)
                     }
                 }
-                
                 Button {
-                    guard selectedButton else { return }
-                    selectedButton.toggle()
+                    guard segmentButton else { return }
+                    withAnimation(.default) {
+                        segmentButton.toggle()
+                    }
                 } label: {
                     ZStack {
                         UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(topLeading: 12, bottomLeading: 0, bottomTrailing: 0, topTrailing: 12))
                             .frame(height: 50)
-                            .foregroundStyle(selectedButton ? Color.buttonCleanColor : Color.mainColor)
+                            .foregroundStyle(segmentButton ? Color.buttonCleanColor : Color.mainColor)
                         Text("빌린 기록")
-                            .foregroundStyle(selectedButton ? .gray : .black)
+                            .foregroundStyle(segmentButton ? .gray : .black)
                         
                     }
                 }
             }
             .buttonStyle(.plain)
             .padding(.horizontal, 16)
-            //            Spacer()
-            if selectedButton {
+            
+            if segmentButton {
                 //                Text("아직 거래 내역이 없어요")
-                //
                 ZStack {
                     VStack {
                         HStack {
-                            Text("총 \(testDocument.count)건")
+                            Text("총 \(homeStore.document.count)건")
                                 .foregroundStyle(Color(hex: "#6F6F6F"))
                             Spacer()
                         }
-                        .padding(.top, 17)
+                        .padding(.top, sectionTitlePadding)
                         .padding(.horizontal, 16)
                         
-                        List(testDocument) { document in
+                        List(homeStore.document) { document in
                             ZStack {
                                 Rectangle()
                                     .frame(height: 170)
@@ -96,8 +95,13 @@ struct HomeView: View {
                                                     .frame(width: 80)
                                                     .foregroundStyle(Color.dDayCapsulColor)
                                                     .overlay {
-                                                        Text(document.dDay)
-                                                            .foregroundStyle(.white)
+                                                        if document.dDay >= 0 {
+                                                            Text("D - \(document.dDay)")
+                                                                .foregroundStyle(.white)
+                                                        } else {
+                                                            Text("D + \(-document.dDay)")
+                                                                .foregroundStyle(.white)
+                                                        }
                                                     }
                                                 UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(topLeading: 0, bottomLeading: 0, bottomTrailing: 16, topTrailing: 16))
                                                     .frame(width: 140)
@@ -117,68 +121,79 @@ struct HomeView: View {
                             .listRowSeparator(.hidden)
                         }
                         .listStyle(.plain)
+                        Spacer()
                     }
+//                    .background(Color.red)
                     VStack {
                         HStack {
                             Spacer()
                             Button {
-                                menuBarState.toggle()
+                                withAnimation {
+                                    menuState.toggle()
+                                }
                             } label: {
-                                RoundedRectangle(cornerRadius: 12)
-                                    .stroke(Color(hex: "F2F2F2"), lineWidth: 2)
-                                    .frame(width: 120, height: menuBarState ? 88 : 34)
-                                    .background(Color.white)
-                                    .clipShape(.rect(cornerRadius: 12))
-                                    .overlay {
-                                        if menuBarState == false {
-                                            HStack(spacing: 4) {
-                                                Text(menuStateString.stringValue)
-                                                Image(systemName: "chevron.down")
-                                            }
-                                            .font(.system(size: 14))
-                                            .foregroundStyle(.black)
-                                        } else {
-                                            VStack(alignment: .trailing, spacing: 10) {
-                                                Button {
-                                                    menuStateString = .recent
-                                                    menuBarState.toggle()
-                                                } label: {
-                                                    HStack(spacing: 4) {
-                                                        Text(MenuStateString.recent.stringValue)
-                                                        Image(systemName: "chevron.down")
-                                                    }
-                                                }
-                                                Button {
-                                                    menuStateString = .old
-                                                    menuBarState.toggle()
-                                                } label: {
-                                                    HStack(spacing: 4) {
-                                                        Text(MenuStateString.old.stringValue)
-                                                        Image(systemName: "chevron.down")
-                                                            .foregroundStyle(Color.clear)
-                                                    }
-                                                }
-                                                Button {
-                                                    menuStateString = .expiration
-                                                    menuBarState.toggle()
-                                                } label: {
-                                                    HStack(spacing: 4) {
-                                                        Text(MenuStateString.expiration.stringValue)
-                                                        Image(systemName: "chevron.down")
-                                                            .foregroundStyle(Color.clear)
-                                                    }
+                                if menuState == false {
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .stroke(Color(hex: "F2F2F2"), lineWidth: 2)
+                                        .frame(width: 120, height: menuState ? 88 : 34)
+                                        .background(Color.white)
+                                        .clipShape(.rect(cornerRadius: 12))
+                                        .overlay {
+                                            VStack(alignment: .leading) {
+                                                HStack {
+                                                    Text(homeStore.sortingType.stringValue)
+                                                        .lineLimit(1)
+                                                    Spacer()
+                                                    Image(systemName: "chevron.down")
                                                 }
                                             }
-                                            .font(.system(size: 14))
-                                            .foregroundStyle(.black)
+                                            .padding(.horizontal, menuPadding)
                                         }
-                                    }
-                                
+                                } else {
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .stroke(Color(hex: "F2F2F2"), lineWidth: 2)
+                                        .frame(width: 120, height: menuState ? 88 : 34)
+                                        .background(Color.white)
+                                        .clipShape(.rect(cornerRadius: 12))
+                                        .overlay {
+                                            VStack(alignment: .leading, spacing: 10) {
+                                                Button {
+                                                    menuState.toggle()
+                                                } label: {
+                                                    HStack {
+                                                        Text(homeStore.sortingType.stringValue)
+                                                            .lineLimit(1)
+                                                        Spacer()
+                                                        Image(systemName: "chevron.down")
+                                                    }
+                                                }
+                                                ForEach(SortingType.allCases, id: \.self) { state in
+                                                    if state != homeStore.sortingType {
+                                                        Button {
+                                                            homeStore.sortingType = state
+                                                            menuState.toggle()
+                                                            homeStore.sortingDocument()
+                                                        } label: {
+                                                            HStack {
+                                                                Text(state.rawValue)
+                                                                Spacer()
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            .padding(.horizontal, menuPadding)
+                                        }
+                                }
                             }
                         }
+                        .padding(.top, sectionTitlePadding / 2)
                         Spacer()
                     }
-                    .padding(.top, 8.5)
+//                    .background(Color.blue)
+                    .font(.system(size: 14))
+                    .fontWeight(.semibold)
+                    .foregroundStyle(Color(hex: "767676"))
                     .padding(.horizontal, 16)
                 }
             } else {

@@ -55,7 +55,7 @@ struct SignInView: View {
                     }
                     
                     Button {
-                        
+                        logInOK = true
                     } label: {
                         Image("appleLoginImage")
                     }
