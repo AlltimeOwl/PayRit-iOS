@@ -6,9 +6,13 @@
 //
 
 import SwiftUI
+import KakaoMapsSDK
 
 struct MyInfoWritingView: View {
     @State var test = ""
+    @State var address = ""
+    @State var zipCode = ""
+    @State var isPresentingZipCodeView = false
     @State private var isShowingStopAlert = false
     @Binding var path: NavigationPath
     var body: some View {
@@ -38,24 +42,25 @@ struct MyInfoWritingView: View {
                 }
                 VStack(alignment: .leading, spacing: 10) {
                     Text("주소")
-                    HStack {
-                        VStack {
-                            Text(" ")
+                    HStack(alignment: .bottom) {
+                        VStack(alignment: .leading) {
+                            Text(zipCode)
+                                .frame(height: 20)
                             Divider()
                         }
                         Spacer()
                         Button {
-                            
+                            isPresentingZipCodeView.toggle()
                         } label: {
                             Text("우편번호 검색")
                                 .foregroundStyle(.black)
                                 .padding(.horizontal, 16)
                                 .padding(.vertical, 8)
                                 .background(Color(hex: "EAEAEA"))
-                                .clipShape(.rect(cornerRadius: 12))
+                                .clipShape(.rect(cornerRadius: 8))
                         }
                     }
-                    Text(" ")
+                    Text(address)
                     Divider()
                     Text(" ")
                     Divider()
@@ -101,6 +106,10 @@ struct MyInfoWritingView: View {
                       cancleButtonTitle: "네") {
         } cancleAction: {
             path = .init()
+        }
+        .sheet(isPresented: $isPresentingZipCodeView) {
+            KakaoAdressView(address: $address, zonecode: $zipCode, isPresented: $isPresentingZipCodeView)
+                .edgesIgnoringSafeArea(.all)
         }
     }
 }
