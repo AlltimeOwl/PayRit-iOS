@@ -7,24 +7,30 @@
 
 import Foundation
 
-enum DocumentState {
-    case first
-    case second
-    case third
+enum DocumentState: String, CodingKey {
+    case first = "승인 대기중"
+    case second = "결제 대기중"
+    case third = "차용증 작성 완료"
 }
 
 struct Document: Identifiable {
     let id: String = UUID().uuidString
+    let writingDay: String
     let sender: String
     let senderPhoneNumber: String
+    let senderAdress: String
+    
     let recipient: String
     let recipientPhoneNumber: String
+    let recipientAdress: String
     
     let startDay: String
     let endDay: String
     let totalMoney: Int
     let interestRate: Double
-    var state: DocumentState
+    
+    var state: DocumentState = .first
+    
     var totalAmount: Int {
         return totalMoney + Int((Double(totalMoney) * interestRate) / 100.0)
     }
@@ -33,28 +39,43 @@ struct Document: Identifiable {
         formatter.numberStyle = .decimal
         return formatter.string(from: (NSNumber(value: totalMoney))) ?? String(totalMoney)
     }
-    var dDay: String {
+    var dDay: Int {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
 
         if let targetDate = dateFormatter.date(from: endDay) {
-            let dday = calculateDday(targetDate: targetDate)
-            return dday
+            let dDay = calculateDday(targetDate: targetDate)
+            return dDay
         } else {
-            print("날짜 변환 중 오류가 발생했습니다.")
-            return ""
+            print("디데이 변환 중 오류가 발생했습니다.")
+            return 0
         }
     }
     
-    static let samepleDocument: [Document] = [
-        Document(sender: "홍길동", senderPhoneNumber: "01050097937", recipient: "빌린이1", recipientPhoneNumber: "01050097937", startDay: "2024.01.01", endDay: "2024-03-01", totalMoney: 30000000, interestRate: 5.0, state: .first),
-        Document(sender: "홍길동", senderPhoneNumber: "01050097937", recipient: "빌린이2", recipientPhoneNumber: "01050097937", startDay: "2024.01.01", endDay: "2024-04-01", totalMoney: 20000000, interestRate: 5.0, state: .first),
-        Document(sender: "홍길동", senderPhoneNumber: "01050097937", recipient: "빌린이3", recipientPhoneNumber: "01050097937", startDay: "2024.01.01", endDay: "2024-05-01", totalMoney: 14000000, interestRate: 5.0, state: .first),
-        Document(sender: "홍길동", senderPhoneNumber: "01050097937", recipient: "빌린이4", recipientPhoneNumber: "01050097937", startDay: "2024.01.01", endDay: "2024-06-01", totalMoney: 16000000, interestRate: 5.0, state: .first),
-        Document(sender: "홍길동", senderPhoneNumber: "01050097937", recipient: "빌린이5", recipientPhoneNumber: "01050097937", startDay: "2024.01.01", endDay: "2024-07-01", totalMoney: 22000000, interestRate: 5.0, state: .first)
+    var writingDayCal: Int {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+
+        if let targetDate = dateFormatter.date(from: writingDay) {
+            let writingDay = calculateDday(targetDate: targetDate)
+            return writingDay
+        } else {
+            print("작성일 변환 중 오류가 발생했습니다.")
+            return 0
+        }
+    }
+    
+    static var samepleDocument: [Document] = [
+        Document(writingDay: "2024-01-01", sender: "홍길동", senderPhoneNumber: "01050097937", senderAdress: "경기도 용인시", recipient: "빌린이1", recipientPhoneNumber: "01050097937", recipientAdress: "경기도 안양시", startDay: "2024-01-01", endDay: "2024-04-01", totalMoney: 30000000, interestRate: 5.0, state: .first),
+        Document(writingDay: "2024-01-01", sender: "홍길동", senderPhoneNumber: "01050097937", senderAdress: "경기도 용인시", recipient: "빌린이2", recipientPhoneNumber: "01050097937", recipientAdress: "경기도 안양시", startDay: "2024-01-01", endDay: "2024-05-01", totalMoney: 30000000, interestRate: 5.0, state: .third),
+        Document(writingDay: "2024-01-01", sender: "홍길동", senderPhoneNumber: "01050097937", senderAdress: "경기도 용인시", recipient: "빌린이3", recipientPhoneNumber: "01050097937", recipientAdress: "경기도 안양시", startDay: "2024-01-01", endDay: "2024-06-01", totalMoney: 30000000, interestRate: 5.0, state: .second),
+        Document(writingDay: "2024-01-01", sender: "홍길동", senderPhoneNumber: "01050097937", senderAdress: "경기도 용인시", recipient: "빌린이4", recipientPhoneNumber: "01050097937", recipientAdress: "경기도 안양시", startDay: "2024-01-01", endDay: "2024-07-01", totalMoney: 30000000, interestRate: 5.0, state: .first),
+        Document(writingDay: "2024-01-01", sender: "홍길동", senderPhoneNumber: "01050097937", senderAdress: "경기도 용인시", recipient: "빌린이5", recipientPhoneNumber: "01050097937", recipientAdress: "경기도 안양시", startDay: "2024-01-01", endDay: "2024-08-01", totalMoney: 30000000, interestRate: 5.0, state: .first),
+        Document(writingDay: "2024-01-01", sender: "홍길동", senderPhoneNumber: "01050097937", senderAdress: "경기도 용인시", recipient: "빌린이6", recipientPhoneNumber: "01050097937", recipientAdress: "경기도 안양시", startDay: "2024-01-01", endDay: "2024-09-01", totalMoney: 30000000, interestRate: 5.0, state: .first)
     ]
 }
-func calculateDday(targetDate: Date) -> String {
+
+func calculateDday(targetDate: Date) -> Int {
     // 현재 날짜를 가져옵니다.
     let currentDate = Date()
     
@@ -67,13 +88,16 @@ func calculateDday(targetDate: Date) -> String {
     // 디데이 결과를 문자열로 반환합니다.
     if let days = components.day {
         if days == 0 {
-            return "D-0"
+            // 당일
+            return 0
         } else if days > 0 {
-            return "D-\(days)"
+            // 남은 일
+            return days
         } else {
-            return "D+\(-days)"
+            // 만료 이후
+            return days
         }
     } else {
-        return "날짜를 가져오는 데 문제가 발생했습니다."
+        return 0
     }
 }

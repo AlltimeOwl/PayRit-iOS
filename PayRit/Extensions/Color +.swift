@@ -27,14 +27,34 @@ public extension Color {
     // MARK: 정의된 Color와 겹치지 않는 닉네임 선정
     /// 카카오 로그인 버튼 색상
     static let kakaoLoginButton = Color(hex: "#F9E001")
-    //    rgba(35, 224, 190, 1)
+    
     static let mainColor = Color(hex: "#23E0BE")
-    static let buttonCleanColor = Color(hex: "#FAFAFA")
     
     /// 내용이 담긴 박스 회색 버튼 색상 5F5F5F
     static let boxGrayColor = Color(hex: "F5F5F5")
     /// 디데이 표시 캡슐 색상 5F5F5F
     static let dDayCapsulColor = Color(hex: "5F5F5F")
-    /// 작성 가이드 박스 색상 E3FFF6
-    static let writingGuideBoxColor = Color(hex: "E3FFF6")
+    
+    /// 연한 민트 색상 E3FFF6
+    static let semeMintColor = Color(hex: "E3FFF6")
+    
+    /// 민트 컬러 37D9BC
+    static let mintColor = Color(hex: "37D9BC")
+    
+    static let whiteColor = Color(hex: "FFFFFF")
+    
+    /// 연한 그레이 FAFAFA
+    static let semiGrayColor1 = Color(hex: "FAFAFA")
+    
+    /// 연한 그레이 666666
+    static let semiGrayColor2 = Color(hex: "666666")
+    
+    /// 연한 그레이 767676
+    static let semiGrayColor3 = Color(hex: "767676")
+    
+    /// 섹션 타이틀 컬러 949494
+    static let sectionTitleColor = Color(hex: "949494")
+    
+    /// 캡슐 그레이 컬러 A5A5A5
+    static let capsulGrayColor = Color(hex: "A5A5A5")
 }

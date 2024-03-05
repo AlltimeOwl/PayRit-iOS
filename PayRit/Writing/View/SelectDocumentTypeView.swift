@@ -8,13 +8,16 @@
 import SwiftUI
 
 struct SelectDocumentTypeView: View {
+    @Binding var tabBarVisivility: Visibility
+    @Binding var path: NavigationPath
     var body: some View {
         VStack(alignment: .leading) {
             Text("현재, 어떤 상황인가요?")
                 .font(.system(size: 26))
             HStack {
-                Button {
-                    
+                NavigationLink {
+                    TransactionDetailWritingView(path: $path)
+                        .customBackbutton()
                 } label: {
                     Rectangle()
                         .foregroundStyle(Color.boxGrayColor)
@@ -26,15 +29,16 @@ struct SelectDocumentTypeView: View {
                                  예정이에요
                                  """)
                             .lineSpacing(10.0)
-                                .font(.system(size: 24))
-                                .bold()
-                                .foregroundStyle(.black)
+                            .font(.system(size: 24))
+                            .bold()
+                            .foregroundStyle(.black)
                         }
                 }
                 Spacer()
                     .frame(width: 18)
-                Button {
-                    
+                NavigationLink {
+                    TransactionDetailWritingView(path: $path)
+                        .customBackbutton()
                 } label: {
                     Rectangle()
                         .foregroundStyle(Color.boxGrayColor)
@@ -46,23 +50,23 @@ struct SelectDocumentTypeView: View {
                                  예정이에요
                                  """)
                             .lineSpacing(10.0)
-                                .font(.system(size: 24))
-                                .bold()
-                                .foregroundStyle(.black)
+                            .font(.system(size: 24))
+                            .bold()
+                            .foregroundStyle(.black)
                         }
                 }
             }
             .padding(.top, 16)
             
             Rectangle()
-                .foregroundStyle(Color.writingGuideBoxColor)
+                .foregroundStyle(Color.semeMintColor)
                 .clipShape(.rect(cornerRadius: 12))
                 .frame(height: 160)
                 .overlay {
                     VStack {
                         HStack {
                             Text("🍯 작성 가이드")
-                            .lineSpacing(10.0)
+                                .lineSpacing(10.0)
                                 .font(.system(size: 20))
                                 .foregroundStyle(.black)
                             Spacer()
@@ -78,11 +82,14 @@ struct SelectDocumentTypeView: View {
         .padding(.horizontal, 16)
         .navigationTitle("차용증 작성하기")
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear(perform: {
+            tabBarVisivility = .hidden
+        })
     }
 }
 
 #Preview {
     NavigationStack {
-        SelectDocumentTypeView()
+        SelectDocumentTypeView(tabBarVisivility: .constant(.visible), path: .constant(NavigationPath()))
     }
 }

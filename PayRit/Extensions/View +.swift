@@ -26,4 +26,27 @@ extension View {
 //    public func toast(isShowing: Binding<Bool>, message: String) -> some View {
 //        self.modifier(ToastMessageModifier(isShowing: isShowing, message: message))
 //    }
+    
+    public func LoanDetailImage(isPresented: Binding<Bool>, isButtonShowing: Binding<Bool>) -> some View {
+        return modifier(
+            LoanDetailImageViewModifier(isPresented: isPresented, isButtonShowing: isButtonShowing)
+        )
+    }
+    
+    public func PrimaryAlert(isPresented: Binding<Bool>, title: String, content: String, primaryButtonTitle: String?, cancleButtonTitle: String, primaryAction: ( () -> Void)?, cancleAction: @escaping () -> Void) -> some View {
+        return modifier(
+            PrimaryAlertModifier(isPresented: isPresented, title: title, content: content, primaryButtonTitle: primaryButtonTitle, cancleButtonTitle: cancleButtonTitle, primaryAction: primaryAction, cancleAction: cancleAction)
+        )
+    }
+}
+
+extension UINavigationController: ObservableObject, UIGestureRecognizerDelegate {
+    override open func viewDidLoad() {
+        super.viewDidLoad()
+        interactivePopGestureRecognizer?.delegate = self
+    }
+
+    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return viewControllers.count > 1
+    }
 }
