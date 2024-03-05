@@ -7,7 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BC1CF8D72B961F5600A9BF12 /* MyInfoWritingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1CF8D62B961F5600A9BF12 /* MyInfoWritingView.swift */; };
+		BC1CF8D92B96C8D800A9BF12 /* CustomAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1CF8D82B96C8D800A9BF12 /* CustomAlert.swift */; };
+		BC1CF8DD2B96FCA200A9BF12 /* WritingCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1CF8DC2B96FCA200A9BF12 /* WritingCheckView.swift */; };
 		BC388DB52B904BAB005D1279 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC388DB42B904BAB005D1279 /* ContentView.swift */; };
+		BC4876C82B9721F3006B15C0 /* PartnerInfoWritingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC4876C72B9721F3006B15C0 /* PartnerInfoWritingView.swift */; };
 		BC595DD62B8D8AC300CA555E /* PayRitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC595DD52B8D8AC300CA555E /* PayRitApp.swift */; };
 		BC595DD82B8D8AC300CA555E /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC595DD72B8D8AC300CA555E /* SignInView.swift */; };
 		BC595DDA2B8D8AC400CA555E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BC595DD92B8D8AC400CA555E /* Assets.xcassets */; };
@@ -26,11 +30,13 @@
 		BC595E252B8DC9AC00CA555E /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BC595E242B8DC9AC00CA555E /* Launch Screen.storyboard */; };
 		BC595E282B8DDFDD00CA555E /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC595E272B8DDFDD00CA555E /* HomeView.swift */; };
 		BC9E55CC2B936F9700B100C6 /* HomeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC9E55CB2B936F9700B100C6 /* HomeStore.swift */; };
+		BC9E55CE2B956B7300B100C6 /* LoanDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC9E55CD2B956B7300B100C6 /* LoanDetailView.swift */; };
 		BCC9EC042B8F09A6001E18F0 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCC9EC032B8F09A6001E18F0 /* Document.swift */; };
 		BCD942512B8F0CCC00BF61CD /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = BCD942502B8F0CCC00BF61CD /* .swiftlint.yml */; };
 		BCD942532B8F0E0600BF61CD /* LaunchScreenTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD942522B8F0E0600BF61CD /* LaunchScreenTest.swift */; };
 		BCD942572B8F1D5400BF61CD /* MyPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD942562B8F1D5400BF61CD /* MyPageView.swift */; };
 		BCD9425B2B8F639A00BF61CD /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD9425A2B8F639A00BF61CD /* CustomTextField.swift */; };
+		BCDC9C562B958FA2002D8A4A /* LoanDetailImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCDC9C552B958FA2002D8A4A /* LoanDetailImageView.swift */; };
 		BCE280DA2B8F75120085D45E /* View +.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCE280D92B8F75120085D45E /* View +.swift */; };
 		BCE280DC2B8F75450085D45E /* ViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCE280DB2B8F75440085D45E /* ViewModifier.swift */; };
 		BCE280E02B9021EE0085D45E /* WritingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCE280DF2B9021EE0085D45E /* WritingView.swift */; };
@@ -39,7 +45,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BC1CF8D62B961F5600A9BF12 /* MyInfoWritingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyInfoWritingView.swift; sourceTree = "<group>"; };
+		BC1CF8D82B96C8D800A9BF12 /* CustomAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlert.swift; sourceTree = "<group>"; };
+		BC1CF8DC2B96FCA200A9BF12 /* WritingCheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WritingCheckView.swift; sourceTree = "<group>"; };
 		BC388DB42B904BAB005D1279 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		BC4876C72B9721F3006B15C0 /* PartnerInfoWritingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartnerInfoWritingView.swift; sourceTree = "<group>"; };
 		BC595DD22B8D8AC300CA555E /* PayRit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PayRit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC595DD52B8D8AC300CA555E /* PayRitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayRitApp.swift; sourceTree = "<group>"; };
 		BC595DD72B8D8AC300CA555E /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
@@ -55,11 +65,13 @@
 		BC595E242B8DC9AC00CA555E /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		BC595E272B8DDFDD00CA555E /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		BC9E55CB2B936F9700B100C6 /* HomeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeStore.swift; sourceTree = "<group>"; };
+		BC9E55CD2B956B7300B100C6 /* LoanDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanDetailView.swift; sourceTree = "<group>"; };
 		BCC9EC032B8F09A6001E18F0 /* Document.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
 		BCD942502B8F0CCC00BF61CD /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		BCD942522B8F0E0600BF61CD /* LaunchScreenTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenTest.swift; sourceTree = "<group>"; };
 		BCD942562B8F1D5400BF61CD /* MyPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageView.swift; sourceTree = "<group>"; };
 		BCD9425A2B8F639A00BF61CD /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
+		BCDC9C552B958FA2002D8A4A /* LoanDetailImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanDetailImageView.swift; sourceTree = "<group>"; };
 		BCE280D92B8F75120085D45E /* View +.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View +.swift"; sourceTree = "<group>"; };
 		BCE280DB2B8F75440085D45E /* ViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModifier.swift; sourceTree = "<group>"; };
 		BCE280DF2B9021EE0085D45E /* WritingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WritingView.swift; sourceTree = "<group>"; };
@@ -142,6 +154,7 @@
 			isa = PBXGroup;
 			children = (
 				BCD9425A2B8F639A00BF61CD /* CustomTextField.swift */,
+				BC1CF8D82B96C8D800A9BF12 /* CustomAlert.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -253,8 +266,17 @@
 			isa = PBXGroup;
 			children = (
 				BC595E272B8DDFDD00CA555E /* HomeView.swift */,
+				BC9E55CD2B956B7300B100C6 /* LoanDetailView.swift */,
+				BCDC9C552B958FA2002D8A4A /* LoanDetailImageView.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		BC5C57042B974FC700A55CC7 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		BC9E55CA2B936F7E00B100C6 /* ViewModel */ = {
@@ -301,6 +323,7 @@
 			isa = PBXGroup;
 			children = (
 				BCE280DE2B9021E30085D45E /* View */,
+				BC5C57042B974FC700A55CC7 /* ViewModel */,
 			);
 			path = Writing;
 			sourceTree = "<group>";
@@ -311,6 +334,9 @@
 				BCE280DF2B9021EE0085D45E /* WritingView.swift */,
 				BCE280E32B903BE50085D45E /* SelectDocumentTypeView.swift */,
 				BCE280E12B903B660085D45E /* TransactionDetailWritingView.swift */,
+				BC1CF8D62B961F5600A9BF12 /* MyInfoWritingView.swift */,
+				BC4876C72B9721F3006B15C0 /* PartnerInfoWritingView.swift */,
+				BC1CF8DC2B96FCA200A9BF12 /* WritingCheckView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -443,20 +469,26 @@
 				BC9E55CC2B936F9700B100C6 /* HomeStore.swift in Sources */,
 				BCE280E42B903BE50085D45E /* SelectDocumentTypeView.swift in Sources */,
 				BCD9425B2B8F639A00BF61CD /* CustomTextField.swift in Sources */,
+				BC1CF8D92B96C8D800A9BF12 /* CustomAlert.swift in Sources */,
 				BC595E042B8DA83600CA555E /* UIScreen +.swift in Sources */,
 				BC595DD82B8D8AC300CA555E /* SignInView.swift in Sources */,
 				BCE280DA2B8F75120085D45E /* View +.swift in Sources */,
+				BC4876C82B9721F3006B15C0 /* PartnerInfoWritingView.swift in Sources */,
 				BC595E022B8DA21300CA555E /* SignInStore.swift in Sources */,
+				BC9E55CE2B956B7300B100C6 /* LoanDetailView.swift in Sources */,
 				BCD942532B8F0E0600BF61CD /* LaunchScreenTest.swift in Sources */,
 				BCD942572B8F1D5400BF61CD /* MyPageView.swift in Sources */,
 				BCC9EC042B8F09A6001E18F0 /* Document.swift in Sources */,
 				BCE280E02B9021EE0085D45E /* WritingView.swift in Sources */,
+				BC1CF8DD2B96FCA200A9BF12 /* WritingCheckView.swift in Sources */,
 				BCE280E22B903B660085D45E /* TransactionDetailWritingView.swift in Sources */,
 				BC595DF02B8D8EAE00CA555E /* TabBarView.swift in Sources */,
+				BC1CF8D72B961F5600A9BF12 /* MyInfoWritingView.swift in Sources */,
 				BC595DD62B8D8AC300CA555E /* PayRitApp.swift in Sources */,
 				BC595E282B8DDFDD00CA555E /* HomeView.swift in Sources */,
 				BC388DB52B904BAB005D1279 /* ContentView.swift in Sources */,
 				BC595E0A2B8DAFD600CA555E /* Font +.swift in Sources */,
+				BCDC9C562B958FA2002D8A4A /* LoanDetailImageView.swift in Sources */,
 				BCE280DC2B8F75450085D45E /* ViewModifier.swift in Sources */,
 				BC595E192B8DB75600CA555E /* Color +.swift in Sources */,
 			);

@@ -33,7 +33,8 @@ public struct CustomTextField: View {
     public var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 8)
-                .stroke(isFocused ? Color.brown : Color.clear, lineWidth: 1)
+//                .stroke(isFocused ? Color.brown : Color.clear, lineWidth: 1)
+                .stroke(Color.gray)
                 .background(RoundedRectangle(cornerRadius: 8).foregroundColor(backgroundColor))
             TextField(placeholder, text: $text)
                 .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
@@ -51,7 +52,7 @@ public struct CustomTextField: View {
                         text = ""
                     }, label: {
                         Image(systemName: "xmark.circle.fill")
-                            .foregroundColor(.brown)
+//                            .foregroundColor(.brown)
                     })
                     .padding(.trailing, 20)
                 }
@@ -63,6 +64,7 @@ public struct CustomTextField: View {
                 text = String(newValue.prefix(maxLength))
                 isFocused = false
             }
+            _ = oldValue
         }
     }
 }
@@ -71,6 +73,6 @@ public struct CustomTextField: View {
 struct CustomTextField_Previews: PreviewProvider {
     static var previews: some View {
         CustomTextField(placeholder: "ㅎㅎ", text: .constant(""))
+            .background(Color.black)
     }
 }
-

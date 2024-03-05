@@ -16,7 +16,7 @@ struct SignInView: View {
     let singInStore: SignInStore
     @State var test = ""
     @Binding var logInOK: Bool
-    @State var tabBarVisivility: Visibility = .visible
+//    @State var tabBarVisivility: Visibility = .visible
     @Environment(\.dismiss) var dismiss
     var body: some View {
         NavigationStack {
@@ -65,9 +65,9 @@ struct SignInView: View {
                 }
             }
             .ignoresSafeArea(.all)
-            .navigationDestination(isPresented: $logInOK) {
-                TabBarView(tabBarVisivility: $tabBarVisivility)
-            }
+//            .navigationDestination(isPresented: $logInOK) {
+//                TabBarView(tabBarVisivility: $tabBarVisivility)
+//            }
             .onAppear(perform: {
                 
             })

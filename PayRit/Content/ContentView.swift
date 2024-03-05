@@ -17,6 +17,7 @@ struct ContentView: View {
         if logInOK {
             TabBarView(tabBarVisivility: $tabBarVisivility)
         } else {
+            // onOpenURL()을 사용해 커스텀 URL 스킴 처리
             SignInView(singInStore: signInStore, logInOK: $logInOK).onOpenURL(perform: { url in
                 if AuthApi.isKakaoTalkLoginUrl(url) {
                     _ = AuthController.handleOpenUrl(url: url)

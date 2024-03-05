@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct WritingView: View {
+    @State var path = NavigationPath()
+    @Binding var tabBarVisivility: Visibility
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             VStack(spacing: 20) {
                 Rectangle()
                     .frame(height: 160)
@@ -21,12 +23,14 @@ struct WritingView: View {
                                 Text("차용증 작성하기")
                                     .bold()
                                 Spacer()
-                                NavigationLink {
-                                    SelectDocumentTypeView()
-                                        .customBackbutton()
-                                } label: {
+                                NavigationLink(value: "selectDocumentTypeView") {
                                     Image(systemName: "chevron.right")
                                         .foregroundStyle(.black)
+                                }
+                                .navigationDestination(for: String.self) { _ in
+                                    SelectDocumentTypeView(tabBarVisivility: $tabBarVisivility, path: $path)
+                                        .customBackbutton()
+                                        .toolbar(tabBarVisivility, for: .tabBar)
                                 }
                             }
                             .font(.system(size: 26))
@@ -80,5 +84,5 @@ struct WritingView: View {
 }
 
 #Preview {
-    WritingView()
+    WritingView(tabBarVisivility: .constant(.visible))
 }
