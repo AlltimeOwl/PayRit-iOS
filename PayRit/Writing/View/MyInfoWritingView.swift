@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import KakaoMapsSDK
 
 struct MyInfoWritingView: View {
     @State var test = ""

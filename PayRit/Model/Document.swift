@@ -66,12 +66,12 @@ struct Document: Identifiable {
     }
     
     static var samepleDocument: [Document] = [
-        Document(writingDay: "2024-01-01", sender: "홍길동", senderPhoneNumber: "01050097937", senderAdress: "경기도 용인시", recipient: "빌린이1", recipientPhoneNumber: "01050097937", recipientAdress: "경기도 안양시", startDay: "2024-01-01", endDay: "2024-04-01", totalMoney: 30000000, interestRate: 5.0, state: .first),
-        Document(writingDay: "2024-01-01", sender: "홍길동", senderPhoneNumber: "01050097937", senderAdress: "경기도 용인시", recipient: "빌린이2", recipientPhoneNumber: "01050097937", recipientAdress: "경기도 안양시", startDay: "2024-01-01", endDay: "2024-05-01", totalMoney: 30000000, interestRate: 5.0, state: .third),
-        Document(writingDay: "2024-01-01", sender: "홍길동", senderPhoneNumber: "01050097937", senderAdress: "경기도 용인시", recipient: "빌린이3", recipientPhoneNumber: "01050097937", recipientAdress: "경기도 안양시", startDay: "2024-01-01", endDay: "2024-06-01", totalMoney: 30000000, interestRate: 5.0, state: .second),
-        Document(writingDay: "2024-01-01", sender: "홍길동", senderPhoneNumber: "01050097937", senderAdress: "경기도 용인시", recipient: "빌린이4", recipientPhoneNumber: "01050097937", recipientAdress: "경기도 안양시", startDay: "2024-01-01", endDay: "2024-07-01", totalMoney: 30000000, interestRate: 5.0, state: .first),
-        Document(writingDay: "2024-01-01", sender: "홍길동", senderPhoneNumber: "01050097937", senderAdress: "경기도 용인시", recipient: "빌린이5", recipientPhoneNumber: "01050097937", recipientAdress: "경기도 안양시", startDay: "2024-01-01", endDay: "2024-08-01", totalMoney: 30000000, interestRate: 5.0, state: .first),
-        Document(writingDay: "2024-01-01", sender: "홍길동", senderPhoneNumber: "01050097937", senderAdress: "경기도 용인시", recipient: "빌린이6", recipientPhoneNumber: "01050097937", recipientAdress: "경기도 안양시", startDay: "2024-01-01", endDay: "2024-09-01", totalMoney: 30000000, interestRate: 5.0, state: .first)
+        Document(writingDay: "2024-02-01", sender: "홍길동", senderPhoneNumber: "01050097937", senderAdress: "경기도 용인시", recipient: "빌린이1", recipientPhoneNumber: "01050097937", recipientAdress: "경기도 안양시", startDay: "2024-01-01", endDay: "2024-08-01", totalMoney: 30000000, interestRate: 5.0, state: .first),
+        Document(writingDay: "2024-01-21", sender: "홍길동", senderPhoneNumber: "01050097937", senderAdress: "경기도 용인시", recipient: "빌린이2", recipientPhoneNumber: "01050097937", recipientAdress: "경기도 안양시", startDay: "2024-01-01", endDay: "2024-04-01", totalMoney: 30000000, interestRate: 5.0, state: .third),
+        Document(writingDay: "2024-02-11", sender: "홍길동", senderPhoneNumber: "01050097937", senderAdress: "경기도 용인시", recipient: "빌린이3", recipientPhoneNumber: "01050097937", recipientAdress: "경기도 안양시", startDay: "2024-01-01", endDay: "2024-06-01", totalMoney: 30000000, interestRate: 5.0, state: .second),
+        Document(writingDay: "2024-04-01", sender: "홍길동", senderPhoneNumber: "01050097937", senderAdress: "경기도 용인시", recipient: "빌린이4", recipientPhoneNumber: "01050097937", recipientAdress: "경기도 안양시", startDay: "2024-01-01", endDay: "2024-07-01", totalMoney: 30000000, interestRate: 5.0, state: .first),
+        Document(writingDay: "2024-03-05", sender: "홍길동", senderPhoneNumber: "01050097937", senderAdress: "경기도 용인시", recipient: "빌린이5", recipientPhoneNumber: "01050097937", recipientAdress: "경기도 안양시", startDay: "2024-01-01", endDay: "2024-05-21", totalMoney: 30000000, interestRate: 5.0, state: .first),
+        Document(writingDay: "2024-03-21", sender: "홍길동", senderPhoneNumber: "01050097937", senderAdress: "경기도 용인시", recipient: "빌린이6", recipientPhoneNumber: "01050097937", recipientAdress: "경기도 안양시", startDay: "2024-01-01", endDay: "2024-05-01", totalMoney: 30000000, interestRate: 5.0, state: .first)
     ]
 }
 

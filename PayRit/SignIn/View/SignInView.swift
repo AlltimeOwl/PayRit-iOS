@@ -24,7 +24,7 @@ struct SignInView: View {
                 Image("testImage")
                     .resizable()
                     .frame(height: UIScreen.screenHeight)
-                Image("launchScreenLabel")
+                Image("payRitText")
                 
                 VStack(spacing: 8) {
                     Spacer()
