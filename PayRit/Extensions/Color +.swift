@@ -43,14 +43,20 @@ public extension Color {
     
     static let whiteColor = Color(hex: "FFFFFF")
     
-    /// 연한 그레이 FAFAFA
-    static let semiGrayColor1 = Color(hex: "FAFAFA")
-    
     /// 연한 그레이 666666
-    static let semiGrayColor2 = Color(hex: "666666")
+    static let semiGrayColor1 = Color(hex: "666666")
     
     /// 연한 그레이 767676
-    static let semiGrayColor3 = Color(hex: "767676")
+    static let semiGrayColor2 = Color(hex: "767676")
+    
+    /// 연한 그레이 DCDCDC
+    static let semiGrayColor3 = Color(hex: "DCDCDC")
+    
+    /// 연한 그레이 FAFAFA
+    static let semiGrayColor4 = Color(hex: "FAFAFA")
+    
+    /// 연한 그레이 777777
+    static let gray777777 = Color(hex: "777777")
     
     /// 섹션 타이틀 컬러 949494
     static let sectionTitleColor = Color(hex: "949494")

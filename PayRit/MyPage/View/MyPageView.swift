@@ -8,92 +8,94 @@
 import SwiftUI
 
 struct MyPageView: View {
-    let signInStore = SignInStore()
+    @State var name: String = "임대진"
+    @State var email: String = "eowls2983@gmail.com"
+    @State var listItemHeight: CGFloat = 40
+    @State var isShowingSignOut: Bool = false
+    @State var notFoundUser: Bool = false
     @Binding var tabBarVisivility: Visibility
-    var tabBarVisivility1: Visibility = .hidden
+    @Binding var signInState: Bool
     var body: some View {
-        VStack {
-            Text("로그인이 필요합니다")
-            NavigationLink {
-//                SignInView(singInStore: signInStore)
-//                    .customXmarkbutton()
-//                    .toolbar(tabBarVisivility1, for: .tabBar)
-            } label: {
-                Text("로그인 하기")
+        VStack(alignment: .leading) {
+            HStack(spacing: 10) {
+                Circle()
+                    .frame(height: 77)
+                    .foregroundStyle(.blue)
+                VStack(alignment: .leading, spacing: 10) {
+                    Text(name)
+                        .font(.system(size: 24))
+                        .bold()
+                    Text(email)
+                        .font(.system(size: 16))
+                }
+                .frame(height: 77)
+                Spacer()
             }
-            .buttonStyle(.borderedProminent)
+            .padding(.horizontal, 16)
+            List {
+                NavigationLink {
+                    MyInfoView(tabBarVisivility: $tabBarVisivility, signInState: $signInState)
+                        .customBackbutton()
+                        .toolbar(tabBarVisivility, for: .tabBar)
+                } label: {
+                    Text("계정 정보")
+                }
+                .frame(height: listItemHeight)
+                NavigationLink {
+                    
+                } label: {
+                    Text("결제 내역")
+                }
+                .frame(height: listItemHeight)
+                NavigationLink {
+                    
+                } label: {
+                    Text("알림 설정")
+                }
+                .frame(height: listItemHeight)
+                NavigationLink {
+                    
+                } label: {
+                    Text("공지사항")
+                }
+                .frame(height: listItemHeight)
+                NavigationLink {
+                    
+                } label: {
+                    Text("자주 묻는 질문")
+                }
+                .frame(height: listItemHeight)
+                NavigationLink {
+                    
+                } label: {
+                    Text("서비스 이용 약관")
+                }
+                .frame(height: listItemHeight)
+                Button {
+                    isShowingSignOut.toggle()
+                } label: {
+                    Text("로그아웃")
+                }
+                .frame(height: listItemHeight)
+            }
+            .listStyle(.plain)
+            .padding(.top, 30)
+            .disabled(notFoundUser)
+            Spacer()
         }
-//        NavigationStack {
-//            VStack(alignment: .leading) {
-//                HStack {
-//                    Text("이메일 : ")
-//                    Text(signInStore.userEmail)
-//                }
-//                HStack {
-//                    Text("닉네임 : ")
-//                    Text(signInStore.userNickname)
-//                }
-//                HStack {
-//                    Text("이름 : ")
-//                    Text(signInStore.userName)
-//                }
-//                HStack {
-//                    Text("전화번호 : ")
-//                    Text(signInStore.userPhoneNumber)
-//                }
-//                HStack {
-//                    Text("토큰 : ")
-//                    Text(signInStore.aToken)
-//                }
-//                HStack {
-//                    Text("토큰 : ")
-//                    Text(signInStore.rToken)
-//                }
-//            }
-//            VStack {
-//                NavigationLink {
-//                    SignInView(singInStore: signInStore)
-//                } label: {
-//                    Text("로그인")
-//                        .foregroundStyle(.black)
-//                        .frame(width: 100, height: 30)
-//                        .background(.yellow)
-//                        .clipShape(.capsule)
-//                }
-//                
-//                Button {
-//                    signInStore.kakaoSingOut()
-//                } label: {
-//                    Text("로그아웃")
-//                        .foregroundStyle(.black)
-//                        .frame(width: 100, height: 30)
-//                        .background(.yellow)
-//                        .clipShape(.capsule)
-//                }
-//                Button {
-//                    //                  // Inform user and obtain consent
-//                    //                    guard let withdrawalURL = URL(string: "https://accounts.kakao.com/settings/withdrawal") else {
-//                    //                      print("Error creating withdrawal URL")
-//                    //                      return
-//                    //                    }
-//                    //                    UIApplication.shared.open(withdrawalURL)
-//                    signInStore.kakaoUnlink()
-//                } label: {
-//                    Text("탈퇴")
-//                        .foregroundStyle(.black)
-//                        .frame(width: 100, height: 30)
-//                        .background(.yellow)
-//                        .clipShape(.capsule)
-//                }
-//                
-//            }
-//            .padding(.top, 100)
-//        }
+        .toolbar {
+            ToolbarItem {
+                Text("")
+            }
+        }
+        .PrimaryAlert(isPresented: $isShowingSignOut, title: "로그아웃", content: "로그아웃 하시겠습니까?", primaryButtonTitle: "아니오", cancleButtonTitle: "네", primaryAction: nil) {
+            // 로그아웃
+        }
     }
 }
 
 #Preview {
     NavigationStack {
-        MyPageView(tabBarVisivility: .constant(.visible))
+        MyPageView(tabBarVisivility: .constant(.hidden), signInState: .constant(true))
     }
 }

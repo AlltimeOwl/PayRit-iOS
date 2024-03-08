@@ -82,9 +82,9 @@ struct SelectDocumentTypeView: View {
         .padding(.horizontal, 16)
         .navigationTitle("차용증 작성하기")
         .navigationBarTitleDisplayMode(.inline)
-        .onAppear(perform: {
+        .onAppear {
             tabBarVisivility = .hidden
-        })
+        }
     }
 }
 
