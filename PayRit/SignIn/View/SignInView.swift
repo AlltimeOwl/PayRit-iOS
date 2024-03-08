@@ -68,9 +68,9 @@ struct SignInView: View {
 //            .navigationDestination(isPresented: $logInOK) {
 //                TabBarView(tabBarVisivility: $tabBarVisivility)
 //            }
-            .onAppear(perform: {
+            .onAppear {
                 
-            })
+            }
             .onDisappear {
                 
             }

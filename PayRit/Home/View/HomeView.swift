@@ -29,9 +29,9 @@ struct HomeView: View {
                     ZStack {
                         UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(topLeading: 12, bottomLeading: 0, bottomTrailing: 0, topTrailing: 12))
                             .frame(height: 50)
-                            .foregroundStyle(segmentButton ? Color.mintColor : Color.semiGrayColor1)
+                            .foregroundStyle(segmentButton ? Color.mintColor : Color.semiGrayColor4)
                         Text("빌려준 기록")
-                            .foregroundStyle(segmentButton ? Color.whiteColor : Color.semiGrayColor2.opacity(0.5))
+                            .foregroundStyle(segmentButton ? Color.whiteColor : Color.semiGrayColor1.opacity(0.5))
                     }
                 }
                 
@@ -44,9 +44,9 @@ struct HomeView: View {
                     ZStack {
                         UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(topLeading: 12, bottomLeading: 0, bottomTrailing: 0, topTrailing: 12))
                             .frame(height: 50)
-                            .foregroundStyle(segmentButton ? Color.semiGrayColor1 : Color.mintColor)
+                            .foregroundStyle(segmentButton ? Color.semiGrayColor4 : Color.mintColor)
                         Text("빌린 기록")
-                            .foregroundStyle(segmentButton ? Color.semiGrayColor2.opacity(0.5) : Color.whiteColor)
+                            .foregroundStyle(segmentButton ? Color.semiGrayColor1.opacity(0.5) : Color.whiteColor)
                         
                     }
                 }
@@ -91,13 +91,13 @@ struct HomeView: View {
                                                             Text("~")
                                                             Text(document.endDay)
                                                         }
-                                                        .foregroundStyle(Color.semiGrayColor2)
+                                                        .foregroundStyle(Color.semiGrayColor1)
                                                         Spacer()
                                                         Button {
                                                             isActionSheetPresented.toggle()
                                                         } label: {
                                                             Image(systemName: "ellipsis")
-                                                                .foregroundStyle(Color.semiGrayColor3)
+                                                                .foregroundStyle(Color.semiGrayColor2)
                                                                 .rotationEffect(.degrees(90))
                                                                 .foregroundStyle(.black)
                                                                 .font(.system(size: 20))
@@ -114,7 +114,7 @@ struct HomeView: View {
                                                     Text(document.recipient)
                                                         .font(.system(size: 18))
                                                         .fontWeight(.semibold)
-                                                        .foregroundStyle(Color.semiGrayColor2)
+                                                        .foregroundStyle(Color.semiGrayColor1)
                                                         .padding(.top, 8)
                                                     
                                                     Spacer()
@@ -210,7 +210,7 @@ struct HomeView: View {
                                                             Text(homeStore.sortingType.stringValue)
                                                                 .lineLimit(1)
                                                             Spacer()
-                                                            Image(systemName: "chevron.down")
+                                                            Image(systemName: "chevron.up")
                                                         }
                                                     }
                                                     ForEach(SortingType.allCases, id: \.self) { state in
@@ -237,7 +237,7 @@ struct HomeView: View {
                         }
                         .font(.system(size: 14))
                         .fontWeight(.semibold)
-                        .foregroundStyle(Color.semiGrayColor3)
+                        .foregroundStyle(Color.semiGrayColor2)
                         .padding(.horizontal, horizontalPadding)
                     }
                 }

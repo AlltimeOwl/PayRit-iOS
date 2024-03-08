@@ -24,6 +24,7 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>HSSantokki-Regular.ttf</string>
+		<string>Pretendard-Bold.otf</string>
 	</array>
 	<key>UILaunchScreen</key>
 	<dict>

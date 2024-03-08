@@ -30,6 +30,10 @@
 		BC595E252B8DC9AC00CA555E /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BC595E242B8DC9AC00CA555E /* Launch Screen.storyboard */; };
 		BC595E282B8DDFDD00CA555E /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC595E272B8DDFDD00CA555E /* HomeView.swift */; };
 		BC5C57092B975A2400A55CC7 /* KakaoAdressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC5C57082B975A2400A55CC7 /* KakaoAdressView.swift */; };
+		BC6F652B2B9B355200FB9FA7 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6F652A2B9B355200FB9FA7 /* User.swift */; };
+		BC6F652D2B9B394800FB9FA7 /* MembershipWithdrawalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6F652C2B9B394800FB9FA7 /* MembershipWithdrawalView.swift */; };
+		BC6F652F2B9B3D9000FB9FA7 /* MyPageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6F652E2B9B3D9000FB9FA7 /* MyPageStore.swift */; };
+		BC6F65312B9B42A700FB9FA7 /* Pretendard-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = BC6F65302B9B42A700FB9FA7 /* Pretendard-Bold.otf */; };
 		BC947A5D2B984AEF00295C7B /* MyInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC947A5C2B984AEF00295C7B /* MyInfoView.swift */; };
 		BC9E55CC2B936F9700B100C6 /* HomeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC9E55CB2B936F9700B100C6 /* HomeStore.swift */; };
 		BC9E55CE2B956B7300B100C6 /* LoanDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC9E55CD2B956B7300B100C6 /* LoanDetailView.swift */; };
@@ -67,6 +71,10 @@
 		BC595E242B8DC9AC00CA555E /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		BC595E272B8DDFDD00CA555E /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		BC5C57082B975A2400A55CC7 /* KakaoAdressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KakaoAdressView.swift; sourceTree = "<group>"; };
+		BC6F652A2B9B355200FB9FA7 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		BC6F652C2B9B394800FB9FA7 /* MembershipWithdrawalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MembershipWithdrawalView.swift; sourceTree = "<group>"; };
+		BC6F652E2B9B3D9000FB9FA7 /* MyPageStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageStore.swift; sourceTree = "<group>"; };
+		BC6F65302B9B42A700FB9FA7 /* Pretendard-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Bold.otf"; sourceTree = "<group>"; };
 		BC947A5C2B984AEF00295C7B /* MyInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyInfoView.swift; sourceTree = "<group>"; };
 		BC9E55CB2B936F9700B100C6 /* HomeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeStore.swift; sourceTree = "<group>"; };
 		BC9E55CD2B956B7300B100C6 /* LoanDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanDetailView.swift; sourceTree = "<group>"; };
@@ -189,6 +197,7 @@
 			children = (
 				BC595E0B2B8DB0B500CA555E /* Info.plist */,
 				BC595E162B8DB52E00CA555E /* HSSantokki-Regular.ttf */,
+				BC6F65302B9B42A700FB9FA7 /* Pretendard-Bold.otf */,
 				BC595DD92B8D8AC400CA555E /* Assets.xcassets */,
 			);
 			path = Config;
@@ -198,6 +207,7 @@
 			isa = PBXGroup;
 			children = (
 				BCC9EC032B8F09A6001E18F0 /* Document.swift */,
+				BC6F652A2B9B355200FB9FA7 /* User.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -314,6 +324,7 @@
 			children = (
 				BCD942562B8F1D5400BF61CD /* MyPageView.swift */,
 				BC947A5C2B984AEF00295C7B /* MyInfoView.swift */,
+				BC6F652C2B9B394800FB9FA7 /* MembershipWithdrawalView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -321,6 +332,7 @@
 		BCD942582B8F1D9200BF61CD /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				BC6F652E2B9B3D9000FB9FA7 /* MyPageStore.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -427,6 +439,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BCD942512B8F0CCC00BF61CD /* .swiftlint.yml in Resources */,
+				BC6F65312B9B42A700FB9FA7 /* Pretendard-Bold.otf in Resources */,
 				BC595E172B8DB52E00CA555E /* HSSantokki-Regular.ttf in Resources */,
 				BC595DDD2B8D8AC400CA555E /* Preview Assets.xcassets in Resources */,
 				BC595E252B8DC9AC00CA555E /* Launch Screen.storyboard in Resources */,
@@ -500,10 +513,13 @@
 				BC595DF02B8D8EAE00CA555E /* TabBarView.swift in Sources */,
 				BC1CF8D72B961F5600A9BF12 /* MyInfoWritingView.swift in Sources */,
 				BC595DD62B8D8AC300CA555E /* PayRitApp.swift in Sources */,
+				BC6F652B2B9B355200FB9FA7 /* User.swift in Sources */,
+				BC6F652D2B9B394800FB9FA7 /* MembershipWithdrawalView.swift in Sources */,
 				BC595E282B8DDFDD00CA555E /* HomeView.swift in Sources */,
 				BC388DB52B904BAB005D1279 /* ContentView.swift in Sources */,
 				BC595E0A2B8DAFD600CA555E /* Font +.swift in Sources */,
 				BCDC9C562B958FA2002D8A4A /* LoanDetailImageView.swift in Sources */,
+				BC6F652F2B9B3D9000FB9FA7 /* MyPageStore.swift in Sources */,
 				BC5C57092B975A2400A55CC7 /* KakaoAdressView.swift in Sources */,
 				BCE280DC2B8F75450085D45E /* ViewModifier.swift in Sources */,
 				BC595E192B8DB75600CA555E /* Color +.swift in Sources */,

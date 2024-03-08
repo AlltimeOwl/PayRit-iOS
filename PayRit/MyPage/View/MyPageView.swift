@@ -12,7 +12,9 @@ struct MyPageView: View {
     @State var email: String = "eowls2983@gmail.com"
     @State var listItemHeight: CGFloat = 40
     @State var isShowingSignOut: Bool = false
+    @State var notFoundUser: Bool = false
     @Binding var tabBarVisivility: Visibility
+    @Binding var signInState: Bool
     var body: some View {
         VStack(alignment: .leading) {
             HStack(spacing: 10) {
@@ -32,8 +34,9 @@ struct MyPageView: View {
             .padding(.horizontal, 16)
             List {
                 NavigationLink {
-                    MyInfoView()
+                    MyInfoView(tabBarVisivility: $tabBarVisivility, signInState: $signInState)
                         .customBackbutton()
+                        .toolbar(tabBarVisivility, for: .tabBar)
                 } label: {
                     Text("계정 정보")
                 }
@@ -77,6 +80,7 @@ struct MyPageView: View {
             }
             .listStyle(.plain)
             .padding(.top, 30)
+            .disabled(notFoundUser)
             Spacer()
         }
         .toolbar {
@@ -92,6 +96,6 @@ struct MyPageView: View {
 
 #Preview {
     NavigationStack {
-        MyPageView(tabBarVisivility: .constant(.hidden))
+        MyPageView(tabBarVisivility: .constant(.hidden), signInState: .constant(true))
     }
 }
