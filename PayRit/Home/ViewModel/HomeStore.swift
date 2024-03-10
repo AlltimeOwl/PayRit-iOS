@@ -16,10 +16,10 @@ enum SortingType: String, CodingKey, CaseIterable {
 @Observable
 final class HomeStore {
     var sortingType: SortingType = .recent
-    var document: [Certificate] = Certificate.samepleDocument
+    var document: [Document] = Document.samepleDocument
     
     func sortingDocument() {
-        document = Certificate.samepleDocument.sorted {
+        document = Document.samepleDocument.sorted {
             switch sortingType {
             case .recent:
                 return $0.writingDayCal < $1.writingDayCal

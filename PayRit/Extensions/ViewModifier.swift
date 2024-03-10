@@ -7,6 +7,29 @@
 
 import SwiftUI
 
+public struct CustomXmarkButton: ViewModifier {
+    @Environment(\.dismiss) private var dismiss
+    public typealias Action = () -> ()
+    
+    var action: Action?
+    
+    public func body(content: Content) -> some View {
+        content
+            .navigationBarBackButtonHidden(true)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button {
+                        action?()
+                        dismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                            .foregroundColor(.black)
+                    }
+                }
+            }
+    }
+}
+
 public struct CustomBackButton: ViewModifier {
     @Environment(\.dismiss) private var dismiss
     public typealias Action = () -> ()
@@ -96,42 +119,6 @@ struct PrimaryAlertModifier: ViewModifier {
 //                : .none,
 //                value: isPresented
 //            )
-        }
-    }
-}
-
-struct ToastMessageModifier: ViewModifier {
-    @Binding var isShowing: Bool
-    var message: String
-    
-    func body(content: Content) -> some View {
-        ZStack {
-            content
-            if isShowing {
-                VStack {
-                    Spacer()
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 8)
-//                            .stroke(Color.gray07, lineWidth: 1)
-                            .fill(Color(hex: "E3FFF6"))
-                            .frame(width: 280, height: 50)
-                            .transition(.scale)
-                        Text(message)
-                            .font(Font.caption01)
-                            .foregroundStyle(Color(hex: "818181"))
-                            .multilineTextAlignment(.center)
-                    }
-                }
-                .padding(.bottom, 80)
-                .onAppear {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                        withAnimation {
-                            isShowing = false
-                        }
-                    }
-                }
-                .zIndex(1)
-            }
         }
     }
 }

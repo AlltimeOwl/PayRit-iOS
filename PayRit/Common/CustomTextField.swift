@@ -16,16 +16,14 @@ import SwiftUI
 public struct CustomTextField: View {
     var maxLength: Int = 100
     var backgroundColor: Color = .white
-    var foregroundStyle: Color = .black
     var placeholder: String
     var keyboardType: UIKeyboardType = .default
     @Binding var text: String
     @FocusState private var isFocused: Bool
     
-    public init(maxLength: Int = 100, backgroundColor: Color = .white, foregroundStyle: Color = .black, placeholder: String, keyboardType: UIKeyboardType = .default, text: Binding<String>, isFocused: Bool = false) {
+    public init(maxLength: Int = 100, backgroundColor: Color = .white, placeholder: String, keyboardType: UIKeyboardType = .default, text: Binding<String>, isFocused: Bool = false) {
         self.maxLength = maxLength
         self.backgroundColor = backgroundColor
-        self.foregroundStyle = foregroundStyle
         self.placeholder = placeholder
         self.keyboardType = keyboardType
         self._text = text
@@ -34,14 +32,14 @@ public struct CustomTextField: View {
     
     public var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 6)
-                .stroke(Color.gray08, lineWidth: 1)
-                .background(RoundedRectangle(cornerRadius: 6)
-                .foregroundStyle(backgroundColor))
+            RoundedRectangle(cornerRadius: 8)
+//                .stroke(isFocused ? Color.brown : Color.clear, lineWidth: 1)
+                .stroke(Color.gray)
+                .background(RoundedRectangle(cornerRadius: 8).foregroundColor(backgroundColor))
             TextField(placeholder, text: $text)
-                .padding(EdgeInsets(top: 0, leading: 14, bottom: 0, trailing: 14))
-                .font(Font.body01)
-                .foregroundStyle(foregroundStyle)
+                .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
+                .font(.headline)
+                .foregroundColor(.black)
                 .focused($isFocused)
                 .keyboardType(keyboardType)
                 .textInputAutocapitalization(.never)
@@ -53,11 +51,10 @@ public struct CustomTextField: View {
                     Button(action: {
                         text = ""
                     }, label: {
-                        Image(systemName: "xmark.circle")
-                            .font(.system(size: 20))
-                            .foregroundStyle(Color.gray06)
+                        Image(systemName: "xmark.circle.fill")
+//                            .foregroundColor(.brown)
                     })
-                    .padding(.trailing, 14)
+                    .padding(.trailing, 20)
                 }
             }
         }
@@ -75,10 +72,7 @@ public struct CustomTextField: View {
 @available(iOS 15.0, *)
 struct CustomTextField_Previews: PreviewProvider {
     static var previews: some View {
-        ZStack {
-            Color.blue.ignoresSafeArea()
-            CustomTextField(placeholder: "숫자를 입력해주세요", text: .constant(""))
-                .padding()
-        }
+        CustomTextField(placeholder: "ㅎㅎ", text: .constant(""))
+            .background(Color.black)
     }
 }

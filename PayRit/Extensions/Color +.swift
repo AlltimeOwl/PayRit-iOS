@@ -24,46 +24,37 @@ public extension Color {
         self.init(red: red, green: green, blue: blue, opacity: opacity)
     }
 
-    // MARK: - Primary
+    // MARK: 정의된 Color와 겹치지 않는 닉네임 선정
     /// 카카오 로그인 버튼 색상
     static let kakaoLoginButton = Color(hex: "#F9E001")
-    /// 민트 28D7D2
-    static let payritMint = Color(hex: "28D7D2")
-    /// 라이트 민트 CBF0EF
-    static let payritLightMint = Color(hex: "CBF0EF")
-    /// 마인드 그린 44DD88
-    static let payritMindGreen = Color(hex: "44DD88")
     
-    // MARK: - Secondary
-    /// 핑크 FF7A90
-    static let payritIntensivePink = Color(hex: "FF7A90")
-    /// 하늘색  FFCC55
-    static let payritWithYellow = Color(hex: "FFCC55")
-    /// System Error  레드 컬러  FE1111
-    static let payritErrorRed = Color(hex: "FE1111")
-    /// System Positive 청록 컬러  00DD22
-    static let payritPositive = Color(hex: "00DD22")
+    static let mainColor = Color(hex: "#23E0BE")
     
-    // MARK: - grayColor
-    /// 181818
-    static let gray00 = Color(hex: "181818")
-    /// 212626
-    static let gray01 = Color(hex: "212626")
-    /// 2E3636
-    static let gray02 = Color(hex: "2E3636")
-    /// 3F4B4B
-    static let gray03 = Color(hex: "3F4B4B")
-    /// 5E6969
-    static let gray04 = Color(hex: "5E6969")
-    /// 7D8888
-    static let gray05 = Color(hex: "7D8888")
-    /// BCC7C7
-    static let gray06 = Color(hex: "BCC7C7")
-    /// D1DBDB
-    static let gray07 = Color(hex: "D1DBDB")
-    /// ECF0F0
-    static let gray08 = Color(hex: "ECF0F0")
-    /// F9F9F9
-    static let gray09 = Color(hex: "F9F9F9")
+    /// 내용이 담긴 박스 회색 버튼 색상 5F5F5F
+    static let boxGrayColor = Color(hex: "F5F5F5")
+    /// 디데이 표시 캡슐 색상 5F5F5F
+    static let dDayCapsulColor = Color(hex: "5F5F5F")
     
+    /// 연한 민트 색상 E3FFF6
+    static let semeMintColor = Color(hex: "E3FFF6")
+    
+    /// 민트 컬러 37D9BC
+    static let mintColor = Color(hex: "37D9BC")
+    
+    static let whiteColor = Color(hex: "FFFFFF")
+    
+    /// 연한 그레이 FAFAFA
+    static let semiGrayColor1 = Color(hex: "FAFAFA")
+    
+    /// 연한 그레이 666666
+    static let semiGrayColor2 = Color(hex: "666666")
+    
+    /// 연한 그레이 767676
+    static let semiGrayColor3 = Color(hex: "767676")
+    
+    /// 섹션 타이틀 컬러 949494
+    static let sectionTitleColor = Color(hex: "949494")
+    
+    /// 캡슐 그레이 컬러 A5A5A5
+    static let capsulGrayColor = Color(hex: "A5A5A5")
 }

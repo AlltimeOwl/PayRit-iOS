@@ -24,7 +24,7 @@ struct SignInView: View {
                 Image("testImage")
                     .resizable()
                     .frame(height: UIScreen.screenHeight)
-                Image("payRitText")
+                Image("launchScreenLabel")
                 
                 VStack(spacing: 8) {
                     Spacer()
@@ -68,9 +68,9 @@ struct SignInView: View {
 //            .navigationDestination(isPresented: $logInOK) {
 //                TabBarView(tabBarVisivility: $tabBarVisivility)
 //            }
-            .onAppear {
+            .onAppear(perform: {
                 
-            }
+            })
             .onDisappear {
                 
             }

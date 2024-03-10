@@ -19,11 +19,10 @@ struct PartnerInfoWritingView: View {
                     .customBackbutton()
             } label: {
                 Text("다음")
-                    .font(Font.title04)
                     .foregroundStyle(.white)
                     .frame(height: 50)
                     .frame(maxWidth: .infinity)
-                    .background(Color.payritMint)
+                    .background(Color.mintColor)
                     .clipShape(.rect(cornerRadius: 12))
             }
         }
