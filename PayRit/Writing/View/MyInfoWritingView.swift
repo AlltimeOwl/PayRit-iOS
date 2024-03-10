@@ -8,80 +8,79 @@
 import SwiftUI
 
 struct MyInfoWritingView: View {
-    @State var test = ""
-    @State var address = ""
-    @State var zipCode = ""
-    @State var isPresentingZipCodeView = false
+    @State private var name: String = ""
+    @State private var phoneNumber: String = ""
+    @State private var zipCode = ""
+    @State private var address = ""
+    @State private var detailAddress = ""
+    @State private var isPresentingZipCodeView = false
     @State private var isShowingStopAlert = false
+    @Binding var newCertificate: Certificate
     @Binding var path: NavigationPath
+    @FocusState var interestFocused: Bool
     var body: some View {
-        NavigationView {
-            VStack(alignment: .leading, spacing: 40) {
-                VStack(alignment: .leading) {
-                    Text("이름")
-                    HStack {
-                        TextField(text: $test) {
-                            Text("임대진")
-                        }
-                        Spacer()
-                        Image(systemName: "xmark.circle")
+        VStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 40) {
+                    VStack {
+                        Text("""
+                 작성하는 분의
+                 정보를 입력해 주세요.
+                """)
+                        .font(Font.title03)
+                        .lineSpacing(4)
                     }
-                    Divider()
-                }
-                VStack(alignment: .leading) {
-                    Text("연락처")
-                    HStack {
-                        TextField(text: $test) {
-                            Text("010-5009-7937")
-                        }
-                        Spacer()
-                        Image(systemName: "xmark.circle")
+                    
+                    VStack(alignment: .leading) {
+                        Text("이름")
+                        CustomTextField(foregroundStyle: .black, placeholder: "이름을 적어주세요", keyboardType: .default, text: $name, isFocused: interestFocused)
                     }
-                    Divider()
-                }
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("주소")
-                    HStack(alignment: .bottom) {
-                        VStack(alignment: .leading) {
-                            Text(zipCode)
-                                .frame(height: 20)
-                            Divider()
-                        }
-                        Spacer()
-                        Button {
-                            isPresentingZipCodeView.toggle()
-                        } label: {
-                            Text("우편번호 검색")
-                                .foregroundStyle(.black)
-                                .padding(.horizontal, 16)
-                                .padding(.vertical, 8)
-                                .background(Color(hex: "EAEAEA"))
-                                .clipShape(.rect(cornerRadius: 8))
-                        }
+                    VStack(alignment: .leading) {
+                        Text("연락처")
+                        CustomTextField(foregroundStyle: .black, placeholder: "숫자만 입력해주세요", keyboardType: .numberPad, text: $phoneNumber, isFocused: interestFocused)
+                        
                     }
-                    Text(address)
-                    Divider()
-                    Text(" ")
-                    Divider()
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("주소")
+                        HStack(alignment: .bottom) {
+                            CustomTextField(foregroundStyle: .black, placeholder: "우편번호", keyboardType: .numberPad, text: $zipCode, isFocused: interestFocused)
+                                .disabled(true)
+                            Button {
+                                isPresentingZipCodeView.toggle()
+                            } label: {
+                                Text("우편번호 검색")
+                                    .font(Font.body04)
+                                    .foregroundStyle(.white)
+                                    .padding(.horizontal, 24)
+                                    .frame(height: 42)
+                                    .background(Color.gray05)
+                                    .clipShape(.rect(cornerRadius: 6))
+                            }
+                        }
+                        CustomTextField(foregroundStyle: .black, placeholder: "", keyboardType: .numberPad, text: $address, isFocused: interestFocused)
+                            .disabled(true)
+                        CustomTextField(foregroundStyle: .black, placeholder: "상세주소를 적어주세요", keyboardType: .default, text: $detailAddress, isFocused: interestFocused)
+                    }
                 }
-                Spacer()
-                NavigationLink {
-                    PartnerInfoWritingView(path: $path)
-                        .customBackbutton()
-                } label: {
-                    Text("다음")
-                        .foregroundStyle(.white)
-                        .frame(height: 50)
-                        .frame(maxWidth: .infinity)
-                        .background(Color.mintColor)
-                        .clipShape(.rect(cornerRadius: 12))
-                }
+                .padding(.top, 30)
+                .padding(.horizontal, 16)
             }
+            NavigationLink {
+                PartnerInfoWritingView(path: $path)
+                    .customBackbutton()
+            } label: {
+                Text("다음")
+                    .font(Font.title04)
+                    .foregroundStyle(.white)
+                    .frame(height: 50)
+                    .frame(maxWidth: .infinity)
+                    .background(Color.payritMint)
+                    .clipShape(.rect(cornerRadius: 12))
+            }
+            .padding(.bottom, 16)
+            .padding(.horizontal, 16)
         }
-        .padding(.horizontal, 16)
-        .padding(.top, 30)
-        .padding(.bottom, 16)
-        .navigationTitle("내 정보 작성하기")
+        .navigationTitle("페이릿 작성하기")
         .navigationBarTitleDisplayMode(.inline)
         .onTapGesture { self.endTextEditing() }
         .toolbar {
@@ -110,11 +109,14 @@ struct MyInfoWritingView: View {
             KakaoAdressView(address: $address, zonecode: $zipCode, isPresented: $isPresentingZipCodeView)
                 .edgesIgnoringSafeArea(.all)
         }
+        .onAppear {
+            print(newCertificate)
+        }
     }
 }
 
 #Preview {
     NavigationStack {
-        MyInfoWritingView(path: .constant(NavigationPath()))
+        MyInfoWritingView(newCertificate: .constant(Certificate.EmptyCertificate), path: .constant(NavigationPath()))
     }
 }

@@ -13,9 +13,7 @@ struct TabBarView: View {
     @Binding var signInState: Bool
     var body: some View {
         TabView(selection: $selectedTab) {
-            NavigationStack {
-                HomeView()
-            }
+            HomeView()
             .tabItem {
                 Image(systemName: "house")
                     .environment(\.symbolVariants, selectedTab == 0 ? .fill : .none)
@@ -41,7 +39,7 @@ struct TabBarView: View {
             }
             .tag(2)
         }
-        .tint(.mainColor)
+        .tint(.payritMint)
     }
 }
 

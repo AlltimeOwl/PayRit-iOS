@@ -19,7 +19,7 @@ struct MembershipWithdrawalView: View {
                 Text("페이릿을")
                 HStack(spacing: 0) {
                     Text("떠나시는 이유")
-                        .foregroundStyle(Color.mintColor)
+                        .foregroundStyle(Color.payritMint)
                     Text("가 있을까요?")
                 }
             }
@@ -38,7 +38,7 @@ struct MembershipWithdrawalView: View {
                         RoundedRectangle(cornerRadius: 12)
                             .stroke(Color(hex: "F2F2F2"), lineWidth: 2)
                             .frame(height: isShowingMenu ? 88 : 56)
-                            .background(Color.boxGrayColor)
+                            .background(Color.gray09)
                             .clipShape(.rect(cornerRadius: 12))
                             .overlay {
                                 VStack(alignment: .leading) {
@@ -54,7 +54,7 @@ struct MembershipWithdrawalView: View {
                         RoundedRectangle(cornerRadius: 12)
                             .stroke(Color(hex: "F2F2F2"), lineWidth: 2)
                             .frame(height: isShowingMenu ? 214 : 56)
-                            .background(Color.boxGrayColor)
+                            .background(Color.gray09)
                             .clipShape(.rect(cornerRadius: 12))
                             .overlay {
                                 VStack(alignment: .leading, spacing: 20) {
@@ -98,7 +98,7 @@ struct MembershipWithdrawalView: View {
                     }
                 }
                 .font(.system(size: 16))
-                .foregroundStyle(Color.semiGrayColor2)
+//                .foregroundStyle(Color.semiGrayColor2)
             }
             
             VStack(alignment: .leading, spacing: 6) {
@@ -131,7 +131,7 @@ struct MembershipWithdrawalView: View {
             .disabled(seletedReason.isEmpty)
             .frame(maxWidth: .infinity)
             .frame(height: 48)
-            .background(seletedReason.isEmpty ? Color(hex: "DBDBDB") : Color.mintColor)
+            .background(seletedReason.isEmpty ? Color(hex: "DBDBDB") : Color.payritMint)
             .clipShape(.rect(cornerRadius: 12))
         }
         .padding(16)

@@ -8,9 +8,6 @@
 import SwiftUI
 
 extension View {
-    public func customXmarkbutton(action: (() -> ())? = nil) -> some View {
-        modifier(CustomBackButton(action: action))
-    }
     public func customBackbutton(action: (() -> ())? = nil) -> some View {
         modifier(CustomBackButton(action: action))
     }
@@ -23,9 +20,9 @@ extension View {
 
     // MARK: 토스트 메세지
     // 토스트 메세지를 띄우고싶은 뷰에서 .toast(isShowing: $showToast, message: message) 추가
-//    public func toast(isShowing: Binding<Bool>, message: String) -> some View {
-//        self.modifier(ToastMessageModifier(isShowing: isShowing, message: message))
-//    }
+    public func toast(isShowing: Binding<Bool>, message: String) -> some View {
+        self.modifier(ToastMessageModifier(isShowing: isShowing, message: message))
+    }
     
     public func LoanDetailImage(isPresented: Binding<Bool>, isButtonShowing: Binding<Bool>) -> some View {
         return modifier(

@@ -23,8 +23,10 @@
 	</array>
 	<key>UIAppFonts</key>
 	<array>
-		<string>HSSantokki-Regular.ttf</string>
-		<string>Pretendard-Bold.otf</string>
+		<string>SUIT-SemiBold.otf</string>
+		<string>SUIT-Bold.otf</string>
+		<string>SUIT-Regular.otf</string>
+		<string>SUIT-Medium.otf</string>
 	</array>
 	<key>UILaunchScreen</key>
 	<dict>
