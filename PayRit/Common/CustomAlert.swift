@@ -60,7 +60,7 @@ struct PrimaryAlert: View {
                                 .frame(width: 120, height: 40)
                         }
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .background(Color.mintColor)
+                        .background(Color.payritMint)
                     } else {
                         Button {
                             cancleAction()
@@ -73,7 +73,7 @@ struct PrimaryAlert: View {
                                 .frame(width: 300, height: 50)
                         }
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .background(Color.mintColor)
+                        .background(Color.payritMint)
                     }
                 }
                 .frame(height: 50)
