@@ -10,11 +10,10 @@ import SwiftUI
 struct TabBarView: View {
     @State private var selectedTab = 0
     @Binding var tabBarVisivility: Visibility
+    @Binding var signInState: Bool
     var body: some View {
         TabView(selection: $selectedTab) {
-            NavigationStack {
-                HomeView()
-            }
+            HomeView()
             .tabItem {
                 Image(systemName: "house")
                     .environment(\.symbolVariants, selectedTab == 0 ? .fill : .none)
@@ -31,7 +30,7 @@ struct TabBarView: View {
             .tag(1)
             
             NavigationStack {
-                MyPageView(tabBarVisivility: $tabBarVisivility)
+                MyPageView(tabBarVisivility: $tabBarVisivility, signInState: $signInState)
             }
             .tabItem {
                 Image(systemName: "person")
@@ -40,10 +39,10 @@ struct TabBarView: View {
             }
             .tag(2)
         }
-        .tint(.mainColor)
+        .tint(.payritMint)
     }
 }
 
 #Preview {
-    TabBarView(tabBarVisivility: .constant(.visible))
+    TabBarView(tabBarVisivility: .constant(.visible), signInState: .constant(true))
 }

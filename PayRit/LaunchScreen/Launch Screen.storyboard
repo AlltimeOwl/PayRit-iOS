@@ -15,8 +15,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="launchScreenLabel" translatesAutoresizingMaskIntoConstraints="NO" id="AaU-5j-M9F">
-                                <rect key="frame" x="134.66666666666666" y="404" width="123.99999999999997" height="44"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="payRitText" translatesAutoresizingMaskIntoConstraints="NO" id="AaU-5j-M9F">
+                                <rect key="frame" x="121.66666666666669" y="400" width="150" height="52"/>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
@@ -33,6 +33,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="launchScreenLabel" width="124" height="44"/>
+        <image name="payRitText" width="150" height="52"/>
     </resources>
 </document>
