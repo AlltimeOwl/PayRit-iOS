@@ -1,5 +1,5 @@
 //
-//  SelectDocumentTypeView.swift
+//  SelectCertificateTypeView.swift
 //  PayRit
 //
 //  Created by 임대진 on 2/29/24.
@@ -7,20 +7,20 @@
 
 import SwiftUI
 
-struct SelectDocumentTypeView: View {
+struct SelectCertificateTypeView: View {
     @Binding var tabBarVisivility: Visibility
     @Binding var path: NavigationPath
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack {
             Text("현재, 어떤 상황인가요?")
-                .font(.system(size: 26))
+                .font(Font.title03)
             HStack {
                 NavigationLink {
-                    TransactionDetailWritingView(path: $path)
+                    WritingCertificateInfoView(certificateType: .constant(.iLentYou), path: $path)
                         .customBackbutton()
                 } label: {
                     Rectangle()
-                        .foregroundStyle(Color.boxGrayColor)
+                        .foregroundStyle(Color.gray08)
                         .clipShape(.rect(cornerRadius: 12))
                         .frame(height: 160)
                         .overlay {
@@ -28,20 +28,19 @@ struct SelectDocumentTypeView: View {
                                  빌려줄
                                  예정이에요
                                  """)
-                            .lineSpacing(10.0)
-                            .font(.system(size: 24))
-                            .bold()
+                            .lineSpacing(6)
+                            .font(Font.title05)
                             .foregroundStyle(.black)
                         }
                 }
                 Spacer()
                     .frame(width: 18)
                 NavigationLink {
-                    TransactionDetailWritingView(path: $path)
+                    WritingCertificateInfoView(certificateType: .constant(.iBorrowed), path: $path)
                         .customBackbutton()
                 } label: {
                     Rectangle()
-                        .foregroundStyle(Color.boxGrayColor)
+                        .foregroundStyle(Color.gray08)
                         .clipShape(.rect(cornerRadius: 12))
                         .frame(height: 160)
                         .overlay {
@@ -49,38 +48,17 @@ struct SelectDocumentTypeView: View {
                                  빌릴
                                  예정이에요
                                  """)
-                            .lineSpacing(10.0)
-                            .font(.system(size: 24))
-                            .bold()
+                            .lineSpacing(6)
+                            .font(Font.title05)
                             .foregroundStyle(.black)
                         }
                 }
             }
             .padding(.top, 16)
-            
-            Rectangle()
-                .foregroundStyle(Color.semeMintColor)
-                .clipShape(.rect(cornerRadius: 12))
-                .frame(height: 160)
-                .overlay {
-                    VStack {
-                        HStack {
-                            Text("🍯 작성 가이드")
-                                .lineSpacing(10.0)
-                                .font(.system(size: 20))
-                                .foregroundStyle(.black)
-                            Spacer()
-                        }
-                        Spacer()
-                    }
-                    .padding(15)
-                }
-                .padding(.top, 40)
-            Spacer()
         }
         .padding(.top, 40)
         .padding(.horizontal, 16)
-        .navigationTitle("차용증 작성하기")
+        .navigationTitle("페이릿 작성하기")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             tabBarVisivility = .hidden
@@ -90,6 +68,6 @@ struct SelectDocumentTypeView: View {
 
 #Preview {
     NavigationStack {
-        SelectDocumentTypeView(tabBarVisivility: .constant(.visible), path: .constant(NavigationPath()))
+        SelectCertificateTypeView(tabBarVisivility: .constant(.visible), path: .constant(NavigationPath()))
     }
 }

@@ -8,48 +8,16 @@
 import SwiftUI
 
 struct WritingCheckView: View {
-    let document: Document = Document.samepleDocument[0]
+    let document: Certificate = Certificate.samepleDocument[0]
     @State private var isShowingStopAlert: Bool = false
     @State private var isShowingKaKaoAlert: Bool = false
     @State private var isShowingDoneAlert: Bool = false
     @Binding var path: NavigationPath
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
-            // 내용 상세
-            HStack(alignment: .center, spacing: 20) {
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack {
-                        Text("거래 금액")
-                    }
-                    HStack {
-                        Text("거래 날짜")
-                    }
-                    HStack {
-                        Text("상환 마감일")
-                    }
-                }
-                .bold()
-                
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack {
-                        Text("\(document.totalMoney) 원")
-                    }
-                    HStack {
-                        Text("\(document.startDay)")
-                    }
-                    HStack {
-                        Text("\(document.endDay)")
-                    }
-                }
-                Spacer()
-            }
-            .padding(20)
-            .background(Color.boxGrayColor)
-            .clipShape(.rect(cornerRadius: 12))
-            
             VStack(alignment: .leading) {
                 Text("빌려준 사람")
-                    .foregroundStyle(Color.sectionTitleColor)
+//                    .foregroundStyle(Color.sectionTitleColor)
                     .font(.system(size: 16))
                     .fontWeight(.semibold)
                 HStack(alignment: .center, spacing: 20) {
@@ -80,14 +48,14 @@ struct WritingCheckView: View {
                     Spacer()
                 }
                 .padding(20)
-                .background(Color.boxGrayColor)
+//                .background(Color.boxGrayColor)
                 .clipShape(.rect(cornerRadius: 12))
             }
             
             // 빌린 사람 정보
             VStack(alignment: .leading) {
                 Text("빌린 사람")
-                    .foregroundStyle(Color.sectionTitleColor)
+//                    .foregroundStyle(Color.sectionTitleColor)
                     .font(.system(size: 16))
                     .fontWeight(.semibold)
                 HStack(alignment: .center, spacing: 20) {
@@ -118,7 +86,7 @@ struct WritingCheckView: View {
                     Spacer()
                 }
                 .padding(20)
-                .background(Color.semeMintColor)
+//                .background(Color.semeMintColor)
                 .clipShape(.rect(cornerRadius: 12))
             }
             Spacer()
@@ -126,10 +94,11 @@ struct WritingCheckView: View {
                 isShowingKaKaoAlert.toggle()
             } label: {
                 Text("요청 전송")
+                    .font(Font.title04)
                     .foregroundStyle(.white)
                     .frame(height: 50)
                     .frame(maxWidth: .infinity)
-                    .background(Color.mintColor)
+                    .background(Color.payritMint)
                     .clipShape(.rect(cornerRadius: 12))
             }
             .padding(.bottom, 16)

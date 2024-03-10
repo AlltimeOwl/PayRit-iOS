@@ -18,11 +18,11 @@ struct MyInfoView: View {
                     .bold()
                 RoundedRectangle(cornerRadius: 12)
                     .frame(height: 48)
-                    .foregroundStyle(Color.semiGrayColor3)
+//                    .foregroundStyle(Color.semiGrayColor3)
                     .overlay {
                         HStack {
                             Text(sampleUser.name)
-                                .foregroundStyle(Color.semiGrayColor1)
+//                                .foregroundStyle(Color.semiGrayColor1)
                             Spacer()
                         }
                         .padding(.horizontal, 20)
@@ -33,11 +33,11 @@ struct MyInfoView: View {
                     .bold()
                 RoundedRectangle(cornerRadius: 12)
                     .frame(height: 48)
-                    .foregroundStyle(Color.semiGrayColor3)
+//                    .foregroundStyle(Color.semiGrayColor3)
                     .overlay {
                         HStack {
                             Text(sampleUser.email)
-                                .foregroundStyle(Color.semiGrayColor1)
+//                                .foregroundStyle(Color.semiGrayColor1)
                             Spacer()
                         }
                         .padding(.horizontal, 20)
@@ -48,11 +48,11 @@ struct MyInfoView: View {
                     .bold()
                 RoundedRectangle(cornerRadius: 12)
                     .frame(height: 48)
-                    .foregroundStyle(Color.semiGrayColor3)
+//                    .foregroundStyle(Color.semiGrayColor3)
                     .overlay {
                         HStack {
                             Text(sampleUser.phoneNumber)
-                                .foregroundStyle(Color.semiGrayColor1)
+//                                .foregroundStyle(Color.semiGrayColor1)
                             Spacer()
                         }
                         .padding(.horizontal, 20)
@@ -63,11 +63,11 @@ struct MyInfoView: View {
                     .bold()
                 RoundedRectangle(cornerRadius: 12)
                     .frame(height: 48)
-                    .foregroundStyle(Color.semiGrayColor3)
+//                    .foregroundStyle(Color.semiGrayColor3)
                     .overlay {
                         HStack {
                             Text("카카오톡")
-                                .foregroundStyle(Color.semiGrayColor1)
+//                                .foregroundStyle(Color.semiGrayColor1)
                             Spacer()
                         }
                         .padding(.horizontal, 20)

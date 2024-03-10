@@ -13,57 +13,58 @@ struct WritingView: View {
     var body: some View {
         NavigationStack(path: $path) {
             VStack(spacing: 20) {
-                Rectangle()
-                    .frame(height: 160)
-                    .foregroundStyle(Color.boxGrayColor)
-                    .clipShape(.rect(cornerRadius: 12))
-                    .overlay {
-                        VStack(alignment: .leading) {
-                            HStack {
-                                Text("차용증 작성하기")
-                                    .bold()
+                NavigationLink(value: "selectDocumentTypeView") {
+                    Rectangle()
+                        .frame(height: 160)
+                        .foregroundStyle(Color.payritMint)
+                        .clipShape(.rect(cornerRadius: 12))
+                        .overlay {
+                            VStack(alignment: .leading) {
+                                HStack {
+                                    Text("페이릿 작성하기")
+                                        .font(Font.title01)
+                                        .foregroundStyle(.white)
+                                    Spacer()
+                                }
                                 Spacer()
-                                NavigationLink(value: "selectDocumentTypeView") {
-                                    Image(systemName: "chevron.right")
-                                        .foregroundStyle(.black)
-                                }
-                                .navigationDestination(for: String.self) { _ in
-                                    SelectDocumentTypeView(tabBarVisivility: $tabBarVisivility, path: $path)
-                                        .customBackbutton()
-                                        .toolbar(tabBarVisivility, for: .tabBar)
-                                }
+                                Text("차용증과 동일한 효력을 가지고 있어요")
+                                    .font(Font.body03)
+                                    .foregroundStyle(.white)
                             }
-                            .font(.system(size: 26))
-                            Spacer()
-                            Text("작성 시 본인인증이 필요해요.")
+                            .padding(22)
                         }
-                        .padding(22)
-                    }
-                Rectangle()
-                    .frame(height: 160)
-                    .foregroundStyle(Color.boxGrayColor)
-                    .clipShape(.rect(cornerRadius: 12))
-                    .overlay {
-                        VStack(alignment: .leading) {
-                            HStack {
-                                Text("약속 작성하기")
-                                    .bold()
+                        .shadow(color: .gray.opacity(0.2), radius: 5)
+                }
+                .navigationDestination(for: String.self) { _ in
+                    SelectCertificateTypeView(tabBarVisivility: $tabBarVisivility, path: $path)
+                        .customBackbutton()
+                        .toolbar(tabBarVisivility, for: .tabBar)
+                }
+                
+                NavigationLink {
+                    
+                } label: {
+                    Rectangle()
+                        .frame(height: 160)
+                        .foregroundStyle(Color(hex: "FFFA86"))
+                        .clipShape(.rect(cornerRadius: 12))
+                        .overlay {
+                            VStack(alignment: .leading) {
+                                HStack {
+                                    Text("약속 작성하기")
+                                        .font(Font.title01)
+                                    Spacer()
+                                }
                                 Spacer()
-                                NavigationLink {
-                                    
-                                } label: {
-                                    Image(systemName: "chevron.right")
-                                        .foregroundStyle(.black)
-                                }
+                                Text("곧 출시되요!")
                             }
-                            .font(.system(size: 26))
-                            Spacer()
-                            Text("곧 출시되요!")
+                            .padding(22)
+                            .foregroundStyle(.black)
                         }
-                        .padding(22)
-                    }
-                    .opacity(0.3)
-                    .disabled(true)
+                        .opacity(0.3)
+                }
+                .disabled(true)
+                .shadow(color: .gray.opacity(0.2), radius: 5)
                 
                 Spacer()
             }
@@ -74,8 +75,13 @@ struct WritingView: View {
                     VStack {
                         Spacer().frame(height: 20)
                         Text("작성하기")
-                            .font(.navigationTitleSize28)
-                            .bold()
+                            .font(Font.title01)
+                    }
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    VStack {
+                        Spacer().frame(height: 20)
+                        Image(systemName: "bell")
                     }
                 }
             }

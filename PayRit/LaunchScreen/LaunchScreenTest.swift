@@ -12,7 +12,6 @@ struct LaunchScreenTest: View {
         ZStack {
             
             Text("페이릿")
-                .font(.santokkiHome)
         }
         .ignoresSafeArea()
     }
