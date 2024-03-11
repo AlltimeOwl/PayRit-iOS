@@ -16,10 +16,10 @@ enum SortingType: String, CodingKey, CaseIterable {
 @Observable
 final class HomeStore {
     var sortingType: SortingType = .recent
-    var document: [Certificate] = Certificate.samepleDocument
+    var certificates: [Certificate] = Certificate.samepleDocument
     
     func sortingDocument() {
-        document = Certificate.samepleDocument.sorted {
+        certificates = Certificate.samepleDocument.sorted {
             switch sortingType {
             case .recent:
                 return $0.writingDayCal < $1.writingDayCal
@@ -28,5 +28,22 @@ final class HomeStore {
             case .expiration:
                 return $0.dDay < $1.dDay
             }}
+    }
+    
+    func todayString() -> String {
+        let today = Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy.MM.dd" // 원하는 날짜 형식 지정
+        let dateString = dateFormatter.string(from: today)
+        return dateString
+    }
+    
+    func memoSave(certificate: Certificate, today: String, text: String) {
+        if let index = certificates.firstIndex(where: { $0.id == certificate.id }) {
+            var updatedCertificate = certificate
+            let newMemo = Memo(today: today, text: text)
+            updatedCertificate.memo.append(newMemo)
+            certificates[index] = updatedCertificate
+        }
     }
 }

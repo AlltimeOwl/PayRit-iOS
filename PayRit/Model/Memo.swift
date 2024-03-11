@@ -9,6 +9,6 @@ import Foundation
 
 struct Memo: Identifiable, Hashable {
     let id: String = UUID().uuidString
-    let text: String
-    let day: Date = Date()
+    var today: String = ""
+    var text: String = ""
 }

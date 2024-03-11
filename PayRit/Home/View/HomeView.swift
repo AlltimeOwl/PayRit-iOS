@@ -11,9 +11,9 @@ struct HomeView: View {
     @State private var menuState = false
     @State private var isHiddenInfoBox = true
     @State private var path = NavigationPath()
+    @State var homeStore = HomeStore()
     private let menuPadding = 8.0
     private let horizontalPadding = 16.0
-    private let homeStore = HomeStore()
     
     var body: some View {
         NavigationStack(path: $path) {
@@ -63,7 +63,7 @@ struct HomeView: View {
                             .padding(.horizontal, 35)
                         }
                 }
-                if homeStore.document.isEmpty {
+                if homeStore.certificates.isEmpty {
                     Text("""
                         아직 거래내역이 없어요.
                         작성하러 가볼까요?
@@ -77,7 +77,7 @@ struct HomeView: View {
                     ZStack {
                         VStack(spacing: 0) {
                             HStack {
-                                Text("총 \(homeStore.document.count)건")
+                                Text("총 \(homeStore.certificates.count)건")
                                     .font(.custom("SUIT-Medium", size: 16))
                                     .foregroundStyle(Color.gray02)
                                 Spacer()
@@ -85,62 +85,59 @@ struct HomeView: View {
                             .frame(height: 34)
                             .padding(.horizontal, horizontalPadding)
                             
-                            List(homeStore.document) { certificate in
-                                Button {
-                                    path.append(certificate)
-                                } label: {
-                                        // MARK: 문서박스
-                                    VStack(alignment: .leading, spacing: 0) {
-                                        HStack {
-                                            Text(certificate.tradeDay + " ~ " + certificate.endDay)
-                                                .font(.custom("SUIT-Medium", size: 12))
-                                                .foregroundStyle(Color.gray02)
-                                            Spacer()
-                                            Text(certificate.type.rawValue)
-                                                .foregroundStyle(certificate.type == .iLentYou ? Color.payritMint : Color.payritIntensivePink)
-                                        }
-                                        .padding(.top, 16)
-                                        Text(String(certificate.totalMoneyFormatter) + "원")
-                                            .font(.custom("SUIT-Bold", size: 28))
-                                            .padding(.top, 8)
-                                        
-                                        Text(certificate.recipient)
-                                            .font(Font.body03)
-                                            .foregroundStyle(Color.gray02)
-                                            .padding(.top, 8)
-                                         
-                                        VStack(alignment: .trailing, spacing: 6) {
-                                            HStack { Spacer() }
-                                            if certificate.dDay >= 0 {
-                                                Text("D - \(certificate.dDay)")
-                                                    .font(Font.body03)
+                            // MARK: - 홈 카드 리스트
+                            List {
+                                ForEach(homeStore.certificates.indices, id: \.self) { index in
+                                    let certificate = homeStore.certificates[index]
+                                    Button {
+                                        path.append(index)
+                                    } label: {
+                                        VStack(alignment: .leading, spacing: 0) {
+                                            HStack {
+                                                Text(certificate.tradeDay + " ~ " + certificate.endDay)
+                                                    .font(.custom("SUIT-Medium", size: 12))
                                                     .foregroundStyle(Color.gray02)
-                                            } else {
-                                                Text("D + \(-certificate.dDay)")
-                                                    .font(Font.body03)
-                                                    .foregroundStyle(Color.gray02)
+                                                Spacer()
+                                                Text(certificate.type.rawValue)
+                                                    .foregroundStyle(certificate.type == .iLentYou ? Color.payritMint : Color.payritIntensivePink)
                                             }
-                                            ProgressView(value: 50, total: 100)
-                                                .progressViewStyle(LinearProgressViewStyle(tint: certificate.type == .iLentYou ? Color.payritMint : Color.payritIntensivePink))
-                                            Text(certificate.state.rawValue + "(50%)")
-                                                .font(.custom("SUIT-Medium", size: 10))
+                                            .padding(.top, 16)
+                                            
+                                            Text("\(certificate.totalMoneyFormatter)원")
+                                                .font(.custom("SUIT-Bold", size: 28))
+                                                .padding(.top, 8)
+                                            
+                                            Text(certificate.type == .iBorrowed ? certificate.recipient : certificate.sender)
+                                                .font(Font.body03)
+                                                .foregroundStyle(Color.gray02)
+                                                .padding(.top, 8)
+                                            
+                                            VStack(alignment: .trailing, spacing: 6) {
+                                                HStack { Spacer() }
+                                                Text(certificate.dDay >= 0 ? "D - \(certificate.dDay)" : "D + \(-certificate.dDay)")
+                                                    .font(Font.body03)
+                                                    .foregroundStyle(Color.gray02)
+                                                ProgressView(value: 50, total: 100)
+                                                    .progressViewStyle(LinearProgressViewStyle(tint: certificate.type == .iLentYou ? Color.payritMint : Color.payritIntensivePink))
+                                                Text("\(certificate.state.rawValue) (50%)")
+                                                    .font(.custom("SUIT-Medium", size: 10))
+                                            }
+                                            .padding(.bottom, 16)
                                         }
-                                        .padding(.bottom, 16)
+                                        .padding(.horizontal, horizontalPadding)
+                                        .frame(height: 170)
+                                        .frame(maxWidth: .infinity)
+                                        .background()
+                                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                                        .shadow(color: .gray.opacity(0.2), radius: 5)
                                     }
-                                    .padding(.horizontal, horizontalPadding)
-                                    .frame(height: 170)
-                                    .frame(maxWidth: .infinity)
-                                    .background()
-                                    .clipShape(.rect(cornerRadius: 12))
-                                    .shadow(color: .gray.opacity(0.2), radius: 5)
-
+                                    .listRowSeparator(.hidden)
+                                    .listRowBackground(Color.white)
                                 }
-                                .listRowSeparator(.hidden)
-                                .listRowBackground(Color.white)
                             }
                             .listStyle(.plain)
-                            .navigationDestination(for: Certificate.self) { certificate in
-                                LoanDetailView(certificate: .constant(certificate))
+                            .navigationDestination(for: Int.self) { index in
+                                CertificateDetailView(index: .constant(index), homeStore: $homeStore)
                                     .customBackbutton()
                                     .toolbar(.hidden, for: .tabBar)
                             }
