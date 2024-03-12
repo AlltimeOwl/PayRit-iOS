@@ -24,9 +24,9 @@ extension View {
         self.modifier(ToastMessageModifier(isShowing: isShowing, message: message))
     }
     
-    public func LoanDetailImage(isPresented: Binding<Bool>, isButtonShowing: Binding<Bool>) -> some View {
+    public func CertificateDetailImage(isPresented: Binding<Bool>, isButtonShowing: Binding<Bool>) -> some View {
         return modifier(
-            LoanDetailImageViewModifier(isPresented: isPresented, isButtonShowing: isButtonShowing)
+            CertificateDetailImageViewModifier(isPresented: isPresented, isButtonShowing: isButtonShowing)
         )
     }
     

@@ -30,7 +30,7 @@ public struct CustomBackButton: ViewModifier {
     }
 }
 
-struct LoanDetailImageViewModifier: ViewModifier {
+struct CertificateDetailImageViewModifier: ViewModifier {
     @Binding var isPresented: Bool
     @Binding var isButtonShowing: Bool
     func body(content: Content) -> some View {
@@ -111,16 +111,15 @@ struct ToastMessageModifier: ViewModifier {
                 VStack {
                     Spacer()
                     ZStack {
-//                        RoundedRectangle(cornerRadius: 8)
-////                            .stroke(Color.gray07, lineWidth: 1)
-//                            .fill(Color(hex: "E3FFF6"))
-//                            .frame(width: 280, height: 50)
-//                            .transition(.scale)
-//                        Text(message)
-//                            .font(Font.caption01)
-//                            .foregroundStyle(Color(hex: "818181"))
-//                            .multilineTextAlignment(.center)
-                        CertificateImageView()
+                        RoundedRectangle(cornerRadius: 8)
+//                            .stroke(Color.gray07, lineWidth: 1)
+                            .fill(Color(hex: "E3FFF6"))
+                            .frame(width: 280, height: 50)
+                            .transition(.scale)
+                        Text(message)
+                            .font(Font.caption01)
+                            .foregroundStyle(Color(hex: "818181"))
+                            .multilineTextAlignment(.center)
                     }
                 }
                 .padding(.bottom, 80)

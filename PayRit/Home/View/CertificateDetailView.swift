@@ -316,7 +316,7 @@ struct CertificateDetailView: View {
         .scrollIndicators(.hidden)
         .navigationTitle("페이릿 상세 페이지")
         .navigationBarTitleDisplayMode(.inline)
-        .LoanDetailImage(isPresented: $isModalPresented, isButtonShowing: .constant(true))
+        .CertificateDetailImage(isPresented: $isModalPresented, isButtonShowing: .constant(true))
         .confirmationDialog("", isPresented: $isActionSheetPresented, titleVisibility: .hidden) {
             Button("PDF 다운") {
             }

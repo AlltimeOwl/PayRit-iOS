@@ -32,7 +32,7 @@ final class MyPageStore {
     func generateRandomPayments(count: Int) -> [Payment] {
         var payments = [Payment]()
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.dateFormat = "yyyy.MM.dd"
         
         for _ in 0..<count {
             let formatter = NumberFormatter()

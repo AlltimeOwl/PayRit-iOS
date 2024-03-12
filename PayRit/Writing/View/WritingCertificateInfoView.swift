@@ -57,10 +57,20 @@ struct WritingCertificateInfoView: View {
                         Text("송금 날짜")
                             .font(Font.body03)
                             .foregroundStyle(Color.gray04)
-                        CustomTextField(foregroundStyle: .black, placeholder: "YY.MM.DD", keyboardType: .numberPad, text: $newCertificate.tradeDay, isFocused: interestFocused)
-                            .onChange(of: newCertificate.tradeDay) {
-                                
-                            }
+//                        CustomTextField(foregroundStyle: .black, placeholder: "YY.MM.DD", keyboardType: .numberPad, text: $newCertificate.tradeDay, isFocused: interestFocused)
+//                            .onChange(of: newCertificate.tradeDay) {
+//                                
+//                            }
+                        RoundedRectangle(cornerRadius: 6)
+                            .stroke(Color.gray08, lineWidth: 1)
+                            .background(RoundedRectangle(cornerRadius: 6))
+                            .foregroundStyle(.white)
+                            .frame(height: 42)
+                            .overlay(
+                                Text("YY.MM.DD")
+                                    .padding(.leading, 14)
+                                , alignment: .leading
+                            )
                     }
                     
                     VStack(alignment: .leading) {
