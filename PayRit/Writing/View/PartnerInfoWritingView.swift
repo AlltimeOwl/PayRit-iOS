@@ -6,13 +6,13 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct PartnerInfoWritingView: View {
     @Binding var path: NavigationPath
     @State private var isShowingStopAlert = false
     var body: some View {
         VStack {
-            
             Spacer()
             NavigationLink {
                 WritingCheckView(path: $path)

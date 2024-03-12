@@ -18,7 +18,7 @@ struct CertificateMemoView: View {
             Group {
                 Text(today)
                     .font(Font.body01)
-                RoundedRectangle(cornerRadius: 12)
+                RoundedRectangle(cornerRadius: 6)
                     .stroke(Color.gray07, lineWidth: 1.0)
                     .frame(height: 110)
                     .overlay {
@@ -40,8 +40,8 @@ struct CertificateMemoView: View {
                         .padding(16)
                         .frame(maxWidth: .infinity)
                         .background(.white)
-                        .clipShape(.rect(cornerRadius: 12))
-                        .shadow(color: .gray.opacity(0.2), radius: 5)
+                        .clipShape(.rect(cornerRadius: 6))
+                        .shadow(color: Color.gray05.opacity(0.3), radius: 5)
                     }
                     .listRowSeparator(.hidden)
                 }

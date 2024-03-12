@@ -15,13 +15,15 @@ struct MyInfoView: View {
         VStack(spacing: 20) {
             VStack(alignment: .leading) {
                 Text("이름")
-                    .bold()
+                    .font(Font.body02)
+                    .foregroundStyle(Color.gray03)
                 RoundedRectangle(cornerRadius: 12)
                     .frame(height: 48)
                     .foregroundStyle(Color.gray09)
                     .overlay {
                         HStack {
                             Text(sampleUser.name)
+                                .font(Font.body02)
                                 .foregroundStyle(Color.gray06)
                             Spacer()
                         }
@@ -30,13 +32,15 @@ struct MyInfoView: View {
             }
             VStack(alignment: .leading) {
                 Text("이메일")
-                    .bold()
+                    .font(Font.body02)
+                    .foregroundStyle(Color.gray03)
                 RoundedRectangle(cornerRadius: 12)
                     .frame(height: 48)
                     .foregroundStyle(Color.gray09)
                     .overlay {
                         HStack {
                             Text(sampleUser.email)
+                                .font(Font.body02)
                                 .foregroundStyle(Color.gray06)
                             Spacer()
                         }
@@ -45,13 +49,15 @@ struct MyInfoView: View {
             }
             VStack(alignment: .leading) {
                 Text("이름")
-                    .bold()
+                    .font(Font.body02)
+                    .foregroundStyle(Color.gray03)
                 RoundedRectangle(cornerRadius: 12)
                     .frame(height: 48)
                     .foregroundStyle(Color.gray09)
                     .overlay {
                         HStack {
                             Text(sampleUser.phoneNumber)
+                                .font(Font.body02)
                                 .foregroundStyle(Color.gray06)
                             Spacer()
                         }
@@ -60,13 +66,15 @@ struct MyInfoView: View {
             }
             VStack(alignment: .leading) {
                 Text("연결된 계정")
-                    .bold()
+                    .font(Font.body02)
+                    .foregroundStyle(Color.gray03)
                 RoundedRectangle(cornerRadius: 12)
                     .frame(height: 48)
                     .foregroundStyle(Color.gray09)
                     .overlay {
                         HStack {
                             Text("카카오톡")
+                                .font(Font.body02)
                                 .foregroundStyle(Color.gray06)
                             Spacer()
                         }

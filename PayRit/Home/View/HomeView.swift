@@ -43,12 +43,12 @@ struct HomeView: View {
                                             페이릿,
                                             기록을 시작합니다!
                                             """)
-                                        .font(.custom("SUIT-SemiBold", size: 20))
+                                        .font(Font.title04)
                                         Button {
                                             
                                         } label: {
                                             Text("확인하기")
-                                                .font(.custom("SUIT-Bold", size: 14))
+                                                .font(Font.body03)
                                                 .foregroundStyle(.white)
                                         }
                                         .frame(width: 74, height: 28)
@@ -103,12 +103,12 @@ struct HomeView: View {
                                             }
                                             .padding(.top, 16)
                                             
-                                            Text("\(certificate.totalMoneyFormatter)원")
-                                                .font(.custom("SUIT-Bold", size: 28))
+                                            Text("\(certificate.totalAmountFormatter)원")
+                                                .font(Font.title01)
                                                 .padding(.top, 8)
                                             
                                             Text(certificate.type == .iBorrowed ? certificate.recipient : certificate.sender)
-                                                .font(Font.body03)
+                                                .font(Font.title06)
                                                 .foregroundStyle(Color.gray02)
                                                 .padding(.top, 8)
                                             
@@ -120,7 +120,8 @@ struct HomeView: View {
                                                 ProgressView(value: 50, total: 100)
                                                     .progressViewStyle(LinearProgressViewStyle(tint: certificate.type == .iLentYou ? Color.payritMint : Color.payritIntensivePink))
                                                 Text("\(certificate.state.rawValue) (50%)")
-                                                    .font(.custom("SUIT-Medium", size: 10))
+                                                    .font(Font.caption02)
+                                                    .foregroundStyle(Color.gray04)
                                             }
                                             .padding(.bottom, 16)
                                         }
@@ -144,7 +145,7 @@ struct HomeView: View {
                             Spacer()
                         }
                         
-                        // MARK: 메뉴
+                        // MARK: - 메뉴
                         VStack {
                             HStack {
                                 Spacer()
@@ -223,8 +224,7 @@ struct HomeView: View {
                     VStack {
                         Spacer().frame(height: 30)
                         Text("임대진님의 기록")
-                            .font(.custom("SUIT-Regular", size: 26))
-                            .bold()
+                            .font(Font.title01)
                             .foregroundStyle(.black)
                         Spacer().frame(height: 10)
                     }

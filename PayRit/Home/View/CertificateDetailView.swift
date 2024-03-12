@@ -6,11 +6,15 @@
 //
 
 import SwiftUI
+import UIKit
+import MessageUI
 
 struct CertificateDetailView: View {
-    @State var isModalPresented: Bool = false
+    @State private var isModalPresented: Bool = false
     @State private var isActionSheetPresented: Bool = false
-    @State var certificate: Certificate = Certificate.samepleDocument[0]
+    @State private var isShowingMailView: Bool = false
+    @State private var result: Result<MFMailComposeResult, Error>?
+    @State private var certificate: Certificate = Certificate.samepleDocument[0]
     @Binding var index: Int
     @Binding var homeStore: HomeStore
     var body: some View {
@@ -24,7 +28,7 @@ struct CertificateDetailView: View {
                                 Text("총 ")
                                 Text(certificate.totalAmountFormatter)
                                     .foregroundStyle(Color.payritIntensivePink)
-                                Text("원을 빌려주었어요.")
+                                Text("원을 빌렸어요.")
                             }
                         }
                         .font(Font.title03)
@@ -35,7 +39,7 @@ struct CertificateDetailView: View {
                                 Text("총 ")
                                 Text(certificate.totalAmountFormatter)
                                     .foregroundStyle(Color.payritMint)
-                                Text("원을 빌렸어요.")
+                                Text("원을 빌려주었어요.")
                             }
                         }
                         .font(Font.title03)
@@ -47,7 +51,7 @@ struct CertificateDetailView: View {
                     VStack(alignment: .leading, spacing: 0) {
                         HStack {
                             Text(certificate.tradeDay + " ~ " + certificate.endDay)
-                                .font(.custom("SUIT-Medium", size: 12))
+                                .font(Font.caption02)
                                 .foregroundStyle(Color.gray02)
                             Spacer()
                         }
@@ -59,7 +63,7 @@ struct CertificateDetailView: View {
                             .padding(.top, 14)
                         
                         Text(String(certificate.totalAmountFormatter) + "원")
-                            .font(.custom("SUIT-Bold", size: 28))
+                            .font(Font.title01)
                             .padding(.top, 2)
                         
                         Spacer()
@@ -76,52 +80,72 @@ struct CertificateDetailView: View {
                                     .foregroundStyle(Color.gray02)
                             }
                             ProgressView(value: 50, total: 100)
-                                .progressViewStyle(LinearProgressViewStyle(tint: Color.payritMint))
+                                .progressViewStyle(LinearProgressViewStyle(tint: certificate.type == .iBorrowed ? Color.payritIntensivePink : Color.payritMint))
                             Text(certificate.state.rawValue + "(50%)")
-                                .font(.custom("SUIT-Medium", size: 10))
+                                .font(Font.caption02)
+                                .foregroundStyle(Color.gray04)
                         }
                         .padding(.bottom, 16)
                     }
                     .padding(.horizontal, 16)
                     .frame(height: 170)
                     .frame(maxWidth: .infinity)
-                    .background(Color.payritLightMint)
+                    .background(certificate.type == .iBorrowed ? Color.payritIntensiveLightPink : Color.payritLightMint)
                     .clipShape(.rect(cornerRadius: 12))
                     Spacer().frame(minWidth: 0)
                     // 내보내기 버튼
-                    HStack(spacing: 20) {
+                    HStack {
                         Button {
                             isActionSheetPresented.toggle()
                         } label: {
                             HStack {
                                 Image(systemName: "doc")
-                                Text("문서로 보내기")
+                                Text("PDF·메일")
                             }
                             .frame(height: 24)
-                            .font(Font.body03)
                             .foregroundStyle(.white)
                             .padding(.vertical, 6)
-                            .padding(.horizontal, 14)
-                            .background(Color.gray05)
-                            .clipShape(.rect(cornerRadius: 20))
+                            .padding(.horizontal, 10)
+                            .background(
+                                Capsule()
+                                    .fill(Color.gray05)
+                            )
                         }
                         Button {
                             isActionSheetPresented.toggle()
                         } label: {
                             HStack {
-                                Image(systemName: "tag")
-                                Text("받은 금액 입력하기")
+                                Image(systemName: "paperplane")
+                                Text("알림 전송")
                             }
                             .frame(height: 24)
-                            .font(Font.body03)
                             .foregroundStyle(.white)
                             .padding(.vertical, 6)
-                            .padding(.horizontal, 14)
-                            .background(Color.payritMint)
-                            .clipShape(.rect(cornerRadius: 20))
+                            .padding(.horizontal, 10)
+                            .background(
+                                Capsule()
+                                    .fill(Color.payritIntensivePink)
+                            )
+                        }
+                        if certificate.type == .iLentYou {
+                            Button {
+                            } label: {
+                                HStack {
+                                    Image(systemName: "tag")
+                                    Text("금액 입력하기")
+                                }
+                                .frame(height: 24)
+                                .foregroundStyle(.white)
+                                .padding(.vertical, 6)
+                                .padding(.horizontal, 10)
+                                .background(
+                                    Capsule()
+                                        .fill(Color.payritMint)
+                                )
+                            }
                         }
                     }
-                    .font(Font.body02)
+                    .font(Font.body03)
                     .padding(.bottom, 16)
                 }
                 .frame(height: 240)
@@ -135,7 +159,7 @@ struct CertificateDetailView: View {
                         isModalPresented.toggle()
                     } label: {
                         Rectangle()
-                            .foregroundStyle(Color.payritLightMint)
+                            .foregroundStyle(certificate.type == .iBorrowed ? Color.payritIntensiveLightPink : Color.payritLightMint)
                             .frame(width: 130, height: 155)
                             .shadow(color: .gray.opacity(0.2), radius: 5)
                             .overlay {
@@ -207,9 +231,8 @@ struct CertificateDetailView: View {
                 VStack(alignment: .leading, spacing: 24) {
                     VStack(alignment: .leading) {
                         Text("빌려준 사람")
+                            .font(Font.body03)
                             .foregroundStyle(Color.gray04)
-                            .font(.system(size: 16))
-                            .fontWeight(.semibold)
                         HStack(alignment: .center, spacing: 20) {
                             VStack(alignment: .leading, spacing: 8) {
                                 HStack {
@@ -222,7 +245,7 @@ struct CertificateDetailView: View {
                                     Text("주소")
                                 }
                             }
-                            .bold()
+                            .font(Font.body04)
                             
                             VStack(alignment: .leading, spacing: 8) {
                                 HStack {
@@ -235,6 +258,7 @@ struct CertificateDetailView: View {
                                     Text("\(certificate.senderAdress)")
                                 }
                             }
+                            .font(Font.body01)
                             Spacer()
                         }
                         .padding(20)
@@ -246,9 +270,8 @@ struct CertificateDetailView: View {
                     // 빌린 사람 정보
                     VStack(alignment: .leading) {
                         Text("빌린 사람")
+                            .font(Font.body03)
                             .foregroundStyle(Color.gray04)
-                            .font(.system(size: 16))
-                            .fontWeight(.semibold)
                         HStack(alignment: .center, spacing: 20) {
                             VStack(alignment: .leading, spacing: 8) {
                                 HStack {
@@ -261,7 +284,7 @@ struct CertificateDetailView: View {
                                     Text("주소")
                                 }
                             }
-                            .bold()
+                            .font(Font.body04)
                             
                             VStack(alignment: .leading, spacing: 8) {
                                 HStack {
@@ -274,6 +297,7 @@ struct CertificateDetailView: View {
                                     Text("\(certificate.recipientAdress)")
                                 }
                             }
+                            .font(Font.body01)
                             Spacer()
                         }
                         .padding(20)
@@ -297,8 +321,27 @@ struct CertificateDetailView: View {
             Button("PDF 다운") {
             }
             Button("이메일 전송") {
+                if MFMailComposeViewController.canSendMail() {
+                        self.isShowingMailView.toggle()
+                } else {
+                    print("메일을 보낼수 없는 기기입니다.")
+                }
+                if result != nil {
+                    print("Result: \(String(describing: result))")
+                }
             }
             Button("취소", role: .cancel) {
+            }
+        }
+        .sheet(isPresented: $isShowingMailView) {
+            MailView(result: self.$result) { composer in
+                composer.setSubject("페이릿 차용증 \(homeStore.todayString())")
+                composer.setToRecipients([""])
+                composer.setMessageBody("", isHTML: false)
+                
+                if let imageData = UIImage(named: "homeBoxImage")?.jpegData(compressionQuality: 1.0) {
+                    composer.addAttachmentData(imageData, mimeType: "image/jpeg", fileName: "\(Date()).jpg")
+                }
             }
         }
         .onAppear {

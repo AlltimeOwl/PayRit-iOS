@@ -31,6 +31,10 @@
 		BC595E252B8DC9AC00CA555E /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BC595E242B8DC9AC00CA555E /* Launch Screen.storyboard */; };
 		BC595E282B8DDFDD00CA555E /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC595E272B8DDFDD00CA555E /* HomeView.swift */; };
 		BC5C57092B975A2400A55CC7 /* KakaoAdressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC5C57082B975A2400A55CC7 /* KakaoAdressView.swift */; };
+		BC62BFEE2B9F4695000A1BA5 /* CertificateImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC62BFED2B9F4695000A1BA5 /* CertificateImage.swift */; };
+		BC62BFF02BA02011000A1BA5 /* PaymentHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC62BFEF2BA02011000A1BA5 /* PaymentHistoryView.swift */; };
+		BC62BFF22BA02481000A1BA5 /* Payment.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC62BFF12BA02481000A1BA5 /* Payment.swift */; };
+		BC62BFF42BA02B61000A1BA5 /* AlarmSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC62BFF32BA02B61000A1BA5 /* AlarmSettingView.swift */; };
 		BC6829192B9CA836009EF3F5 /* SUIT-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = BC6829182B9CA836009EF3F5 /* SUIT-Regular.otf */; };
 		BC68291B2B9CACC6009EF3F5 /* SUIT-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = BC68291A2B9CACC6009EF3F5 /* SUIT-Medium.otf */; };
 		BC68291F2B9CEE87009EF3F5 /* Memo.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC68291E2B9CEE87009EF3F5 /* Memo.swift */; };
@@ -40,6 +44,7 @@
 		BC6F65332B9CA37A00FB9FA7 /* SUIT-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = BC6F65322B9CA37A00FB9FA7 /* SUIT-SemiBold.otf */; };
 		BC6F65352B9CA3C100FB9FA7 /* SUIT-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = BC6F65342B9CA3C100FB9FA7 /* SUIT-Bold.otf */; };
 		BC947A5D2B984AEF00295C7B /* MyInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC947A5C2B984AEF00295C7B /* MyInfoView.swift */; };
+		BC9563502B9F3B130014010C /* MFMailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC95634F2B9F3B130014010C /* MFMailView.swift */; };
 		BC9E55CC2B936F9700B100C6 /* HomeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC9E55CB2B936F9700B100C6 /* HomeStore.swift */; };
 		BC9E55CE2B956B7300B100C6 /* CertificateDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC9E55CD2B956B7300B100C6 /* CertificateDetailView.swift */; };
 		BCC9EC042B8F09A6001E18F0 /* Certificate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCC9EC032B8F09A6001E18F0 /* Certificate.swift */; };
@@ -47,7 +52,7 @@
 		BCD942532B8F0E0600BF61CD /* LaunchScreenTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD942522B8F0E0600BF61CD /* LaunchScreenTest.swift */; };
 		BCD942572B8F1D5400BF61CD /* MyPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD942562B8F1D5400BF61CD /* MyPageView.swift */; };
 		BCD9425B2B8F639A00BF61CD /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD9425A2B8F639A00BF61CD /* CustomTextField.swift */; };
-		BCDC9C562B958FA2002D8A4A /* LoanDetailImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCDC9C552B958FA2002D8A4A /* LoanDetailImageView.swift */; };
+		BCDC9C562B958FA2002D8A4A /* CertificateDetailImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCDC9C552B958FA2002D8A4A /* CertificateDetailImageView.swift */; };
 		BCE280DA2B8F75120085D45E /* View +.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCE280D92B8F75120085D45E /* View +.swift */; };
 		BCE280DC2B8F75450085D45E /* ViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCE280DB2B8F75440085D45E /* ViewModifier.swift */; };
 		BCE280E02B9021EE0085D45E /* WritingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCE280DF2B9021EE0085D45E /* WritingView.swift */; };
@@ -77,6 +82,10 @@
 		BC595E242B8DC9AC00CA555E /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		BC595E272B8DDFDD00CA555E /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		BC5C57082B975A2400A55CC7 /* KakaoAdressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KakaoAdressView.swift; sourceTree = "<group>"; };
+		BC62BFED2B9F4695000A1BA5 /* CertificateImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateImage.swift; sourceTree = "<group>"; };
+		BC62BFEF2BA02011000A1BA5 /* PaymentHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentHistoryView.swift; sourceTree = "<group>"; };
+		BC62BFF12BA02481000A1BA5 /* Payment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Payment.swift; sourceTree = "<group>"; };
+		BC62BFF32BA02B61000A1BA5 /* AlarmSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmSettingView.swift; sourceTree = "<group>"; };
 		BC6829182B9CA836009EF3F5 /* SUIT-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SUIT-Regular.otf"; sourceTree = "<group>"; };
 		BC68291A2B9CACC6009EF3F5 /* SUIT-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SUIT-Medium.otf"; sourceTree = "<group>"; };
 		BC68291E2B9CEE87009EF3F5 /* Memo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Memo.swift; sourceTree = "<group>"; };
@@ -86,6 +95,7 @@
 		BC6F65322B9CA37A00FB9FA7 /* SUIT-SemiBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SUIT-SemiBold.otf"; sourceTree = "<group>"; };
 		BC6F65342B9CA3C100FB9FA7 /* SUIT-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SUIT-Bold.otf"; sourceTree = "<group>"; };
 		BC947A5C2B984AEF00295C7B /* MyInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyInfoView.swift; sourceTree = "<group>"; };
+		BC95634F2B9F3B130014010C /* MFMailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MFMailView.swift; sourceTree = "<group>"; };
 		BC9E55CB2B936F9700B100C6 /* HomeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeStore.swift; sourceTree = "<group>"; };
 		BC9E55CD2B956B7300B100C6 /* CertificateDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateDetailView.swift; sourceTree = "<group>"; };
 		BCC9EC032B8F09A6001E18F0 /* Certificate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Certificate.swift; sourceTree = "<group>"; };
@@ -93,7 +103,7 @@
 		BCD942522B8F0E0600BF61CD /* LaunchScreenTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenTest.swift; sourceTree = "<group>"; };
 		BCD942562B8F1D5400BF61CD /* MyPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageView.swift; sourceTree = "<group>"; };
 		BCD9425A2B8F639A00BF61CD /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
-		BCDC9C552B958FA2002D8A4A /* LoanDetailImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanDetailImageView.swift; sourceTree = "<group>"; };
+		BCDC9C552B958FA2002D8A4A /* CertificateDetailImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateDetailImageView.swift; sourceTree = "<group>"; };
 		BCE280D92B8F75120085D45E /* View +.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View +.swift"; sourceTree = "<group>"; };
 		BCE280DB2B8F75440085D45E /* ViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModifier.swift; sourceTree = "<group>"; };
 		BCE280DF2B9021EE0085D45E /* WritingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WritingView.swift; sourceTree = "<group>"; };
@@ -149,6 +159,7 @@
 				BCD9425C2B8F6FBA00BF61CD /* App */,
 				BC388DB32B904B6F005D1279 /* Content */,
 				BC595E1D2B8DBDB300CA555E /* LaunchScreen */,
+				BC595DED2B8D8E6200CA555E /* Service */,
 				BC595DE72B8D8DCF00CA555E /* Common */,
 				BC595DE92B8D8DE200CA555E /* Extensions */,
 				BC595DEB2B8D8E0800CA555E /* Model */,
@@ -158,7 +169,6 @@
 				BC5C572A2B977B6800A55CC7 /* KakaoAddress */,
 				BC595DFE2B8DA1E200CA555E /* SignIn */,
 				BCD942542B8F1D3100BF61CD /* MyPage */,
-				BC595DED2B8D8E6200CA555E /* Service */,
 				BC595DEC2B8D8E4600CA555E /* UserDefaults */,
 				BC595DDB2B8D8AC400CA555E /* Preview Content */,
 			);
@@ -221,6 +231,7 @@
 				BCC9EC032B8F09A6001E18F0 /* Certificate.swift */,
 				BC68291E2B9CEE87009EF3F5 /* Memo.swift */,
 				BC6F652A2B9B355200FB9FA7 /* User.swift */,
+				BC62BFF12BA02481000A1BA5 /* Payment.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -235,6 +246,8 @@
 		BC595DED2B8D8E6200CA555E /* Service */ = {
 			isa = PBXGroup;
 			children = (
+				BC95634F2B9F3B130014010C /* MFMailView.swift */,
+				BC62BFED2B9F4695000A1BA5 /* CertificateImage.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -297,7 +310,7 @@
 				BC9E55CD2B956B7300B100C6 /* CertificateDetailView.swift */,
 				BC2D51CB2B9ECD870041FD77 /* CertificateMemoView.swift */,
 				BC2D51CD2B9F35260041FD77 /* CertificateDeductibleView.swift */,
-				BCDC9C552B958FA2002D8A4A /* LoanDetailImageView.swift */,
+				BCDC9C552B958FA2002D8A4A /* CertificateDetailImageView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -340,6 +353,8 @@
 				BCD942562B8F1D5400BF61CD /* MyPageView.swift */,
 				BC947A5C2B984AEF00295C7B /* MyInfoView.swift */,
 				BC6F652C2B9B394800FB9FA7 /* MembershipWithdrawalView.swift */,
+				BC62BFEF2BA02011000A1BA5 /* PaymentHistoryView.swift */,
+				BC62BFF32BA02B61000A1BA5 /* AlarmSettingView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -513,8 +528,11 @@
 				BC9E55CC2B936F9700B100C6 /* HomeStore.swift in Sources */,
 				BCE280E42B903BE50085D45E /* SelectCertificateTypeView.swift in Sources */,
 				BCD9425B2B8F639A00BF61CD /* CustomTextField.swift in Sources */,
+				BC62BFEE2B9F4695000A1BA5 /* CertificateImage.swift in Sources */,
 				BC1CF8D92B96C8D800A9BF12 /* CustomAlert.swift in Sources */,
+				BC62BFF42BA02B61000A1BA5 /* AlarmSettingView.swift in Sources */,
 				BC947A5D2B984AEF00295C7B /* MyInfoView.swift in Sources */,
+				BC9563502B9F3B130014010C /* MFMailView.swift in Sources */,
 				BC595E042B8DA83600CA555E /* UIScreen +.swift in Sources */,
 				BC595DD82B8D8AC300CA555E /* SignInView.swift in Sources */,
 				BCE280DA2B8F75120085D45E /* View +.swift in Sources */,
@@ -526,8 +544,10 @@
 				BCD942572B8F1D5400BF61CD /* MyPageView.swift in Sources */,
 				BCC9EC042B8F09A6001E18F0 /* Certificate.swift in Sources */,
 				BCE280E02B9021EE0085D45E /* WritingView.swift in Sources */,
+				BC62BFF02BA02011000A1BA5 /* PaymentHistoryView.swift in Sources */,
 				BC1CF8DD2B96FCA200A9BF12 /* WritingCheckView.swift in Sources */,
 				BCE280E22B903B660085D45E /* WritingCertificateInfoView.swift in Sources */,
+				BC62BFF22BA02481000A1BA5 /* Payment.swift in Sources */,
 				BC595DF02B8D8EAE00CA555E /* TabBarView.swift in Sources */,
 				BC68291F2B9CEE87009EF3F5 /* Memo.swift in Sources */,
 				BC2D51CC2B9ECD870041FD77 /* CertificateMemoView.swift in Sources */,
@@ -538,7 +558,7 @@
 				BC595E282B8DDFDD00CA555E /* HomeView.swift in Sources */,
 				BC388DB52B904BAB005D1279 /* ContentView.swift in Sources */,
 				BC595E0A2B8DAFD600CA555E /* Font +.swift in Sources */,
-				BCDC9C562B958FA2002D8A4A /* LoanDetailImageView.swift in Sources */,
+				BCDC9C562B958FA2002D8A4A /* CertificateDetailImageView.swift in Sources */,
 				BC6F652F2B9B3D9000FB9FA7 /* MyPageStore.swift in Sources */,
 				BC5C57092B975A2400A55CC7 /* KakaoAdressView.swift in Sources */,
 				BCE280DC2B8F75450085D45E /* ViewModifier.swift in Sources */,

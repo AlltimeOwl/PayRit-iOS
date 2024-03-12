@@ -45,7 +45,7 @@ struct LoanDetailImageViewModifier: ViewModifier {
                             isPresented = false // 외부 영역 터치시 내려감
                         }
                     
-                    LoanDetailImageView(isPresented: $isPresented, isButtonShowing: $isButtonShowing)
+                    CertificateDetailImageView(isPresented: $isPresented, isButtonShowing: $isButtonShowing)
                     .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
             }
@@ -111,15 +111,16 @@ struct ToastMessageModifier: ViewModifier {
                 VStack {
                     Spacer()
                     ZStack {
-                        RoundedRectangle(cornerRadius: 8)
-//                            .stroke(Color.gray07, lineWidth: 1)
-                            .fill(Color(hex: "E3FFF6"))
-                            .frame(width: 280, height: 50)
-                            .transition(.scale)
-                        Text(message)
-                            .font(Font.caption01)
-                            .foregroundStyle(Color(hex: "818181"))
-                            .multilineTextAlignment(.center)
+//                        RoundedRectangle(cornerRadius: 8)
+////                            .stroke(Color.gray07, lineWidth: 1)
+//                            .fill(Color(hex: "E3FFF6"))
+//                            .frame(width: 280, height: 50)
+//                            .transition(.scale)
+//                        Text(message)
+//                            .font(Font.caption01)
+//                            .foregroundStyle(Color(hex: "818181"))
+//                            .multilineTextAlignment(.center)
+                        CertificateImageView()
                     }
                 }
                 .padding(.bottom, 80)

@@ -7,16 +7,13 @@
 
 import SwiftUI
 
-struct LoanDetailImageView: View {
+struct CertificateDetailImageView: View {
     @Binding var isPresented: Bool
     @Binding var isButtonShowing: Bool
     var body: some View {
         VStack {
             VStack {
-                Text("차용증 이미지")
-                    .font(.title)
-                    .foregroundColor(.black)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                CertificateImageView()
                     .background(Color.white)
             }
             .clipShape(.rect(cornerRadius: 12))
@@ -42,6 +39,6 @@ struct LoanDetailImageView: View {
 }
 
 #Preview {
-    LoanDetailImageView(isPresented: .constant(true), isButtonShowing: .constant(true))
+    CertificateDetailImageView(isPresented: .constant(true), isButtonShowing: .constant(true))
         .background(Color.black)
 }

@@ -16,17 +16,17 @@ struct MyPageView: View {
     @Binding var tabBarVisivility: Visibility
     @Binding var signInState: Bool
     var body: some View {
-        VStack(alignment: .leading) {
-            HStack(spacing: 10) {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(spacing: 16) {
                 Circle()
                     .frame(height: 77)
                     .foregroundStyle(.blue)
                 VStack(alignment: .leading, spacing: 10) {
                     Text(name)
-                        .font(.system(size: 24))
-                        .bold()
+                        .font(Font.title01)
                     Text(email)
                         .font(.system(size: 16))
+                        .foregroundStyle(Color.gray05)
                 }
                 .frame(height: 77)
                 Spacer()
@@ -42,13 +42,17 @@ struct MyPageView: View {
                 }
                 .frame(height: listItemHeight)
                 NavigationLink {
-                    
+                    PaymentHistoryView(tabBarVisivility: $tabBarVisivility)
+                        .customBackbutton()
+                        .toolbar(tabBarVisivility, for: .tabBar)
                 } label: {
                     Text("결제 내역")
                 }
                 .frame(height: listItemHeight)
                 NavigationLink {
-                    
+                    AlarmSettingView(tabBarVisivility: $tabBarVisivility)
+                        .customBackbutton()
+                        .toolbar(tabBarVisivility, for: .tabBar)
                 } label: {
                     Text("알림 설정")
                 }
@@ -79,6 +83,7 @@ struct MyPageView: View {
                 .frame(height: listItemHeight)
             }
             .listStyle(.plain)
+            .font(Font.body02)
             .padding(.top, 30)
             .disabled(notFoundUser)
             Spacer()

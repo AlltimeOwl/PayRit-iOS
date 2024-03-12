@@ -37,6 +37,9 @@ public extension Color {
     // MARK: - Secondary
     /// 핑크 FF7A90
     static let payritIntensivePink = Color(hex: "FF7A90")
+    /// 라이트 핑크 FFD7DD
+    static let payritIntensiveLightPink = Color(hex: "FFD7DD")
+    
     /// 하늘색  FFCC55
     static let payritWithYellow = Color(hex: "FFCC55")
     /// System Error  레드 컬러  FE1111

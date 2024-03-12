@@ -23,10 +23,11 @@ struct MembershipWithdrawalView: View {
                     Text("가 있을까요?")
                 }
             }
-            .font(.custom("Pretendard-Bold", size: 27))
-            .font(.system(size: 28))
+            .font(Font.title01)
             
             Text("떠나시는 이유를 알려주세요.")
+                .font(Font.title06)
+                .foregroundStyle(Color.gray05)
             
             Group {
                 Button {
@@ -64,6 +65,7 @@ struct MembershipWithdrawalView: View {
                                     } label: {
                                         HStack {
                                             Text("선택해주세요")
+                                                .foregroundStyle(Color.gray06)
                                             Spacer()
                                             Image(systemName: "chevron.up")
                                         }
@@ -98,25 +100,25 @@ struct MembershipWithdrawalView: View {
                     }
                 }
                 .font(.system(size: 16))
-//                .foregroundStyle(Color.semiGrayColor2)
+                .foregroundStyle(Color.gray05)
             }
             
             VStack(alignment: .leading, spacing: 6) {
                 HStack(spacing: 4) {
                     Text("잠깐!")
-                        .foregroundStyle(Color(hex: "E75555"))
+                        .foregroundStyle(Color.payritIntensivePink)
                     Text("이렇게 해보시면 어때요?")
-                        .foregroundStyle(Color(hex: "666666"))
+                        .foregroundStyle(Color.gray05)
                 }
-                .font(.custom("Pretendard-Bold", size: 16))
+                .font(Font.title06)
                 Text("""
                 페이릿에서는 금전 거래 약속 관련 법률 정책에 대한 정보를
                 쉽게 알 수 있어요! 더 이용해보시겠어요?
                 """)
                 .kerning(0.5)
                 .lineSpacing(2)
-                .font(.custom("Pretendard-Regular", size: 14))
-                .foregroundStyle(Color(hex: "999999"))
+                .font(Font.body02)
+                .foregroundStyle(Color.gray06)
             }
             
             Spacer()
@@ -124,14 +126,14 @@ struct MembershipWithdrawalView: View {
                 isShowingWithdrawalButton.toggle()
             } label: {
                 Text("탈퇴하기")
-                    .font(.system(size: 18))
-                    .fontWeight(.semibold)
-                    .foregroundStyle(seletedReason.isEmpty ? .gray : .white)
+                    .font(.system(size: 20))
+                    .bold()
+                    .foregroundStyle(.white)
             }
             .disabled(seletedReason.isEmpty)
             .frame(maxWidth: .infinity)
             .frame(height: 48)
-            .background(seletedReason.isEmpty ? Color(hex: "DBDBDB") : Color.payritMint)
+            .background(seletedReason.isEmpty ? Color.gray07 : Color.payritMint)
             .clipShape(.rect(cornerRadius: 12))
         }
         .padding(16)
