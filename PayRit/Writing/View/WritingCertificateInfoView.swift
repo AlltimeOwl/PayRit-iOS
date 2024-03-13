@@ -264,6 +264,9 @@ struct WritingCertificateInfoView: View {
                 .datePickerStyle(.graphical)
                 .presentationDetents([.height(400)])
         })
+        .onChange(of: redemptionDate) {
+            newCertificate.redemptionDate = redemptionDate.dateToString()
+        }
         .PrimaryAlert(isPresented: $isShowingStopAlert,
                       title: "작성 중단",
                       content: """

@@ -9,13 +9,100 @@ import SwiftUI
 import UIKit
 
 struct PartnerInfoWritingView: View {
-    @Binding var path: NavigationPath
+    @State private var name: String = ""
+    @State private var phoneNumber: String = ""
+    @State private var zipCode = ""
+    @State private var address = ""
+    @State private var detailAddress = ""
+    @State private var isPresentingZipCodeView = false
     @State private var isShowingStopAlert = false
+    @State private var keyBoardFocused: Bool = false
+    @Binding var newCertificate: Certificate
+    @Binding var path: NavigationPath
+    var isFormValid: Bool {
+        return true
+    }
     var body: some View {
         VStack {
-            Spacer()
+            ScrollView {
+                VStack(alignment: .leading, spacing: 40) {
+                    VStack {
+                        Text("""
+                         상대방의
+                         정보를 입력해 주세요.
+                        """)
+                        .font(Font.title03)
+                        .lineSpacing(4)
+                    }
+                    
+                    VStack(alignment: .leading) {
+                        Text("이름")
+                        CustomTextField(foregroundStyle: .black, placeholder: "이름을 적어주세요", keyboardType: .default, text: $name)
+                            .onChange(of: name) {
+                                switch newCertificate.type {
+                                case .iBorrowed
+                                    : newCertificate.sender = name
+                                case .iLentYou
+                                    : newCertificate.recipient = name
+                                }
+                            }
+                    }
+                    VStack(alignment: .leading) {
+                        Text("연락처")
+                        CustomTextField(foregroundStyle: .black, placeholder: "숫자만 입력해주세요", keyboardType: .numberPad, text: $phoneNumber)
+                            .onChange(of: phoneNumber) {
+                                switch newCertificate.type {
+                                case .iBorrowed
+                                    : newCertificate.senderPhoneNumber = phoneNumber
+                                case .iLentYou
+                                    : newCertificate.recipientPhoneNumber = phoneNumber
+                                }
+                            }
+                        
+                    }
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("주소")
+                        HStack(alignment: .bottom) {
+                            CustomTextField(foregroundStyle: .black, placeholder: "우편번호", keyboardType: .numberPad, text: $zipCode)
+                                .disabled(true)
+                                .onChange(of: zipCode) {
+                                    switch newCertificate.type {
+                                    case .iBorrowed
+                                        : newCertificate.senderAdress = address + "(\(zipCode))"
+                                    case .iLentYou
+                                        : newCertificate.recipientAdress = address + "(\(zipCode))"
+                                    }
+                                }
+                            Button {
+                                isPresentingZipCodeView.toggle()
+                            } label: {
+                                Text("우편번호 검색")
+                                    .font(Font.body04)
+                                    .foregroundStyle(.white)
+                                    .padding(.horizontal, 24)
+                                    .frame(height: 45)
+                                    .background(Color.gray05)
+                                    .clipShape(.rect(cornerRadius: 6))
+                            }
+                        }
+                        CustomTextField(foregroundStyle: .black, placeholder: "", keyboardType: .numberPad, text: $address)
+                            .disabled(true)
+                        CustomTextField(foregroundStyle: .black, placeholder: "상세주소를 적어주세요", keyboardType: .default, text: $detailAddress)
+                            .onChange(of: detailAddress) {
+                                switch newCertificate.type {
+                                case .iBorrowed
+                                    : newCertificate.senderAdress = address + " \(detailAddress) " + "(\(zipCode))"
+                                case .iLentYou
+                                    : newCertificate.recipientAdress = address + " \(detailAddress) " + "(\(zipCode))"
+                                }
+                            }
+                    }
+                }
+                .padding(.top, 30)
+                .padding(.horizontal, 16)
+            }
             NavigationLink {
-                WritingCheckView(path: $path)
+                WritingCheckView(path: $path, newCertificate: $newCertificate)
                     .customBackbutton()
             } label: {
                 Text("다음")
@@ -23,16 +110,21 @@ struct PartnerInfoWritingView: View {
                     .foregroundStyle(.white)
                     .frame(height: 50)
                     .frame(maxWidth: .infinity)
-                    .background(Color.payritMint)
-                    .clipShape(.rect(cornerRadius: 12))
+                    .background(!isFormValid ? Color.gray07 : Color.payritMint)
+                    .clipShape(.rect(cornerRadius: keyBoardFocused ? 0 : 12))
             }
+            .padding(.bottom, keyBoardFocused ? 0 : 16)
+            .padding(.horizontal, keyBoardFocused ? 0 : 16)
         }
-        .padding(.horizontal, 16)
-        .padding(.top, 30)
-        .padding(.bottom, 16)
-        .navigationTitle("상대방 정보 작성하기")
+        .navigationTitle("페이릿 작성하기")
         .navigationBarTitleDisplayMode(.inline)
         .onTapGesture { self.endTextEditing() }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillChangeFrameNotification)) { _ in
+            keyBoardFocused = true
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
+            keyBoardFocused = false
+        }
         .toolbar {
             ToolbarItem {
                 Button {
@@ -55,11 +147,18 @@ struct PartnerInfoWritingView: View {
         } cancleAction: {
             path = .init()
         }
+        .sheet(isPresented: $isPresentingZipCodeView) {
+            KakaoAdressView(address: $address, zonecode: $zipCode, isPresented: $isPresentingZipCodeView)
+                .edgesIgnoringSafeArea(.all)
+        }
+        .onAppear {
+            print(newCertificate)
+        }
     }
 }
 
 #Preview {
     NavigationStack {
-        PartnerInfoWritingView(path: .constant(NavigationPath()))
+        PartnerInfoWritingView(newCertificate: .constant(Certificate.EmptyCertificate), path: .constant(NavigationPath()))
     }
 }
