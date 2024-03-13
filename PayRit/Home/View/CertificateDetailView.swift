@@ -14,19 +14,18 @@ struct CertificateDetailView: View {
     @State private var isActionSheetPresented: Bool = false
     @State private var isShowingMailView: Bool = false
     @State private var result: Result<MFMailComposeResult, Error>?
-    @State private var certificate: Certificate = Certificate.samepleDocument[0]
-    @Binding var index: Int
     @Binding var homeStore: HomeStore
+    let index: Int
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
                 HStack {
-                    if certificate.type == .iBorrowed {
+                    if homeStore.certificates[index].type == .iBorrowed {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("\(certificate.recipient)님께")
+                            Text("\(homeStore.certificates[index].recipient)님께")
                             HStack(spacing: 0) {
                                 Text("총 ")
-                                Text(certificate.totalAmountFormatter)
+                                Text(homeStore.certificates[index].totalAmountFormatter)
                                     .foregroundStyle(Color.payritIntensivePink)
                                 Text("원을 빌렸어요.")
                             }
@@ -34,10 +33,10 @@ struct CertificateDetailView: View {
                         .font(Font.title03)
                     } else {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("\(certificate.sender)님께")
+                            Text("\(homeStore.certificates[index].sender)님께")
                             HStack(spacing: 0) {
                                 Text("총 ")
-                                Text(certificate.totalAmountFormatter)
+                                Text(homeStore.certificates[index].totalAmountFormatter)
                                     .foregroundStyle(Color.payritMint)
                                 Text("원을 빌려주었어요.")
                             }
@@ -47,10 +46,10 @@ struct CertificateDetailView: View {
                     Spacer()
                 }
                 
-                VStack {
+                VStack(spacing: 0) {
                     VStack(alignment: .leading, spacing: 0) {
                         HStack {
-                            Text(certificate.tradeDay + " ~ " + certificate.endDay)
+                            Text("원금상환일 \(homeStore.certificates[index].redemptionDate)")
                                 .font(Font.caption02)
                                 .foregroundStyle(Color.gray02)
                             Spacer()
@@ -62,7 +61,7 @@ struct CertificateDetailView: View {
                             .foregroundStyle(Color.gray04)
                             .padding(.top, 14)
                         
-                        Text(String(certificate.totalAmountFormatter) + "원")
+                        Text(String(homeStore.certificates[index].totalAmountFormatter) + "원")
                             .font(Font.title01)
                             .padding(.top, 2)
                         
@@ -70,18 +69,18 @@ struct CertificateDetailView: View {
                         
                         VStack(alignment: .trailing, spacing: 6) {
                             HStack { Spacer() }
-                            if certificate.dDay >= 0 {
-                                Text("D - \(certificate.dDay)")
+                            if homeStore.certificates[index].dDay >= 0 {
+                                Text("D - \(homeStore.certificates[index].dDay)")
                                     .font(Font.body03)
                                     .foregroundStyle(Color.gray02)
                             } else {
-                                Text("D + \(-certificate.dDay)")
+                                Text("D + \(-homeStore.certificates[index].dDay)")
                                     .font(Font.body03)
                                     .foregroundStyle(Color.gray02)
                             }
                             ProgressView(value: 50, total: 100)
-                                .progressViewStyle(LinearProgressViewStyle(tint: certificate.type == .iBorrowed ? Color.payritIntensivePink : Color.payritMint))
-                            Text(certificate.state.rawValue + "(50%)")
+                                .progressViewStyle(LinearProgressViewStyle(tint: homeStore.certificates[index].type == .iBorrowed ? Color.payritIntensivePink : Color.payritMint))
+                            Text(homeStore.certificates[index].state.rawValue + "(50%)")
                                 .font(Font.caption02)
                                 .foregroundStyle(Color.gray04)
                         }
@@ -90,9 +89,28 @@ struct CertificateDetailView: View {
                     .padding(.horizontal, 16)
                     .frame(height: 170)
                     .frame(maxWidth: .infinity)
-                    .background(certificate.type == .iBorrowed ? Color.payritIntensiveLightPink : Color.payritLightMint)
+                    .background(homeStore.certificates[index].type == .iBorrowed ? Color.payritIntensiveLightPink : Color.payritLightMint)
                     .clipShape(.rect(cornerRadius: 12))
-                    Spacer().frame(minWidth: 0)
+                    Spacer().frame(minWidth: 16)
+                    HStack {
+                        Text("받은 날짜")
+                            .frame(width: UIScreen.screenWidth * 0.4)
+                        Text("상환 내역")
+                            .frame(width: UIScreen.screenWidth * 0.4)
+                    }
+                    .font(Font.title06)
+                    
+                    ForEach(homeStore.certificates[index].deductedHistory) { deducted in
+                        HStack {
+                            Text(deducted.date)
+                                .frame(width: UIScreen.screenWidth * 0.4)
+                            Text("\(deducted.money)원")
+                                .frame(width: UIScreen.screenWidth * 0.4)
+                        }
+                        .font(Font.body02)
+                        .padding(.vertical, 6)
+                    }
+                    
                     // 내보내기 버튼
                     HStack {
                         Button {
@@ -127,8 +145,10 @@ struct CertificateDetailView: View {
                                     .fill(Color.payritIntensivePink)
                             )
                         }
-                        if certificate.type == .iLentYou {
-                            Button {
+                        if homeStore.certificates[index].type == .iLentYou {
+                            NavigationLink {
+                                CertificateDeductibleView(homeStore: $homeStore, index: index)
+                                    .customBackbutton()
                             } label: {
                                 HStack {
                                     Image(systemName: "tag")
@@ -146,9 +166,9 @@ struct CertificateDetailView: View {
                         }
                     }
                     .font(Font.body03)
-                    .padding(.bottom, 16)
+                    .padding(.vertical, 16)
                 }
-                .frame(height: 240)
+                .frame(height: 370)
                 .background(Color.white)
                 .clipShape(.rect(cornerRadius: 12))
                 .shadow(color: .gray.opacity(0.2), radius: 5)
@@ -159,14 +179,14 @@ struct CertificateDetailView: View {
                         isModalPresented.toggle()
                     } label: {
                         Rectangle()
-                            .foregroundStyle(certificate.type == .iBorrowed ? Color.payritIntensiveLightPink : Color.payritLightMint)
+                            .foregroundStyle(homeStore.certificates[index].type == .iBorrowed ? Color.payritIntensiveLightPink : Color.payritLightMint)
                             .frame(width: 130, height: 155)
                             .shadow(color: .gray.opacity(0.2), radius: 5)
                             .overlay {
                                 VStack(alignment: .leading) {
                                     Text("""
                                          차용증
-                                         미리보기
+                                         보기
                                          """)
                                     .lineSpacing(4)
                                     .multilineTextAlignment(.leading)
@@ -188,7 +208,7 @@ struct CertificateDetailView: View {
                     }
                     Spacer().frame(width: 14)
                     NavigationLink {
-                        CertificateMemoView(index: $index, homeStore: $homeStore)
+                        CertificateMemoView(homeStore: $homeStore, index: index)
                             .customBackbutton()
                     } label: {
                         VStack(spacing: 0) {
@@ -214,7 +234,7 @@ struct CertificateDetailView: View {
                                 .foregroundStyle(Color.gray08)
                                 .frame(height: 50)
                                 .overlay(
-                                    Text("총 \(certificate.memo.count)개의 메모")
+                                    Text("총 \(homeStore.certificates[index].memo.count)개의 메모")
                                         .font(Font.caption02)
                                         .foregroundStyle(Color.gray02)
                                         .padding(.leading, 16)
@@ -249,13 +269,13 @@ struct CertificateDetailView: View {
                             
                             VStack(alignment: .leading, spacing: 8) {
                                 HStack {
-                                    Text("\(certificate.sender)")
+                                    Text("\(homeStore.certificates[index].sender)")
                                 }
                                 HStack {
-                                    Text("\(certificate.senderPhoneNumber)")
+                                    Text("\(homeStore.certificates[index].senderPhoneNumber)")
                                 }
                                 HStack {
-                                    Text("\(certificate.senderAdress)")
+                                    Text("\(homeStore.certificates[index].senderAdress)")
                                 }
                             }
                             .font(Font.body01)
@@ -288,13 +308,13 @@ struct CertificateDetailView: View {
                             
                             VStack(alignment: .leading, spacing: 8) {
                                 HStack {
-                                    Text("\(certificate.recipient)")
+                                    Text("\(homeStore.certificates[index].recipient)")
                                 }
                                 HStack {
-                                    Text("\(certificate.recipientPhoneNumber)")
+                                    Text("\(homeStore.certificates[index].recipientPhoneNumber)")
                                 }
                                 HStack {
-                                    Text("\(certificate.recipientAdress)")
+                                    Text("\(homeStore.certificates[index].recipientAdress)")
                                 }
                             }
                             .font(Font.body01)
@@ -344,14 +364,11 @@ struct CertificateDetailView: View {
                 }
             }
         }
-        .onAppear {
-            certificate = homeStore.certificates[index]
-        }
     }
 }
 
 #Preview {
     NavigationStack {
-        CertificateDetailView(index: .constant(1), homeStore: .constant(HomeStore()))
+        CertificateDetailView(homeStore: .constant(HomeStore()), index: 0)
     }
 }

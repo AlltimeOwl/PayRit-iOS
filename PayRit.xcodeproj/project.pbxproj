@@ -7,9 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BC1219612BA1D6FC00B575F8 /* Deducted.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1219602BA1D6FC00B575F8 /* Deducted.swift */; };
 		BC1CF8D72B961F5600A9BF12 /* MyInfoWritingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1CF8D62B961F5600A9BF12 /* MyInfoWritingView.swift */; };
 		BC1CF8D92B96C8D800A9BF12 /* CustomAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1CF8D82B96C8D800A9BF12 /* CustomAlert.swift */; };
 		BC1CF8DD2B96FCA200A9BF12 /* WritingCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1CF8DC2B96FCA200A9BF12 /* WritingCheckView.swift */; };
+		BC29AA3B2BA1BEB9002CB968 /* CertificateSerchingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC29AA3A2BA1BEB9002CB968 /* CertificateSerchingView.swift */; };
 		BC2D51CC2B9ECD870041FD77 /* CertificateMemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2D51CB2B9ECD870041FD77 /* CertificateMemoView.swift */; };
 		BC2D51CE2B9F35260041FD77 /* CertificateDeductibleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2D51CD2B9F35260041FD77 /* CertificateDeductibleView.swift */; };
 		BC388DB52B904BAB005D1279 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC388DB42B904BAB005D1279 /* ContentView.swift */; };
@@ -35,6 +37,8 @@
 		BC62BFF02BA02011000A1BA5 /* PaymentHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC62BFEF2BA02011000A1BA5 /* PaymentHistoryView.swift */; };
 		BC62BFF22BA02481000A1BA5 /* Payment.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC62BFF12BA02481000A1BA5 /* Payment.swift */; };
 		BC62BFF42BA02B61000A1BA5 /* AlarmSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC62BFF32BA02B61000A1BA5 /* AlarmSettingView.swift */; };
+		BC62BFF62BA1551F000A1BA5 /* Date +.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC62BFF52BA1551F000A1BA5 /* Date +.swift */; };
+		BC62BFF82BA15695000A1BA5 /* WritingStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC62BFF72BA15695000A1BA5 /* WritingStore.swift */; };
 		BC6829192B9CA836009EF3F5 /* SUIT-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = BC6829182B9CA836009EF3F5 /* SUIT-Regular.otf */; };
 		BC68291B2B9CACC6009EF3F5 /* SUIT-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = BC68291A2B9CACC6009EF3F5 /* SUIT-Medium.otf */; };
 		BC68291F2B9CEE87009EF3F5 /* Memo.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC68291E2B9CEE87009EF3F5 /* Memo.swift */; };
@@ -61,9 +65,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BC1219602BA1D6FC00B575F8 /* Deducted.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deducted.swift; sourceTree = "<group>"; };
 		BC1CF8D62B961F5600A9BF12 /* MyInfoWritingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyInfoWritingView.swift; sourceTree = "<group>"; };
 		BC1CF8D82B96C8D800A9BF12 /* CustomAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlert.swift; sourceTree = "<group>"; };
 		BC1CF8DC2B96FCA200A9BF12 /* WritingCheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WritingCheckView.swift; sourceTree = "<group>"; };
+		BC29AA3A2BA1BEB9002CB968 /* CertificateSerchingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateSerchingView.swift; sourceTree = "<group>"; };
 		BC2D51CB2B9ECD870041FD77 /* CertificateMemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateMemoView.swift; sourceTree = "<group>"; };
 		BC2D51CD2B9F35260041FD77 /* CertificateDeductibleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateDeductibleView.swift; sourceTree = "<group>"; };
 		BC388DB42B904BAB005D1279 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -86,6 +92,8 @@
 		BC62BFEF2BA02011000A1BA5 /* PaymentHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentHistoryView.swift; sourceTree = "<group>"; };
 		BC62BFF12BA02481000A1BA5 /* Payment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Payment.swift; sourceTree = "<group>"; };
 		BC62BFF32BA02B61000A1BA5 /* AlarmSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmSettingView.swift; sourceTree = "<group>"; };
+		BC62BFF52BA1551F000A1BA5 /* Date +.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date +.swift"; sourceTree = "<group>"; };
+		BC62BFF72BA15695000A1BA5 /* WritingStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WritingStore.swift; sourceTree = "<group>"; };
 		BC6829182B9CA836009EF3F5 /* SUIT-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SUIT-Regular.otf"; sourceTree = "<group>"; };
 		BC68291A2B9CACC6009EF3F5 /* SUIT-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SUIT-Medium.otf"; sourceTree = "<group>"; };
 		BC68291E2B9CEE87009EF3F5 /* Memo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Memo.swift; sourceTree = "<group>"; };
@@ -207,6 +215,7 @@
 				BC595E092B8DAFD600CA555E /* Font +.swift */,
 				BC595E182B8DB75600CA555E /* Color +.swift */,
 				BCE280D92B8F75120085D45E /* View +.swift */,
+				BC62BFF52BA1551F000A1BA5 /* Date +.swift */,
 				BCE280DB2B8F75440085D45E /* ViewModifier.swift */,
 			);
 			path = Extensions;
@@ -230,6 +239,7 @@
 			children = (
 				BCC9EC032B8F09A6001E18F0 /* Certificate.swift */,
 				BC68291E2B9CEE87009EF3F5 /* Memo.swift */,
+				BC1219602BA1D6FC00B575F8 /* Deducted.swift */,
 				BC6F652A2B9B355200FB9FA7 /* User.swift */,
 				BC62BFF12BA02481000A1BA5 /* Payment.swift */,
 			);
@@ -307,6 +317,7 @@
 			isa = PBXGroup;
 			children = (
 				BC595E272B8DDFDD00CA555E /* HomeView.swift */,
+				BC29AA3A2BA1BEB9002CB968 /* CertificateSerchingView.swift */,
 				BC9E55CD2B956B7300B100C6 /* CertificateDetailView.swift */,
 				BC2D51CB2B9ECD870041FD77 /* CertificateMemoView.swift */,
 				BC2D51CD2B9F35260041FD77 /* CertificateDeductibleView.swift */,
@@ -318,6 +329,7 @@
 		BC5C57042B974FC700A55CC7 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				BC62BFF72BA15695000A1BA5 /* WritingStore.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -540,10 +552,13 @@
 				BC595E022B8DA21300CA555E /* SignInStore.swift in Sources */,
 				BC2D51CE2B9F35260041FD77 /* CertificateDeductibleView.swift in Sources */,
 				BC9E55CE2B956B7300B100C6 /* CertificateDetailView.swift in Sources */,
+				BC1219612BA1D6FC00B575F8 /* Deducted.swift in Sources */,
+				BC29AA3B2BA1BEB9002CB968 /* CertificateSerchingView.swift in Sources */,
 				BCD942532B8F0E0600BF61CD /* LaunchScreenTest.swift in Sources */,
 				BCD942572B8F1D5400BF61CD /* MyPageView.swift in Sources */,
 				BCC9EC042B8F09A6001E18F0 /* Certificate.swift in Sources */,
 				BCE280E02B9021EE0085D45E /* WritingView.swift in Sources */,
+				BC62BFF62BA1551F000A1BA5 /* Date +.swift in Sources */,
 				BC62BFF02BA02011000A1BA5 /* PaymentHistoryView.swift in Sources */,
 				BC1CF8DD2B96FCA200A9BF12 /* WritingCheckView.swift in Sources */,
 				BCE280E22B903B660085D45E /* WritingCertificateInfoView.swift in Sources */,
@@ -554,6 +569,7 @@
 				BC1CF8D72B961F5600A9BF12 /* MyInfoWritingView.swift in Sources */,
 				BC595DD62B8D8AC300CA555E /* PayRitApp.swift in Sources */,
 				BC6F652B2B9B355200FB9FA7 /* User.swift in Sources */,
+				BC62BFF82BA15695000A1BA5 /* WritingStore.swift in Sources */,
 				BC6F652D2B9B394800FB9FA7 /* MembershipWithdrawalView.swift in Sources */,
 				BC595E282B8DDFDD00CA555E /* HomeView.swift in Sources */,
 				BC388DB52B904BAB005D1279 /* ContentView.swift in Sources */,

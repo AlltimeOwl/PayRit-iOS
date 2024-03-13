@@ -9,16 +9,17 @@ import SwiftUI
 
 struct HomeView: View {
     @State private var menuState = false
-    @State private var isHiddenInfoBox = true
-    @State private var path = NavigationPath()
+    @State private var isHiddenInfoBox = false
+    @State private var navigationLinkToggle = false
+    @State private var index: Int = 0
     @State var homeStore = HomeStore()
     private let menuPadding = 8.0
     private let horizontalPadding = 16.0
     
     var body: some View {
-        NavigationStack(path: $path) {
+        NavigationStack {
             VStack {
-                if isHiddenInfoBox {
+                if !isHiddenInfoBox {
                     RoundedRectangle(cornerRadius: 12)
                         .foregroundStyle(Color(hex: "E2FFF1"))
                         .frame(height: 190)
@@ -90,12 +91,13 @@ struct HomeView: View {
                                 ForEach(homeStore.certificates.indices, id: \.self) { index in
                                     let certificate = homeStore.certificates[index]
                                     Button {
-                                        path.append(index)
+                                        self.index = index
+                                        navigationLinkToggle.toggle()
                                     } label: {
                                         VStack(alignment: .leading, spacing: 0) {
                                             HStack {
-                                                Text(certificate.tradeDay + " ~ " + certificate.endDay)
-                                                    .font(.custom("SUIT-Medium", size: 12))
+                                                Text("원금상환일 \(certificate.redemptionDate)")
+                                                    .font(Font.caption02)
                                                     .foregroundStyle(Color.gray02)
                                                 Spacer()
                                                 Text(certificate.type.rawValue)
@@ -137,11 +139,11 @@ struct HomeView: View {
                                 }
                             }
                             .listStyle(.plain)
-                            .navigationDestination(for: Int.self) { index in
-                                CertificateDetailView(index: .constant(index), homeStore: $homeStore)
-                                    .customBackbutton()
-                                    .toolbar(.hidden, for: .tabBar)
-                            }
+//                            .navigationDestination(for: Int.self) { index in
+//                                CertificateDetailView(index: .constant(index), homeStore: $homeStore)
+//                                    .customBackbutton()
+//                                    .toolbar(.hidden, for: .tabBar)
+//                            }
                             Spacer()
                         }
                         
@@ -194,7 +196,7 @@ struct HomeView: View {
                                                             Button {
                                                                 homeStore.sortingType = state
                                                                 menuState.toggle()
-                                                                homeStore.sortingDocument()
+                                                                homeStore.sortingCertificates()
                                                             } label: {
                                                                 HStack {
                                                                     Text(state.rawValue)
@@ -233,7 +235,10 @@ struct HomeView: View {
                     HStack {
                         VStack {
                             Spacer().frame(height: 30)
-                            Button {
+                            NavigationLink {
+                                CertificateSerchingView(homeStore: $homeStore)
+                                    .navigationBarBackButtonHidden()
+                                    .toolbar(.hidden, for: .tabBar)
                             }label: {
                                 Image(systemName: "magnifyingglass")
                                     .foregroundStyle(.black)
@@ -253,6 +258,11 @@ struct HomeView: View {
                         }
                     }
                 }
+            }
+            .navigationDestination(isPresented: $navigationLinkToggle) {
+                CertificateDetailView(homeStore: $homeStore, index: index)
+                    .customBackbutton()
+                    .toolbar(.hidden, for: .tabBar)
             }
         }
     }

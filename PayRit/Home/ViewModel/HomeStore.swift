@@ -18,8 +18,8 @@ final class HomeStore {
     var sortingType: SortingType = .recent
     var certificates: [Certificate] = Certificate.samepleDocument
     
-    func sortingDocument() {
-        certificates = Certificate.samepleDocument.sorted {
+    func sortingCertificates() {
+        self.certificates = Certificate.samepleDocument.sorted {
             switch sortingType {
             case .recent:
                 return $0.writingDayCal < $1.writingDayCal
@@ -43,6 +43,15 @@ final class HomeStore {
             var updatedCertificate = certificate
             let newMemo = Memo(today: today, text: text)
             updatedCertificate.memo.append(newMemo)
+            certificates[index] = updatedCertificate
+        }
+    }
+    
+    func deductedSave(certificate: Certificate, date: String, money: Int) {
+        if let index = certificates.firstIndex(where: { $0.id == certificate.id }) {
+            var updatedCertificate = certificate
+            let newMemo = Deducted(date: date, money: money)
+            updatedCertificate.deductedHistory.append(newMemo)
             certificates[index] = updatedCertificate
         }
     }

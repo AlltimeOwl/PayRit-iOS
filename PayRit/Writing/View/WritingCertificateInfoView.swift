@@ -8,142 +8,194 @@
 import SwiftUI
 
 struct WritingCertificateInfoView: View {
-    @State private var date = Date()
+    @State private var redemptionDate: Date = Date()
     @State private var money: String = ""
     @State private var etc: String = ""
     @State private var interest: String = ""
+    @State private var interestDate: String = ""
+    @State private var warningMessage: Bool = false
     @State private var calToggle: Bool = false
+    @State private var onTapDate: Bool = false
     @State private var isShowingStopAlert: Bool = false
     @State private var isShowingInterestToastMessage: Bool = false
     @State private var isShowingFormToastMessage: Bool = false
+    @State private var isShowingDatePicker: Bool = false
     @State private var moveNextView: Bool = false
+    @State private var keyBoardFocused: Bool = false
     @State private var newCertificate: Certificate = Certificate.EmptyCertificate
     @Binding var certificateType: CertificateType
     @Binding var path: NavigationPath
-    @FocusState private var interestFocused: Bool
     var isFormValid: Bool {
-        let isBasicInfoValid = !money.isEmpty && !newCertificate.tradeDay.isEmpty && !newCertificate.endDay.isEmpty
-            if calToggle {
-                return isBasicInfoValid && !interest.isEmpty
-            } else {
-                return isBasicInfoValid
-            }
+        if calToggle {
+            return !money.isEmpty && onTapDate && !interest.isEmpty
+        } else {
+            return !money.isEmpty && onTapDate
         }
+    }
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     VStack(alignment: .leading) {
                         Text("금액")
                             .font(Font.body03)
                             .foregroundStyle(Color.gray04)
-                        ZStack {
-                            HStack {
-                                if money.count >= 1 {
-                                    Text(money + " 원")
-                                        .font(Font.body01)
-                                        .padding(.horizontal, 14)
-                                    Spacer()
-                                }
+                        CustomTextField(placeholder: "금액을 입력해주세요", keyboardType: .numberPad, text: $money, isFocused: keyBoardFocused)
+                            .onChange(of: money) {
+                                newCertificate.totalMoney = Int(money) ?? 0
                             }
-                            CustomTextField(backgroundColor: .clear, foregroundStyle: .clear, placeholder: "0 원", keyboardType: .numberPad, text: $money, isFocused: interestFocused)
-                                .onChange(of: money) {
-                                    newCertificate.totalMoney = Int(money) ?? 0
-                                }
-                        }
                     }
                     
                     VStack(alignment: .leading) {
-                        Text("송금 날짜")
+                        Text("원금 상환일")
                             .font(Font.body03)
                             .foregroundStyle(Color.gray04)
-//                        CustomTextField(foregroundStyle: .black, placeholder: "YY.MM.DD", keyboardType: .numberPad, text: $newCertificate.tradeDay, isFocused: interestFocused)
-//                            .onChange(of: newCertificate.tradeDay) {
-//                                
-//                            }
                         RoundedRectangle(cornerRadius: 6)
                             .stroke(Color.gray08, lineWidth: 1)
+                            .fill(Color.gray09)
                             .background(RoundedRectangle(cornerRadius: 6))
                             .foregroundStyle(.white)
-                            .frame(height: 42)
+                            .frame(height: 45)
                             .overlay(
-                                Text("YY.MM.DD")
+                                VStack {
+                                    Button {
+                                        onTapDate = true
+                                        isShowingDatePicker.toggle()
+                                    } label: {
+                                        if onTapDate {
+                                            Text(redemptionDate.dateToString())
+                                                .font(Font.body02)
+                                                .foregroundStyle(.black)
+                                        } else {
+                                            Text("YY.MM.DD")
+                                                .font(Font.body02)
+                                                .foregroundStyle(Color.gray07)
+                                        }
+                                    }
+                                }
                                     .padding(.leading, 14)
                                 , alignment: .leading
                             )
                     }
                     
                     VStack(alignment: .leading) {
-                        Text("상환 마감일")
-                            .font(Font.body03)
-                            .foregroundStyle(Color.gray04)
-                        CustomTextField(foregroundStyle: .black, placeholder: "YY.MM.DD", keyboardType: .numberPad, text: $newCertificate.endDay, isFocused: interestFocused)
-                    }
-                    
-                    VStack(alignment: .leading) {
                         Text("특별히 추가할 내용이 있나요? (선택)")
                             .font(Font.body03)
                             .foregroundStyle(Color.gray04)
-                        CustomTextField(foregroundStyle: .black, placeholder: "", keyboardType: .default, text: $etc, isFocused: interestFocused)
+                        CustomTextField(foregroundStyle: .black, placeholder: "특별히 추가할 내용을 적어주세요", keyboardType: .default, text: $etc, isFocused: keyBoardFocused)
                             .onChange(of: etc) {
                                 newCertificate.etc? = etc
                             }
                     }
-                    
-                    HStack {
-                        Text("이자 계산기")
-                            .font(.system(size: 16))
-                            .fontWeight(.semibold)
-                        Spacer()
-                        Toggle("", isOn: $calToggle)
-                            .onTapGesture {
-                                if calToggle == false { interest = "" }
+                    VStack(spacing: 0) {
+                        if !calToggle {
+                            HStack {
+                                Text("이자 계산")
+                                    .font(.system(size: 16))
+                                    .fontWeight(.semibold)
+                                Spacer()
+                                Toggle("", isOn: $calToggle)
+                                    .onTapGesture {
+                                        if calToggle == false { interest = "" }
+                                    }
+                                    .tint(Color.payritMint)
                             }
-                            .tint(Color.payritMint)
-                    }
-                    if calToggle {
-                        VStack(alignment: .leading) {
-                            Text("연 이자율")
-                                .font(Font.body03)
-                                .foregroundStyle(Color.gray04)
-                            ZStack {
+                            .padding(.vertical, 10)
+                            .padding(.horizontal, 16)
+                            .background(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color.payritMint, lineWidth: 2)
+                                    .background(Color(hex: "E5FDFC"))
+                            )
+                        } else {
+                            VStack(alignment: .leading, spacing: 0) {
                                 HStack {
-                                    Text(interest + " %")
-                                        .font(Font.body01)
-                                        .padding(.horizontal, 14)
-                                        .foregroundStyle(interest.isEmpty ? .clear : .black)
+                                    Text("이자 계산")
+                                        .font(.system(size: 16))
+                                        .fontWeight(.semibold)
                                     Spacer()
+                                    Toggle("", isOn: $calToggle)
+                                        .onTapGesture {
+                                            if calToggle == false { interest = "" }
+                                        }
+                                        .tint(Color.payritMint)
                                 }
-                                CustomTextField(backgroundColor: .clear, foregroundStyle: .clear, placeholder: "숫자를 입력해주세요", keyboardType: .decimalPad, text: $interest, isFocused: interestFocused)
-                                    .onChange(of: interest) { oldValue, newValue in
-                                        if newValue.count < 6 {
-                                            if newValue.filter({ $0 == "." }).count >= 2 {
-                                                interest = oldValue
-                                            } else {
-                                                if !interest.isEmpty && interest != "." {
-                                                    if Float(newValue) ?? 20.0 >= 20.0 {
-                                                        interest = "19.99"
+                                .padding(.vertical, 10)
+                                .padding(.horizontal, 16)
+                                .background(
+                                    Rectangle()
+                                        .foregroundStyle(Color(hex: "E5FDFC"))
+                                )
+                                VStack(alignment: .leading, spacing: 0) {
+                                    Text("연 이자율")
+                                        .font(Font.body03)
+                                        .foregroundStyle(Color.gray04)
+                                    HStack {
+                                        Image(systemName: "info.circle")
+                                        Text("한 달은 30일, 일 년은 365일로 계산된 기준입니다.")
+                                    }
+                                    .padding(.top, 4)
+                                    .font(Font.caption03)
+                                    .foregroundStyle(Color.gray04)
+                                    
+                                    CustomTextField(placeholder: "숫자를 입력해주세요", keyboardType: .decimalPad, text: $interest, isFocused: keyBoardFocused)
+                                        .onChange(of: interest) { oldValue, newValue in
+                                            if newValue.count < 6 {
+                                                if newValue.filter({ $0 == "." }).count >= 2 {
+                                                    interest = oldValue
+                                                } else {
+                                                    if !interest.isEmpty && interest != "." {
+                                                        if Float(newValue) ?? 20.0 >= 20.0 {
+                                                            interest = "19.99"
+                                                            warningMessage = true
+                                                        }
                                                     }
                                                 }
+                                            } else {
+                                                interest = oldValue
                                             }
-                                        } else {
-                                            interest = oldValue
+                                            newCertificate.interestRate = Double(interest) ?? 0.0
                                         }
-                                        newCertificate.interestRate = Double(interest) ?? 0.0
+                                    .padding(.top, 4)
+                                    
+                                    if warningMessage {
+                                        HStack {
+                                            Text("이자는 20%를 넘어설 수 없어요.")
+                                            Button {
+                                                isShowingInterestToastMessage.toggle()
+                                            } label: {
+                                                Image(systemName: "questionmark.circle")
+                                            }
+                                        }
+                                        .font(Font.caption01)
+                                        .foregroundStyle(Color.payritErrorRed)
+                                        .padding(.top, 4)
                                     }
-                            }
-                            
-                            HStack {
-                                Text("이자는 20%를 넘어설 수 없어요.")
-                                Button {
-                                    isShowingInterestToastMessage.toggle()
-                                } label: {
-                                    Image(systemName: "questionmark.circle")
+                                    
+                                    HStack(spacing: 0) {
+                                        Text("지급해야하는 이자는 약 ")
+                                        Text("\(newCertificate.totalAmount - newCertificate.totalMoney)")
+                                            .foregroundStyle(Color.payritMint)
+                                        Text("원이에요")
+                                    }
+                                    .padding(.vertical, 20)
+                                    .font(Font.body02)
+                                    
+                                    Text("이자 지급일(선택)")
+                                        .font(Font.body03)
+                                        .foregroundStyle(Color.gray04)
+                                    CustomTextField(placeholder: "숫자를 입력해주세요", keyboardType: .numberPad, text: $interestDate, isFocused: keyBoardFocused)
+                                        .onChange(of: interestDate) { _, _ in
+                                            newCertificate.interestRateDay = interestDate
+                                        }
+                                    .padding(.top, 4)
                                 }
+                                .padding(16)
                             }
-                            .padding(.top, 1)
-                            .font(Font.caption01)
-                            .foregroundStyle(Color.payritErrorRed)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color.payritMint, lineWidth: 2)
+                            )
                         }
                     }
                     if !money.isEmpty {
@@ -160,11 +212,12 @@ struct WritingCertificateInfoView: View {
                         }
                         .font(Font.title04)
                     }
-                    Spacer()
                 }
                 .padding(.top, 30)
                 .padding(.horizontal, 16)
+                .padding(.bottom, 16)
             }
+            
             Button {
                 if !isFormValid {
                     isShowingFormToastMessage.toggle()
@@ -178,15 +231,24 @@ struct WritingCertificateInfoView: View {
                     .frame(height: 50)
                     .frame(maxWidth: .infinity)
                     .background(!isFormValid ? Color.gray07 : Color.payritMint)
-                    .clipShape(.rect(cornerRadius: 12))
+                    .clipShape(.rect(cornerRadius: keyBoardFocused ? 0 : 12))
             }
-            .padding(.bottom, 16)
-            .padding(.horizontal, 16)
+            .padding(.bottom, keyBoardFocused ? 0 : 16)
+            .padding(.horizontal, keyBoardFocused ? 0 : 16)
         }
         .scrollIndicators(.hidden)
         .navigationTitle("페이릿 작성하기")
         .navigationBarTitleDisplayMode(.inline)
         .onTapGesture { self.endTextEditing() }
+        .onChange(of: keyBoardFocused) {
+            print(keyBoardFocused)
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillChangeFrameNotification)) { _ in
+            keyBoardFocused = true
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
+            keyBoardFocused = false
+        }
         .toolbar {
             ToolbarItem {
                 Button {
@@ -197,6 +259,11 @@ struct WritingCertificateInfoView: View {
                 }
             }
         }
+        .sheet(isPresented: $isShowingDatePicker, content: {
+            DatePicker("", selection: $redemptionDate, displayedComponents: [.date])
+                .datePickerStyle(.graphical)
+                .presentationDetents([.height(400)])
+        })
         .PrimaryAlert(isPresented: $isShowingStopAlert,
                       title: "작성 중단",
                       content: """

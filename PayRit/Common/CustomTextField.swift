@@ -22,7 +22,7 @@ public struct CustomTextField: View {
     @Binding var text: String
     @FocusState private var isFocused: Bool
     
-    public init(maxLength: Int = 100, backgroundColor: Color = .white, foregroundStyle: Color = .black, placeholder: String, keyboardType: UIKeyboardType = .default, text: Binding<String>, isFocused: Bool = false) {
+    public init(maxLength: Int = 100, backgroundColor: Color = Color.gray09, foregroundStyle: Color = .black, placeholder: String, keyboardType: UIKeyboardType = .default, text: Binding<String>, isFocused: Bool = false) {
         self.maxLength = maxLength
         self.backgroundColor = backgroundColor
         self.foregroundStyle = foregroundStyle
@@ -38,7 +38,7 @@ public struct CustomTextField: View {
                 .stroke(Color.gray08, lineWidth: 1)
                 .background(RoundedRectangle(cornerRadius: 6)
                 .foregroundStyle(backgroundColor))
-            TextField("", text: $text, prompt: Text(placeholder).foregroundColor(Color.gray08))
+            TextField("", text: $text, prompt: Text(placeholder).font(Font.body02).foregroundColor(Color.gray07))
                 .padding(EdgeInsets(top: 0, leading: 14, bottom: 0, trailing: 14))
                 .font(Font.body02)
                 .foregroundStyle(foregroundStyle)
@@ -61,7 +61,7 @@ public struct CustomTextField: View {
                 }
             }
         }
-        .frame(minHeight: 42, maxHeight: 52)
+        .frame(height: 45)
         .onChange(of: text) { oldValue, newValue in
             if newValue.count > maxLength {
                 text = String(newValue.prefix(maxLength))
