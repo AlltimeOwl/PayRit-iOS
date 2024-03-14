@@ -5,7 +5,8 @@
 //  Created by 임대진 on 3/2/24.
 //
 
-import Foundation
+import SwiftUI
+import PDFKit
 
 enum SortingType: String, CodingKey, CaseIterable {
     case recent = "최근 작성일 순"
@@ -54,5 +55,25 @@ final class HomeStore {
             updatedCertificate.deductedHistory.append(newMemo)
             certificates[index] = updatedCertificate
         }
+    }
+    
+    @MainActor
+    func generatePDF() -> URL {
+        let renderer = ImageRenderer(content: CertificateDocumentView())
+        
+        let url = URL.documentsDirectory.appending(path: "\(Date().dateToString()) 페이릿 차용증.pdf")
+        
+        renderer.render { size, context in
+            var pdfDimension = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+            
+            guard let pdf = CGContext(url as CFURL, mediaBox: &pdfDimension, nil) else {
+                return
+            }
+            pdf.beginPDFPage(nil)
+            context(pdf)
+            pdf.endPDFPage()
+            pdf.closePDF()
+        }
+        return url
     }
 }

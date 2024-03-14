@@ -29,8 +29,8 @@ public extension Color {
     static let kakaoLoginButton = Color(hex: "#F9E001")
     /// 민트 28D7D2
     static let payritMint = Color(hex: "28D7D2")
-    /// 라이트 민트 CBF0EF
-    static let payritLightMint = Color(hex: "CBF0EF")
+    /// 라이트 민트 FFCC55
+    static let payritLightMint = Color(hex: "FFCC55")
     /// 마인드 그린 44DD88
     static let payritMindGreen = Color(hex: "44DD88")
     
@@ -39,9 +39,6 @@ public extension Color {
     static let payritIntensivePink = Color(hex: "FF7A90")
     /// 라이트 핑크 FFD7DD
     static let payritIntensiveLightPink = Color(hex: "FFD7DD")
-    
-    /// 하늘색  FFCC55
-    static let payritWithYellow = Color(hex: "FFCC55")
     /// System Error  레드 컬러  FE1111
     static let payritErrorRed = Color(hex: "FE1111")
     /// System Positive 청록 컬러  00DD22

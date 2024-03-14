@@ -135,7 +135,7 @@ struct PartnerInfoWritingView: View {
                 }
             }
         }
-        .PrimaryAlert(isPresented: $isShowingStopAlert,
+        .primaryAlert(isPresented: $isShowingStopAlert,
                       title: "작성 중단",
                       content: """
                         지금 작성을 중단하시면

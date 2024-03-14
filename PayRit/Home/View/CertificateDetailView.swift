@@ -10,8 +10,10 @@ import UIKit
 import MessageUI
 
 struct CertificateDetailView: View {
+    @State private var pdfURL: URL?
     @State private var isModalPresented: Bool = false
     @State private var isActionSheetPresented: Bool = false
+    @State private var isShowingPDFView: Bool = false
     @State private var isShowingMailView: Bool = false
     @State private var result: Result<MFMailComposeResult, Error>?
     @Binding var homeStore: HomeStore
@@ -91,28 +93,29 @@ struct CertificateDetailView: View {
                     .frame(maxWidth: .infinity)
                     .background(homeStore.certificates[index].type == .iBorrowed ? Color.payritIntensiveLightPink : Color.payritLightMint)
                     .clipShape(.rect(cornerRadius: 12))
-                    Spacer().frame(minWidth: 16)
-                    HStack {
-                        Text("받은 날짜")
-                            .frame(width: UIScreen.screenWidth * 0.4)
-                        Text("상환 내역")
-                            .frame(width: UIScreen.screenWidth * 0.4)
-                    }
-                    .font(Font.title06)
                     
-                    ForEach(homeStore.certificates[index].deductedHistory) { deducted in
-                        HStack {
-                            Text(deducted.date)
-                                .frame(width: UIScreen.screenWidth * 0.4)
-                            Text("\(deducted.money)원")
-                                .frame(width: UIScreen.screenWidth * 0.4)
-                        }
-                        .font(Font.body02)
-                        .padding(.vertical, 6)
-                    }
-                    
+//                    Spacer().frame(minWidth: 16)
+//                    HStack {
+//                        Text("받은 날짜")
+//                            .frame(width: UIScreen.screenWidth * 0.4)
+//                        Text("상환 내역")
+//                            .frame(width: UIScreen.screenWidth * 0.4)
+//                    }
+//                    .font(Font.title06)
+//                    
+//                    ForEach(homeStore.certificates[index].deductedHistory) { deducted in
+//                        HStack {
+//                            Text(deducted.date)
+//                                .frame(width: UIScreen.screenWidth * 0.4)
+//                            Text("\(deducted.money)원")
+//                                .frame(width: UIScreen.screenWidth * 0.4)
+//                        }
+//                        .font(Font.body02)
+//                        .padding(.vertical, 6)
+//                    }
+                    Spacer()
                     // 내보내기 버튼
-                    HStack {
+                    HStack(spacing: 6) {
                         Button {
                             isActionSheetPresented.toggle()
                         } label: {
@@ -166,9 +169,10 @@ struct CertificateDetailView: View {
                         }
                     }
                     .font(Font.body03)
-                    .padding(.vertical, 16)
+//                    .padding(.vertical, 16)
+                    Spacer()
                 }
-                .frame(height: 370)
+                .frame(height: 240)
                 .background(Color.white)
                 .clipShape(.rect(cornerRadius: 12))
                 .shadow(color: .gray.opacity(0.2), radius: 5)
@@ -336,12 +340,18 @@ struct CertificateDetailView: View {
         .scrollIndicators(.hidden)
         .navigationTitle("페이릿 상세 페이지")
         .navigationBarTitleDisplayMode(.inline)
-        .CertificateDetailImage(isPresented: $isModalPresented, isButtonShowing: .constant(true))
+        .certificateToDoucument(isPresented: $isModalPresented, isButtonShowing: .constant(true))
+        .onAppear {
+            
+        }
         .confirmationDialog("", isPresented: $isActionSheetPresented, titleVisibility: .hidden) {
             Button("PDF 다운") {
+                pdfURL = homeStore.generatePDF()
+                isShowingPDFView.toggle()
             }
             Button("이메일 전송") {
                 if MFMailComposeViewController.canSendMail() {
+                    pdfURL = homeStore.generatePDF()
                         self.isShowingMailView.toggle()
                 } else {
                     print("메일을 보낼수 없는 기기입니다.")
@@ -354,16 +364,25 @@ struct CertificateDetailView: View {
             }
         }
         .sheet(isPresented: $isShowingMailView) {
-            MailView(result: self.$result) { composer in
-                composer.setSubject("페이릿 차용증 \(homeStore.todayString())")
-                composer.setToRecipients([""])
-                composer.setMessageBody("", isHTML: false)
+            MailView(result: self.$result) { mailComposer in
+                mailComposer.setSubject("\(Date().dateToString()) 페이릿 차용증")
+                mailComposer.setToRecipients([""])
+                mailComposer.setMessageBody("", isHTML: false)
                 
-                if let imageData = UIImage(named: "homeBoxImage")?.jpegData(compressionQuality: 1.0) {
-                    composer.addAttachmentData(imageData, mimeType: "image/jpeg", fileName: "\(Date()).jpg")
+                if let pdfURL = pdfURL, let pdfData = try? Data(contentsOf: pdfURL) {
+                    mailComposer.addAttachmentData(pdfData, mimeType: "application/pdf", fileName: "\(Date().dateToString()) 페이릿 차용증.pdf")
+                } else {
+                    print("PDF 메일 오류")
                 }
             }
         }
+
+        .sheet(isPresented: $isShowingPDFView, content: {
+            if let pdfURL = pdfURL {
+                PDFKitView(url: pdfURL)
+                ShareLink("PDF로 내보내기", item: pdfURL)
+            }
+        })
     }
 }
 

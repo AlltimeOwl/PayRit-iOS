@@ -10,7 +10,7 @@ import SwiftUI
 struct MyInfoView: View {
     let sampleUser = User.sampleUser
     @Binding var tabBarVisivility: Visibility
-    @Binding var signInState: Bool
+    @Binding var signInStore: SignInStore
     var body: some View {
         VStack(spacing: 20) {
             VStack(alignment: .leading) {
@@ -83,7 +83,7 @@ struct MyInfoView: View {
             }
             Spacer()
             NavigationLink {
-                MembershipWithdrawalView(signInState: $signInState)
+                MembershipWithdrawalView(signInStore: $signInStore)
                     .customBackbutton()
             } label: {
                 Text("회원탈퇴")
@@ -105,6 +105,6 @@ struct MyInfoView: View {
 
 #Preview {
     NavigationStack {
-        MyInfoView(tabBarVisivility: .constant(.hidden), signInState: .constant(true))
+        MyInfoView(tabBarVisivility: .constant(.hidden), signInStore: .constant(SignInStore()))
     }
 }

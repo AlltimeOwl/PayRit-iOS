@@ -15,6 +15,7 @@ struct HomeView: View {
     @State var homeStore = HomeStore()
     private let menuPadding = 8.0
     private let horizontalPadding = 16.0
+    @Binding var signInStore: SignInStore
     
     var body: some View {
         NavigationStack {
@@ -30,7 +31,7 @@ struct HomeView: View {
                                     Spacer()
                                     Button {
                                         withAnimation {
-                                            isHiddenInfoBox = false
+                                            isHiddenInfoBox.toggle()
                                         }
                                     } label: {
                                         Image(systemName: "xmark")
@@ -46,7 +47,9 @@ struct HomeView: View {
                                             """)
                                         .font(Font.title04)
                                         Button {
-                                            
+                                            print(signInStore.aToken)
+                                            print(signInStore.rToken)
+                                            signInStore.test()
                                         } label: {
                                             Text("확인하기")
                                                 .font(Font.body03)
@@ -270,6 +273,6 @@ struct HomeView: View {
 
 #Preview {
     NavigationStack {
-        HomeView()
+        HomeView(signInStore: .constant(SignInStore()))
     }
 }

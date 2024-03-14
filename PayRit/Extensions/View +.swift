@@ -12,25 +12,21 @@ extension View {
         modifier(CustomBackButton(action: action))
     }
     
-    // MARK: 키보드 올라온 상태에서, 빈공간 터치시 키보드 내리는 코드
-    // 키보드를 내리고싶은 뷰에서 .onTapGesture { self.endTextEditing() } 추가
     public func endTextEditing() {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 
-    // MARK: 토스트 메세지
-    // 토스트 메세지를 띄우고싶은 뷰에서 .toast(isShowing: $showToast, message: message) 추가
     public func toast(isShowing: Binding<Bool>, message: String) -> some View {
         self.modifier(ToastMessageModifier(isShowing: isShowing, message: message))
     }
     
-    public func CertificateDetailImage(isPresented: Binding<Bool>, isButtonShowing: Binding<Bool>) -> some View {
+    public func certificateToDoucument(isPresented: Binding<Bool>, isButtonShowing: Binding<Bool>) -> some View {
         return modifier(
-            CertificateDetailImageViewModifier(isPresented: isPresented, isButtonShowing: isButtonShowing)
+            CertificateToDoucumentModifier(isPresented: isPresented, isButtonShowing: isButtonShowing)
         )
     }
     
-    public func PrimaryAlert(isPresented: Binding<Bool>, title: String, content: String, primaryButtonTitle: String?, cancleButtonTitle: String, primaryAction: ( () -> Void)?, cancleAction: @escaping () -> Void) -> some View {
+    public func primaryAlert(isPresented: Binding<Bool>, title: String, content: String, primaryButtonTitle: String?, cancleButtonTitle: String, primaryAction: ( () -> Void)?, cancleAction: @escaping () -> Void) -> some View {
         return modifier(
             PrimaryAlertModifier(isPresented: isPresented, title: title, content: content, primaryButtonTitle: primaryButtonTitle, cancleButtonTitle: cancleButtonTitle, primaryAction: primaryAction, cancleAction: cancleAction)
         )

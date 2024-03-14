@@ -20,7 +20,8 @@ enum CertificateType: String, CodingKey {
 
 struct Certificate: Identifiable, Hashable {
     let id: String = UUID().uuidString
-    var writingDay: String
+    var writingDay: String = Date().dateToString()
+    
     var sender: String
     var senderPhoneNumber: String
     var senderAdress: String
@@ -29,8 +30,9 @@ struct Certificate: Identifiable, Hashable {
     var recipientPhoneNumber: String
     var recipientAdress: String
     
+    var borrowedDate: String
     var redemptionDate: String
-    var totalMoney: Int
+    var money: Int
     var interestRate: Double
     var interestRateDay: String?
     
@@ -50,14 +52,35 @@ struct Certificate: Identifiable, Hashable {
 //        return interestAmount
 //    }
     
+    var interestRateAmount: Int {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy.MM.dd"
+
+        if let targetDate = dateFormatter.date(from: redemptionDate), let startDate = dateFormatter.date(from: borrowedDate) {
+            // 대출 기간 계산
+            let totalDate = calculateDday(startDate: startDate, targetDate: targetDate) + 1
+            
+            // 일일 이자율 계산
+            let dailyInterestRate = interestRate / 100.0 / 365.0
+            
+            // 이자 계산
+            let interestAmount = Double(money) * dailyInterestRate * Double(totalDate)
+            
+            // 이자를 정수로 반환
+            return Int(interestAmount)
+        } else {
+            return 0
+        }
+    }
+
     var totalAmount: Int {
-        return (totalMoney + Int((Double(totalMoney) * interestRate) / 100.0)) - (deductedHistory.reduce(0) { $0 + $1.money })
+        return (money + interestRateAmount) - (deductedHistory.reduce(0) { $0 + $1.money })
     }
     
     var totalMoneyFormatter: String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
-        return formatter.string(from: (NSNumber(value: totalMoney))) ?? String(totalMoney)
+        return formatter.string(from: (NSNumber(value: money))) ?? String(money)
     }
     var totalAmountFormatter: String {
         let formatter = NumberFormatter()
@@ -69,7 +92,7 @@ struct Certificate: Identifiable, Hashable {
         dateFormatter.dateFormat = "yyyy.MM.dd"
 
         if let targetDate = dateFormatter.date(from: redemptionDate) {
-            let dDay = calculateDday(targetDate: targetDate)
+            let dDay = calculateDday(startDate: Date(), targetDate: targetDate)
             return dDay
         } else {
             print("디데이 변환 중 오류가 발생했습니다.")
@@ -82,7 +105,7 @@ struct Certificate: Identifiable, Hashable {
         dateFormatter.dateFormat = "yyyy.MM.dd"
 
         if let targetDate = dateFormatter.date(from: writingDay) {
-            let writingDay = calculateDday(targetDate: targetDate)
+            let writingDay = calculateDday(startDate: Date(), targetDate: targetDate)
             return writingDay
         } else {
             print("작성일 변환 중 오류가 발생했습니다.")
@@ -90,28 +113,25 @@ struct Certificate: Identifiable, Hashable {
         }
     }
     
-    static var samepleDocument: [Certificate] = [
-        Certificate(writingDay: "2024.02.01", sender: "홍길동", senderPhoneNumber: "01050097937", senderAdress: "경기도 용인시", recipient: "임대진", recipientPhoneNumber: "01050097937", recipientAdress: "경기도 안양시", redemptionDate: "2024.01.01", totalMoney: 30000000, interestRate: 5.0, interestRateDay: "2024.05.05", state: .waitingApproval, type: .iLentYou, memo: [Memo(today: "2024.02.01", text: "10,000원을 한달뒤에 갚는다고 했음"), Memo(today: "2024.02.01", text: "10,000원을 한달뒤에 갚는다고 했음10,000원을 한달뒤에 갚는다고 했음"), Memo(today: "2024.02.01", text: "10,000원을 한달뒤에 갚는다고 했음10,000원을 한달뒤에 갚는다고 했음10,000원을 한달뒤에 갚는다고 했음")], deductedHistory: [Deducted(date: "2024.02.01", money: 1000), Deducted(date: "2024.02.01", money: 20000000), Deducted(date: "2024.02.01", money: 3000000)]),
-        Certificate(writingDay: "2024.01.21", sender: "임대진", senderPhoneNumber: "01050097937", senderAdress: "경기도 용인시", recipient: "우리은행2", recipientPhoneNumber: "01050097937", recipientAdress: "경기도 안양시", redemptionDate: "2024.01.01", totalMoney: 30000000, interestRate: 5.0, state: .complete, type: .iBorrowed),
-        Certificate(writingDay: "2024.02.11", sender: "홍길동", senderPhoneNumber: "01050097937", senderAdress: "경기도 용인시", recipient: "임대진", recipientPhoneNumber: "01050097937", recipientAdress: "경기도 안양시", redemptionDate: "2024.03.01", totalMoney: 30000000, interestRate: 5.0, state: .waitingPayment, type: .iLentYou),
-        Certificate(writingDay: "2024.04.01", sender: "임대진", senderPhoneNumber: "01050097937", senderAdress: "경기도 용인시", recipient: "우리은행4", recipientPhoneNumber: "01050097937", recipientAdress: "경기도 안양시", redemptionDate: "2024.01.01", totalMoney: 30000000, interestRate: 5.0, state: .waitingApproval, type: .iBorrowed),
-        Certificate(writingDay: "2024.03.05", sender: "홍길동", senderPhoneNumber: "01050097937", senderAdress: "경기도 용인시", recipient: "임대진", recipientPhoneNumber: "01050097937", recipientAdress: "경기도 안양시", redemptionDate: "2024.02.01", totalMoney: 30000000, interestRate: 5.0, state: .waitingApproval, type: .iLentYou),
-        Certificate(writingDay: "2024.03.21", sender: "임대진", senderPhoneNumber: "01050097937", senderAdress: "경기도 용인시", recipient: "우리은행6", recipientPhoneNumber: "01050097937", recipientAdress: "경기도 안양시", redemptionDate: "2024.01.01", totalMoney: 30000000, interestRate: 5.0, state: .waitingApproval, type: .iBorrowed)
-    ]
+    var calTotalDate: Int {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy.MM.dd"
+
+        if let targetDate = dateFormatter.date(from: redemptionDate), let startDate = dateFormatter.date(from: borrowedDate) {
+            // 대출 기간 계산
+            let totalDate = calculateDday(startDate: startDate, targetDate: targetDate)
+            
+            return totalDate
+        } else {
+            return 0
+        }
+    }
     
-    static let EmptyCertificate: Certificate = Certificate(writingDay: "", sender: "", senderPhoneNumber: "", senderAdress: "", recipient: "", recipientPhoneNumber: "", recipientAdress: "", redemptionDate: "", totalMoney: 0, interestRate: 0.0)
-    
-    func calculateDday(targetDate: Date) -> Int {
-        // 현재 날짜를 가져옵니다.
-        let currentDate = Date()
-        
-        // Calendar 인스턴스를 생성합니다.
+    func calculateDday(startDate: Date, targetDate: Date) -> Int {
         let calendar = Calendar.current
         
-        // 날짜 간의 차이를 계산합니다.
-        let components = calendar.dateComponents([.day], from: currentDate, to: targetDate)
+        let components = calendar.dateComponents([.day], from: startDate, to: targetDate)
         
-        // 디데이 결과를 문자열로 반환합니다.
         if let days = components.day {
             if days == 0 {
                 // 당일
@@ -127,5 +147,15 @@ struct Certificate: Identifiable, Hashable {
             return 0
         }
     }
+    
+    static var samepleDocument: [Certificate] = [
+        Certificate(writingDay: "2024.02.01", sender: "홍길동", senderPhoneNumber: "01050097937", senderAdress: "경기도 용인시", recipient: "임대진", recipientPhoneNumber: "01050097937", recipientAdress: "경기도 안양시", borrowedDate: "2024.01.05", redemptionDate: "2024.01.01", money: 30000000, interestRate: 5.0, interestRateDay: "2024.05.05", state: .waitingApproval, type: .iLentYou, memo: [Memo(today: "2024.02.01", text: "10,000원을 한달뒤에 갚는다고 했음"), Memo(today: "2024.02.01", text: "10,000원을 한달뒤에 갚는다고 했음10,000원을 한달뒤에 갚는다고 했음"), Memo(today: "2024.02.01", text: "10,000원을 한달뒤에 갚는다고 했음10,000원을 한달뒤에 갚는다고 했음10,000원을 한달뒤에 갚는다고 했음")], deductedHistory: [Deducted(date: "2024.02.01", money: 1000), Deducted(date: "2024.02.01", money: 20000000), Deducted(date: "2024.02.01", money: 3000000)]),
+        Certificate(writingDay: "2024.01.21", sender: "임대진", senderPhoneNumber: "01050097937", senderAdress: "경기도 용인시", recipient: "우리은행2", recipientPhoneNumber: "01050097937", recipientAdress: "경기도 안양시", borrowedDate: "2024.01.05", redemptionDate: "2024.01.01", money: 30000000, interestRate: 5.0, state: .complete, type: .iBorrowed),
+        Certificate(writingDay: "2024.02.11", sender: "홍길동", senderPhoneNumber: "01050097937", senderAdress: "경기도 용인시", recipient: "임대진", recipientPhoneNumber: "01050097937", recipientAdress: "경기도 안양시", borrowedDate: "2024.01.05", redemptionDate: "2024.03.01", money: 30000000, interestRate: 5.0, state: .waitingPayment, type: .iLentYou),
+        Certificate(writingDay: "2024.04.01", sender: "임대진", senderPhoneNumber: "01050097937", senderAdress: "경기도 용인시", recipient: "우리은행4", recipientPhoneNumber: "01050097937", recipientAdress: "경기도 안양시", borrowedDate: "2024.01.05", redemptionDate: "2024.01.01", money: 30000000, interestRate: 5.0, state: .waitingApproval, type: .iBorrowed),
+        Certificate(writingDay: "2024.03.05", sender: "홍길동", senderPhoneNumber: "01050097937", senderAdress: "경기도 용인시", recipient: "임대진", recipientPhoneNumber: "01050097937", recipientAdress: "경기도 안양시", borrowedDate: "2024.01.05", redemptionDate: "2024.02.01", money: 30000000, interestRate: 5.0, state: .waitingApproval, type: .iLentYou),
+        Certificate(writingDay: "2024.03.21", sender: "임대진", senderPhoneNumber: "01050097937", senderAdress: "경기도 용인시", recipient: "우리은행6", recipientPhoneNumber: "01050097937", recipientAdress: "경기도 안양시", borrowedDate: "2024.01.05", redemptionDate: "2024.01.01", money: 30000000, interestRate: 5.0, state: .waitingApproval, type: .iBorrowed)
+    ]
+    
+    static let EmptyCertificate: Certificate = Certificate(writingDay: "", sender: "", senderPhoneNumber: "", senderAdress: "", recipient: "", recipientPhoneNumber: "", recipientAdress: "", borrowedDate: "", redemptionDate: "", money: 0, interestRate: 0.0)
 }
-

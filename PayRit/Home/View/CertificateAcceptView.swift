@@ -1,18 +1,15 @@
 //
-//  WritingCheckView.swift
+//  CertificateAcceptView.swift
 //  PayRit
 //
-//  Created by 임대진 on 3/5/24.
+//  Created by 임대진 on 3/14/24.
 //
 
 import SwiftUI
 
-struct WritingCheckView: View {
-    @State private var isShowingStopAlert: Bool = false
-    @State private var isShowingKaKaoAlert: Bool = false
-    @State private var isShowingDoneAlert: Bool = false
-    @Binding var path: NavigationPath
-    @Binding var newCertificate: Certificate
+struct CertificateAcceptView: View {
+    @State private var checkBox: Bool = false
+    @Binding var certificate: Certificate
     var body: some View {
         VStack {
             ScrollView {
@@ -26,7 +23,7 @@ struct WritingCheckView: View {
                                 Text("금액")
                                     .font(Font.body04)
                                 Spacer().frame(width: 70)
-                                Text("\(newCertificate.totalAmountFormatter)원")
+                                Text("\(certificate.totalAmountFormatter)원")
                                     .font(Font.body01)
                                 Spacer()
                             }
@@ -34,7 +31,7 @@ struct WritingCheckView: View {
                                 Text("원금 상환일")
                                     .font(Font.body04)
                                 Spacer().frame(width: 30)
-                                Text("\(newCertificate.redemptionDate)")
+                                Text("\(certificate.redemptionDate)")
                                     .font(Font.body01)
                                 Spacer()
                             }
@@ -55,7 +52,7 @@ struct WritingCheckView: View {
                                 Text("이자")
                                     .font(Font.body04)
                                 Spacer().frame(width: 70)
-                                Text("\(newCertificate.totalAmount - newCertificate.money)")
+                                Text("\(certificate.totalAmount - certificate.money)")
                                     .font(Font.body01)
                                 Spacer()
                             }
@@ -63,8 +60,8 @@ struct WritingCheckView: View {
                                 Text("이자 지급일")
                                     .font(Font.body04)
                                 Spacer().frame(width: 30)
-                                Text("매월 \(newCertificate.interestRateDay ?? "")일")
-                                    .foregroundStyle(!newCertificate.redemptionDate.isEmpty ? .black : .clear)
+                                Text("매월 \(certificate.interestRateDay ?? "")일")
+                                    .foregroundStyle(!certificate.redemptionDate.isEmpty ? .black : .clear)
                                     .font(Font.body01)
                                 Spacer()
                             }
@@ -72,7 +69,7 @@ struct WritingCheckView: View {
                                 Text("특이사항")
                                     .font(Font.body04)
                                 Spacer().frame(width: 70)
-                                Text("\(newCertificate.etc ?? "")")
+                                Text("\(certificate.etc ?? "")")
                                     .font(Font.body01)
                                 Spacer()
                             }
@@ -93,7 +90,7 @@ struct WritingCheckView: View {
                                 Text("이름")
                                     .font(Font.body04)
                                 Spacer().frame(width: 33)
-                                Text("\(newCertificate.sender)")
+                                Text("\(certificate.sender)")
                                     .font(Font.body01)
                                 Spacer()
                             }
@@ -101,7 +98,7 @@ struct WritingCheckView: View {
                                 Text("연락처")
                                     .font(Font.body04)
                                 Spacer().frame(width: 20)
-                                Text("\(newCertificate.senderPhoneNumber)")
+                                Text("\(certificate.senderPhoneNumber)")
                                     .font(Font.body01)
                                 Spacer()
                             }
@@ -109,7 +106,7 @@ struct WritingCheckView: View {
                                 Text("주소")
                                     .font(Font.body04)
                                 Spacer().frame(width: 33)
-                                Text("\(newCertificate.senderAdress)")
+                                Text("\(certificate.senderAdress)")
                                     .fixedSize(horizontal: false, vertical: true)
                                     .font(Font.body01)
                                 Spacer()
@@ -131,7 +128,7 @@ struct WritingCheckView: View {
                                 Text("이름")
                                     .font(Font.body04)
                                 Spacer().frame(width: 33)
-                                Text("\(newCertificate.recipient)")
+                                Text("\(certificate.recipient)")
                                     .font(Font.body01)
                                 Spacer()
                             }
@@ -139,7 +136,7 @@ struct WritingCheckView: View {
                                 Text("연락처")
                                     .font(Font.body04)
                                 Spacer().frame(width: 20)
-                                Text("\(newCertificate.recipientPhoneNumber)")
+                                Text("\(certificate.recipientPhoneNumber)")
                                     .font(Font.body01)
                                 Spacer()
                             }
@@ -147,7 +144,7 @@ struct WritingCheckView: View {
                                 Text("주소")
                                     .font(Font.body04)
                                 Spacer().frame(width: 33)
-                                Text("\(newCertificate.recipientAdress)")
+                                Text("\(certificate.recipientAdress)")
                                     .fixedSize(horizontal: false, vertical: true)
                                     .font(Font.body01)
                                 Spacer()
@@ -159,76 +156,52 @@ struct WritingCheckView: View {
                         .clipShape(.rect(cornerRadius: 12))
                         .shadow(color: .gray.opacity(0.2), radius: 5)
                     }
-                    
+                    HStack {
+                        Button {
+                            checkBox.toggle()
+                        } label: {
+                            Image(systemName: checkBox ? "checkmark.square.fill" : "checkmark.square" )
+                                .foregroundStyle(Color(hex: "37D9BC"))
+                        }
+                        Text("위 정보가 정확한지 확인 했어요 (필수)")
+                            .font(Font.caption02)
+                            .foregroundStyle(Color(hex: "5C5C5C"))
+                    }
+                    .padding(.bottom, 30)
                 }
                 .padding(.top, 30)
                 .padding(.horizontal, 16)
             }
             Button {
-                isShowingKaKaoAlert.toggle()
             } label: {
-                Text("요청 전송")
+                Text("수락 하기")
                     .font(Font.title04)
                     .foregroundStyle(.white)
                     .frame(height: 50)
                     .frame(maxWidth: .infinity)
-                    .background(Color.payritMint)
+                    .background(checkBox ? Color.payritMint : Color.gray07)
                     .clipShape(.rect(cornerRadius: 12))
             }
+            .disabled(!checkBox)
             .padding(.bottom, 16)
             .padding(.horizontal, 16)
         }
-        .navigationTitle("차용증 내용 확인")
+        .navigationTitle("페이릿 내용 확인")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem {
-                Button {
-                    isShowingStopAlert.toggle()
-                } label: {
-                    Image(systemName: "xmark")
-                        .foregroundStyle(.black)
-                }
-            }
-        }
-        .primaryAlert(isPresented: $isShowingStopAlert,
-                      title: "작성 중단",
-                      content: """
-                        지금 작성을 중단하시면
-                        처음부터 다시 작성해야해요.
-                        작성 전 페이지로 돌아갈까요?
-                        """,
-                      primaryButtonTitle: "아니오",
-                      cancleButtonTitle: "네") {
-        } cancleAction: {
-            path = .init()
-        }
-        .primaryAlert(isPresented: $isShowingKaKaoAlert,
-                      title: "카카오톡 요청 전송",
-                      content: """
-                        요청 메시지를
-                        전송하시겠습니까?
-                        """,
-                      primaryButtonTitle: "네",
-                      cancleButtonTitle: "아니오") {
-            isShowingDoneAlert.toggle()
-        } cancleAction: {
-        }
-        .primaryAlert(isPresented: $isShowingDoneAlert,
-                      title: "카카오톡 요청 완료",
-                      content: """
-                        상대방에게 카카오톡으로 요청이
-                        완료되었습니다.
-                        """,
-                      primaryButtonTitle: nil,
-                      cancleButtonTitle: "확인",
-                      primaryAction: nil) {
-            path = .init()
+//            ToolbarItem {
+//                Button {
+//                } label: {
+//                    Image(systemName: "xmark")
+//                        .foregroundStyle(.black)
+//                }
+//            }
         }
     }
 }
 
 #Preview {
     NavigationStack {
-        WritingCheckView(path: .constant(NavigationPath()), newCertificate: .constant(Certificate.samepleDocument[0]))
+        CertificateAcceptView(certificate: .constant(Certificate.samepleDocument[0]))
     }
 }

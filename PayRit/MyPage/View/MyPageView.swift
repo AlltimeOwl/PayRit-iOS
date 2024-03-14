@@ -14,7 +14,7 @@ struct MyPageView: View {
     @State var isShowingSignOut: Bool = false
     @State var notFoundUser: Bool = false
     @Binding var tabBarVisivility: Visibility
-    @Binding var signInState: Bool
+    @Binding var signInStore: SignInStore
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(spacing: 16) {
@@ -34,7 +34,7 @@ struct MyPageView: View {
             .padding(.horizontal, 16)
             List {
                 NavigationLink {
-                    MyInfoView(tabBarVisivility: $tabBarVisivility, signInState: $signInState)
+                    MyInfoView(tabBarVisivility: $tabBarVisivility, signInStore: $signInStore)
                         .customBackbutton()
                         .toolbar(tabBarVisivility, for: .tabBar)
                 } label: {
@@ -93,7 +93,7 @@ struct MyPageView: View {
                 Text("")
             }
         }
-        .PrimaryAlert(isPresented: $isShowingSignOut, title: "로그아웃", content: "로그아웃 하시겠습니까?", primaryButtonTitle: "아니오", cancleButtonTitle: "네", primaryAction: nil) {
+        .primaryAlert(isPresented: $isShowingSignOut, title: "로그아웃", content: "로그아웃 하시겠습니까?", primaryButtonTitle: "아니오", cancleButtonTitle: "네", primaryAction: nil) {
             // 로그아웃
         }
     }
@@ -101,6 +101,6 @@ struct MyPageView: View {
 
 #Preview {
     NavigationStack {
-        MyPageView(tabBarVisivility: .constant(.hidden), signInState: .constant(true))
+        MyPageView(tabBarVisivility: .constant(.hidden), signInStore: .constant(SignInStore()))
     }
 }

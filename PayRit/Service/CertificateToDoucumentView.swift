@@ -1,19 +1,20 @@
 //
-//  LoanDetailImageView.swift
+//  SwiftUIView.swift
 //  PayRit
 //
-//  Created by 임대진 on 3/4/24.
+//  Created by 임대진 on 3/15/24.
 //
-
 import SwiftUI
 
-struct CertificateDetailImageView: View {
+struct                     CertificateToDoucumentView: View {
     @Binding var isPresented: Bool
     @Binding var isButtonShowing: Bool
     var body: some View {
         VStack {
             VStack {
-                CertificateImageView()
+                CertificateDocumentView()
+//                    .foregroundColor(.black)
+//                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color.white)
             }
             .clipShape(.rect(cornerRadius: 12))
@@ -39,6 +40,6 @@ struct CertificateDetailImageView: View {
 }
 
 #Preview {
-    CertificateDetailImageView(isPresented: .constant(true), isButtonShowing: .constant(true))
+                        CertificateToDoucumentView(isPresented: .constant(true), isButtonShowing: .constant(true))
         .background(Color.black)
 }

@@ -20,7 +20,6 @@ struct MailView: UIViewControllerRepresentable {
         return mailComposer
     }
 
-
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
     }

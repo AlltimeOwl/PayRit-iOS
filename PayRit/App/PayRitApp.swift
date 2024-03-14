@@ -21,7 +21,7 @@ struct PayRitApp: App {
     @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
     
     init() {
-        KakaoSDK.initSDK(appKey: "8465cab1fe7ac30a9b0b67cd90db791d")
+        KakaoSDK.initSDK(appKey: "804faa43c8ef17f50ff27c0df82defbf")
         
     }
     

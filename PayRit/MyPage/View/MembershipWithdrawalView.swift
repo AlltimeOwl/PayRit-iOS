@@ -12,7 +12,7 @@ struct MembershipWithdrawalView: View {
     @State var isShowingMenu: Bool = false
     @State var isShowingWithdrawalButton: Bool = false
     @State var isShowingWithdrawalCompleteButton: Bool = false
-    @Binding var signInState: Bool
+    @Binding var signInStore: SignInStore
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             VStack(alignment: .leading) {
@@ -139,22 +139,22 @@ struct MembershipWithdrawalView: View {
         .padding(16)
         .navigationTitle("회원탈퇴")
         .navigationBarTitleDisplayMode(.inline)
-        .PrimaryAlert(isPresented: $isShowingWithdrawalButton, title: "회원탈퇴", content: "정말 탈퇴하시겠습니까?", primaryButtonTitle: "아니오", cancleButtonTitle: "네", primaryAction: nil) {
+        .primaryAlert(isPresented: $isShowingWithdrawalButton, title: "회원탈퇴", content: "정말 탈퇴하시겠습니까?", primaryButtonTitle: "아니오", cancleButtonTitle: "네", primaryAction: nil) {
             isShowingWithdrawalCompleteButton.toggle()
         }
-        .PrimaryAlert(isPresented: $isShowingWithdrawalCompleteButton, title: "회원탈퇴 완료",
+        .primaryAlert(isPresented: $isShowingWithdrawalCompleteButton, title: "회원탈퇴 완료",
                       content: """
                                 회원탈퇴가
                                 완료되었습니다.
                                 """
                       , primaryButtonTitle: nil, cancleButtonTitle: "확인", primaryAction: nil) {
-            signInState.toggle()
+            signInStore.signInState.toggle()
         }
     }
 }
 
 #Preview {
     NavigationStack {
-        MembershipWithdrawalView(signInState: .constant(true))
+        MembershipWithdrawalView(signInStore: .constant(SignInStore()))
     }
 }

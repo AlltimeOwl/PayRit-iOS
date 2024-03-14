@@ -30,7 +30,7 @@ public struct CustomBackButton: ViewModifier {
     }
 }
 
-struct CertificateDetailImageViewModifier: ViewModifier {
+struct CertificateToDoucumentModifier: ViewModifier {
     @Binding var isPresented: Bool
     @Binding var isButtonShowing: Bool
     func body(content: Content) -> some View {
@@ -45,7 +45,7 @@ struct CertificateDetailImageViewModifier: ViewModifier {
                             isPresented = false // 외부 영역 터치시 내려감
                         }
                     
-                    CertificateDetailImageView(isPresented: $isPresented, isButtonShowing: $isButtonShowing)
+                    CertificateToDoucumentView(isPresented: $isPresented, isButtonShowing: $isButtonShowing)
                     .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
             }

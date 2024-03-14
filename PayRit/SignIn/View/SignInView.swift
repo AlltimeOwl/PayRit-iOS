@@ -13,10 +13,8 @@ import KakaoSDKAuth
 import AuthenticationServices
 
 struct SignInView: View {
-    let singInStore: SignInStore
     @State var test = ""
-    @Binding var logInOK: Bool
-//    @State var tabBarVisivility: Visibility = .visible
+    @Binding var signInStore: SignInStore
     @Environment(\.dismiss) var dismiss
     var body: some View {
         NavigationStack {
@@ -29,33 +27,13 @@ struct SignInView: View {
                 VStack(spacing: 8) {
                     Spacer()
                     Button {
-                        if UserApi.isKakaoTalkLoginAvailable() {
-                            UserApi.shared.loginWithKakaoTalk(launchMethod: .CustomScheme) {(oauthToken, error) in
-                                _ = oauthToken
-                                if let error = error {
-                                    print(error.localizedDescription)
-                                } else {
-                                    singInStore.loadingInfoDidKakaoAuth()
-                                    logInOK = true
-                                }
-                            }
-                        } else {
-                            UserApi.shared.loginWithKakaoAccount {(oauthToken, error) in
-                                _ = oauthToken
-                                if let error = error {
-                                    print(error.localizedDescription)
-                                } else {
-                                    singInStore.loadingInfoDidKakaoAuth()
-                                    logInOK = true
-                                }
-                            }
-                        }
+                        signInStore.loadingInfoDidKakaoAuth()
                     } label: {
                         Image("kakaoLoginImage")
                     }
                     
                     Button {
-                        logInOK = true
+                        signInStore.signInState = true
                     } label: {
                         Image("appleLoginImage")
                     }
@@ -80,6 +58,6 @@ struct SignInView: View {
 
 #Preview {
     NavigationStack {
-        SignInView(singInStore: SignInStore(), logInOK: .constant(false))
+        SignInView(signInStore: .constant(SignInStore()))
     }
 }

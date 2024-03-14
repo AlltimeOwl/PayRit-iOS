@@ -10,6 +10,7 @@ import SwiftUI
 
 @Observable
 final class WritingStore {
+    
     func convertToKoreanNumber(_ number: Int) -> String {
         let numbers = ["영", "일", "이", "삼", "사", "오", "육", "칠", "팔", "구"]
         let units = ["", "십", "백", "천"]

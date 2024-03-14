@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		BC1219612BA1D6FC00B575F8 /* Deducted.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1219602BA1D6FC00B575F8 /* Deducted.swift */; };
+		BC1219632BA293EE00B575F8 /* CertificateDocumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1219622BA293EE00B575F8 /* CertificateDocumentView.swift */; };
+		BC1219652BA29FE700B575F8 /* CertificateAcceptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1219642BA29FE700B575F8 /* CertificateAcceptView.swift */; };
+		BC1219672BA32E4700B575F8 /* PDFKitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1219662BA32E4700B575F8 /* PDFKitView.swift */; };
+		BC1219692BA35B1000B575F8 /* CertificateToDoucumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1219682BA35B1000B575F8 /* CertificateToDoucumentView.swift */; };
 		BC1CF8D72B961F5600A9BF12 /* MyInfoWritingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1CF8D62B961F5600A9BF12 /* MyInfoWritingView.swift */; };
 		BC1CF8D92B96C8D800A9BF12 /* CustomAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1CF8D82B96C8D800A9BF12 /* CustomAlert.swift */; };
 		BC1CF8DD2B96FCA200A9BF12 /* WritingCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1CF8DC2B96FCA200A9BF12 /* WritingCheckView.swift */; };
@@ -33,7 +37,6 @@
 		BC595E252B8DC9AC00CA555E /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BC595E242B8DC9AC00CA555E /* Launch Screen.storyboard */; };
 		BC595E282B8DDFDD00CA555E /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC595E272B8DDFDD00CA555E /* HomeView.swift */; };
 		BC5C57092B975A2400A55CC7 /* KakaoAdressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC5C57082B975A2400A55CC7 /* KakaoAdressView.swift */; };
-		BC62BFEE2B9F4695000A1BA5 /* CertificateImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC62BFED2B9F4695000A1BA5 /* CertificateImage.swift */; };
 		BC62BFF02BA02011000A1BA5 /* PaymentHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC62BFEF2BA02011000A1BA5 /* PaymentHistoryView.swift */; };
 		BC62BFF22BA02481000A1BA5 /* Payment.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC62BFF12BA02481000A1BA5 /* Payment.swift */; };
 		BC62BFF42BA02B61000A1BA5 /* AlarmSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC62BFF32BA02B61000A1BA5 /* AlarmSettingView.swift */; };
@@ -56,7 +59,6 @@
 		BCD942532B8F0E0600BF61CD /* LaunchScreenTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD942522B8F0E0600BF61CD /* LaunchScreenTest.swift */; };
 		BCD942572B8F1D5400BF61CD /* MyPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD942562B8F1D5400BF61CD /* MyPageView.swift */; };
 		BCD9425B2B8F639A00BF61CD /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD9425A2B8F639A00BF61CD /* CustomTextField.swift */; };
-		BCDC9C562B958FA2002D8A4A /* CertificateDetailImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCDC9C552B958FA2002D8A4A /* CertificateDetailImageView.swift */; };
 		BCE280DA2B8F75120085D45E /* View +.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCE280D92B8F75120085D45E /* View +.swift */; };
 		BCE280DC2B8F75450085D45E /* ViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCE280DB2B8F75440085D45E /* ViewModifier.swift */; };
 		BCE280E02B9021EE0085D45E /* WritingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCE280DF2B9021EE0085D45E /* WritingView.swift */; };
@@ -66,6 +68,10 @@
 
 /* Begin PBXFileReference section */
 		BC1219602BA1D6FC00B575F8 /* Deducted.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deducted.swift; sourceTree = "<group>"; };
+		BC1219622BA293EE00B575F8 /* CertificateDocumentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateDocumentView.swift; sourceTree = "<group>"; };
+		BC1219642BA29FE700B575F8 /* CertificateAcceptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateAcceptView.swift; sourceTree = "<group>"; };
+		BC1219662BA32E4700B575F8 /* PDFKitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFKitView.swift; sourceTree = "<group>"; };
+		BC1219682BA35B1000B575F8 /* CertificateToDoucumentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateToDoucumentView.swift; sourceTree = "<group>"; };
 		BC1CF8D62B961F5600A9BF12 /* MyInfoWritingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyInfoWritingView.swift; sourceTree = "<group>"; };
 		BC1CF8D82B96C8D800A9BF12 /* CustomAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlert.swift; sourceTree = "<group>"; };
 		BC1CF8DC2B96FCA200A9BF12 /* WritingCheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WritingCheckView.swift; sourceTree = "<group>"; };
@@ -88,7 +94,6 @@
 		BC595E242B8DC9AC00CA555E /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		BC595E272B8DDFDD00CA555E /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		BC5C57082B975A2400A55CC7 /* KakaoAdressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KakaoAdressView.swift; sourceTree = "<group>"; };
-		BC62BFED2B9F4695000A1BA5 /* CertificateImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateImage.swift; sourceTree = "<group>"; };
 		BC62BFEF2BA02011000A1BA5 /* PaymentHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentHistoryView.swift; sourceTree = "<group>"; };
 		BC62BFF12BA02481000A1BA5 /* Payment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Payment.swift; sourceTree = "<group>"; };
 		BC62BFF32BA02B61000A1BA5 /* AlarmSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmSettingView.swift; sourceTree = "<group>"; };
@@ -111,7 +116,6 @@
 		BCD942522B8F0E0600BF61CD /* LaunchScreenTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenTest.swift; sourceTree = "<group>"; };
 		BCD942562B8F1D5400BF61CD /* MyPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageView.swift; sourceTree = "<group>"; };
 		BCD9425A2B8F639A00BF61CD /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
-		BCDC9C552B958FA2002D8A4A /* CertificateDetailImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateDetailImageView.swift; sourceTree = "<group>"; };
 		BCE280D92B8F75120085D45E /* View +.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View +.swift"; sourceTree = "<group>"; };
 		BCE280DB2B8F75440085D45E /* ViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModifier.swift; sourceTree = "<group>"; };
 		BCE280DF2B9021EE0085D45E /* WritingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WritingView.swift; sourceTree = "<group>"; };
@@ -164,9 +168,9 @@
 			children = (
 				BCD942502B8F0CCC00BF61CD /* .swiftlint.yml */,
 				BC595DEA2B8D8DF300CA555E /* Config */,
+				BC595E1D2B8DBDB300CA555E /* LaunchScreen */,
 				BCD9425C2B8F6FBA00BF61CD /* App */,
 				BC388DB32B904B6F005D1279 /* Content */,
-				BC595E1D2B8DBDB300CA555E /* LaunchScreen */,
 				BC595DED2B8D8E6200CA555E /* Service */,
 				BC595DE72B8D8DCF00CA555E /* Common */,
 				BC595DE92B8D8DE200CA555E /* Extensions */,
@@ -257,7 +261,8 @@
 			isa = PBXGroup;
 			children = (
 				BC95634F2B9F3B130014010C /* MFMailView.swift */,
-				BC62BFED2B9F4695000A1BA5 /* CertificateImage.swift */,
+				BC1219662BA32E4700B575F8 /* PDFKitView.swift */,
+				BC1219682BA35B1000B575F8 /* CertificateToDoucumentView.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -321,7 +326,8 @@
 				BC9E55CD2B956B7300B100C6 /* CertificateDetailView.swift */,
 				BC2D51CB2B9ECD870041FD77 /* CertificateMemoView.swift */,
 				BC2D51CD2B9F35260041FD77 /* CertificateDeductibleView.swift */,
-				BCDC9C552B958FA2002D8A4A /* CertificateDetailImageView.swift */,
+				BC1219622BA293EE00B575F8 /* CertificateDocumentView.swift */,
+				BC1219642BA29FE700B575F8 /* CertificateAcceptView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -539,8 +545,11 @@
 			files = (
 				BC9E55CC2B936F9700B100C6 /* HomeStore.swift in Sources */,
 				BCE280E42B903BE50085D45E /* SelectCertificateTypeView.swift in Sources */,
+				BC1219692BA35B1000B575F8 /* CertificateToDoucumentView.swift in Sources */,
 				BCD9425B2B8F639A00BF61CD /* CustomTextField.swift in Sources */,
-				BC62BFEE2B9F4695000A1BA5 /* CertificateImage.swift in Sources */,
+				BC1219672BA32E4700B575F8 /* PDFKitView.swift in Sources */,
+				BC1219652BA29FE700B575F8 /* CertificateAcceptView.swift in Sources */,
+				BC1219632BA293EE00B575F8 /* CertificateDocumentView.swift in Sources */,
 				BC1CF8D92B96C8D800A9BF12 /* CustomAlert.swift in Sources */,
 				BC62BFF42BA02B61000A1BA5 /* AlarmSettingView.swift in Sources */,
 				BC947A5D2B984AEF00295C7B /* MyInfoView.swift in Sources */,
@@ -574,7 +583,6 @@
 				BC595E282B8DDFDD00CA555E /* HomeView.swift in Sources */,
 				BC388DB52B904BAB005D1279 /* ContentView.swift in Sources */,
 				BC595E0A2B8DAFD600CA555E /* Font +.swift in Sources */,
-				BCDC9C562B958FA2002D8A4A /* CertificateDetailImageView.swift in Sources */,
 				BC6F652F2B9B3D9000FB9FA7 /* MyPageStore.swift in Sources */,
 				BC5C57092B975A2400A55CC7 /* KakaoAdressView.swift in Sources */,
 				BCE280DC2B8F75450085D45E /* ViewModifier.swift in Sources */,
@@ -723,6 +731,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -755,6 +764,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
