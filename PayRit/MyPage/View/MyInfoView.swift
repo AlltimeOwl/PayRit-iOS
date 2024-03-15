@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct MyInfoView: View {
-    let sampleUser = User.sampleUser
     @Binding var tabBarVisivility: Visibility
-    @Binding var signInStore: SignInStore
+    @Environment(SignInStore.self) var signInStore
+    
     var body: some View {
         VStack(spacing: 20) {
             VStack(alignment: .leading) {
@@ -22,7 +22,7 @@ struct MyInfoView: View {
                     .foregroundStyle(Color.gray09)
                     .overlay {
                         HStack {
-                            Text(sampleUser.name)
+                            Text(signInStore.userName)
                                 .font(Font.body02)
                                 .foregroundStyle(Color.gray06)
                             Spacer()
@@ -39,7 +39,7 @@ struct MyInfoView: View {
                     .foregroundStyle(Color.gray09)
                     .overlay {
                         HStack {
-                            Text(sampleUser.email)
+                            Text(signInStore.userEmail)
                                 .font(Font.body02)
                                 .foregroundStyle(Color.gray06)
                             Spacer()
@@ -48,7 +48,7 @@ struct MyInfoView: View {
                     }
             }
             VStack(alignment: .leading) {
-                Text("이름")
+                Text("휴대폰 번호")
                     .font(Font.body02)
                     .foregroundStyle(Color.gray03)
                 RoundedRectangle(cornerRadius: 12)
@@ -56,7 +56,7 @@ struct MyInfoView: View {
                     .foregroundStyle(Color.gray09)
                     .overlay {
                         HStack {
-                            Text(sampleUser.phoneNumber)
+                            Text(signInStore.userPhoneNumber)
                                 .font(Font.body02)
                                 .foregroundStyle(Color.gray06)
                             Spacer()
@@ -73,7 +73,7 @@ struct MyInfoView: View {
                     .foregroundStyle(Color.gray09)
                     .overlay {
                         HStack {
-                            Text("카카오톡")
+                            Text(signInStore.signInCompany)
                                 .font(Font.body02)
                                 .foregroundStyle(Color.gray06)
                             Spacer()
@@ -83,7 +83,7 @@ struct MyInfoView: View {
             }
             Spacer()
             NavigationLink {
-                MembershipWithdrawalView(signInStore: $signInStore)
+                MembershipWithdrawalView()
                     .customBackbutton()
             } label: {
                 Text("회원탈퇴")
@@ -105,6 +105,6 @@ struct MyInfoView: View {
 
 #Preview {
     NavigationStack {
-        MyInfoView(tabBarVisivility: .constant(.hidden), signInStore: .constant(SignInStore()))
+        MyInfoView(tabBarVisivility: .constant(.hidden))
     }
 }

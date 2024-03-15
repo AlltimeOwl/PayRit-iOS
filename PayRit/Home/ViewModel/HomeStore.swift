@@ -57,8 +57,7 @@ final class HomeStore {
         }
     }
     
-    @MainActor
-    func generatePDF() -> URL {
+    @MainActor func generatePDF() -> URL {
         let renderer = ImageRenderer(content: CertificateDocumentView())
         
         let url = URL.documentsDirectory.appending(path: "\(Date().dateToString()) 페이릿 차용증.pdf")

@@ -12,6 +12,7 @@
 		BC1219652BA29FE700B575F8 /* CertificateAcceptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1219642BA29FE700B575F8 /* CertificateAcceptView.swift */; };
 		BC1219672BA32E4700B575F8 /* PDFKitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1219662BA32E4700B575F8 /* PDFKitView.swift */; };
 		BC1219692BA35B1000B575F8 /* CertificateToDoucumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1219682BA35B1000B575F8 /* CertificateToDoucumentView.swift */; };
+		BC12196D2BA43D8200B575F8 /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC12196C2BA43D8200B575F8 /* UserDefaultsManager.swift */; };
 		BC1CF8D72B961F5600A9BF12 /* MyInfoWritingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1CF8D62B961F5600A9BF12 /* MyInfoWritingView.swift */; };
 		BC1CF8D92B96C8D800A9BF12 /* CustomAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1CF8D82B96C8D800A9BF12 /* CustomAlert.swift */; };
 		BC1CF8DD2B96FCA200A9BF12 /* WritingCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1CF8DC2B96FCA200A9BF12 /* WritingCheckView.swift */; };
@@ -72,6 +73,8 @@
 		BC1219642BA29FE700B575F8 /* CertificateAcceptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateAcceptView.swift; sourceTree = "<group>"; };
 		BC1219662BA32E4700B575F8 /* PDFKitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFKitView.swift; sourceTree = "<group>"; };
 		BC1219682BA35B1000B575F8 /* CertificateToDoucumentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateToDoucumentView.swift; sourceTree = "<group>"; };
+		BC12196A2BA4010500B575F8 /* PayRit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PayRit.entitlements; sourceTree = "<group>"; };
+		BC12196C2BA43D8200B575F8 /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
 		BC1CF8D62B961F5600A9BF12 /* MyInfoWritingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyInfoWritingView.swift; sourceTree = "<group>"; };
 		BC1CF8D82B96C8D800A9BF12 /* CustomAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlert.swift; sourceTree = "<group>"; };
 		BC1CF8DC2B96FCA200A9BF12 /* WritingCheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WritingCheckView.swift; sourceTree = "<group>"; };
@@ -166,11 +169,13 @@
 		BC595DD42B8D8AC300CA555E /* PayRit */ = {
 			isa = PBXGroup;
 			children = (
+				BC12196A2BA4010500B575F8 /* PayRit.entitlements */,
 				BCD942502B8F0CCC00BF61CD /* .swiftlint.yml */,
 				BC595DEA2B8D8DF300CA555E /* Config */,
-				BC595E1D2B8DBDB300CA555E /* LaunchScreen */,
 				BCD9425C2B8F6FBA00BF61CD /* App */,
+				BC595E1D2B8DBDB300CA555E /* LaunchScreen */,
 				BC388DB32B904B6F005D1279 /* Content */,
+				BC595DEC2B8D8E4600CA555E /* UserDefaults */,
 				BC595DED2B8D8E6200CA555E /* Service */,
 				BC595DE72B8D8DCF00CA555E /* Common */,
 				BC595DE92B8D8DE200CA555E /* Extensions */,
@@ -181,7 +186,6 @@
 				BC5C572A2B977B6800A55CC7 /* KakaoAddress */,
 				BC595DFE2B8DA1E200CA555E /* SignIn */,
 				BCD942542B8F1D3100BF61CD /* MyPage */,
-				BC595DEC2B8D8E4600CA555E /* UserDefaults */,
 				BC595DDB2B8D8AC400CA555E /* Preview Content */,
 			);
 			path = PayRit;
@@ -253,6 +257,7 @@
 		BC595DEC2B8D8E4600CA555E /* UserDefaults */ = {
 			isa = PBXGroup;
 			children = (
+				BC12196C2BA43D8200B575F8 /* UserDefaultsManager.swift */,
 			);
 			path = UserDefaults;
 			sourceTree = "<group>";
@@ -370,9 +375,9 @@
 			children = (
 				BCD942562B8F1D5400BF61CD /* MyPageView.swift */,
 				BC947A5C2B984AEF00295C7B /* MyInfoView.swift */,
-				BC6F652C2B9B394800FB9FA7 /* MembershipWithdrawalView.swift */,
 				BC62BFEF2BA02011000A1BA5 /* PaymentHistoryView.swift */,
 				BC62BFF32BA02B61000A1BA5 /* AlarmSettingView.swift */,
+				BC6F652C2B9B394800FB9FA7 /* MembershipWithdrawalView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -584,6 +589,7 @@
 				BC388DB52B904BAB005D1279 /* ContentView.swift in Sources */,
 				BC595E0A2B8DAFD600CA555E /* Font +.swift in Sources */,
 				BC6F652F2B9B3D9000FB9FA7 /* MyPageStore.swift in Sources */,
+				BC12196D2BA43D8200B575F8 /* UserDefaultsManager.swift in Sources */,
 				BC5C57092B975A2400A55CC7 /* KakaoAdressView.swift in Sources */,
 				BCE280DC2B8F75450085D45E /* ViewModifier.swift in Sources */,
 				BC595E192B8DB75600CA555E /* Color +.swift in Sources */,
@@ -718,6 +724,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_ENTITLEMENTS = PayRit/PayRit.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PayRit/Preview Content\"";
@@ -751,6 +758,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_ENTITLEMENTS = PayRit/PayRit.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PayRit/Preview Content\"";

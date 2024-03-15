@@ -12,6 +12,6 @@ struct User: Identifiable {
     let name: String
     let email: String
     let phoneNumber: String
-    
-    static var sampleUser: User = User(name: "임대진", email: "eowls2983@gmail.com", phoneNumber: "01050097937")
+    let signInCompany: String
+    var appleId: String?
 }

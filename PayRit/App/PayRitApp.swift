@@ -19,15 +19,19 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct PayRitApp: App {
     @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
+    @State var signInStore: SignInStore = SignInStore()
     
     init() {
         KakaoSDK.initSDK(appKey: "804faa43c8ef17f50ff27c0df82defbf")
         
+        // 애플로그인 일때
+        signInStore.appleAuthCheck()
     }
     
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environment(signInStore)
         }
     }
 }

@@ -12,7 +12,7 @@ struct MembershipWithdrawalView: View {
     @State var isShowingMenu: Bool = false
     @State var isShowingWithdrawalButton: Bool = false
     @State var isShowingWithdrawalCompleteButton: Bool = false
-    @Binding var signInStore: SignInStore
+    @Environment(SignInStore.self) var signInStore
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             VStack(alignment: .leading) {
@@ -148,13 +148,14 @@ struct MembershipWithdrawalView: View {
                                 완료되었습니다.
                                 """
                       , primaryButtonTitle: nil, cancleButtonTitle: "확인", primaryAction: nil) {
-            signInStore.signInState.toggle()
+            signInStore.isSignIn = false
+            UserDefaultsManager().removeAll()
         }
     }
 }
 
 #Preview {
     NavigationStack {
-        MembershipWithdrawalView(signInStore: .constant(SignInStore()))
+        MembershipWithdrawalView()
     }
 }

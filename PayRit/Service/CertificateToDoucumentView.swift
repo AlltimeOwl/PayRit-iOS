@@ -6,15 +6,15 @@
 //
 import SwiftUI
 
-struct                     CertificateToDoucumentView: View {
+struct CertificateToDoucumentView: View {
     @Binding var isPresented: Bool
     @Binding var isButtonShowing: Bool
     var body: some View {
         VStack {
             VStack {
                 CertificateDocumentView()
-//                    .foregroundColor(.black)
-//                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                //                    .foregroundColor(.black)
+                //                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color.white)
             }
             .clipShape(.rect(cornerRadius: 12))
@@ -40,6 +40,6 @@ struct                     CertificateToDoucumentView: View {
 }
 
 #Preview {
-                        CertificateToDoucumentView(isPresented: .constant(true), isButtonShowing: .constant(true))
-        .background(Color.black)
+    CertificateToDoucumentView(isPresented: .constant(true), isButtonShowing: .constant(true))
+        .background(Color.gray)
 }

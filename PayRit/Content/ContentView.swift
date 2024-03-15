@@ -11,20 +11,18 @@ import KakaoSDKAuth
 
 struct ContentView: View {
     @State var tabBarVisivility: Visibility = .visible
-    @State var signInStore = SignInStore()
+    @Environment(SignInStore.self) var signInStore
+    
     var body: some View {
-        if signInStore.signInState {
-            TabBarView(tabBarVisivility: $tabBarVisivility, signInStore: $signInStore)
+        if signInStore.isSignIn {
+            TabBarView(tabBarVisivility: $tabBarVisivility)
         } else {
             // onOpenURL()을 사용해 커스텀 URL 스킴 처리
-            SignInView(signInStore: $signInStore).onOpenURL(perform: { url in
+            SignInView().onOpenURL(perform: { url in
                 if AuthApi.isKakaoTalkLoginUrl(url) {
                     _ = AuthController.handleOpenUrl(url: url)
                 }
             })
-            .onAppear {
-                
-            }
         }
     }
 }

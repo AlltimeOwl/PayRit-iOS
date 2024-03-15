@@ -8,13 +8,11 @@
 import SwiftUI
 
 struct MyPageView: View {
-    @State var name: String = "임대진"
-    @State var email: String = "eowls2983@gmail.com"
     @State var listItemHeight: CGFloat = 40
     @State var isShowingSignOut: Bool = false
     @State var notFoundUser: Bool = false
     @Binding var tabBarVisivility: Visibility
-    @Binding var signInStore: SignInStore
+    @Environment(SignInStore.self) var signInStore
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(spacing: 16) {
@@ -22,9 +20,9 @@ struct MyPageView: View {
                     .frame(height: 77)
                     .foregroundStyle(.blue)
                 VStack(alignment: .leading, spacing: 10) {
-                    Text(name)
+                    Text(signInStore.userName)
                         .font(Font.title01)
-                    Text(email)
+                    Text(signInStore.userEmail)
                         .font(.system(size: 16))
                         .foregroundStyle(Color.gray05)
                 }
@@ -34,7 +32,7 @@ struct MyPageView: View {
             .padding(.horizontal, 16)
             List {
                 NavigationLink {
-                    MyInfoView(tabBarVisivility: $tabBarVisivility, signInStore: $signInStore)
+                    MyInfoView(tabBarVisivility: $tabBarVisivility)
                         .customBackbutton()
                         .toolbar(tabBarVisivility, for: .tabBar)
                 } label: {
@@ -101,6 +99,6 @@ struct MyPageView: View {
 
 #Preview {
     NavigationStack {
-        MyPageView(tabBarVisivility: .constant(.hidden), signInStore: .constant(SignInStore()))
+        MyPageView(tabBarVisivility: .constant(.hidden))
     }
 }

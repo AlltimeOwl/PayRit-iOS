@@ -13,9 +13,9 @@ struct HomeView: View {
     @State private var navigationLinkToggle = false
     @State private var index: Int = 0
     @State var homeStore = HomeStore()
+    @Environment(SignInStore.self) var signInStore
     private let menuPadding = 8.0
     private let horizontalPadding = 16.0
-    @Binding var signInStore: SignInStore
     
     var body: some View {
         NavigationStack {
@@ -49,7 +49,7 @@ struct HomeView: View {
                                         Button {
                                             print(signInStore.aToken)
                                             print(signInStore.rToken)
-                                            signInStore.test()
+                                            signInStore.serverTest()
                                         } label: {
                                             Text("확인하기")
                                                 .font(Font.body03)
@@ -273,6 +273,6 @@ struct HomeView: View {
 
 #Preview {
     NavigationStack {
-        HomeView(signInStore: .constant(SignInStore()))
+        HomeView()
     }
 }
