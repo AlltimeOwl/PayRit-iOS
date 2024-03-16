@@ -12,7 +12,6 @@ public struct CustomBackButton: ViewModifier {
     public typealias Action = () -> ()
     
     var action: Action?
-    
     public func body(content: Content) -> some View {
         content
             .navigationBarBackButtonHidden(true)
@@ -31,8 +30,10 @@ public struct CustomBackButton: ViewModifier {
 }
 
 struct CertificateToDoucumentModifier: ViewModifier {
+    public typealias Action = () -> ()
+    let primaryAction: Action?
+    let primaryAction2: Action?
     @Binding var isPresented: Bool
-    @Binding var isButtonShowing: Bool
     func body(content: Content) -> some View {
         ZStack {
             content
@@ -45,16 +46,16 @@ struct CertificateToDoucumentModifier: ViewModifier {
                             isPresented = false // 외부 영역 터치시 내려감
                         }
                     
-                    CertificateToDoucumentView(isPresented: $isPresented, isButtonShowing: $isButtonShowing)
+                    CertificateToDoucumentView(primaryAction: primaryAction, primaryAction2: primaryAction2, isPresented: $isPresented)
                     .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
             }
-//            .animation(
-//                isPresented
-//                ? .spring(response: 0.3)
-//                : .none,
-//                value: isPresented
-//            )
+            .animation(
+                isPresented
+                ? .spring(response: 0.3)
+                : .none,
+                value: isPresented
+            )
         }
     }
 }

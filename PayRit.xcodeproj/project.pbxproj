@@ -8,11 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		BC1219612BA1D6FC00B575F8 /* Deducted.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1219602BA1D6FC00B575F8 /* Deducted.swift */; };
-		BC1219632BA293EE00B575F8 /* CertificateDocumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1219622BA293EE00B575F8 /* CertificateDocumentView.swift */; };
 		BC1219652BA29FE700B575F8 /* CertificateAcceptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1219642BA29FE700B575F8 /* CertificateAcceptView.swift */; };
 		BC1219672BA32E4700B575F8 /* PDFKitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1219662BA32E4700B575F8 /* PDFKitView.swift */; };
 		BC1219692BA35B1000B575F8 /* CertificateToDoucumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1219682BA35B1000B575F8 /* CertificateToDoucumentView.swift */; };
 		BC12196D2BA43D8200B575F8 /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC12196C2BA43D8200B575F8 /* UserDefaultsManager.swift */; };
+		BC12196F2BA5F21F00B575F8 /* CertificateDocumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1219622BA293EE00B575F8 /* CertificateDocumentView.swift */; };
 		BC1CF8D72B961F5600A9BF12 /* MyInfoWritingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1CF8D62B961F5600A9BF12 /* MyInfoWritingView.swift */; };
 		BC1CF8D92B96C8D800A9BF12 /* CustomAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1CF8D82B96C8D800A9BF12 /* CustomAlert.swift */; };
 		BC1CF8DD2B96FCA200A9BF12 /* WritingCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1CF8DC2B96FCA200A9BF12 /* WritingCheckView.swift */; };
@@ -142,6 +142,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BC12196E2BA5F1D700B575F8 /* ExportView */ = {
+			isa = PBXGroup;
+			children = (
+				BC1219622BA293EE00B575F8 /* CertificateDocumentView.swift */,
+				BC1219682BA35B1000B575F8 /* CertificateToDoucumentView.swift */,
+			);
+			path = ExportView;
+			sourceTree = "<group>";
+		};
 		BC388DB32B904B6F005D1279 /* Content */ = {
 			isa = PBXGroup;
 			children = (
@@ -267,7 +276,6 @@
 			children = (
 				BC95634F2B9F3B130014010C /* MFMailView.swift */,
 				BC1219662BA32E4700B575F8 /* PDFKitView.swift */,
-				BC1219682BA35B1000B575F8 /* CertificateToDoucumentView.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -331,8 +339,8 @@
 				BC9E55CD2B956B7300B100C6 /* CertificateDetailView.swift */,
 				BC2D51CB2B9ECD870041FD77 /* CertificateMemoView.swift */,
 				BC2D51CD2B9F35260041FD77 /* CertificateDeductibleView.swift */,
-				BC1219622BA293EE00B575F8 /* CertificateDocumentView.swift */,
 				BC1219642BA29FE700B575F8 /* CertificateAcceptView.swift */,
+				BC12196E2BA5F1D700B575F8 /* ExportView */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -554,7 +562,6 @@
 				BCD9425B2B8F639A00BF61CD /* CustomTextField.swift in Sources */,
 				BC1219672BA32E4700B575F8 /* PDFKitView.swift in Sources */,
 				BC1219652BA29FE700B575F8 /* CertificateAcceptView.swift in Sources */,
-				BC1219632BA293EE00B575F8 /* CertificateDocumentView.swift in Sources */,
 				BC1CF8D92B96C8D800A9BF12 /* CustomAlert.swift in Sources */,
 				BC62BFF42BA02B61000A1BA5 /* AlarmSettingView.swift in Sources */,
 				BC947A5D2B984AEF00295C7B /* MyInfoView.swift in Sources */,
@@ -591,6 +598,7 @@
 				BC6F652F2B9B3D9000FB9FA7 /* MyPageStore.swift in Sources */,
 				BC12196D2BA43D8200B575F8 /* UserDefaultsManager.swift in Sources */,
 				BC5C57092B975A2400A55CC7 /* KakaoAdressView.swift in Sources */,
+				BC12196F2BA5F21F00B575F8 /* CertificateDocumentView.swift in Sources */,
 				BCE280DC2B8F75450085D45E /* ViewModifier.swift in Sources */,
 				BC595E192B8DB75600CA555E /* Color +.swift in Sources */,
 			);

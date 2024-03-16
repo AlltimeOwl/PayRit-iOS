@@ -20,9 +20,9 @@ extension View {
         self.modifier(ToastMessageModifier(isShowing: isShowing, title: title, message: message))
     }
     
-    public func certificateToDoucument(isPresented: Binding<Bool>, isButtonShowing: Binding<Bool>) -> some View {
+    public func certificateToDoucument(isPresented: Binding<Bool>, primaryAction: (() -> ())? = nil, primaryAction2: (() -> ())? = nil) -> some View {
         return modifier(
-            CertificateToDoucumentModifier(isPresented: isPresented, isButtonShowing: isButtonShowing)
+            CertificateToDoucumentModifier(primaryAction: primaryAction, primaryAction2: primaryAction2, isPresented: isPresented)
         )
     }
     

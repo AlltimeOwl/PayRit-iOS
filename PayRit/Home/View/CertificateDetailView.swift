@@ -1,18 +1,16 @@
-//
+
 //  CertificateDetailView.swift
 //  PayRit
 //
 //  Created by 임대진 on 3/4/24.
-//
+
 
 import SwiftUI
 import UIKit
 import MessageUI
 
 struct CertificateDetailView: View {
-    @State private var pdfURL: URL?
-    @State private var isModalPresented: Bool = false
-    @State private var isActionSheetPresented: Bool = false
+    @State private var isShowingExportView: Bool = false
     @State private var isShowingPDFView: Bool = false
     @State private var isShowingMailView: Bool = false
     @State private var result: Result<MFMailComposeResult, Error>?
@@ -127,7 +125,6 @@ struct CertificateDetailView: View {
                                 )
                             }
                             Button {
-                                isActionSheetPresented.toggle()
                             } label: {
                                 HStack {
                                     Image(systemName: "paperplane")
@@ -142,7 +139,7 @@ struct CertificateDetailView: View {
                                 )
                             }
                             Button {
-                                isActionSheetPresented.toggle()
+                                isShowingExportView.toggle()
                             } label: {
                                 HStack {
                                     Image(systemName: "doc")
@@ -158,7 +155,7 @@ struct CertificateDetailView: View {
                             }
                         } else {
                             Button {
-                                isActionSheetPresented.toggle()
+                                isShowingExportView.toggle()
                             } label: {
                                 HStack {
                                     Image(systemName: "doc")
@@ -183,77 +180,43 @@ struct CertificateDetailView: View {
                 .shadow(color: .gray.opacity(0.2), radius: 5)
                 .padding(.top, 24)
                 
-                HStack {
-                    Button {
-                        isModalPresented.toggle()
-                    } label: {
+                NavigationLink {
+                    CertificateMemoView(index: index)
+                        .customBackbutton()
+                } label: {
+                    VStack(spacing: 0) {
                         Rectangle()
-                            .foregroundStyle(homeStore.certificates[index].cardColor == .payritMint ? Color.payritLightMint : Color.payritIntensiveLightPink)
-                            .frame(width: 130, height: 155)
-                            .shadow(color: .gray.opacity(0.2), radius: 5)
-                            .overlay {
-                                VStack(alignment: .leading) {
-                                    Text("""
-                                         차용증
-                                         미리보기
-                                         """)
-                                    .lineSpacing(4)
+                            .foregroundStyle(Color.white)
+                            .frame(height: 105)
+                            .overlay(
+                                VStack(alignment: .leading, spacing: 10) {
+                                    Text("개인 메모")
+                                        .font(Font.body01)
+                                        .foregroundStyle(.black)
+                                    Text("최근 날짜의 메모가 요약으로 보여집니다.")
+                                    .font(Font.body03)
+                                    .foregroundStyle(Color.gray05)
                                     .multilineTextAlignment(.leading)
-                                    .font(Font.body01)
-                                    .foregroundStyle(.black)
                                     Spacer()
-                                    HStack {
-                                        Spacer()
-                                        Image(systemName: "arrow.down.backward.and.arrow.up.forward")
-                                            .font(.system(size: 20))
-                                            .foregroundStyle(Color.gray04)
-                                    }
                                 }
-                                .padding(16)
-                            }
-                            .background()
-                            .clipShape(.rect(cornerRadius: 12))
-                            .shadow(color: .gray.opacity(0.2), radius: 5)
+                                    .padding(.top, 16)
+                                    .padding(.leading, 16)
+                                , alignment: .leading
+                            )
+                        Rectangle()
+                            .foregroundStyle(Color.gray08)
+                            .frame(height: 50)
+                            .overlay(
+                                Text("총 \(homeStore.certificates[index].memo.count)개의 메모")
+                                    .font(Font.caption02)
+                                    .foregroundStyle(Color.gray02)
+                                    .padding(.leading, 16)
+                                , alignment: .leading
+                            )
                     }
-                    Spacer().frame(width: 14)
-                    NavigationLink {
-                        CertificateMemoView(index: index)
-                            .customBackbutton()
-                    } label: {
-                        VStack(spacing: 0) {
-                            Rectangle()
-                                .foregroundStyle(Color.white)
-                                .frame(height: 105)
-                                .overlay(
-                                    VStack(alignment: .leading, spacing: 10) {
-                                        Text("개인 메모")
-                                            .font(Font.body01)
-                                            .foregroundStyle(.black)
-                                        Text("최근 날짜의 메모가 요약으로 보여집니다.")
-                                        .font(Font.body03)
-                                        .foregroundStyle(Color.gray05)
-                                        .multilineTextAlignment(.leading)
-                                        Spacer()
-                                    }
-                                        .padding(.top, 16)
-                                        .padding(.leading, 16)
-                                    , alignment: .leading
-                                )
-                            Rectangle()
-                                .foregroundStyle(Color.gray08)
-                                .frame(height: 50)
-                                .overlay(
-                                    Text("총 \(homeStore.certificates[index].memo.count)개의 메모")
-                                        .font(Font.caption02)
-                                        .foregroundStyle(Color.gray02)
-                                        .padding(.leading, 16)
-                                    , alignment: .leading
-                                )
-                        }
-                        .background()
-                        .clipShape(.rect(cornerRadius: 12))
-                        .shadow(color: .gray.opacity(0.2), radius: 5)
-                    }
+                    .background()
+                    .clipShape(.rect(cornerRadius: 12))
+                    .shadow(color: .gray.opacity(0.2), radius: 5)
                 }
                 .padding(.top, 14)
                 
@@ -334,6 +297,54 @@ struct CertificateDetailView: View {
                         .clipShape(.rect(cornerRadius: 12))
                         .shadow(color: .gray.opacity(0.2), radius: 5)
                     }
+                    
+                    if homeStore.certificates[index].interestRateAmount != 0 || (homeStore.certificates[index].interestRateDay != nil) || (homeStore.certificates[index].etc != nil) {
+                        VStack(alignment: .leading) {
+                            Text("추가사항")
+                                .font(Font.body03)
+                                .foregroundStyle(Color.gray04)
+                            VStack(alignment: .leading, spacing: 12) {
+                                if homeStore.certificates[index].interestRateAmount != 0 {
+                                    HStack {
+                                        Text("이자")
+                                            .font(Font.body04)
+                                        Spacer().frame(width: 70)
+                                        Text("\(homeStore.certificates[index].interestRateAmount)원")
+                                            .font(Font.body01)
+                                        Spacer()
+                                    }
+                                }
+                                
+                                if let day = homeStore.certificates[index].interestRateDay {
+                                    HStack {
+                                        Text("이자 지급일")
+                                            .font(Font.body04)
+                                        Spacer().frame(width: 30)
+                                        Text("매월 \(day)일")
+                                            .foregroundStyle(!homeStore.certificates[index].repaymentEndDate.isEmpty ? .black : .clear)
+                                            .font(Font.body01)
+                                        Spacer()
+                                    }
+                                }
+                                
+                                if let etc = homeStore.certificates[index].etc {
+                                    HStack {
+                                        Text("특이사항")
+                                            .font(Font.body04)
+                                        Spacer().frame(width: 70)
+                                        Text("\(etc)")
+                                            .font(Font.body01)
+                                        Spacer()
+                                    }
+                                }
+                            }
+                            .padding(.vertical, 16)
+                            .padding(.horizontal, 20)
+                            .background(Color(hex: "E5FDFC"))
+                            .clipShape(.rect(cornerRadius: 12))
+                            .shadow(color: .gray.opacity(0.2), radius: 5)
+                        }
+                    }
                 }
                 .padding(.top, 20)
                 .font(.system(size: 18))
@@ -345,35 +356,27 @@ struct CertificateDetailView: View {
         .scrollIndicators(.hidden)
         .navigationTitle("페이릿 상세 페이지")
         .navigationBarTitleDisplayMode(.inline)
-        .certificateToDoucument(isPresented: $isModalPresented, isButtonShowing: .constant(true))
-        .onAppear {
-        }
-        .confirmationDialog("", isPresented: $isActionSheetPresented, titleVisibility: .hidden) {
-            Button("PDF 다운") {
-                pdfURL = homeStore.generatePDF()
-                isShowingPDFView.toggle()
+        .certificateToDoucument(isPresented: $isShowingExportView, primaryAction: {
+            isShowingExportView.toggle()
+            isShowingPDFView.toggle()
+        }, primaryAction2: {
+            if MFMailComposeViewController.canSendMail() {
+                isShowingExportView.toggle()
+                isShowingMailView.toggle()
+            } else {
+                print("메일을 보낼수 없는 기기입니다.")
             }
-            Button("이메일 전송") {
-                if MFMailComposeViewController.canSendMail() {
-                    pdfURL = homeStore.generatePDF()
-                        self.isShowingMailView.toggle()
-                } else {
-                    print("메일을 보낼수 없는 기기입니다.")
-                }
-                if result != nil {
-                    print("Result: \(String(describing: result))")
-                }
+            if result != nil {
+                print("Result: \(String(describing: result))")
             }
-            Button("취소", role: .cancel) {
-            }
-        }
+        })
         .sheet(isPresented: $isShowingMailView) {
+            let pdfURL: URL? = homeStore.generatePDF()
             MailView(result: self.$result) { mailComposer in
                 mailComposer.setSubject("\(Date().dateToString()) 페이릿 차용증")
                 mailComposer.setToRecipients([""])
                 mailComposer.setMessageBody("", isHTML: false)
-                
-                if let pdfURL = pdfURL, let pdfData = try? Data(contentsOf: pdfURL) {
+                if let url = pdfURL, let pdfData = try? Data(contentsOf: url) {
                     mailComposer.addAttachmentData(pdfData, mimeType: "application/pdf", fileName: "\(Date().dateToString()) 페이릿 차용증.pdf")
                 } else {
                     print("PDF 메일 오류")
@@ -381,9 +384,10 @@ struct CertificateDetailView: View {
             }
         }
         .sheet(isPresented: $isShowingPDFView, content: {
-            if let pdfURL = pdfURL {
-                PDFKitView(url: pdfURL)
-                ShareLink("PDF로 내보내기", item: pdfURL)
+            let pdfURL: URL? = homeStore.generatePDF()
+            if let url = pdfURL {
+                PDFKitView(url: url)
+                ShareLink("PDF로 내보내기", item: url)
             }
         })
     }
