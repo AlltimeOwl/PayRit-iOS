@@ -102,6 +102,7 @@ struct PrimaryAlertModifier: ViewModifier {
 
 struct ToastMessageModifier: ViewModifier {
     @Binding var isShowing: Bool
+    var title: String?
     var message: String
     
     func body(content: Content) -> some View {
@@ -114,12 +115,23 @@ struct ToastMessageModifier: ViewModifier {
                         RoundedRectangle(cornerRadius: 8)
 //                            .stroke(Color.gray07, lineWidth: 1)
                             .fill(Color(hex: "E3FFF6"))
-                            .frame(width: 280, height: 50)
+                            .frame(width: 280, height: title == nil ? 50 : 90)
                             .transition(.scale)
-                        Text(message)
-                            .font(Font.caption01)
-                            .foregroundStyle(Color(hex: "818181"))
-                            .multilineTextAlignment(.center)
+                        VStack {
+                            if let title {
+                                Text(title)
+                                    .font(Font.caption01)
+                                    .padding(.bottom, 4)
+                                Text(message)
+                                    .font(Font.caption03)
+                            } else {
+                                Text(message)
+                                    .font(Font.caption01)
+                            }
+                        }
+                        .foregroundStyle(Color(hex: "818181"))
+                        .multilineTextAlignment(.center)
+                        .frame(width: 250, height: title == nil ? 50 : 90)
                     }
                 }
                 .padding(.bottom, 80)

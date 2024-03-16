@@ -36,40 +36,43 @@ struct MyInfoWritingView: View {
                     
                     VStack(alignment: .leading) {
                         Text("이름")
+                            .font(Font.body03)
                         CustomTextField(foregroundStyle: .black, placeholder: "이름을 적어주세요", keyboardType: .default, text: $name)
                             .onChange(of: name) {
-                                switch newCertificate.type {
-                                case .iBorrowed
-                                    : newCertificate.recipient = name
-                                case .iLentYou
-                                    : newCertificate.sender = name
+                                switch newCertificate.WriterRole {
+                                case .DEBTOR
+                                    : newCertificate.creditorName = name
+                                case .CREDITOR
+                                    : newCertificate.debtorName = name
                                 }
                             }
                     }
                     VStack(alignment: .leading) {
                         Text("연락처")
+                            .font(Font.body03)
                         CustomTextField(foregroundStyle: .black, placeholder: "숫자만 입력해주세요", keyboardType: .numberPad, text: $phoneNumber)
                             .onChange(of: phoneNumber) {
-                                switch newCertificate.type {
-                                case .iBorrowed
-                                    : newCertificate.recipientPhoneNumber = phoneNumber
-                                case .iLentYou
-                                    : newCertificate.senderPhoneNumber = phoneNumber
+                                switch newCertificate.WriterRole {
+                                case .DEBTOR
+                                    : newCertificate.creditorPhoneNumber = phoneNumber
+                                case .CREDITOR
+                                    : newCertificate.debtorPhoneNumber = phoneNumber
                                 }
                             }
                         
                     }
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("주소")
+                        Text("주소 (선택사항)")
+                            .font(Font.body03)
                         HStack(alignment: .bottom) {
                             CustomTextField(foregroundStyle: .black, placeholder: "우편번호", keyboardType: .numberPad, text: $zipCode)
                                 .disabled(true)
                                 .onChange(of: zipCode) {
-                                    switch newCertificate.type {
-                                    case .iBorrowed
-                                        : newCertificate.recipientAdress = address + "(\(zipCode))"
-                                    case .iLentYou
-                                        : newCertificate.senderAdress = address + "(\(zipCode))"
+                                    switch newCertificate.WriterRole {
+                                    case .DEBTOR
+                                        : newCertificate.creditorAddress = address + "(\(zipCode))"
+                                    case .CREDITOR
+                                        : newCertificate.debtorAddress = address + "(\(zipCode))"
                                     }
                                 }
                             Button {
@@ -88,11 +91,11 @@ struct MyInfoWritingView: View {
                             .disabled(true)
                         CustomTextField(foregroundStyle: .black, placeholder: "상세주소를 적어주세요", keyboardType: .default, text: $detailAddress)
                             .onChange(of: detailAddress) {
-                                switch newCertificate.type {
-                                case .iBorrowed
-                                    : newCertificate.recipientAdress = address + " \(detailAddress) " + "(\(zipCode))"
-                                case .iLentYou
-                                    : newCertificate.senderAdress = address + " \(detailAddress) " + "(\(zipCode))"
+                                switch newCertificate.WriterRole {
+                                case .DEBTOR
+                                    : newCertificate.creditorAddress = address + " \(detailAddress) " + "(\(zipCode))"
+                                case .CREDITOR
+                                    : newCertificate.debtorAddress = address + " \(detailAddress) " + "(\(zipCode))"
                                 }
                             }
                     }

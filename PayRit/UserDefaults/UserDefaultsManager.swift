@@ -11,7 +11,7 @@ import Foundation
 final class UserDefaultsManager {
     enum Key: String, CaseIterable {
         case isSignIn
-        case userAppleId, userName, userEmail, userPhoneNumber, signInCompany
+        case userAppleId, userName, userEmail, userPhoneNumber, signInCompany, signature
     }
     
     // 카카오 정보저장
@@ -42,7 +42,8 @@ final class UserDefaultsManager {
         let phoneNumber = UserDefaults.standard.string(forKey: Key.userPhoneNumber.rawValue) ?? ""
         let company = UserDefaults.standard.string(forKey: Key.signInCompany.rawValue) ?? ""
         let appleId = UserDefaults.standard.string(forKey: Key.isSignIn.rawValue)
-        return User(name: name, email: email, phoneNumber: phoneNumber, signInCompany: company, appleId: appleId)
+        let signature = UserDefaults.standard.bool(forKey: Key.signature.rawValue)
+        return User(name: name, email: email, phoneNumber: phoneNumber, signInCompany: company, appleId: appleId, signature: signature)
     }
     
     // 저장된 애플 유저 고유 아이디값 반환

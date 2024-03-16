@@ -129,9 +129,9 @@ struct MembershipWithdrawalView: View {
                     .font(.system(size: 20))
                     .bold()
                     .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
             }
             .disabled(seletedReason.isEmpty)
-            .frame(maxWidth: .infinity)
             .frame(height: 48)
             .background(seletedReason.isEmpty ? Color.gray07 : Color.payritMint)
             .clipShape(.rect(cornerRadius: 12))
@@ -157,5 +157,6 @@ struct MembershipWithdrawalView: View {
 #Preview {
     NavigationStack {
         MembershipWithdrawalView()
+            .environment(SignInStore())
     }
 }

@@ -20,9 +20,9 @@ struct MyPageView: View {
                     .frame(height: 77)
                     .foregroundStyle(.blue)
                 VStack(alignment: .leading, spacing: 10) {
-                    Text(signInStore.userName)
+                    Text(signInStore.currenUser.name)
                         .font(Font.title01)
-                    Text(signInStore.userEmail)
+                    Text(signInStore.currenUser.email)
                         .font(.system(size: 16))
                         .foregroundStyle(Color.gray05)
                 }

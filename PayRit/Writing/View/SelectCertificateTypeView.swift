@@ -16,7 +16,7 @@ struct SelectCertificateTypeView: View {
                 .font(Font.title03)
             HStack {
                 NavigationLink {
-                    WritingCertificateInfoView(certificateType: .constant(.iLentYou), path: $path)
+                    WritingCertificateInfoView(certificateType: .constant(.CREDITOR), path: $path)
                         .customBackbutton()
                 } label: {
                     Rectangle()
@@ -36,7 +36,7 @@ struct SelectCertificateTypeView: View {
                 Spacer()
                     .frame(width: 18)
                 NavigationLink {
-                    WritingCertificateInfoView(certificateType: .constant(.iBorrowed), path: $path)
+                    WritingCertificateInfoView(certificateType: .constant(.DEBTOR), path: $path)
                         .customBackbutton()
                 } label: {
                     Rectangle()

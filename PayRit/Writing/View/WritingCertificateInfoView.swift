@@ -20,17 +20,17 @@ struct WritingCertificateInfoView: View {
     @State private var calToggle: Bool = false
     @State private var isShowingStopAlert: Bool = false
     @State private var isShowingInterestToastMessage: Bool = false
+    @State private var isShowingInterestWarningToastMessage: Bool = false
     @State private var isShowingFormToastMessage: Bool = false
     @State private var isShowingBorrowedDatePicker: Bool = false
     @State private var isShowingRedemptionDatePicker: Bool = false
     @State private var moveNextView: Bool = false
     @State private var keyBoardFocused: Bool = false
     @State private var newCertificate: Certificate = Certificate.EmptyCertificate
-    @State private var scrollToBottom = false
-    @Binding var certificateType: CertificateType
+    @Binding var certificateType: WriterRole
     @Binding var path: NavigationPath
     @FocusState var interestTextFieldFocus: Bool
-
+    @Namespace var bottomID
     var isFormValid: Bool {
         if calToggle {
             return !money.isEmpty && onTapBorrowedDate && !interest.isEmpty
@@ -66,6 +66,7 @@ struct WritingCertificateInfoView: View {
                                 .overlay(
                                     VStack {
                                         Button {
+                                            endTextEditing()
                                             onTapBorrowedDate = true
                                             isShowingBorrowedDatePicker.toggle()
                                         } label: {
@@ -104,6 +105,7 @@ struct WritingCertificateInfoView: View {
                                 .overlay(
                                     VStack {
                                         Button {
+                                            endTextEditing()
                                             onTapRedemptionDate = true
                                             isShowingRedemptionDatePicker.toggle()
                                         } label: {
@@ -148,8 +150,10 @@ struct WritingCertificateInfoView: View {
                                     Toggle("", isOn: $calToggle)
                                         .onTapGesture {
                                             interestTextFieldFocus = true
-                                            withAnimation {
-                                                proxy.scrollTo("bottom", anchor: .bottom)
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                                withAnimation {
+                                                    proxy.scrollTo(bottomID, anchor: .top)
+                                                }
                                             }
                                         }
                                         .tint(Color.payritMint)
@@ -172,6 +176,7 @@ struct WritingCertificateInfoView: View {
                                             .onTapGesture {
                                                 interest = ""
                                                 interestDate = ""
+                                                newCertificate.interestRateDay = nil
                                             }
                                             .tint(Color.payritMint)
                                     }
@@ -182,16 +187,17 @@ struct WritingCertificateInfoView: View {
                                             .foregroundStyle(Color(hex: "E5FDFC"))
                                     )
                                     VStack(alignment: .leading, spacing: 0) {
-                                        Text("연 이자율")
-                                            .font(Font.body03)
-                                            .foregroundStyle(Color.gray04)
-                                        HStack {
-                                            Image(systemName: "info.circle")
-                                            Text("한 달은 30일, 일 년은 365일로 계산된 기준입니다.")
+                                        HStack(spacing: 2) {
+                                            Text("연 이자율")
+                                            Button {
+                                                isShowingInterestToastMessage.toggle()
+                                            } label: {
+                                                Image(systemName: "questionmark.circle")
+                                            }
                                         }
-                                        .padding(.top, 4)
-                                        .font(Font.caption03)
+                                        .font(Font.body03)
                                         .foregroundStyle(Color.gray04)
+                                        .padding(.top, 4)
                                         
                                         CustomTextField(placeholder: "숫자를 입력해주세요", keyboardType: .decimalPad, text: $interest, isFocused: interestTextFieldFocus)
                                             .onChange(of: interest) { oldValue, newValue in
@@ -211,13 +217,18 @@ struct WritingCertificateInfoView: View {
                                                 }
                                                 newCertificate.interestRate = Double(interest) ?? 0.0
                                             }
+                                            .onTapGesture {
+                                                withAnimation {
+                                                    proxy.scrollTo(bottomID, anchor: .top)
+                                                }
+                                            }
                                             .padding(.top, 4)
                                         
                                         if warningMessage {
                                             HStack {
                                                 Text("이자는 20%를 넘어설 수 없어요.")
                                                 Button {
-                                                    isShowingInterestToastMessage.toggle()
+                                                    isShowingInterestWarningToastMessage.toggle()
                                                 } label: {
                                                     Image(systemName: "questionmark.circle")
                                                 }
@@ -243,10 +254,16 @@ struct WritingCertificateInfoView: View {
                                             .onChange(of: interestDate) { _, _ in
                                                 newCertificate.interestRateDay = interestDate
                                             }
+                                            .onTapGesture {
+                                                withAnimation {
+                                                    proxy.scrollTo(bottomID, anchor: .top)
+                                                }
+                                            }
                                             .padding(.top, 4)
                                     }
                                     .padding(16)
                                 }
+                                .id(bottomID)
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 8)
                                         .stroke(Color.payritMint, lineWidth: 2)
@@ -273,35 +290,24 @@ struct WritingCertificateInfoView: View {
                     .padding(.horizontal, 16)
                     .padding(.bottom, 16)
                 }
-                .onChange(of: scrollToBottom) {
-                    if scrollToBottom {
-                        withAnimation {
-                            proxy.scrollTo("bottom", anchor: .bottom)
-                        }
-                    }
-                }
-                .onAppear {
-                    scrollToBottom = true
-                }
-                
-                Button {
-                    if !isFormValid {
-                        isShowingFormToastMessage.toggle()
-                    } else {
-                        moveNextView.toggle()
-                    }
-                } label: {
-                    Text("다음")
-                        .font(Font.title04)
-                        .foregroundStyle(.white)
-                        .frame(height: 50)
-                        .frame(maxWidth: .infinity)
-                        .background(!isFormValid ? Color.gray07 : Color.payritMint)
-                        .clipShape(.rect(cornerRadius: keyBoardFocused ? 0 : 12))
-                }
-                .padding(.bottom, keyBoardFocused ? 0 : 16)
-                .padding(.horizontal, keyBoardFocused ? 0 : 16)
             }
+            Button {
+                if !isFormValid {
+                    isShowingFormToastMessage.toggle()
+                } else {
+                    moveNextView.toggle()
+                }
+            } label: {
+                Text("다음")
+                    .font(Font.title04)
+                    .foregroundStyle(.white)
+                    .frame(height: 50)
+                    .frame(maxWidth: .infinity)
+                    .background(!isFormValid ? Color.gray07 : Color.payritMint)
+                    .clipShape(.rect(cornerRadius: keyBoardFocused ? 0 : 12))
+            }
+            .padding(.bottom, keyBoardFocused ? 0 : 16)
+            .padding(.horizontal, keyBoardFocused ? 0 : 16)
         }
         .scrollIndicators(.hidden)
         .navigationTitle("페이릿 작성하기")
@@ -330,22 +336,22 @@ struct WritingCertificateInfoView: View {
                 .datePickerStyle(.graphical)
                 .presentationDetents([.height(400)])
                 .onDisappear {
-                    newCertificate.borrowedDate = borrowedDate.dateToString()
+                    newCertificate.repaymentStartDate = borrowedDate.dateToString()
                 }
         })
         .sheet(isPresented: $isShowingRedemptionDatePicker, content: {
-            DatePicker("", selection: $redemptionDate, displayedComponents: [.date])
+            DatePicker("", selection: $redemptionDate, in: borrowedDate..., displayedComponents: [.date])
                 .datePickerStyle(.graphical)
                 .presentationDetents([.height(400)])
                 .onDisappear {
-                    newCertificate.borrowedDate = borrowedDate.dateToString()
+                    newCertificate.repaymentStartDate = borrowedDate.dateToString()
                 }
         })
         .onChange(of: borrowedDate) {
-            newCertificate.borrowedDate = borrowedDate.dateToString()
+            newCertificate.repaymentStartDate = borrowedDate.dateToString()
         }
         .onChange(of: redemptionDate) {
-            newCertificate.redemptionDate = redemptionDate.dateToString()
+            newCertificate.repaymentEndDate = redemptionDate.dateToString()
         }
         .primaryAlert(isPresented: $isShowingStopAlert,
                       title: "작성 중단",
@@ -359,14 +365,15 @@ struct WritingCertificateInfoView: View {
         } cancleAction: {
             path = .init()
         }
-        .toast(isShowing: $isShowingInterestToastMessage, message: "이자제한법상 법정 최고 이자율은 20% 미만 입니다.")
-        .toast(isShowing: $isShowingFormToastMessage, message: "필수 항목을 작성해주세요")
+        .toast(isShowing: $isShowingInterestWarningToastMessage, title: nil, message: "이자제한법상 법정 최고 이자율은 20% 미만 입니다.")
+        .toast(isShowing: $isShowingInterestToastMessage, title: "빌려준 날짜부터 갚는 날짜까지의 일수를 기준으로 계산됩니다.", message: "예) 원금이 50만원, 이자율이 2%, 일수가 300일 일때\n50만원 * 2% * 300/365 = 약 8,219원")
+        .toast(isShowing: $isShowingFormToastMessage, title: nil, message: "필수 항목을 작성해주세요")
         .navigationDestination(isPresented: $moveNextView) {
             MyInfoWritingView(newCertificate: $newCertificate, path: $path)
                 .customBackbutton()
         }
         .onAppear {
-            newCertificate.type = certificateType
+            newCertificate.WriterRole = certificateType
         }
     }
 }
@@ -374,7 +381,7 @@ struct WritingCertificateInfoView: View {
 #Preview {
     TabView {
         NavigationStack {
-            WritingCertificateInfoView(certificateType: .constant(.iBorrowed), path: .constant(NavigationPath()))
+            WritingCertificateInfoView(certificateType: .constant(.DEBTOR), path: .constant(NavigationPath()))
         }
     }
 }

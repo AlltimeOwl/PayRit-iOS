@@ -16,31 +16,31 @@ struct CertificateDetailView: View {
     @State private var isShowingPDFView: Bool = false
     @State private var isShowingMailView: Bool = false
     @State private var result: Result<MFMailComposeResult, Error>?
-    @Binding var homeStore: HomeStore
+    @Environment(HomeStore.self) var homeStore
     let index: Int
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
                 HStack {
-                    if homeStore.certificates[index].type == .iBorrowed {
+                    if homeStore.certificates[index].cardColor == .payritMint {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("\(homeStore.certificates[index].recipient)님께")
-                            HStack(spacing: 0) {
-                                Text("총 ")
-                                Text(homeStore.certificates[index].totalAmountFormatter)
-                                    .foregroundStyle(Color.payritIntensivePink)
-                                Text("원을 빌렸어요.")
-                            }
-                        }
-                        .font(Font.title03)
-                    } else {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("\(homeStore.certificates[index].sender)님께")
+                            Text("\(homeStore.certificates[index].debtorName)님께")
                             HStack(spacing: 0) {
                                 Text("총 ")
                                 Text(homeStore.certificates[index].totalAmountFormatter)
                                     .foregroundStyle(Color.payritMint)
                                 Text("원을 빌려주었어요.")
+                            }
+                        }
+                        .font(Font.title03)
+                    } else {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("\(homeStore.certificates[index].creditorName)님께")
+                            HStack(spacing: 0) {
+                                Text("총 ")
+                                Text(homeStore.certificates[index].totalAmountFormatter)
+                                    .foregroundStyle(Color.payritIntensivePink)
+                                Text("원을 빌렸어요.")
                             }
                         }
                         .font(Font.title03)
@@ -51,7 +51,7 @@ struct CertificateDetailView: View {
                 VStack(spacing: 0) {
                     VStack(alignment: .leading, spacing: 0) {
                         HStack {
-                            Text("원금상환일 \(homeStore.certificates[index].redemptionDate)")
+                            Text("원금상환일 \(homeStore.certificates[index].repaymentEndDate)")
                                 .font(Font.caption02)
                                 .foregroundStyle(Color.gray02)
                             Spacer()
@@ -80,9 +80,9 @@ struct CertificateDetailView: View {
                                     .font(Font.body03)
                                     .foregroundStyle(Color.gray02)
                             }
-                            ProgressView(value: 50, total: 100)
-                                .progressViewStyle(LinearProgressViewStyle(tint: homeStore.certificates[index].type == .iBorrowed ? Color.payritIntensivePink : Color.payritMint))
-                            Text(homeStore.certificates[index].state.rawValue + "(50%)")
+                            ProgressView(value: homeStore.certificates[index].state == .progress ? homeStore.certificates[index].progressValue : 0, total: 100)
+                                .progressViewStyle(LinearProgressViewStyle(tint: homeStore.certificates[index].cardColor == Color.payritMint ? Color.payritMint : Color.payritIntensivePink))
+                            Text(homeStore.certificates[index].state.rawValue + "(\(Int(homeStore.certificates[index].progressValue))%)")
                                 .font(Font.caption02)
                                 .foregroundStyle(Color.gray04)
                         }
@@ -91,88 +91,93 @@ struct CertificateDetailView: View {
                     .padding(.horizontal, 16)
                     .frame(height: 170)
                     .frame(maxWidth: .infinity)
-                    .background(homeStore.certificates[index].type == .iBorrowed ? Color.payritIntensiveLightPink : Color.payritLightMint)
+                    .background(homeStore.certificates[index].cardColor == Color.payritMint ? Color.payritLightMint : Color.payritIntensiveLightPink)
                     .clipShape(.rect(cornerRadius: 12))
                     
-//                    Spacer().frame(minWidth: 16)
-//                    HStack {
-//                        Text("받은 날짜")
-//                            .frame(width: UIScreen.screenWidth * 0.4)
-//                        Text("상환 내역")
-//                            .frame(width: UIScreen.screenWidth * 0.4)
-//                    }
-//                    .font(Font.title06)
-//                    
-//                    ForEach(homeStore.certificates[index].deductedHistory) { deducted in
-//                        HStack {
-//                            Text(deducted.date)
-//                                .frame(width: UIScreen.screenWidth * 0.4)
-//                            Text("\(deducted.money)원")
-//                                .frame(width: UIScreen.screenWidth * 0.4)
-//                        }
-//                        .font(Font.body02)
-//                        .padding(.vertical, 6)
-//                    }
-                    Spacer()
                     // 내보내기 버튼
-                    HStack(spacing: 6) {
-                        Button {
-                            isActionSheetPresented.toggle()
-                        } label: {
-                            HStack {
-                                Image(systemName: "doc")
-                                Text("PDF·메일")
+                    VStack(spacing: 6) {
+                        if homeStore.certificates[index].cardColor == .payritMint {
+//                        if true {
+                            Button {
+                            } label: {
+                                HStack {
+                                    Image(systemName: "tag")
+                                    Text("전체 상환 기록")
+                                }
+                                .frame(height: 40)
+                                .frame(maxWidth: .infinity)
+                                .foregroundStyle(.white)
+                                .background(Color.payritMint)
+                                .clipShape(.rect(cornerRadius: 8))
                             }
-                            .frame(height: 24)
-                            .foregroundStyle(.white)
-                            .padding(.vertical, 6)
-                            .padding(.horizontal, 10)
-                            .background(
-                                Capsule()
-                                    .fill(Color.gray05)
-                            )
-                        }
-                        Button {
-                            isActionSheetPresented.toggle()
-                        } label: {
-                            HStack {
-                                Image(systemName: "paperplane")
-                                Text("알림 전송")
-                            }
-                            .frame(height: 24)
-                            .foregroundStyle(.white)
-                            .padding(.vertical, 6)
-                            .padding(.horizontal, 10)
-                            .background(
-                                Capsule()
-                                    .fill(Color.payritIntensivePink)
-                            )
-                        }
-                        if homeStore.certificates[index].type == .iLentYou {
                             NavigationLink {
-                                CertificateDeductibleView(homeStore: $homeStore, index: index)
+                                CertificateDeductibleView(index: index)
                                     .customBackbutton()
                             } label: {
                                 HStack {
                                     Image(systemName: "tag")
-                                    Text("금액 입력하기")
+                                    Text("일부 상환 기록")
                                 }
-                                .frame(height: 24)
-                                .foregroundStyle(.white)
-                                .padding(.vertical, 6)
-                                .padding(.horizontal, 10)
+                                .frame(height: 40)
+                                .frame(maxWidth: .infinity)
+                                .foregroundStyle(Color.payritMint)
                                 .background(
-                                    Capsule()
-                                        .fill(Color.payritMint)
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color.payritMint, lineWidth: 2)
                                 )
+                            }
+                            Button {
+                                isActionSheetPresented.toggle()
+                            } label: {
+                                HStack {
+                                    Image(systemName: "paperplane")
+                                    Text("상환 재촉하기")
+                                }
+                                .frame(height: 40)
+                                .frame(maxWidth: .infinity)
+                                .foregroundStyle(Color.payritMint)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color.payritMint, lineWidth: 2)
+                                )
+                            }
+                            Button {
+                                isActionSheetPresented.toggle()
+                            } label: {
+                                HStack {
+                                    Image(systemName: "doc")
+                                    Text("PDF·메일 내보내기")
+                                }
+                                .frame(height: 40)
+                                .frame(maxWidth: .infinity)
+                                .foregroundStyle(Color.payritMint)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color.payritMint, lineWidth: 2)
+                                    )
+                            }
+                        } else {
+                            Button {
+                                isActionSheetPresented.toggle()
+                            } label: {
+                                HStack {
+                                    Image(systemName: "doc")
+                                    Text("PDF·메일 내보내기")
+                                }
+                                .frame(height: 40)
+                                .frame(maxWidth: .infinity)
+                                .foregroundStyle(Color.payritIntensivePink)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color.payritIntensivePink, lineWidth: 2)
+                                    )
                             }
                         }
                     }
                     .font(Font.body03)
-//                    .padding(.vertical, 16)
-                    Spacer()
+                    .padding(.horizontal, 9)
+                    .padding(.vertical, 16)
                 }
-                .frame(height: 240)
                 .background(Color.white)
                 .clipShape(.rect(cornerRadius: 12))
                 .shadow(color: .gray.opacity(0.2), radius: 5)
@@ -183,14 +188,14 @@ struct CertificateDetailView: View {
                         isModalPresented.toggle()
                     } label: {
                         Rectangle()
-                            .foregroundStyle(homeStore.certificates[index].type == .iBorrowed ? Color.payritIntensiveLightPink : Color.payritLightMint)
+                            .foregroundStyle(homeStore.certificates[index].cardColor == .payritMint ? Color.payritLightMint : Color.payritIntensiveLightPink)
                             .frame(width: 130, height: 155)
                             .shadow(color: .gray.opacity(0.2), radius: 5)
                             .overlay {
                                 VStack(alignment: .leading) {
                                     Text("""
                                          차용증
-                                         보기
+                                         미리보기
                                          """)
                                     .lineSpacing(4)
                                     .multilineTextAlignment(.leading)
@@ -212,7 +217,7 @@ struct CertificateDetailView: View {
                     }
                     Spacer().frame(width: 14)
                     NavigationLink {
-                        CertificateMemoView(homeStore: $homeStore, index: index)
+                        CertificateMemoView(index: index)
                             .customBackbutton()
                     } label: {
                         VStack(spacing: 0) {
@@ -273,13 +278,13 @@ struct CertificateDetailView: View {
                             
                             VStack(alignment: .leading, spacing: 8) {
                                 HStack {
-                                    Text("\(homeStore.certificates[index].sender)")
+                                    Text("\(homeStore.certificates[index].creditorName)")
                                 }
                                 HStack {
-                                    Text("\(homeStore.certificates[index].senderPhoneNumber)")
+                                    Text("\(homeStore.certificates[index].creditorPhoneNumber)")
                                 }
                                 HStack {
-                                    Text("\(homeStore.certificates[index].senderAdress)")
+                                    Text("\(homeStore.certificates[index].creditorAddress)")
                                 }
                             }
                             .font(Font.body01)
@@ -312,13 +317,13 @@ struct CertificateDetailView: View {
                             
                             VStack(alignment: .leading, spacing: 8) {
                                 HStack {
-                                    Text("\(homeStore.certificates[index].recipient)")
+                                    Text("\(homeStore.certificates[index].debtorName)")
                                 }
                                 HStack {
-                                    Text("\(homeStore.certificates[index].recipientPhoneNumber)")
+                                    Text("\(homeStore.certificates[index].debtorPhoneNumber)")
                                 }
                                 HStack {
-                                    Text("\(homeStore.certificates[index].recipientAdress)")
+                                    Text("\(homeStore.certificates[index].debtorAddress)")
                                 }
                             }
                             .font(Font.body01)
@@ -342,7 +347,6 @@ struct CertificateDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .certificateToDoucument(isPresented: $isModalPresented, isButtonShowing: .constant(true))
         .onAppear {
-            
         }
         .confirmationDialog("", isPresented: $isActionSheetPresented, titleVisibility: .hidden) {
             Button("PDF 다운") {
@@ -376,7 +380,6 @@ struct CertificateDetailView: View {
                 }
             }
         }
-
         .sheet(isPresented: $isShowingPDFView, content: {
             if let pdfURL = pdfURL {
                 PDFKitView(url: pdfURL)
@@ -388,6 +391,7 @@ struct CertificateDetailView: View {
 
 #Preview {
     NavigationStack {
-        CertificateDetailView(homeStore: .constant(HomeStore()), index: 0)
+        CertificateDetailView(index: 0)
+            .environment(HomeStore())
     }
 }

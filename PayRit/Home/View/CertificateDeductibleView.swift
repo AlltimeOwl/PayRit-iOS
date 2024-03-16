@@ -13,7 +13,8 @@ struct CertificateDeductibleView: View {
     @State private var date: Date = Date()
     @State private var isShowingDatePicker: Bool = false
     @State private var keyBoardFocused: Bool = false
-    @Binding var homeStore: HomeStore
+    @Environment(HomeStore.self) var homeStore
+    @FocusState var focused: Bool
     let index: Int
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
@@ -21,7 +22,7 @@ struct CertificateDeductibleView: View {
                 Text("금액")
                     .font(Font.body03)
                     .foregroundStyle(Color.gray04)
-                CustomTextField(placeholder: "금액을 입력해주세요", keyboardType: .numberPad, text: $money)
+                CustomTextField(placeholder: "금액을 입력해주세요", keyboardType: .numberPad, text: $money, isFocused: focused)
             }
             .padding(.horizontal, 16)
             
@@ -111,6 +112,9 @@ struct CertificateDeductibleView: View {
         .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
             keyBoardFocused = false
         }
+        .onAppear {
+            focused = true
+        }
         .navigationTitle("받은 금액 입력하기")
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $isShowingDatePicker, content: {
@@ -123,6 +127,7 @@ struct CertificateDeductibleView: View {
 
 #Preview {
     NavigationStack {
-        CertificateDeductibleView(homeStore: .constant(HomeStore()), index: 0)
+        CertificateDeductibleView(index: 0)
+            .environment(HomeStore())
     }
 }

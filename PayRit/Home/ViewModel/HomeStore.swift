@@ -9,9 +9,9 @@ import SwiftUI
 import PDFKit
 
 enum SortingType: String, CodingKey, CaseIterable {
-    case recent = "최근 작성일 순"
-    case old = "작성 오래된 순"
-    case expiration = "기간 만료일 순"
+    case recent = "최근 거래 순"
+    case old = "오래된 순"
+    case expiration = "기간 만료 순"
 }
 
 @Observable
@@ -20,15 +20,40 @@ final class HomeStore {
     var certificates: [Certificate] = Certificate.samepleDocument
     
     func sortingCertificates() {
-        self.certificates = Certificate.samepleDocument.sorted {
+        self.certificates = certificates.sorted {
             switch sortingType {
             case .recent:
-                return $0.writingDayCal < $1.writingDayCal
-            case .old:
                 return $0.writingDayCal > $1.writingDayCal
+            case .old:
+                return $0.writingDayCal < $1.writingDayCal
             case .expiration:
                 return $0.dDay < $1.dDay
             }}
+    }
+    
+    // 홈에 새로 받은게 있나 검색
+    func checkNewReceived() -> [Certificate]? {
+        let newRecived = certificates.filter { $0.WriterRole == .CREDITOR }.filter { $0.debtorName == UserDefaultsManager().getUserInfo().name && $0.debtorPhoneNumber == UserDefaultsManager().getUserInfo().phoneNumber } + certificates.filter { $0.WriterRole == .DEBTOR }.filter { $0.creditorName == UserDefaultsManager().getUserInfo().name && $0.creditorPhoneNumber == UserDefaultsManager().getUserInfo().phoneNumber }
+        return newRecived.filter { $0.state == .waitingApproval }
+    }
+    
+    // 내가 쓴건지 확인 맞으면 true
+    func checkIMadeIt(_ certificate: Certificate) -> Bool {
+        let user = UserDefaultsManager().getUserInfo()
+        switch certificate.WriterRole {
+        case .CREDITOR:
+            if certificate.debtorName == user.name {
+                return false
+            } else {
+                return true
+            }
+        case .DEBTOR:
+            if certificate.creditorName == user.name {
+                return false
+            } else {
+                return true
+            }
+        }
     }
     
     func todayString() -> String {
@@ -57,7 +82,8 @@ final class HomeStore {
         }
     }
     
-    @MainActor func generatePDF() -> URL {
+    @MainActor 
+    func generatePDF() -> URL {
         let renderer = ImageRenderer(content: CertificateDocumentView())
         
         let url = URL.documentsDirectory.appending(path: "\(Date().dateToString()) 페이릿 차용증.pdf")

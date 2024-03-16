@@ -9,9 +9,10 @@ import Foundation
 
 struct User: Identifiable {
     let id: String = UUID().uuidString
-    let name: String
-    let email: String
-    let phoneNumber: String
-    let signInCompany: String
+    var name: String
+    var email: String
+    var phoneNumber: String
+    var signInCompany: String
     var appleId: String?
+    var signature: Bool = false
 }

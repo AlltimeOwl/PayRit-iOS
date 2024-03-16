@@ -245,10 +245,10 @@
 		BC595DEB2B8D8E0800CA555E /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				BCC9EC032B8F09A6001E18F0 /* Certificate.swift */,
-				BC68291E2B9CEE87009EF3F5 /* Memo.swift */,
-				BC1219602BA1D6FC00B575F8 /* Deducted.swift */,
 				BC6F652A2B9B355200FB9FA7 /* User.swift */,
+				BCC9EC032B8F09A6001E18F0 /* Certificate.swift */,
+				BC1219602BA1D6FC00B575F8 /* Deducted.swift */,
+				BC68291E2B9CEE87009EF3F5 /* Memo.swift */,
 				BC62BFF12BA02481000A1BA5 /* Payment.swift */,
 			);
 			path = Model;

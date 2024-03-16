@@ -14,7 +14,7 @@ struct CertificateSerchingView: View {
     @State private var navigationLinkToggle = false
     @State private var index: Int = 0
     @State private var filterCount: Int = 0
-    @Binding var homeStore: HomeStore
+    @Environment(HomeStore.self) var homeStore
     @FocusState private var interestFocused: Bool
     private let menuPadding = 8.0
     private let horizontalPadding = 16.0
@@ -65,27 +65,27 @@ struct CertificateSerchingView: View {
                     List {
                         ForEach(homeStore.certificates.indices, id: \.self) { index in
                             let certificate = homeStore.certificates[index]
-                            if certificate.type == .iBorrowed ? certificate.recipient.contains(searchWord) : certificate.sender.contains(searchWord) {
+                            if homeStore.certificates[index].cardName.contains(searchWord) {
                                 Button {
                                     self.index = index
                                     navigationLinkToggle.toggle()
                                 } label: {
                                     VStack(alignment: .leading, spacing: 0) {
                                         HStack {
-                                            Text("원금상환일 \(certificate.redemptionDate)")
+                                            Text("원금상환일 \(certificate.repaymentEndDate)")
                                                 .font(Font.caption02)
                                                 .foregroundStyle(Color.gray02)
                                             Spacer()
-                                            Text(certificate.type.rawValue)
-                                                .foregroundStyle(certificate.type == .iLentYou ? Color.payritMint : Color.payritIntensivePink)
+                                            Text(certificate.cardColor == .payritMint ? "빌려준 돈" : "빌린 돈")
+                                                .font(Font.body03)
+                                                .foregroundStyle(certificate.cardColor)
                                         }
                                         .padding(.top, 16)
                                         
                                         Text("\(certificate.totalAmountFormatter)원")
                                             .font(Font.title01)
                                             .padding(.top, 8)
-                                        
-                                        Text(certificate.type == .iBorrowed ? certificate.recipient : certificate.sender)
+                                        Text(certificate.cardColor == .payritMint ? certificate.debtorName : certificate.creditorName)
                                             .font(Font.title06)
                                             .foregroundStyle(Color.gray02)
                                             .padding(.top, 8)
@@ -95,9 +95,9 @@ struct CertificateSerchingView: View {
                                             Text(certificate.dDay >= 0 ? "D - \(certificate.dDay)" : "D + \(-certificate.dDay)")
                                                 .font(Font.body03)
                                                 .foregroundStyle(Color.gray02)
-                                            ProgressView(value: 50, total: 100)
-                                                .progressViewStyle(LinearProgressViewStyle(tint: certificate.type == .iLentYou ? Color.payritMint : Color.payritIntensivePink))
-                                            Text("\(certificate.state.rawValue) (50%)")
+                                            ProgressView(value: certificate.state == .progress ? certificate.progressValue : 0, total: 100)
+                                                .progressViewStyle(LinearProgressViewStyle(tint: certificate.cardColor))
+                                            Text("\(certificate.state.rawValue) (\(Int(certificate.state == .progress ? certificate.progressValue : 0))%)")
                                                 .font(Font.caption02)
                                                 .foregroundStyle(Color.gray04)
                                         }
@@ -197,18 +197,18 @@ struct CertificateSerchingView: View {
             Spacer()
         }
         .navigationDestination(isPresented: $navigationLinkToggle) {
-            CertificateDetailView(homeStore: $homeStore, index: index)
-                .customBackbutton()
-                .toolbar(.hidden, for: .tabBar)
+            if !homeStore.checkIMadeIt(homeStore.certificates[index]) && homeStore.certificates[index].state == .waitingApproval {
+                CertificateAcceptView(index: index)
+                    .customBackbutton()
+                    .toolbar(.hidden, for: .tabBar)
+            } else {
+                CertificateDetailView(index: index)
+                    .customBackbutton()
+                    .toolbar(.hidden, for: .tabBar)
+            }
         }
         .onChange(of: searchWord) {
-            filterCount = homeStore.certificates.filter { certificate in
-                if certificate.type == .iBorrowed {
-                    return certificate.recipient.contains(searchWord)
-                } else {
-                    return certificate.sender.contains(searchWord)
-                }
-            }.count
+            filterCount = homeStore.certificates.filter { $0.cardName.contains(searchWord) }.count
         }
         .onAppear {
             interestFocused = true
@@ -218,6 +218,7 @@ struct CertificateSerchingView: View {
 
 #Preview {
     NavigationStack {
-        CertificateSerchingView(homeStore: .constant(HomeStore()))
+        CertificateSerchingView()
+            .environment(HomeStore())
     }
 }

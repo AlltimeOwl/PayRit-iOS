@@ -6,38 +6,39 @@
 //
 
 import Foundation
+import SwiftUI
 
 enum CertificateStep: String, CodingKey {
     case waitingApproval = "승인 대기중"
     case waitingPayment = "결제 대기중"
-    case complete = "상환 진행중"
+    case progress = "상환 진행중"
 }
 
-enum CertificateType: String, CodingKey {
-    case iLentYou = "빌려준 돈"
-    case iBorrowed = "빌린 돈"
+enum WriterRole {
+    case CREDITOR
+    case DEBTOR
 }
 
 struct Certificate: Identifiable, Hashable {
     let id: String = UUID().uuidString
     var writingDay: String = Date().dateToString()
+    var WriterRole: WriterRole = .CREDITOR
     
-    var sender: String
-    var senderPhoneNumber: String
-    var senderAdress: String
+    var creditorName: String
+    var creditorPhoneNumber: String
+    var creditorAddress: String
     
-    var recipient: String
-    var recipientPhoneNumber: String
-    var recipientAdress: String
+    var debtorName: String
+    var debtorPhoneNumber: String
+    var debtorAddress: String
     
-    var borrowedDate: String
-    var redemptionDate: String
+    var repaymentStartDate: String
+    var repaymentEndDate: String
     var money: Int
     var interestRate: Double
     var interestRateDay: String?
     
     var state: CertificateStep = .waitingApproval
-    var type: CertificateType = .iLentYou
     
     var etc: String?
     var memo: [Memo] = [Memo]()
@@ -56,7 +57,7 @@ struct Certificate: Identifiable, Hashable {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy.MM.dd"
 
-        if let targetDate = dateFormatter.date(from: redemptionDate), let startDate = dateFormatter.date(from: borrowedDate) {
+        if let targetDate = dateFormatter.date(from: repaymentEndDate), let startDate = dateFormatter.date(from: repaymentStartDate) {
             // 대출 기간 계산
             let totalDate = calculateDday(startDate: startDate, targetDate: targetDate) + 1
             
@@ -74,7 +75,12 @@ struct Certificate: Identifiable, Hashable {
     }
 
     var totalAmount: Int {
-        return (money + interestRateAmount) - (deductedHistory.reduce(0) { $0 + $1.money })
+        let total = (money + interestRateAmount) - (deductedHistory.reduce(0) { $0 + $1.money })
+        if total < 0 {
+            return 0
+        } else {
+            return total
+        }
     }
     
     var totalMoneyFormatter: String {
@@ -82,16 +88,24 @@ struct Certificate: Identifiable, Hashable {
         formatter.numberStyle = .decimal
         return formatter.string(from: (NSNumber(value: money))) ?? String(money)
     }
+    
+    var totalInterestRateAmountFormatter: String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        return formatter.string(from: (NSNumber(value: interestRateAmount))) ?? String(interestRateAmount)
+    }
+    
     var totalAmountFormatter: String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         return formatter.string(from: (NSNumber(value: totalAmount))) ?? String(totalAmount)
     }
+    
     var dDay: Int {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy.MM.dd"
 
-        if let targetDate = dateFormatter.date(from: redemptionDate) {
+        if let targetDate = dateFormatter.date(from: repaymentEndDate) {
             let dDay = calculateDday(startDate: Date(), targetDate: targetDate)
             return dDay
         } else {
@@ -117,13 +131,44 @@ struct Certificate: Identifiable, Hashable {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy.MM.dd"
 
-        if let targetDate = dateFormatter.date(from: redemptionDate), let startDate = dateFormatter.date(from: borrowedDate) {
+        if let targetDate = dateFormatter.date(from: repaymentEndDate), let startDate = dateFormatter.date(from: repaymentStartDate) {
             // 대출 기간 계산
             let totalDate = calculateDday(startDate: startDate, targetDate: targetDate)
             
             return totalDate
         } else {
             return 0
+        }
+    }
+    
+    var progressValue: Double {
+        if deductedHistory.isEmpty {
+            return 0.0
+        } else {
+            let sum = deductedHistory.reduce(0) { $0 + $1.money }
+            if sum > money + interestRateAmount {
+                return 100
+            } else {
+                let percentage = Double(totalAmount) / Double(money + interestRateAmount) * 100.0
+                return (100 - percentage)            }
+        }
+    }
+    
+    var cardColor: Color {
+        let user = UserDefaultsManager().getUserInfo()
+        if creditorName == user.name {
+            return Color.payritMint
+        } else {
+            return Color.payritIntensivePink
+        }
+    }
+    
+    var cardName: String {
+        let user = UserDefaultsManager().getUserInfo()
+        if creditorName == user.name {
+            return debtorName
+        } else {
+            return creditorName
         }
     }
     
@@ -149,13 +194,18 @@ struct Certificate: Identifiable, Hashable {
     }
     
     static var samepleDocument: [Certificate] = [
-        Certificate(writingDay: "2024.02.01", sender: "홍길동", senderPhoneNumber: "01050097937", senderAdress: "경기도 용인시", recipient: "임대진", recipientPhoneNumber: "01050097937", recipientAdress: "경기도 안양시", borrowedDate: "2024.01.05", redemptionDate: "2024.01.01", money: 30000000, interestRate: 5.0, interestRateDay: "2024.05.05", state: .waitingApproval, type: .iLentYou, memo: [Memo(today: "2024.02.01", text: "10,000원을 한달뒤에 갚는다고 했음"), Memo(today: "2024.02.01", text: "10,000원을 한달뒤에 갚는다고 했음10,000원을 한달뒤에 갚는다고 했음"), Memo(today: "2024.02.01", text: "10,000원을 한달뒤에 갚는다고 했음10,000원을 한달뒤에 갚는다고 했음10,000원을 한달뒤에 갚는다고 했음")], deductedHistory: [Deducted(date: "2024.02.01", money: 1000), Deducted(date: "2024.02.01", money: 20000000), Deducted(date: "2024.02.01", money: 3000000)]),
-        Certificate(writingDay: "2024.01.21", sender: "임대진", senderPhoneNumber: "01050097937", senderAdress: "경기도 용인시", recipient: "우리은행2", recipientPhoneNumber: "01050097937", recipientAdress: "경기도 안양시", borrowedDate: "2024.01.05", redemptionDate: "2024.01.01", money: 30000000, interestRate: 5.0, state: .complete, type: .iBorrowed),
-        Certificate(writingDay: "2024.02.11", sender: "홍길동", senderPhoneNumber: "01050097937", senderAdress: "경기도 용인시", recipient: "임대진", recipientPhoneNumber: "01050097937", recipientAdress: "경기도 안양시", borrowedDate: "2024.01.05", redemptionDate: "2024.03.01", money: 30000000, interestRate: 5.0, state: .waitingPayment, type: .iLentYou),
-        Certificate(writingDay: "2024.04.01", sender: "임대진", senderPhoneNumber: "01050097937", senderAdress: "경기도 용인시", recipient: "우리은행4", recipientPhoneNumber: "01050097937", recipientAdress: "경기도 안양시", borrowedDate: "2024.01.05", redemptionDate: "2024.01.01", money: 30000000, interestRate: 5.0, state: .waitingApproval, type: .iBorrowed),
-        Certificate(writingDay: "2024.03.05", sender: "홍길동", senderPhoneNumber: "01050097937", senderAdress: "경기도 용인시", recipient: "임대진", recipientPhoneNumber: "01050097937", recipientAdress: "경기도 안양시", borrowedDate: "2024.01.05", redemptionDate: "2024.02.01", money: 30000000, interestRate: 5.0, state: .waitingApproval, type: .iLentYou),
-        Certificate(writingDay: "2024.03.21", sender: "임대진", senderPhoneNumber: "01050097937", senderAdress: "경기도 용인시", recipient: "우리은행6", recipientPhoneNumber: "01050097937", recipientAdress: "경기도 안양시", borrowedDate: "2024.01.05", redemptionDate: "2024.01.01", money: 30000000, interestRate: 5.0, state: .waitingApproval, type: .iBorrowed)
+//        Certificate(writingDay: "2024.01.01", creditorName: "홍길동", creditorPhoneNumber: "01050097937", creditorAddress: "경기도 용인시", debtorName: "임대진", debtorPhoneNumber: "01050097937", debtorAddress: "경기도 안양시", borrowedDate: "2024.01.05", redemptionDate: "2024.06.01", money: 30000000, interestRate: 5.0, interestRateDay: "2024.05.05", state: .progress, WriterRole: .CREDITOR, memo: [Memo(today: "2024.02.01", text: "10,000원을 한달뒤에 갚는다고 했음"), Memo(today: "2024.02.01", text: "10,000원을 한달뒤에 갚는다고 했음10,000원을 한달뒤에 갚는다고 했음"), Memo(today: "2024.02.01", text: "10,000원을 한달뒤에 갚는다고 했음10,000원을 한달뒤에 갚는다고 했음10,000원을 한달뒤에 갚는다고 했음")], deductedHistory: [Deducted(date: "2024.02.01", money: 1000), Deducted(date: "2024.02.01", money: 20000000), Deducted(date: "2024.02.01", money: 3000000)]),
+//        Certificate(writingDay: "2024.01.03", creditorName: "임대진", creditorPhoneNumber: "01050097937", creditorAddress: "경기도 용인시", debtorName: "우리은행2", debtorPhoneNumber: "01050097937", debtorAddress: "경기도 안양시", borrowedDate: "2024.01.05", redemptionDate: "2024.06.01", money: 30000000, interestRate: 5.0, state: .progress, WriterRole: .CREDITOR),
+//        Certificate(writingDay: "2024.01.11", creditorName: "홍길동", creditorPhoneNumber: "01050097937", creditorAddress: "경기도 용인시", debtorName: "임대진", debtorPhoneNumber: "01050097937", debtorAddress: "경기도 안양시", borrowedDate: "2024.01.05", redemptionDate: "2024.03.01", money: 30000000, interestRate: 5.0, state: .progress, WriterRole: .CREDITOR),
+//        Certificate(writingDay: "2024.01.02", creditorName: "임대진", creditorPhoneNumber: "01050097937", creditorAddress: "경기도 용인시", debtorName: "우리은행4", debtorPhoneNumber: "01050097937", debtorAddress: "경기도 안양시", borrowedDate: "2024.01.05", redemptionDate: "2024.06.01", money: 30000000, interestRate: 5.0, state: .progress, WriterRole: .CREDITOR),
+//        Certificate(writingDay: "2024.03.05", creditorName: "홍길동", creditorPhoneNumber: "01050097937", creditorAddress: "경기도 용인시", debtorName: "임대진", debtorPhoneNumber: "01050097937", debtorAddress: "경기도 안양시", borrowedDate: "2024.01.05", redemptionDate: "2024.02.01", money: 30000000, interestRate: 5.0, state: .progress, WriterRole: .CREDITOR),
+//        Certificate(writingDay: "2024.03.11", creditorName: "임대진", creditorPhoneNumber: "01050097937", creditorAddress: "경기도 용인시", debtorName: "우리은행6", debtorPhoneNumber: "01050097937", debtorAddress: "경기도 안양시", borrowedDate: "2024.01.05", redemptionDate: "2024.09.01", money: 30000000, interestRate: 5.0, state: .progress, WriterRole: .CREDITOR)
+        Certificate(writingDay: "2024.03.05", WriterRole: .CREDITOR, creditorName: "", creditorPhoneNumber: "01050097937", creditorAddress: "경기도 용인시", debtorName: "정주성1", debtorPhoneNumber: "01050097937", debtorAddress: "경기도 용인시", repaymentStartDate: "2024.02.01", repaymentEndDate: "2024.09.01", money: 1, interestRate: 0.0, interestRateDay: "", state: .waitingApproval, etc: ""),
+        Certificate(writingDay: "2024.03.05", WriterRole: .DEBTOR, creditorName: "임대진", creditorPhoneNumber: "01050097937", creditorAddress: "경기도 용인시", debtorName: "정주성2", debtorPhoneNumber: "01050097937", debtorAddress: "경기도 용인시", repaymentStartDate: "2024.02.01", repaymentEndDate: "2024.09.01", money: 1, interestRate: 0.0, interestRateDay: "", state: .waitingPayment, etc: ""),
+        Certificate(writingDay: "2024.03.05", WriterRole: .CREDITOR, creditorName: "정주성3", creditorPhoneNumber: "01050097937", creditorAddress: "경기도 용인시", debtorName: "임대진", debtorPhoneNumber: "01050097937", debtorAddress: "경기도 용인시", repaymentStartDate: "2024.02.01", repaymentEndDate: "2024.09.01", money: 1, interestRate: 0.0, interestRateDay: "", state: .waitingApproval, etc: ""),
+        Certificate(writingDay: "2024.03.05", WriterRole: .DEBTOR, creditorName: "정주성4", creditorPhoneNumber: "01050097937", creditorAddress: "경기도 용인시", debtorName: "임대진", debtorPhoneNumber: "01050097937", debtorAddress: "경기도 용인시", repaymentStartDate: "2024.02.01", repaymentEndDate: "2024.09.01", money: 1, interestRate: 0.0, interestRateDay: "", state: .waitingApproval, etc: "")
     ]
     
-    static let EmptyCertificate: Certificate = Certificate(writingDay: "", sender: "", senderPhoneNumber: "", senderAdress: "", recipient: "", recipientPhoneNumber: "", recipientAdress: "", borrowedDate: "", redemptionDate: "", money: 0, interestRate: 0.0)
+    static let EmptyCertificate: Certificate = Certificate(writingDay: "", creditorName: "", creditorPhoneNumber: "", creditorAddress: "", debtorName: "", debtorPhoneNumber: "", debtorAddress: "", repaymentStartDate: "", repaymentEndDate: "", money: 0, interestRate: 0.0)
+    
 }

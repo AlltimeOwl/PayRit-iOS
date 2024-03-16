@@ -16,8 +16,8 @@ extension View {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 
-    public func toast(isShowing: Binding<Bool>, message: String) -> some View {
-        self.modifier(ToastMessageModifier(isShowing: isShowing, message: message))
+    public func toast(isShowing: Binding<Bool>, title: String?, message: String) -> some View {
+        self.modifier(ToastMessageModifier(isShowing: isShowing, title: title, message: message))
     }
     
     public func certificateToDoucument(isPresented: Binding<Bool>, isButtonShowing: Binding<Bool>) -> some View {

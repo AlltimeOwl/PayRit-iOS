@@ -8,10 +8,12 @@
 import SwiftUI
 
 struct CertificateAcceptView: View {
+    let index: Int
     @State private var checkBox: Bool = false
-    @Binding var certificate: Certificate
+    @Environment(HomeStore.self) var homeStore: HomeStore
+    @Environment(\.dismiss) private var dismiss
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     VStack(alignment: .leading) {
@@ -23,7 +25,7 @@ struct CertificateAcceptView: View {
                                 Text("금액")
                                     .font(Font.body04)
                                 Spacer().frame(width: 70)
-                                Text("\(certificate.totalAmountFormatter)원")
+                                Text("\(homeStore.certificates[index].totalAmountFormatter)원")
                                     .font(Font.body01)
                                 Spacer()
                             }
@@ -31,7 +33,7 @@ struct CertificateAcceptView: View {
                                 Text("원금 상환일")
                                     .font(Font.body04)
                                 Spacer().frame(width: 30)
-                                Text("\(certificate.redemptionDate)")
+                                Text("\(homeStore.certificates[index].repaymentEndDate)")
                                     .font(Font.body01)
                                 Spacer()
                             }
@@ -52,7 +54,7 @@ struct CertificateAcceptView: View {
                                 Text("이자")
                                     .font(Font.body04)
                                 Spacer().frame(width: 70)
-                                Text("\(certificate.totalAmount - certificate.money)")
+                                Text("\(homeStore.certificates[index].totalAmount - homeStore.certificates[index].money)")
                                     .font(Font.body01)
                                 Spacer()
                             }
@@ -60,8 +62,8 @@ struct CertificateAcceptView: View {
                                 Text("이자 지급일")
                                     .font(Font.body04)
                                 Spacer().frame(width: 30)
-                                Text("매월 \(certificate.interestRateDay ?? "")일")
-                                    .foregroundStyle(!certificate.redemptionDate.isEmpty ? .black : .clear)
+                                Text("매월 \(homeStore.certificates[index].interestRateDay ?? "")일")
+                                    .foregroundStyle(!homeStore.certificates[index].repaymentEndDate.isEmpty ? .black : .clear)
                                     .font(Font.body01)
                                 Spacer()
                             }
@@ -69,7 +71,7 @@ struct CertificateAcceptView: View {
                                 Text("특이사항")
                                     .font(Font.body04)
                                 Spacer().frame(width: 70)
-                                Text("\(certificate.etc ?? "")")
+                                Text("\(homeStore.certificates[index].etc ?? "")")
                                     .font(Font.body01)
                                 Spacer()
                             }
@@ -90,7 +92,7 @@ struct CertificateAcceptView: View {
                                 Text("이름")
                                     .font(Font.body04)
                                 Spacer().frame(width: 33)
-                                Text("\(certificate.sender)")
+                                Text("\(homeStore.certificates[index].creditorName)")
                                     .font(Font.body01)
                                 Spacer()
                             }
@@ -98,7 +100,7 @@ struct CertificateAcceptView: View {
                                 Text("연락처")
                                     .font(Font.body04)
                                 Spacer().frame(width: 20)
-                                Text("\(certificate.senderPhoneNumber)")
+                                Text("\(homeStore.certificates[index].creditorPhoneNumber)")
                                     .font(Font.body01)
                                 Spacer()
                             }
@@ -106,7 +108,7 @@ struct CertificateAcceptView: View {
                                 Text("주소")
                                     .font(Font.body04)
                                 Spacer().frame(width: 33)
-                                Text("\(certificate.senderAdress)")
+                                Text("\(homeStore.certificates[index].creditorAddress)")
                                     .fixedSize(horizontal: false, vertical: true)
                                     .font(Font.body01)
                                 Spacer()
@@ -128,7 +130,7 @@ struct CertificateAcceptView: View {
                                 Text("이름")
                                     .font(Font.body04)
                                 Spacer().frame(width: 33)
-                                Text("\(certificate.recipient)")
+                                Text("\(homeStore.certificates[index].debtorName)")
                                     .font(Font.body01)
                                 Spacer()
                             }
@@ -136,7 +138,7 @@ struct CertificateAcceptView: View {
                                 Text("연락처")
                                     .font(Font.body04)
                                 Spacer().frame(width: 20)
-                                Text("\(certificate.recipientPhoneNumber)")
+                                Text("\(homeStore.certificates[index].debtorPhoneNumber)")
                                     .font(Font.body01)
                                 Spacer()
                             }
@@ -144,7 +146,7 @@ struct CertificateAcceptView: View {
                                 Text("주소")
                                     .font(Font.body04)
                                 Spacer().frame(width: 33)
-                                Text("\(certificate.recipientAdress)")
+                                Text("\(homeStore.certificates[index].debtorAddress)")
                                     .fixedSize(horizontal: false, vertical: true)
                                     .font(Font.body01)
                                 Spacer()
@@ -173,6 +175,8 @@ struct CertificateAcceptView: View {
                 .padding(.horizontal, 16)
             }
             Button {
+                homeStore.certificates[index].state = .waitingPayment
+                dismiss()
             } label: {
                 Text("수락 하기")
                     .font(Font.title04)
@@ -188,6 +192,8 @@ struct CertificateAcceptView: View {
         }
         .navigationTitle("페이릿 내용 확인")
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+        }
         .toolbar {
 //            ToolbarItem {
 //                Button {
@@ -202,6 +208,7 @@ struct CertificateAcceptView: View {
 
 #Preview {
     NavigationStack {
-        CertificateAcceptView(certificate: .constant(Certificate.samepleDocument[0]))
+        CertificateAcceptView(index: 0)
+            .environment(HomeStore())
     }
 }

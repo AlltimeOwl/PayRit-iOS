@@ -10,7 +10,7 @@ import SwiftUI
 struct CertificateMemoView: View {
     @State private var today = ""
     @State private var text: String = ""
-    @Binding var homeStore: HomeStore
+    @Environment(HomeStore.self) var homeStore
     let index: Int
     var body: some View {
         VStack(alignment: .leading) {
@@ -77,6 +77,7 @@ struct CertificateMemoView: View {
 
 #Preview {
     NavigationStack {
-        CertificateMemoView(homeStore: .constant(HomeStore()), index: 0)
+        CertificateMemoView(index: 0)
+            .environment(HomeStore())
     }
 }

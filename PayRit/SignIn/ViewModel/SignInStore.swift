@@ -20,10 +20,7 @@ struct TokenTestData: Codable {
 
 @Observable
 class SignInStore {
-    var userName = ""
-    var userEmail = ""
-    var userPhoneNumber = ""
-    var signInCompany = ""
+    var currenUser: User = UserDefaultsManager().getUserInfo()
     var aToken = ""
     var rToken = ""
     var appleAuthorizationCode = ""
@@ -33,13 +30,6 @@ class SignInStore {
     //        "key1": "value1",
     //        "key2": "value2"
     //    ]
-    init() {
-        let userDefault = UserDefaultsManager().getUserInfo()
-        userName = userDefault.name
-        userEmail = userDefault.email
-        userPhoneNumber = userDefault.phoneNumber
-        signInCompany = userDefault.signInCompany
-    }
     
     func appleAuthCheck() {
         let appleIDProvider = ASAuthorizationAppleIDProvider()
@@ -198,15 +188,15 @@ class SignInStore {
                         } else {
                             print(kakaoUser!)
                             if let email = kakaoUser?.kakaoAccount?.email {
-                                self.userEmail = email
+                                self.currenUser.email = email
                             }
                             if let name = kakaoUser?.kakaoAccount?.name {
-                                self.userName = name
+                                self.currenUser.name = name
                             }
                             if let phoneNumber = kakaoUser?.kakaoAccount?.phoneNumber {
-                                self.userPhoneNumber = phoneNumber
+                                self.currenUser.phoneNumber = phoneNumber
                             }
-                            UserDefaultsManager().setKakaoUserData(userData: User(name: self.userName, email: self.userEmail, phoneNumber: self.userPhoneNumber, signInCompany: "카카오톡"))
+                            UserDefaultsManager().setKakaoUserData(userData: User(name: self.currenUser.name, email: self.currenUser.email, phoneNumber: self.currenUser.phoneNumber, signInCompany: "카카오톡"))
                             self.isSignIn = true
                             UserDefaultsManager().setIsSignInState(value: true)
                         }
@@ -228,15 +218,15 @@ class SignInStore {
                             return
                         } else {
                             if let email = kakaoUser?.kakaoAccount?.email {
-                                self.userEmail = email
+                                self.currenUser.email = email
                             }
                             if let name = kakaoUser?.kakaoAccount?.name {
-                                self.userName = name
+                                self.currenUser.name = name
                             }
                             if let phoneNumber = kakaoUser?.kakaoAccount?.phoneNumber {
-                                self.userPhoneNumber = phoneNumber
+                                self.currenUser.phoneNumber = phoneNumber
                             }
-                            UserDefaultsManager().setKakaoUserData(userData: User(name: self.userName, email: self.userEmail, phoneNumber: self.userPhoneNumber, signInCompany: "카카오톡"))
+                            UserDefaultsManager().setKakaoUserData(userData: User(name: self.currenUser.name, email: self.currenUser.email, phoneNumber: self.currenUser.phoneNumber, signInCompany: "카카오톡"))
                             self.isSignIn = true
                             UserDefaultsManager().setIsSignInState(value: true)
                         }
@@ -262,9 +252,9 @@ class SignInStore {
                 print(error)
             } else {
                 print("unlink() success.")
-                self.userEmail = ""
-                self.userName = ""
-                self.userPhoneNumber = ""
+                self.currenUser.email = ""
+                self.currenUser.name = ""
+                self.currenUser.phoneNumber = ""
             }
         }
     }
