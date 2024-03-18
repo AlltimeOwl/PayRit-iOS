@@ -14,181 +14,186 @@ struct WritingCheckView: View {
     @Binding var path: NavigationPath
     @Binding var newCertificate: Certificate
     @Environment(HomeStore.self) var homeStore
+    let writingStore = WritingStore()
     var body: some View {
-        VStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
-                    VStack(alignment: .leading) {
-                        Text("거래내역")
-                            .font(Font.body03)
-                            .foregroundStyle(Color.gray04)
-                        VStack(alignment: .leading, spacing: 12) {
-                            HStack {
-                                Text("금액")
-                                    .font(Font.body04)
-                                Spacer().frame(width: 70)
-                                Text("\(newCertificate.totalAmountFormatter)원")
-                                    .font(Font.body01)
-                                Spacer()
-                            }
-                            HStack {
-                                Text("원금 상환일")
-                                    .font(Font.body04)
-                                Spacer().frame(width: 30)
-                                Text("\(newCertificate.repaymentEndDate)")
-                                    .font(Font.body01)
-                                Spacer()
-                            }
-                        }
-                        .padding(.vertical, 16)
-                        .padding(.horizontal, 20)
-                        .background(Color.white)
-                        .clipShape(.rect(cornerRadius: 12))
-                        .shadow(color: .gray.opacity(0.2), radius: 5)
-                    }
-                    
-                    if newCertificate.interestRateAmount != 0 || (newCertificate.interestRateDay != nil) || (newCertificate.etc != nil) {
+        ZStack {
+            Color.payritBackground.ignoresSafeArea()
+            VStack {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 24) {
                         VStack(alignment: .leading) {
-                            Text("추가사항")
+                            Text("거래내역")
                                 .font(Font.body03)
                                 .foregroundStyle(Color.gray04)
                             VStack(alignment: .leading, spacing: 12) {
-                                if newCertificate.interestRateAmount != 0 {
-                                    HStack {
-                                        Text("이자")
-                                            .font(Font.body04)
-                                        Spacer().frame(width: 70)
-                                        Text("\(newCertificate.interestRateAmount)원")
-                                            .font(Font.body01)
-                                        Spacer()
-                                    }
+                                HStack {
+                                    Text("금액")
+                                        .font(Font.body04)
+                                    Spacer().frame(width: 70)
+                                    Text("\(newCertificate.totalAmountFormatter)원")
+                                        .font(Font.body01)
+                                    Spacer()
                                 }
-                                
-                                if let day = newCertificate.interestRateDay {
-                                    HStack {
-                                        Text("이자 지급일")
-                                            .font(Font.body04)
-                                        Spacer().frame(width: 30)
-                                        Text("매월 \(day)일")
-                                            .foregroundStyle(!newCertificate.repaymentEndDate.isEmpty ? .black : .clear)
-                                            .font(Font.body01)
-                                        Spacer()
-                                    }
-                                }
-                                
-                                if let etc = newCertificate.etc {
-                                    HStack {
-                                        Text("특이사항")
-                                            .font(Font.body04)
-                                        Spacer().frame(width: 70)
-                                        Text("\(etc)")
-                                            .font(Font.body01)
-                                        Spacer()
-                                    }
+                                HStack {
+                                    Text("원금 상환일")
+                                        .font(Font.body04)
+                                    Spacer().frame(width: 30)
+                                    Text("\(newCertificate.repaymentEndDate)")
+                                        .font(Font.body01)
+                                    Spacer()
                                 }
                             }
                             .padding(.vertical, 16)
                             .padding(.horizontal, 20)
-                            .background(Color(hex: "E5FDFC"))
+                            .background(Color.white)
                             .clipShape(.rect(cornerRadius: 12))
                             .shadow(color: .gray.opacity(0.2), radius: 5)
                         }
-                    }
-                    
-                    VStack(alignment: .leading) {
-                        Text("빌려준 사람")
-                            .font(Font.body03)
-                            .foregroundStyle(Color.gray04)
-                        VStack(alignment: .leading, spacing: 12) {
-                            HStack {
-                                Text("이름")
-                                    .font(Font.body04)
-                                Spacer().frame(width: 33)
-                                Text("\(newCertificate.creditorName)")
-                                    .font(Font.body01)
-                                Spacer()
-                            }
-                            HStack {
-                                Text("연락처")
-                                    .font(Font.body04)
-                                Spacer().frame(width: 20)
-                                Text("\(newCertificate.creditorPhoneNumber)")
-                                    .font(Font.body01)
-                                Spacer()
-                            }
-                            HStack {
-                                Text("주소")
-                                    .font(Font.body04)
-                                Spacer().frame(width: 33)
-                                Text("\(newCertificate.creditorAddress)")
-                                    .fixedSize(horizontal: false, vertical: true)
-                                    .font(Font.body01)
-                                Spacer()
-                            }
-                        }
-                        .padding(.vertical, 16)
-                        .padding(.horizontal, 20)
-                        .background(.white)
-                        .clipShape(.rect(cornerRadius: 12))
-                        .shadow(color: .gray.opacity(0.2), radius: 5)
-                    }
-                    
-                    VStack(alignment: .leading) {
-                        Text("빌린 사람")
-                            .font(Font.body03)
-                            .foregroundStyle(Color.gray04)
-                        VStack(alignment: .leading, spacing: 12) {
-                            HStack {
-                                Text("이름")
-                                    .font(Font.body04)
-                                Spacer().frame(width: 33)
-                                Text("\(newCertificate.debtorName)")
-                                    .font(Font.body01)
-                                Spacer()
-                            }
-                            HStack {
-                                Text("연락처")
-                                    .font(Font.body04)
-                                Spacer().frame(width: 20)
-                                Text("\(newCertificate.debtorPhoneNumber)")
-                                    .font(Font.body01)
-                                Spacer()
-                            }
-                            HStack {
-                                Text("주소")
-                                    .font(Font.body04)
-                                Spacer().frame(width: 33)
-                                Text("\(newCertificate.debtorAddress)")
-                                    .fixedSize(horizontal: false, vertical: true)
-                                    .font(Font.body01)
-                                Spacer()
+                        
+                        if newCertificate.interestRateAmount != 0 || (newCertificate.interestRateDay != nil) || (newCertificate.etc != nil) {
+                            VStack(alignment: .leading) {
+                                Text("추가사항")
+                                    .font(Font.body03)
+                                    .foregroundStyle(Color.gray04)
+                                VStack(alignment: .leading, spacing: 12) {
+                                    if newCertificate.interestRateAmount != 0 {
+                                        HStack {
+                                            Text("이자")
+                                                .font(Font.body04)
+                                            Spacer().frame(width: 70)
+                                            Text("\(newCertificate.interestRateAmount)원")
+                                                .font(Font.body01)
+                                            Spacer()
+                                        }
+                                    }
+                                    
+                                    if let day = newCertificate.interestRateDay {
+                                        HStack {
+                                            Text("이자 지급일")
+                                                .font(Font.body04)
+                                            Spacer().frame(width: 30)
+                                            Text("매월 \(day)일")
+                                                .foregroundStyle(!newCertificate.repaymentEndDate.isEmpty ? .black : .clear)
+                                                .font(Font.body01)
+                                            Spacer()
+                                        }
+                                    }
+                                    
+                                    if let etc = newCertificate.etc {
+                                        HStack {
+                                            Text("특이사항")
+                                                .font(Font.body04)
+                                            Spacer().frame(width: 70)
+                                            Text("\(etc)")
+                                                .font(Font.body01)
+                                            Spacer()
+                                        }
+                                    }
+                                }
+                                .padding(.vertical, 16)
+                                .padding(.horizontal, 20)
+                                .background(Color(hex: "E5FDFC"))
+                                .clipShape(.rect(cornerRadius: 12))
+                                .shadow(color: .gray.opacity(0.2), radius: 5)
                             }
                         }
-                        .padding(.vertical, 16)
-                        .padding(.horizontal, 20)
-                        .background(.white)
-                        .clipShape(.rect(cornerRadius: 12))
-                        .shadow(color: .gray.opacity(0.2), radius: 5)
+                        
+                        VStack(alignment: .leading) {
+                            Text("빌려준 사람")
+                                .font(Font.body03)
+                                .foregroundStyle(Color.gray04)
+                            VStack(alignment: .leading, spacing: 12) {
+                                HStack {
+                                    Text("이름")
+                                        .font(Font.body04)
+                                    Spacer().frame(width: 33)
+                                    Text("\(newCertificate.creditorName)")
+                                        .font(Font.body01)
+                                    Spacer()
+                                }
+                                HStack {
+                                    Text("연락처")
+                                        .font(Font.body04)
+                                    Spacer().frame(width: 20)
+                                    Text("\(newCertificate.creditorPhoneNumber)")
+                                        .font(Font.body01)
+                                    Spacer()
+                                }
+                                HStack {
+                                    Text("주소")
+                                        .font(Font.body04)
+                                    Spacer().frame(width: 33)
+                                    Text("\(newCertificate.creditorAddress)")
+                                        .fixedSize(horizontal: false, vertical: true)
+                                        .font(Font.body01)
+                                    Spacer()
+                                }
+                            }
+                            .padding(.vertical, 16)
+                            .padding(.horizontal, 20)
+                            .background(.white)
+                            .clipShape(.rect(cornerRadius: 12))
+                            .shadow(color: .gray.opacity(0.2), radius: 5)
+                        }
+                        
+                        VStack(alignment: .leading) {
+                            Text("빌린 사람")
+                                .font(Font.body03)
+                                .foregroundStyle(Color.gray04)
+                            VStack(alignment: .leading, spacing: 12) {
+                                HStack {
+                                    Text("이름")
+                                        .font(Font.body04)
+                                    Spacer().frame(width: 33)
+                                    Text("\(newCertificate.debtorName)")
+                                        .font(Font.body01)
+                                    Spacer()
+                                }
+                                HStack {
+                                    Text("연락처")
+                                        .font(Font.body04)
+                                    Spacer().frame(width: 20)
+                                    Text("\(newCertificate.debtorPhoneNumber)")
+                                        .font(Font.body01)
+                                    Spacer()
+                                }
+                                HStack {
+                                    Text("주소")
+                                        .font(Font.body04)
+                                    Spacer().frame(width: 33)
+                                    Text("\(newCertificate.debtorAddress)")
+                                        .fixedSize(horizontal: false, vertical: true)
+                                        .font(Font.body01)
+                                    Spacer()
+                                }
+                            }
+                            .padding(.vertical, 16)
+                            .padding(.horizontal, 20)
+                            .background(.white)
+                            .clipShape(.rect(cornerRadius: 12))
+                            .shadow(color: .gray.opacity(0.2), radius: 5)
+                        }
+                        
                     }
-                    
+                    .padding(.top, 30)
+                    .padding(.horizontal, 16)
                 }
-                .padding(.top, 30)
+                Button {
+                    isShowingKaKaoAlert.toggle()
+                } label: {
+                    Text("요청 전송")
+                        .font(Font.title04)
+                        .foregroundStyle(.white)
+                        .frame(height: 50)
+                        .frame(maxWidth: .infinity)
+                        .background(Color.payritMint)
+                        .clipShape(.rect(cornerRadius: 12))
+                }
+                .padding(.bottom, 16)
                 .padding(.horizontal, 16)
             }
-            Button {
-                isShowingKaKaoAlert.toggle()
-            } label: {
-                Text("요청 전송")
-                    .font(Font.title04)
-                    .foregroundStyle(.white)
-                    .frame(height: 50)
-                    .frame(maxWidth: .infinity)
-                    .background(Color.payritMint)
-                    .clipShape(.rect(cornerRadius: 12))
-            }
-            .padding(.bottom, 16)
-            .padding(.horizontal, 16)
         }
+        .dismissOnEdgeDrag()
         .navigationTitle("차용증 내용 확인")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -234,6 +239,7 @@ struct WritingCheckView: View {
                       cancleButtonTitle: "확인",
                       primaryAction: nil) {
             homeStore.certificates.append(newCertificate)
+            writingStore.saveCertificae(certificate: newCertificate)
             path = .init()
         }
     }
@@ -242,6 +248,5 @@ struct WritingCheckView: View {
 #Preview {
     NavigationStack {
         WritingCheckView(path: .constant(NavigationPath()), newCertificate: .constant(Certificate.samepleDocument[0]))
-            .environment(HomeStore())
     }
 }

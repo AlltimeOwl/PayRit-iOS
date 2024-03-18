@@ -148,3 +148,67 @@ struct ToastMessageModifier: ViewModifier {
         }
     }
 }
+
+struct ViewDidLoadModifier: ViewModifier {
+    @State private var viewDidLoad = false
+    let action: (() -> Void)?
+    
+    func body(content: Content) -> some View {
+        content
+            .onAppear {
+                if viewDidLoad == false {
+                    viewDidLoad = true
+                    action?()
+                }
+            }
+    }
+}
+
+struct DismissOnDrag: ViewModifier {
+    @Environment(\.dismiss) var dismiss
+    var minimumDragDistance: CGFloat
+
+    func body(content: Content) -> some View {
+        content
+            .gesture(
+                DragGesture()
+                    .onChanged { _ in }
+                    .onEnded { gesture in
+                        if gesture.translation.width > minimumDragDistance {
+                            dismiss()
+                        }
+                    }
+            )
+    }
+}
+
+struct DismissOnEdgeDrag: ViewModifier {
+    @State private var startLocation: CGFloat? // 드래그 시작 위치
+    @Environment(\.dismiss) var dismiss
+    var minimumDragDistance: CGFloat = 100
+    var edgeWidth: CGFloat = 20 // 화면 왼쪽 끝에서 인식할 영역의 너비
+
+    func body(content: Content) -> some View {
+        content
+            .gesture(
+                DragGesture()
+                    .onChanged { gesture in
+                        // 처음 드래그를 인식했을 때 시작 위치를 설정
+                        if startLocation == nil {
+                            startLocation = gesture.startLocation.x
+                        }
+                    }
+                    .onEnded { gesture in
+                        // 드래그 시작 위치가 화면 왼쪽 끝에서 edgeWidth 이내인지,
+                        // 그리고 드래그 거리가 minimumDragDistance 이상인지 확인
+                        if let startLocation = startLocation,
+                           startLocation <= edgeWidth,
+                           gesture.translation.width > minimumDragDistance {
+                            dismiss()
+                        }
+                        // 드래그 상태 리셋
+                        self.startLocation = nil
+                    }
+            )
+    }
+}

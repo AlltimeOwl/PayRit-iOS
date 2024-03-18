@@ -39,134 +39,111 @@ struct WritingCertificateInfoView: View {
         }
     }
     var body: some View {
-        VStack(spacing: 0) {
-            ScrollViewReader { proxy in
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 24) {
-                        VStack(alignment: .leading) {
-                            Text("얼마를 빌려주기로 했나요?")
-                                .font(Font.body03)
-                                .foregroundStyle(Color.gray04)
-                            CustomTextField(placeholder: "금액을 입력해주세요", keyboardType: .numberPad, text: $money)
-                                .onChange(of: money) {
-                                    newCertificate.money = Int(money) ?? 0
-                                }
-                        }
-                        
-                        VStack(alignment: .leading) {
-                            Text("언제 빌려주기로 했나요?")
-                                .font(Font.body03)
-                                .foregroundStyle(Color.gray04)
-                            RoundedRectangle(cornerRadius: 6)
-                                .stroke(Color.gray08, lineWidth: 1)
-                                .fill(Color.gray09)
-                                .background(RoundedRectangle(cornerRadius: 6))
-                                .foregroundStyle(.white)
-                                .frame(height: 45)
-                                .overlay(
-                                    VStack {
-                                        Button {
-                                            endTextEditing()
-                                            onTapBorrowedDate = true
-                                            isShowingBorrowedDatePicker.toggle()
-                                        } label: {
-                                            HStack {
-                                                if onTapBorrowedDate {
-                                                    Text(borrowedDate.dateToString())
-                                                        .font(Font.body02)
-                                                        .foregroundStyle(.black)
-                                                } else {
-                                                    Text("YY.MM.DD")
-                                                        .font(Font.body02)
-                                                        .foregroundStyle(Color.gray07)
-                                                }
-                                                Spacer()
-                                                Image(systemName: "calendar")
-                                                    .font(.system(size: 20))
-                                                    .foregroundStyle(Color.gray06)
-                                            }
-                                        }
+        ZStack {
+            Color.payritBackground.ignoresSafeArea()
+            VStack(spacing: 0) {
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 24) {
+                            VStack(alignment: .leading) {
+                                Text("얼마를 빌려주기로 했나요?")
+                                    .font(Font.body03)
+                                    .foregroundStyle(Color.gray04)
+                                CustomTextField(placeholder: "금액을 입력해주세요", keyboardType: .numberPad, text: $money)
+                                    .onChange(of: money) {
+                                        newCertificate.money = Int(money) ?? 0
                                     }
-                                        .padding(.horizontal, 14)
-                                    , alignment: .leading
-                                )
-                        }
-                        
-                        VStack(alignment: .leading) {
-                            Text("언제까지 갚기로 했나요?")
-                                .font(Font.body03)
-                                .foregroundStyle(Color.gray04)
-                            RoundedRectangle(cornerRadius: 6)
-                                .stroke(Color.gray08, lineWidth: 1)
-                                .fill(Color.gray09)
-                                .background(RoundedRectangle(cornerRadius: 6))
-                                .foregroundStyle(.white)
-                                .frame(height: 45)
-                                .overlay(
-                                    VStack {
-                                        Button {
-                                            endTextEditing()
-                                            onTapRedemptionDate = true
-                                            isShowingRedemptionDatePicker.toggle()
-                                        } label: {
-                                            HStack {
-                                                if onTapRedemptionDate {
-                                                    Text(redemptionDate.dateToString())
-                                                        .font(Font.body02)
-                                                        .foregroundStyle(.black)
-                                                } else {
-                                                    Text("YY.MM.DD")
-                                                        .font(Font.body02)
-                                                        .foregroundStyle(Color.gray07)
+                            }
+                            
+                            VStack(alignment: .leading) {
+                                Text("언제 빌려주기로 했나요?")
+                                    .font(Font.body03)
+                                    .foregroundStyle(Color.gray04)
+                                RoundedRectangle(cornerRadius: 6)
+                                    .stroke(Color.gray08, lineWidth: 1)
+                                    .fill(Color.gray09)
+                                    .background(RoundedRectangle(cornerRadius: 6))
+                                    .foregroundStyle(.white)
+                                    .frame(height: 45)
+                                    .overlay(
+                                        VStack {
+                                            Button {
+                                                endTextEditing()
+                                                onTapBorrowedDate = true
+                                                isShowingBorrowedDatePicker.toggle()
+                                            } label: {
+                                                HStack {
+                                                    if onTapBorrowedDate {
+                                                        Text(borrowedDate.dateToString())
+                                                            .font(Font.body02)
+                                                            .foregroundStyle(.black)
+                                                    } else {
+                                                        Text("YY.MM.DD")
+                                                            .font(Font.body02)
+                                                            .foregroundStyle(Color.gray07)
+                                                    }
+                                                    Spacer()
+                                                    Image(systemName: "calendar")
+                                                        .font(.system(size: 20))
+                                                        .foregroundStyle(Color.gray06)
                                                 }
-                                                Spacer()
-                                                Image(systemName: "calendar")
-                                                    .font(.system(size: 20))
-                                                    .foregroundStyle(Color.gray06)
                                             }
                                         }
+                                            .padding(.horizontal, 14)
+                                        , alignment: .leading
+                                    )
+                            }
+                            
+                            VStack(alignment: .leading) {
+                                Text("언제까지 갚기로 했나요?")
+                                    .font(Font.body03)
+                                    .foregroundStyle(Color.gray04)
+                                RoundedRectangle(cornerRadius: 6)
+                                    .stroke(Color.gray08, lineWidth: 1)
+                                    .fill(Color.gray09)
+                                    .background(RoundedRectangle(cornerRadius: 6))
+                                    .foregroundStyle(.white)
+                                    .frame(height: 45)
+                                    .overlay(
+                                        VStack {
+                                            Button {
+                                                endTextEditing()
+                                                onTapRedemptionDate = true
+                                                isShowingRedemptionDatePicker.toggle()
+                                            } label: {
+                                                HStack {
+                                                    if onTapRedemptionDate {
+                                                        Text(redemptionDate.dateToString())
+                                                            .font(Font.body02)
+                                                            .foregroundStyle(.black)
+                                                    } else {
+                                                        Text("YY.MM.DD")
+                                                            .font(Font.body02)
+                                                            .foregroundStyle(Color.gray07)
+                                                    }
+                                                    Spacer()
+                                                    Image(systemName: "calendar")
+                                                        .font(.system(size: 20))
+                                                        .foregroundStyle(Color.gray06)
+                                                }
+                                            }
+                                        }
+                                            .padding(.horizontal, 14)
+                                        , alignment: .leading
+                                    )
+                            }
+                            
+                            VStack(alignment: .leading) {
+                                Text("특별히 추가할 내용이 있나요? (선택)")
+                                    .font(Font.body03)
+                                    .foregroundStyle(Color.gray04)
+                                CustomTextField(foregroundStyle: .black, placeholder: "특별히 추가할 내용을 적어주세요", keyboardType: .default, text: $etc)
+                                    .onChange(of: etc) {
+                                        newCertificate.etc = etc
                                     }
-                                        .padding(.horizontal, 14)
-                                    , alignment: .leading
-                                )
-                        }
-                        
-                        VStack(alignment: .leading) {
-                            Text("특별히 추가할 내용이 있나요? (선택)")
-                                .font(Font.body03)
-                                .foregroundStyle(Color.gray04)
-                            CustomTextField(foregroundStyle: .black, placeholder: "특별히 추가할 내용을 적어주세요", keyboardType: .default, text: $etc)
-                                .onChange(of: etc) {
-                                    newCertificate.etc? = etc
-                                }
-                        }
-                        VStack(spacing: 0) {
-                            if !calToggle {
-                                HStack {
-                                    Text("이자 계산")
-                                        .font(.system(size: 16))
-                                        .fontWeight(.semibold)
-                                    Spacer()
-                                    Toggle("", isOn: $calToggle)
-                                        .onTapGesture {
-                                            interestTextFieldFocus = true
-                                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                                withAnimation {
-                                                    proxy.scrollTo(bottomID, anchor: .top)
-                                                }
-                                            }
-                                        }
-                                        .tint(Color.payritMint)
-                                }
-                                .padding(.vertical, 10)
-                                .padding(.horizontal, 16)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 8)
-                                        .stroke(Color.payritMint, lineWidth: 2)
-                                        .background(Color(hex: "E5FDFC"))
-                                )
-                            } else {
-                                VStack(alignment: .leading, spacing: 0) {
+                            }
+                            VStack(spacing: 0) {
+                                if !calToggle {
                                     HStack {
                                         Text("이자 계산")
                                             .font(.system(size: 16))
@@ -174,141 +151,172 @@ struct WritingCertificateInfoView: View {
                                         Spacer()
                                         Toggle("", isOn: $calToggle)
                                             .onTapGesture {
-                                                interest = ""
-                                                interestDate = ""
-                                                newCertificate.interestRateDay = nil
+                                                interestTextFieldFocus = true
+                                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                                    withAnimation {
+                                                        proxy.scrollTo(bottomID, anchor: .top)
+                                                    }
+                                                }
                                             }
                                             .tint(Color.payritMint)
                                     }
                                     .padding(.vertical, 10)
                                     .padding(.horizontal, 16)
                                     .background(
-                                        Rectangle()
-                                            .foregroundStyle(Color(hex: "E5FDFC"))
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .stroke(Color.payritMint, lineWidth: 2)
+                                            .background(Color(hex: "E5FDFC"))
                                     )
+                                } else {
                                     VStack(alignment: .leading, spacing: 0) {
-                                        HStack(spacing: 2) {
-                                            Text("연 이자율")
-                                            Button {
-                                                isShowingInterestToastMessage.toggle()
-                                            } label: {
-                                                Image(systemName: "questionmark.circle")
-                                            }
+                                        HStack {
+                                            Text("이자 계산")
+                                                .font(.system(size: 16))
+                                                .fontWeight(.semibold)
+                                            Spacer()
+                                            Toggle("", isOn: $calToggle)
+                                                .onTapGesture {
+                                                    interest = ""
+                                                    interestDate = ""
+                                                    newCertificate.interestRateDay = nil
+                                                }
+                                                .tint(Color.payritMint)
                                         }
-                                        .font(Font.body03)
-                                        .foregroundStyle(Color.gray04)
-                                        .padding(.top, 4)
-                                        
-                                        CustomTextField(placeholder: "숫자를 입력해주세요", keyboardType: .decimalPad, text: $interest, isFocused: interestTextFieldFocus)
-                                            .onChange(of: interest) { oldValue, newValue in
-                                                if newValue.count < 6 {
-                                                    if newValue.filter({ $0 == "." }).count >= 2 {
-                                                        interest = oldValue
-                                                    } else {
-                                                        if !interest.isEmpty && interest != "." {
-                                                            if Float(newValue) ?? 20.0 >= 20.0 {
-                                                                interest = "19.99"
-                                                                warningMessage = true
-                                                            }
-                                                        }
-                                                    }
-                                                } else {
-                                                    interest = oldValue
-                                                }
-                                                newCertificate.interestRate = Double(interest) ?? 0.0
-                                            }
-                                            .onTapGesture {
-                                                withAnimation {
-                                                    proxy.scrollTo(bottomID, anchor: .top)
-                                                }
-                                            }
-                                            .padding(.top, 4)
-                                        
-                                        if warningMessage {
-                                            HStack {
-                                                Text("이자는 20%를 넘어설 수 없어요.")
+                                        .padding(.vertical, 10)
+                                        .padding(.horizontal, 16)
+                                        .background(
+                                            Rectangle()
+                                                .foregroundStyle(Color(hex: "E5FDFC"))
+                                        )
+                                        VStack(alignment: .leading, spacing: 0) {
+                                            HStack(spacing: 2) {
+                                                Text("연 이자율")
                                                 Button {
-                                                    isShowingInterestWarningToastMessage.toggle()
+                                                    isShowingInterestToastMessage.toggle()
                                                 } label: {
                                                     Image(systemName: "questionmark.circle")
                                                 }
                                             }
-                                            .font(Font.caption01)
-                                            .foregroundStyle(Color.payritErrorRed)
-                                            .padding(.top, 4)
-                                        }
-                                        
-                                        HStack(spacing: 0) {
-                                            Text("지급해야하는 이자는 약 ")
-                                            Text("\(newCertificate.interestRateAmount)")
-                                                .foregroundStyle(Color.payritMint)
-                                            Text("원이에요")
-                                        }
-                                        .padding(.vertical, 20)
-                                        .font(Font.body02)
-                                        
-                                        Text("이자 지급일(선택)")
                                             .font(Font.body03)
                                             .foregroundStyle(Color.gray04)
-                                        CustomTextField(placeholder: "숫자를 입력해주세요", keyboardType: .numberPad, text: $interestDate)
-                                            .onChange(of: interestDate) { _, _ in
-                                                newCertificate.interestRateDay = interestDate
-                                            }
-                                            .onTapGesture {
-                                                withAnimation {
-                                                    proxy.scrollTo(bottomID, anchor: .top)
-                                                }
-                                            }
                                             .padding(.top, 4)
+                                            
+                                            CustomTextField(placeholder: "숫자를 입력해주세요", keyboardType: .decimalPad, text: $interest, isFocused: interestTextFieldFocus)
+                                                .onChange(of: interest) { oldValue, newValue in
+                                                    if newValue.count < 6 {
+                                                        if newValue.filter({ $0 == "." }).count >= 2 {
+                                                            interest = oldValue
+                                                        } else {
+                                                            if !interest.isEmpty && interest != "." {
+                                                                if Float(newValue) ?? 20.0 >= 20.0 {
+                                                                    interest = "19.99"
+                                                                    warningMessage = true
+                                                                }
+                                                            }
+                                                        }
+                                                    } else {
+                                                        interest = oldValue
+                                                    }
+                                                    newCertificate.interestRate = Double(interest) ?? 0.0
+                                                }
+                                                .onTapGesture {
+                                                    withAnimation {
+                                                        proxy.scrollTo(bottomID, anchor: .top)
+                                                    }
+                                                }
+                                                .padding(.top, 4)
+                                            
+                                            if warningMessage {
+                                                HStack {
+                                                    Text("이자는 20%를 넘어설 수 없어요.")
+                                                    Button {
+                                                        isShowingInterestWarningToastMessage.toggle()
+                                                    } label: {
+                                                        Image(systemName: "questionmark.circle")
+                                                    }
+                                                }
+                                                .font(Font.caption01)
+                                                .foregroundStyle(Color.payritErrorRed)
+                                                .padding(.top, 4)
+                                            }
+                                            
+                                            HStack(spacing: 0) {
+                                                Text("지급해야하는 이자는 약 ")
+                                                Text("\(newCertificate.interestRateAmount)")
+                                                    .foregroundStyle(Color.payritMint)
+                                                Text("원이에요")
+                                            }
+                                            .padding(.vertical, 20)
+                                            .font(Font.body02)
+                                            
+                                            Text("이자 지급일(선택)")
+                                                .font(Font.body03)
+                                                .foregroundStyle(Color.gray04)
+                                            
+                                            CustomTextField(placeholder: "숫자를 입력해주세요", keyboardType: .numberPad, text: $interestDate)
+                                                .onChange(of: interestDate) { _, newValue in
+                                                    if Int(newValue) ?? 31 > 31 {
+                                                        interestDate = "31"
+                                                    }
+                                                    newCertificate.interestRateDay = interestDate
+                                                }
+                                                .onTapGesture {
+                                                    withAnimation {
+                                                        proxy.scrollTo(bottomID, anchor: .top)
+                                                    }
+                                                }
+                                                .padding(.top, 4)
+                                        }
+                                        .padding(16)
                                     }
-                                    .padding(16)
+                                    .id(bottomID)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .stroke(Color.payritMint, lineWidth: 2)
+                                    )
                                 }
-                                .id(bottomID)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 8)
-                                        .stroke(Color.payritMint, lineWidth: 2)
-                                )
+                            }
+                            
+                            if !money.isEmpty {
+                                HStack(spacing: 0) {
+                                    Text("총 ")
+                                    if calToggle {
+                                        Text("\(newCertificate.totalAmountFormatter)")
+                                            .foregroundStyle(Color.payritMint)
+                                    } else {
+                                        Text(newCertificate.totalMoneyFormatter)
+                                            .foregroundStyle(Color.payritMint)
+                                    }
+                                    Text("원을 상환해야해요!")
+                                }
+                                .font(Font.title04)
                             }
                         }
-                        
-                        if !money.isEmpty {
-                            HStack(spacing: 0) {
-                                Text("총 ")
-                                if calToggle {
-                                    Text("\(newCertificate.totalAmountFormatter)")
-                                        .foregroundStyle(Color.payritMint)
-                                } else {
-                                    Text(newCertificate.totalMoneyFormatter)
-                                        .foregroundStyle(Color.payritMint)
-                                }
-                                Text("원을 상환해야해요!")
-                            }
-                            .font(Font.title04)
-                        }
+                        .padding(.top, 30)
+                        .padding(.horizontal, 16)
+                        .padding(.bottom, 16)
                     }
-                    .padding(.top, 30)
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 16)
                 }
-            }
-            Button {
-                if !isFormValid {
-                    isShowingFormToastMessage.toggle()
-                } else {
-                    moveNextView.toggle()
+                Button {
+                    if !isFormValid {
+                        isShowingFormToastMessage.toggle()
+                    } else {
+                        moveNextView.toggle()
+                    }
+                } label: {
+                    Text("다음")
+                        .font(Font.title04)
+                        .foregroundStyle(.white)
+                        .frame(height: 50)
+                        .frame(maxWidth: .infinity)
+                        .background(!isFormValid ? Color.gray07 : Color.payritMint)
+                        .clipShape(.rect(cornerRadius: keyBoardFocused ? 0 : 12))
                 }
-            } label: {
-                Text("다음")
-                    .font(Font.title04)
-                    .foregroundStyle(.white)
-                    .frame(height: 50)
-                    .frame(maxWidth: .infinity)
-                    .background(!isFormValid ? Color.gray07 : Color.payritMint)
-                    .clipShape(.rect(cornerRadius: keyBoardFocused ? 0 : 12))
+                .padding(.bottom, keyBoardFocused ? 0 : 16)
+                .padding(.horizontal, keyBoardFocused ? 0 : 16)
             }
-            .padding(.bottom, keyBoardFocused ? 0 : 16)
-            .padding(.horizontal, keyBoardFocused ? 0 : 16)
         }
+        .dismissOnEdgeDrag()
         .scrollIndicators(.hidden)
         .navigationTitle("페이릿 작성하기")
         .navigationBarTitleDisplayMode(.inline)
@@ -349,6 +357,9 @@ struct WritingCertificateInfoView: View {
         })
         .onChange(of: borrowedDate) {
             newCertificate.repaymentStartDate = borrowedDate.dateToString()
+            if borrowedDate < redemptionDate {
+                redemptionDate = borrowedDate
+            }
         }
         .onChange(of: redemptionDate) {
             newCertificate.repaymentEndDate = redemptionDate.dateToString()
@@ -382,6 +393,7 @@ struct WritingCertificateInfoView: View {
     TabView {
         NavigationStack {
             WritingCertificateInfoView(certificateType: .constant(.DEBTOR), path: .constant(NavigationPath()))
+                .environment(TabBarStore())
         }
     }
 }

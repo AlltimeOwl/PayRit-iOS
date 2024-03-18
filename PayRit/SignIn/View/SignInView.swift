@@ -29,28 +29,30 @@ struct SignInView: View {
                     Button {
                         signInStore.kakaoSignIn()
                     } label: {
-                        Image("kakaoLoginImage")
+                        HStack(spacing: 6) {
+                            Spacer()
+                            Image("kakaoSignInLogo")
+                                .resizable()
+                                .frame(width: 14, height: 14)
+                            Text("카카오로 계속하기")
+                                .foregroundStyle(Color(hex: "000000").opacity(0.85))
+                                .font(.system(size: 18))
+                            Spacer()
+                        }
                     }
+                    .frame(height: 48)
+                    .frame(maxWidth: .infinity)
+                    .background(Color(hex: "FEE500"))
+                    .cornerRadius(5)
+                    .padding(.horizontal, 30)
                     
-//                    Button {
-//                        signInStore.signInState = true
-//                    } label: {
-//                        Image("appleLoginImage")
-//                    }
                     AppleSigninButton()
-                    .frame(width: UIScreen.screenWidth * 0.8, height: 48)
+                    .frame(height: 48)
+                    .padding(.horizontal, 30)
                     .padding(.bottom, 58)
-                    
-                    Button {
-                    } label: {
-                        Image("kakaoLoginImage")
-                    }
                 }
             }
             .ignoresSafeArea(.all)
-            //            .navigationDestination(isPresented: $logInOK) {
-            //                TabBarView(tabBarVisivility: $tabBarVisivility)
-            //            }
             .onAppear {
                 
             }
@@ -64,6 +66,7 @@ struct SignInView: View {
 #Preview {
     NavigationStack {
         SignInView()
+            .environment(SignInStore())
     }
 }
 
@@ -71,6 +74,8 @@ struct AppleSigninButton: View {
     @Environment(SignInStore.self) var signInStore
     var body: some View {
         SignInWithAppleButton(
+            .continue
+            ,
             onRequest: { request in
                 request.requestedScopes = [.fullName, .email]
             },
@@ -113,6 +118,7 @@ struct AppleSigninButton: View {
                 }
             }
         )
+        .signInWithAppleButtonStyle(.black)
         .cornerRadius(5)
     }
 }

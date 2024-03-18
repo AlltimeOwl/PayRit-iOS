@@ -17,7 +17,89 @@ enum SortingType: String, CodingKey, CaseIterable {
 @Observable
 final class HomeStore {
     var sortingType: SortingType = .recent
-    var certificates: [Certificate] = Certificate.samepleDocument
+//    var certificates: [Certificate] = Certificate.samepleDocument
+    var certificates: [Certificate] = [Certificate]()
+    init() {
+        loadCertificates()
+    }
+    
+    func loadCertificates() {
+        // 요청할 URL 생성
+        let urlString = "https://payrit.info/api/v1/paper/list"
+        guard let url = URL(string: urlString) else {
+            print("Invalid URL")
+            return
+        }
+        
+        // URLSession 객체 생성
+        let session = URLSession.shared
+        
+        // URLRequest 생성
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("application/json", forHTTPHeaderField: "accept")
+        request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
+        
+        // URLSessionDataTask를 사용하여 GET 요청 생성
+        let task = session.dataTask(with: request) { (data, response, error) in
+            // 요청 완료 후 실행될 클로저
+            if let error = error {
+                print("Error: \(error)")
+                return
+            }
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                print("Invalid response")
+                return
+            }
+            
+            if (200..<300).contains(httpResponse.statusCode) {
+                // 요청이 성공했을 때 데이터 처리
+                if let data = data {
+//                    let responseData = String(data: data, encoding: .utf8)
+//                    print("Response data: \(responseData ?? "No data")")
+//                    
+//                    let decodeDate = try? JSONDecoder().decode([Certificate].self, from: data)
+//                    
+//                    decodeDate?.forEach({ data in
+//                        self.certificates.append(Certificate(creditorName: data.creditorName, creditorPhoneNumber: data.creditorPhoneNumber, creditorAddress: data.creditorAddress, debtorName: data.debtorName, debtorPhoneNumber: data.debtorPhoneNumber, debtorAddress: data.debtorAddress, repaymentStartDate: data.repaymentStartDate, repaymentEndDate: data.repaymentEndDate, money: data.money, interestRate: data.interestRate))
+//                    })
+                    do {
+                        if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                            for item in json {
+                                var newCertificate = Certificate(
+                                    writingDay: json["writingDay"] as? String ?? "",
+                                    WriterRole: WriterRole(rawValue: json["WriterRole"] as? String ?? "") ?? .CREDITOR,
+                                    creditorName: json["creditorName"] as? String ?? "",
+                                    creditorPhoneNumber: json["creditorPhoneNumber"] as? String ?? "",
+                                    creditorAddress: json["creditorAddress"] as? String ?? "",
+                                    debtorName: json["debtorName"] as? String ?? "",
+                                    debtorPhoneNumber: json["debtorPhoneNumber"] as? String ?? "",
+                                    debtorAddress: json["debtorAddress"] as? String ?? "",
+                                    repaymentStartDate: json["repaymentStartDate"] as? String ?? "",
+                                    repaymentEndDate: json["repaymentEndDate"] as? String ?? "",
+                                    money: json["money"] as? Int ?? 0,
+                                    interestRate: json["interestRate"] as? Double ?? 0.0,
+                                    state: CertificateStep(rawValue: json["state"] as? String ?? "") ?? .waitingApproval,
+                                    etc: json["etc"] as? String,
+                                    memo: [], // Memo에 대한 처리는 필요에 따라 추가
+                                    deductedHistory: [] // Deducted에 대한 처리는 필요에 따라 추가
+                                )
+                                self.certificates.append(newCertificate)
+                            }
+                        }
+                    } catch {
+                        print("Error parsing JSON: \(error)")
+                    }
+                }
+            } else {
+                print("HTTP status code: \(httpResponse.statusCode)")
+            }
+        }
+        
+        // 요청 시작
+        task.resume()
+    }
     
     func sortingCertificates() {
         self.certificates = certificates.sorted {

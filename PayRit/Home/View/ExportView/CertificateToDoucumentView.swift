@@ -11,29 +11,18 @@ struct CertificateToDoucumentView: View {
     let primaryAction: Action?
     let primaryAction2: Action?
     @Binding var isPresented: Bool
+    @Environment(HomeStore.self) var homeStore
     var body: some View {
         VStack {
             VStack {
-                CertificateDocumentView()
-                //                    .foregroundColor(.black)
-                //                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(Color.white)
+                let pdfURL: URL? = homeStore.generatePDF()
+                if let url = pdfURL {
+                    PDFKitView(url: url)
+                }
             }
             .clipShape(.rect(cornerRadius: 12))
             .padding(.bottom, 10)
             
-//            Button {
-//                isPresented = false
-//            } label: {
-//                Image(systemName: "xmark.circle.fill")
-//                    .font(.system(size: 60))
-//            }
-//            .foregroundStyle(.gray).opacity(0.5)
-//            .background(
-//                Circle().frame(width: 60, height: 60)
-//                    .foregroundStyle(.white)
-//            )
-//            .padding(.top, 20)
             VStack(spacing: 0) {
                 HStack(alignment: .center) {
                     Button {
@@ -77,4 +66,5 @@ struct CertificateToDoucumentView: View {
 #Preview {
     CertificateToDoucumentView(primaryAction: nil, primaryAction2: nil, isPresented: .constant(false))
         .background(Color.gray)
+        .environment(HomeStore())
 }

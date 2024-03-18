@@ -12,9 +12,10 @@ final class UserDefaultsManager {
     enum Key: String, CaseIterable {
         case isSignIn
         case userAppleId, userName, userEmail, userPhoneNumber, signInCompany, signature
+        case accessToken, refreshToken
     }
     
-    // 카카오 정보저장
+    /// 카카오 정보저장
     func setKakaoUserData(userData: User) {
         UserDefaults.standard.setValue(userData.name, forKey: Key.userName.rawValue)
         UserDefaults.standard.setValue(userData.email, forKey: Key.userEmail.rawValue)
@@ -22,7 +23,7 @@ final class UserDefaultsManager {
         UserDefaults.standard.setValue(userData.signInCompany, forKey: Key.signInCompany.rawValue)
     }
     
-    // 애플 정보저장
+    /// 애플 정보저장
     func setAppleUserData(userData: User) {
         UserDefaults.standard.setValue(userData.appleId, forKey: Key.userAppleId.rawValue)
         UserDefaults.standard.setValue(userData.name, forKey: Key.userName.rawValue)
@@ -30,12 +31,35 @@ final class UserDefaultsManager {
         UserDefaults.standard.setValue(userData.signInCompany, forKey: Key.signInCompany.rawValue)
     }
     
-    // 자동로그인 값 저장
+    func setBearerToken(_ aToken: String, _ rToken: String) {
+        UserDefaults.standard.setValue(aToken, forKey: Key.accessToken.rawValue)
+        UserDefaults.standard.setValue(rToken, forKey: Key.refreshToken.rawValue)
+    }
+    
+    /// 자동로그인 값 저장
     func setIsSignInState(value: Bool) {
         UserDefaults.standard.setValue(value, forKey: Key.isSignIn.rawValue)
     }
     
-    // 유저 정보 반환
+    func getBearerToken() -> (aToken: String, rToken: String) {
+        var accessToken = ""
+        var refreshToken = ""
+        if let aToken = UserDefaults.standard.string(forKey: Key.accessToken.rawValue) {
+            print("토큰 정보 : \(aToken)")
+            accessToken = aToken
+        } else {
+            print("UserDefaults 엑세스 토큰 정보 없음")
+        }
+        if let rToken = UserDefaults.standard.string(forKey: Key.refreshToken.rawValue) {
+            print("토큰 정보 : \(rToken)")
+            refreshToken = rToken
+        } else {
+            print("UserDefaults 리프레시 토큰 정보 없음")
+        }
+        return (accessToken, refreshToken)
+    }
+    
+    /// 유저 정보 반환
     func getUserInfo() -> User {
         let name = UserDefaults.standard.string(forKey: Key.userName.rawValue) ?? ""
         let email = UserDefaults.standard.string(forKey: Key.userEmail.rawValue) ?? ""
@@ -46,13 +70,13 @@ final class UserDefaultsManager {
         return User(name: name, email: email, phoneNumber: phoneNumber, signInCompany: company, appleId: appleId, signature: signature)
     }
     
-    // 저장된 애플 유저 고유 아이디값 반환
+    /// 저장된 애플 유저 고유 아이디값 반환
     func getAppleUserId() -> String {
         let appleId = UserDefaults.standard.string(forKey: Key.userAppleId.rawValue) ?? "notFound"
         return appleId
     }
     
-    // 자동로그인 값 반환
+    /// 자동로그인 값 반환
     func getIsSignInState() -> Bool {
         let check = UserDefaults.standard.bool(forKey: Key.isSignIn.rawValue)
         return check

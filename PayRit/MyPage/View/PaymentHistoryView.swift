@@ -9,11 +9,12 @@ import SwiftUI
 
 struct PaymentHistoryView: View {
     @State private var menuState = false
-    @Binding var tabBarVisivility: Visibility
+    @Environment(TabBarStore.self) var tabStore
     private let menuPadding = 8.0
     var myPageStore: MyPageStore = MyPageStore()
     var body: some View {
         ZStack {
+            Color.payritBackground.ignoresSafeArea()
             List(myPageStore.paymentHistory) { payment in
                 VStack(alignment: .leading, spacing: 0) {
                     HStack {
@@ -124,6 +125,7 @@ struct PaymentHistoryView: View {
             .padding(.top, 10)
             .padding(.horizontal, 16)
         }
+        .dismissOnEdgeDrag()
         .navigationTitle("결제 내역")
         .navigationBarTitleDisplayMode(.inline)
     }
@@ -131,6 +133,7 @@ struct PaymentHistoryView: View {
 
 #Preview {
     NavigationStack {
-        PaymentHistoryView(tabBarVisivility: .constant(.hidden))
+        PaymentHistoryView()
+            .environment(TabBarStore())
     }
 }

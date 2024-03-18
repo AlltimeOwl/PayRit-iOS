@@ -21,8 +21,6 @@ struct TokenTestData: Codable {
 @Observable
 class SignInStore {
     var currenUser: User = UserDefaultsManager().getUserInfo()
-    var aToken = ""
-    var rToken = ""
     var appleAuthorizationCode = ""
     var isSignIn: Bool = UserDefaultsManager().getIsSignInState()
     //
@@ -30,6 +28,10 @@ class SignInStore {
     //        "key1": "value1",
     //        "key2": "value2"
     //    ]
+    
+    func appleSignIn() {
+        
+    }
     
     func appleAuthCheck() {
         let appleIDProvider = ASAuthorizationAppleIDProvider()
@@ -60,63 +62,119 @@ class SignInStore {
         }
     }
     
-    func test2() {
-        var urlComponents = URLComponents()
-        urlComponents.scheme = "https"
-        urlComponents.host = "appleid.apple.com"
-        urlComponents.path = "/auth/token"
-        
-        if let url = urlComponents.url {
-            print("URL: \(url)")
-            
-            var request = URLRequest(url: url)
-            request.httpMethod = "POST" // 요청에 사용할 HTTP 메서드 설정
-            // HTTP 헤더 설정
-            request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-            
-            // HTTP 바디 설정
-            let body = [
-                "client_id": "com.daejinlim.PayRit",
-                "client_se": aToken,
-                "code": aToken,
-                "grant_type": appleAuthorizationCode
-            ] as [String: Any]
-            
-            do {
-                request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
-            } catch {
-                print("Error creating JSON data")
-            }
-            // URLSession을 사용하여 요청 수행
-            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+//    func test2() {
+//        var urlComponents = URLComponents()
+//        urlComponents.scheme = "https"
+//        urlComponents.host = "appleid.apple.com"
+//        urlComponents.path = "/auth/token"
+//        
+//        if let url = urlComponents.url {
+//            print("URL: \(url)")
+//            
+//            var request = URLRequest(url: url)
+//            request.httpMethod = "POST" // 요청에 사용할 HTTP 메서드 설정
+//            // HTTP 헤더 설정
+//            request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+//            
+//            // HTTP 바디 설정
+//            let body = [
+//                "client_id": "com.daejinlim.PayRit",
+////                "client_se": aToken,
+////                "code": aToken,
+//                "grant_type": appleAuthorizationCode
+//            ] as [String: Any]
+//            
+//            do {
+//                request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
+//            } catch {
+//                print("Error creating JSON data")
+//            }
+//            // URLSession을 사용하여 요청 수행
+//            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+//                if let error = error {
+//                    print("Error: \(error)")
+//                } else if let data = data, let response = response as? HTTPURLResponse {
+//                    print("Response status code: \(response.statusCode)")
+//                    if response.statusCode == 200 {
+//                        // Handle successful response
+//                        do {
+//                            if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+//                                print("JSON Response: \(json)")
+//                                //                                print(data)
+//                            }
+//                        } catch {
+//                            print("Error parsing JSON response")
+//                        }
+//                    } else {
+//                        // Handle other status codes
+//                        print("Unexpected status code: \(response.statusCode)")
+//                    }
+//                } else {
+//                    // Handle unexpected cases
+//                    print("Unexpected error: No data or response")
+//                }
+//            }
+//            task.resume() // 작업 시작
+//        }
+//    }
+    
+    /// 카카오 로그인 시도
+    func kakaoSignIn() {
+        let userDefault = UserDefaultsManager()
+        if UserApi.isKakaoTalkLoginAvailable() {
+            UserApi.shared.loginWithKakaoTalk(launchMethod: .CustomScheme) {(oauthToken, error) in
                 if let error = error {
-                    print("Error: \(error)")
-                } else if let data = data, let response = response as? HTTPURLResponse {
-                    print("Response status code: \(response.statusCode)")
-                    if response.statusCode == 200 {
-                        // Handle successful response
-                        do {
-                            if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                                print("JSON Response: \(json)")
-                                //                                print(data)
-                            }
-                        } catch {
-                            print("Error parsing JSON response")
-                        }
-                    } else {
-                        // Handle other status codes
-                        print("Unexpected status code: \(response.statusCode)")
-                    }
+                    print(error.localizedDescription)
                 } else {
-                    // Handle unexpected cases
-                    print("Unexpected error: No data or response")
+                    self.getKakaoInfo(oauthToken: oauthToken)
                 }
             }
-            task.resume() // 작업 시작
+        } else {
+            UserApi.shared.loginWithKakaoAccount {(oauthToken, error) in
+                if let error = error {
+                    print(error.localizedDescription)
+                } else {
+                    self.getKakaoInfo(oauthToken: oauthToken)
+                }
+            }
         }
     }
     
-    func serverTest() {
+    /// 카카오 유저 정보, 토큰 가져오기
+    func getKakaoInfo(oauthToken: OAuthToken?) {
+        let userDefault = UserDefaultsManager()
+        userDefault.setIsSignInState(value: true)
+        print("-----카카오에서 받은 토큰-----")
+        print(" accessToken : \(oauthToken?.accessToken ?? "")")
+        print(" refreshToken : \(oauthToken?.refreshToken ?? "")")
+        print("-----카카오에서 받은 토큰-----")
+        UserApi.shared.me { kakaoUser, error in
+            if error != nil {
+                print("카카오톡 사용자 정보 불러오는데 실패했습니다.")
+                return
+            } else {
+                if let email = kakaoUser?.kakaoAccount?.email {
+                    self.currenUser.email = email
+                }
+                if let name = kakaoUser?.kakaoAccount?.name {
+                    self.currenUser.name = name
+                }
+                if let phoneNumber = kakaoUser?.kakaoAccount?.phoneNumber {
+                    self.currenUser.phoneNumber = phoneNumber
+                }
+                userDefault.setKakaoUserData(userData: User(name: self.currenUser.name, email: self.currenUser.email, phoneNumber: self.currenUser.phoneNumber, signInCompany: "카카오톡"))
+                if let aToken = oauthToken?.accessToken, let rToken = oauthToken?.refreshToken {
+                    self.serverAuth(aToken: aToken, rToken: rToken)
+                }
+                self.isSignIn = true
+                userDefault.setIsSignInState(value: true)
+            }
+        }
+    }
+    
+    /// 서버에 카카오 JWT 보내고 Bearer를 userDefault에 저장
+    func serverAuth(aToken: String, rToken: String) {
+        let userDefault = UserDefaultsManager()
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"
         urlComponents.host = "www.payrit.info"
@@ -154,7 +212,15 @@ class SignInStore {
                         do {
                             if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
                                 print("JSON Response: \(json)")
-                                //                                print(data)
+                                if let accessToken = json["accessToken"] as? String, let refreshToken = json["refreshToken"] as? String {
+                                    // accessToken을 저장합니다. 이 예제에서는 UserDefaults를 사용하여 저장합니다.
+                                    UserDefaults.standard.set(accessToken, forKey: "accessToken")
+                                    userDefault.setBearerToken(accessToken, refreshToken)
+                                    print("-----토큰 저장 완료-----")
+                                    print("aToken : \(accessToken)")
+                                    print("rToken : \(refreshToken)")
+                                    print("-----토큰 저장 완료-----")
+                                }
                             }
                         } catch {
                             print("Error parsing JSON response")
@@ -169,70 +235,6 @@ class SignInStore {
                 }
             }
             task.resume() // 작업 시작
-        }
-    }
-    
-    func kakaoSignIn() {  // 사용자 정보 불러오기
-        if UserApi.isKakaoTalkLoginAvailable() {
-            UserApi.shared.loginWithKakaoTalk(launchMethod: .CustomScheme) {(oauthToken, error) in
-                if let error = error {
-                    print(error.localizedDescription)
-                } else {
-                    UserDefaultsManager().setIsSignInState(value: true)
-                    self.aToken = oauthToken?.accessToken ?? ""
-                    self.rToken = oauthToken?.refreshToken ?? ""
-                    UserApi.shared.me { kakaoUser, error in
-                        if error != nil {
-                            print("카카오톡 사용자 정보 불러오는데 실패했습니다.")
-                            return
-                        } else {
-                            print(kakaoUser!)
-                            if let email = kakaoUser?.kakaoAccount?.email {
-                                self.currenUser.email = email
-                            }
-                            if let name = kakaoUser?.kakaoAccount?.name {
-                                self.currenUser.name = name
-                            }
-                            if let phoneNumber = kakaoUser?.kakaoAccount?.phoneNumber {
-                                self.currenUser.phoneNumber = phoneNumber
-                            }
-                            UserDefaultsManager().setKakaoUserData(userData: User(name: self.currenUser.name, email: self.currenUser.email, phoneNumber: self.currenUser.phoneNumber, signInCompany: "카카오톡"))
-                            self.isSignIn = true
-                            UserDefaultsManager().setIsSignInState(value: true)
-                        }
-                    }
-                }
-            }
-        } else {
-            UserApi.shared.loginWithKakaoAccount {(oauthToken, error) in
-                _ = oauthToken
-                if let error = error {
-                    print(error.localizedDescription)
-                } else {
-                    UserDefaultsManager().setIsSignInState(value: true)
-                    self.aToken = oauthToken?.accessToken ?? ""
-                    self.rToken = oauthToken?.refreshToken ?? ""
-                    UserApi.shared.me { kakaoUser, error in
-                        if error != nil {
-                            print("카카오톡 사용자 정보 불러오는데 실패했습니다.")
-                            return
-                        } else {
-                            if let email = kakaoUser?.kakaoAccount?.email {
-                                self.currenUser.email = email
-                            }
-                            if let name = kakaoUser?.kakaoAccount?.name {
-                                self.currenUser.name = name
-                            }
-                            if let phoneNumber = kakaoUser?.kakaoAccount?.phoneNumber {
-                                self.currenUser.phoneNumber = phoneNumber
-                            }
-                            UserDefaultsManager().setKakaoUserData(userData: User(name: self.currenUser.name, email: self.currenUser.email, phoneNumber: self.currenUser.phoneNumber, signInCompany: "카카오톡"))
-                            self.isSignIn = true
-                            UserDefaultsManager().setIsSignInState(value: true)
-                        }
-                    }
-                }
-            }
         }
     }
     

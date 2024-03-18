@@ -8,19 +8,19 @@
 import Foundation
 import SwiftUI
 
-enum CertificateStep: String, CodingKey {
+enum CertificateStep: String, CodingKey, Codable {
     case waitingApproval = "승인 대기중"
     case waitingPayment = "결제 대기중"
     case progress = "상환 진행중"
 }
 
-enum WriterRole {
-    case CREDITOR
-    case DEBTOR
+enum WriterRole: String, CodingKey, Codable {
+    case CREDITOR = "CREDITOR"
+    case DEBTOR = "DEBTOR"
 }
 
-struct Certificate: Identifiable, Hashable {
-    let id: String = UUID().uuidString
+struct Certificate: Identifiable, Hashable, Codable {
+    var id: String = UUID().uuidString
     var writingDay: String = Date().dateToString()
     var WriterRole: WriterRole = .CREDITOR
     
@@ -194,16 +194,10 @@ struct Certificate: Identifiable, Hashable {
     }
     
     static var samepleDocument: [Certificate] = [
-//        Certificate(writingDay: "2024.01.01", creditorName: "홍길동", creditorPhoneNumber: "01050097937", creditorAddress: "경기도 용인시", debtorName: "임대진", debtorPhoneNumber: "01050097937", debtorAddress: "경기도 안양시", borrowedDate: "2024.01.05", redemptionDate: "2024.06.01", money: 30000000, interestRate: 5.0, interestRateDay: "2024.05.05", state: .progress, WriterRole: .CREDITOR, memo: [Memo(today: "2024.02.01", text: "10,000원을 한달뒤에 갚는다고 했음"), Memo(today: "2024.02.01", text: "10,000원을 한달뒤에 갚는다고 했음10,000원을 한달뒤에 갚는다고 했음"), Memo(today: "2024.02.01", text: "10,000원을 한달뒤에 갚는다고 했음10,000원을 한달뒤에 갚는다고 했음10,000원을 한달뒤에 갚는다고 했음")], deductedHistory: [Deducted(date: "2024.02.01", money: 1000), Deducted(date: "2024.02.01", money: 20000000), Deducted(date: "2024.02.01", money: 3000000)]),
-//        Certificate(writingDay: "2024.01.03", creditorName: "임대진", creditorPhoneNumber: "01050097937", creditorAddress: "경기도 용인시", debtorName: "우리은행2", debtorPhoneNumber: "01050097937", debtorAddress: "경기도 안양시", borrowedDate: "2024.01.05", redemptionDate: "2024.06.01", money: 30000000, interestRate: 5.0, state: .progress, WriterRole: .CREDITOR),
-//        Certificate(writingDay: "2024.01.11", creditorName: "홍길동", creditorPhoneNumber: "01050097937", creditorAddress: "경기도 용인시", debtorName: "임대진", debtorPhoneNumber: "01050097937", debtorAddress: "경기도 안양시", borrowedDate: "2024.01.05", redemptionDate: "2024.03.01", money: 30000000, interestRate: 5.0, state: .progress, WriterRole: .CREDITOR),
-//        Certificate(writingDay: "2024.01.02", creditorName: "임대진", creditorPhoneNumber: "01050097937", creditorAddress: "경기도 용인시", debtorName: "우리은행4", debtorPhoneNumber: "01050097937", debtorAddress: "경기도 안양시", borrowedDate: "2024.01.05", redemptionDate: "2024.06.01", money: 30000000, interestRate: 5.0, state: .progress, WriterRole: .CREDITOR),
-//        Certificate(writingDay: "2024.03.05", creditorName: "홍길동", creditorPhoneNumber: "01050097937", creditorAddress: "경기도 용인시", debtorName: "임대진", debtorPhoneNumber: "01050097937", debtorAddress: "경기도 안양시", borrowedDate: "2024.01.05", redemptionDate: "2024.02.01", money: 30000000, interestRate: 5.0, state: .progress, WriterRole: .CREDITOR),
-//        Certificate(writingDay: "2024.03.11", creditorName: "임대진", creditorPhoneNumber: "01050097937", creditorAddress: "경기도 용인시", debtorName: "우리은행6", debtorPhoneNumber: "01050097937", debtorAddress: "경기도 안양시", borrowedDate: "2024.01.05", redemptionDate: "2024.09.01", money: 30000000, interestRate: 5.0, state: .progress, WriterRole: .CREDITOR)
-        Certificate(writingDay: "2024.03.05", WriterRole: .CREDITOR, creditorName: "", creditorPhoneNumber: "01050097937", creditorAddress: "경기도 용인시", debtorName: "정주성1", debtorPhoneNumber: "01050097937", debtorAddress: "경기도 용인시", repaymentStartDate: "2024.02.01", repaymentEndDate: "2024.09.01", money: 1, interestRate: 0.0, interestRateDay: "", state: .waitingApproval, etc: ""),
-        Certificate(writingDay: "2024.03.05", WriterRole: .DEBTOR, creditorName: "임대진", creditorPhoneNumber: "01050097937", creditorAddress: "경기도 용인시", debtorName: "정주성2", debtorPhoneNumber: "01050097937", debtorAddress: "경기도 용인시", repaymentStartDate: "2024.02.01", repaymentEndDate: "2024.09.01", money: 1, interestRate: 0.0, interestRateDay: "", state: .waitingPayment, etc: ""),
-        Certificate(writingDay: "2024.03.05", WriterRole: .CREDITOR, creditorName: "정주성3", creditorPhoneNumber: "01050097937", creditorAddress: "경기도 용인시", debtorName: "임대진", debtorPhoneNumber: "01050097937", debtorAddress: "경기도 용인시", repaymentStartDate: "2024.02.01", repaymentEndDate: "2024.09.01", money: 1, interestRate: 0.0, interestRateDay: "", state: .waitingApproval, etc: ""),
-        Certificate(writingDay: "2024.03.05", WriterRole: .DEBTOR, creditorName: "정주성4", creditorPhoneNumber: "01050097937", creditorAddress: "경기도 용인시", debtorName: "임대진", debtorPhoneNumber: "01050097937", debtorAddress: "경기도 용인시", repaymentStartDate: "2024.02.01", repaymentEndDate: "2024.09.01", money: 1, interestRate: 0.0, interestRateDay: "", state: .waitingApproval, etc: "")
+        Certificate(writingDay: "2024.03.05", WriterRole: .CREDITOR, creditorName: "임대진", creditorPhoneNumber: "01050097937", creditorAddress: "경기도 용인시", debtorName: "정주성1", debtorPhoneNumber: "01050097937", debtorAddress: "경기도 용인시", repaymentStartDate: "2024.02.01", repaymentEndDate: "2024.09.01", money: 1, interestRate: 0.0, state: .waitingApproval),
+        Certificate(writingDay: "2024.03.05", WriterRole: .DEBTOR, creditorName: "임대진", creditorPhoneNumber: "01050097937", creditorAddress: "경기도 용인시", debtorName: "정주성2", debtorPhoneNumber: "01050097937", debtorAddress: "경기도 용인시", repaymentStartDate: "2024.02.01", repaymentEndDate: "2024.09.01", money: 1, interestRate: 0.0, state: .waitingPayment),
+        Certificate(writingDay: "2024.03.05", WriterRole: .CREDITOR, creditorName: "정주성3", creditorPhoneNumber: "01050097937", creditorAddress: "경기도 용인시", debtorName: "임대진", debtorPhoneNumber: "01050097937", debtorAddress: "경기도 용인시", repaymentStartDate: "2024.02.01", repaymentEndDate: "2024.09.01", money: 1, interestRate: 0.0, state: .waitingApproval),
+        Certificate(writingDay: "2024.03.05", WriterRole: .DEBTOR, creditorName: "정주성4", creditorPhoneNumber: "01050097937", creditorAddress: "경기도 용인시", debtorName: "임대진", debtorPhoneNumber: "01050097937", debtorAddress: "경기도 용인시", repaymentStartDate: "2024.02.01", repaymentEndDate: "2024.09.01", money: 1, interestRate: 0.0, state: .waitingPayment)
     ]
     
     static let EmptyCertificate: Certificate = Certificate(writingDay: "", creditorName: "", creditorPhoneNumber: "", creditorAddress: "", debtorName: "", debtorPhoneNumber: "", debtorAddress: "", repaymentStartDate: "", repaymentEndDate: "", money: 0, interestRate: 0.0)

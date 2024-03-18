@@ -10,12 +10,11 @@ import KakaoSDKCommon
 import KakaoSDKAuth
 
 struct ContentView: View {
-    @State var tabBarVisivility: Visibility = .visible
     @Environment(SignInStore.self) var signInStore
     
     var body: some View {
         if signInStore.isSignIn {
-            TabBarView(tabBarVisivility: $tabBarVisivility)
+            CustomTabView()
         } else {
             // onOpenURL()을 사용해 커스텀 URL 스킴 처리
             SignInView().onOpenURL(perform: { url in
@@ -29,4 +28,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+        .environment(SignInStore())
 }

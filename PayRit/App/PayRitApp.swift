@@ -21,7 +21,7 @@ struct PayRitApp: App {
     @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
     @State var signInStore: SignInStore = SignInStore()
     @State var homeStore: HomeStore = HomeStore()
-    
+    @State var tabStore: TabBarStore = TabBarStore()
     init() {
         KakaoSDK.initSDK(appKey: "804faa43c8ef17f50ff27c0df82defbf")
         
@@ -35,6 +35,7 @@ struct PayRitApp: App {
             ContentView()
                 .environment(signInStore)
                 .environment(homeStore)
+                .environment(tabStore)
         }
     }
 }

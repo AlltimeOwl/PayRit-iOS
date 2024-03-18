@@ -8,103 +8,106 @@
 import SwiftUI
 
 struct MyInfoView: View {
-    @Binding var tabBarVisivility: Visibility
     @Environment(SignInStore.self) var signInStore
+    @Environment(TabBarStore.self) var tabStore
     
     var body: some View {
-        VStack(spacing: 20) {
-            VStack(alignment: .leading) {
-                Text("이름")
-                    .font(Font.body02)
-                    .foregroundStyle(Color.gray03)
-                RoundedRectangle(cornerRadius: 12)
-                    .frame(height: 48)
-                    .foregroundStyle(Color.gray09)
-                    .overlay {
-                        HStack {
-                            Text(signInStore.currenUser.name)
-                                .font(Font.body02)
-                                .foregroundStyle(Color.gray06)
-                            Spacer()
+        ZStack {
+            Color.payritBackground.ignoresSafeArea()
+            VStack(spacing: 20) {
+                VStack(alignment: .leading) {
+                    Text("이름")
+                        .font(Font.body02)
+                        .foregroundStyle(Color.gray03)
+                    RoundedRectangle(cornerRadius: 12)
+                        .frame(height: 48)
+                        .foregroundStyle(Color.gray09)
+                        .overlay {
+                            HStack {
+                                Text(signInStore.currenUser.name)
+                                    .font(Font.body02)
+                                    .foregroundStyle(Color.gray06)
+                                Spacer()
+                            }
+                            .padding(.horizontal, 20)
                         }
-                        .padding(.horizontal, 20)
-                    }
-            }
-            VStack(alignment: .leading) {
-                Text("이메일")
-                    .font(Font.body02)
-                    .foregroundStyle(Color.gray03)
-                RoundedRectangle(cornerRadius: 12)
-                    .frame(height: 48)
-                    .foregroundStyle(Color.gray09)
-                    .overlay {
-                        HStack {
-                            Text(signInStore.currenUser.email)
-                                .font(Font.body02)
-                                .foregroundStyle(Color.gray06)
-                            Spacer()
+                }
+                VStack(alignment: .leading) {
+                    Text("이메일")
+                        .font(Font.body02)
+                        .foregroundStyle(Color.gray03)
+                    RoundedRectangle(cornerRadius: 12)
+                        .frame(height: 48)
+                        .foregroundStyle(Color.gray09)
+                        .overlay {
+                            HStack {
+                                Text(signInStore.currenUser.email)
+                                    .font(Font.body02)
+                                    .foregroundStyle(Color.gray06)
+                                Spacer()
+                            }
+                            .padding(.horizontal, 20)
                         }
-                        .padding(.horizontal, 20)
-                    }
-            }
-            VStack(alignment: .leading) {
-                Text("휴대폰 번호")
-                    .font(Font.body02)
-                    .foregroundStyle(Color.gray03)
-                RoundedRectangle(cornerRadius: 12)
-                    .frame(height: 48)
-                    .foregroundStyle(Color.gray09)
-                    .overlay {
-                        HStack {
-                            Text(signInStore.currenUser.phoneNumber)
-                                .font(Font.body02)
-                                .foregroundStyle(Color.gray06)
-                            Spacer()
+                }
+                VStack(alignment: .leading) {
+                    Text("휴대폰 번호")
+                        .font(Font.body02)
+                        .foregroundStyle(Color.gray03)
+                    RoundedRectangle(cornerRadius: 12)
+                        .frame(height: 48)
+                        .foregroundStyle(Color.gray09)
+                        .overlay {
+                            HStack {
+                                Text(signInStore.currenUser.phoneNumber)
+                                    .font(Font.body02)
+                                    .foregroundStyle(Color.gray06)
+                                Spacer()
+                            }
+                            .padding(.horizontal, 20)
                         }
-                        .padding(.horizontal, 20)
-                    }
-            }
-            VStack(alignment: .leading) {
-                Text("연결된 계정")
-                    .font(Font.body02)
-                    .foregroundStyle(Color.gray03)
-                RoundedRectangle(cornerRadius: 12)
-                    .frame(height: 48)
-                    .foregroundStyle(Color.gray09)
-                    .overlay {
-                        HStack {
-                            Text(signInStore.currenUser.signInCompany)
-                                .font(Font.body02)
-                                .foregroundStyle(Color.gray06)
-                            Spacer()
+                }
+                VStack(alignment: .leading) {
+                    Text("연결된 계정")
+                        .font(Font.body02)
+                        .foregroundStyle(Color.gray03)
+                    RoundedRectangle(cornerRadius: 12)
+                        .frame(height: 48)
+                        .foregroundStyle(Color.gray09)
+                        .overlay {
+                            HStack {
+                                Text(signInStore.currenUser.signInCompany)
+                                    .font(Font.body02)
+                                    .foregroundStyle(Color.gray06)
+                                Spacer()
+                            }
+                            .padding(.horizontal, 20)
                         }
-                        .padding(.horizontal, 20)
-                    }
-            }
-            Spacer()
-            NavigationLink {
-                MembershipWithdrawalView()
-                    .customBackbutton()
-            } label: {
-                Text("회원탈퇴")
-                    .font(.system(size: 18))
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.gray).opacity(0.5)
+                }
+                Spacer()
+                NavigationLink {
+                    MembershipWithdrawalView()
+                        .customBackbutton()
+                } label: {
+                    Text("회원탈퇴")
+                        .font(.system(size: 18))
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.gray).opacity(0.5)
+                }
             }
         }
+        .dismissOnEdgeDrag()
         .navigationTitle("계정 정보")
         .navigationBarTitleDisplayMode(.inline)
         .padding(16)
         .font(.system(size: 16))
-        .onAppear {
-            tabBarVisivility = .hidden
-        }
-
+        
     }
 }
 
 #Preview {
     NavigationStack {
-        MyInfoView(tabBarVisivility: .constant(.hidden))
+        MyInfoView()
+            .environment(SignInStore())
+            .environment(TabBarStore())
     }
 }

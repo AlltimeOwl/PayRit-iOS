@@ -9,6 +9,7 @@ import SwiftUI
 struct PrimaryAlert: View {
     
     @Binding var isPresented: Bool
+    @Environment(TabBarStore.self) var tabStore
     let title: String
     let content: String
     let primaryButtonTitle: String?

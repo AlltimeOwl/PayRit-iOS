@@ -103,7 +103,7 @@ class CertificateUIView: UIView {
             guideSubLabel.bottomAnchor.constraint(equalTo: super.bottomAnchor),
             
             day.centerXAnchor.constraint(equalTo: super.centerXAnchor),
-            day.bottomAnchor.constraint(equalTo: super.bottomAnchor),
+            day.bottomAnchor.constraint(equalTo: super.bottomAnchor)
         ])
     }
 }

@@ -31,15 +31,48 @@ extension View {
             PrimaryAlertModifier(isPresented: isPresented, title: title, content: content, primaryButtonTitle: primaryButtonTitle, cancleButtonTitle: cancleButtonTitle, primaryAction: primaryAction, cancleAction: cancleAction)
         )
     }
+    
+    func onViewDidLoad(perform action: (() -> Void)? = nil) -> some View {
+        self.modifier(ViewDidLoadModifier(action: action))
+    }
+    
+    func dismissOnDrag(minimumDragDistance: CGFloat = 100) -> some View {
+        self.modifier(DismissOnDrag(minimumDragDistance: minimumDragDistance))
+    }
+    
+    func dismissOnEdgeDrag(minimumDragDistance: CGFloat = 60, edgeWidth: CGFloat = 20) -> some View {
+        self.modifier(DismissOnEdgeDrag(minimumDragDistance: minimumDragDistance, edgeWidth: edgeWidth))
+    }
 }
 
-extension UINavigationController: ObservableObject, UIGestureRecognizerDelegate {
-    override open func viewDidLoad() {
-        super.viewDidLoad()
-        interactivePopGestureRecognizer?.delegate = self
-    }
+//extension UINavigationController: ObservableObject, UIGestureRecognizerDelegate {
+//    override open func viewDidLoad() {
+//        super.viewDidLoad()
+//        interactivePopGestureRecognizer?.delegate = self
+//    }
+//
+//    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+//        return viewControllers.count > 1
+//    }
+//}
 
-    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        return viewControllers.count > 1
+struct CustomLinearProgressViewStyle: ProgressViewStyle {
+    var trackColor: Color
+    var progressColor: Color
+
+    func makeBody(configuration: Configuration) -> some View {
+        GeometryReader { geometry in
+            ZStack(alignment: .leading) {
+                Rectangle()
+                    .frame(width: geometry.size.width, height: 4)
+                    .foregroundColor(trackColor)
+
+                Rectangle().frame(width: min(CGFloat(configuration.fractionCompleted ?? 0) * geometry.size.width, geometry.size.width), height: 4)
+                    .foregroundColor(progressColor)
+                    .cornerRadius(45.0)
+                    .animation(.linear, value: configuration.fractionCompleted)
+            }
+            .cornerRadius(45.0)
+        }
     }
 }

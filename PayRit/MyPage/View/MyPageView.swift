@@ -11,80 +11,98 @@ struct MyPageView: View {
     @State var listItemHeight: CGFloat = 40
     @State var isShowingSignOut: Bool = false
     @State var notFoundUser: Bool = false
-    @Binding var tabBarVisivility: Visibility
     @Environment(SignInStore.self) var signInStore
+    @Environment(TabBarStore.self) var tabStore
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            HStack(spacing: 16) {
-                Circle()
+        ZStack {
+            Color.payritBackground.ignoresSafeArea()
+            VStack(alignment: .leading, spacing: 0) {
+                HStack(spacing: 16) {
+                    Circle()
+                        .frame(height: 77)
+                        .foregroundStyle(.blue)
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text(signInStore.currenUser.name)
+                            .font(Font.title01)
+                        Text(signInStore.currenUser.email)
+                            .font(.system(size: 16))
+                            .foregroundStyle(Color.gray05)
+                    }
                     .frame(height: 77)
-                    .foregroundStyle(.blue)
-                VStack(alignment: .leading, spacing: 10) {
-                    Text(signInStore.currenUser.name)
-                        .font(Font.title01)
-                    Text(signInStore.currenUser.email)
-                        .font(.system(size: 16))
-                        .foregroundStyle(Color.gray05)
+                    Spacer()
                 }
-                .frame(height: 77)
+                .padding(.horizontal, 16)
+                List {
+                    NavigationLink {
+                        MyInfoView()
+                            .customBackbutton()
+                            .onAppear {
+                                tabStore.tabBarHide = true
+                            }
+                    } label: {
+                        Text("계정 정보")
+                    }
+                    .frame(height: listItemHeight)
+                    NavigationLink {
+                        PaymentHistoryView()
+                            .customBackbutton()
+                            .onAppear {
+                                tabStore.tabBarHide = true
+                            }
+                    } label: {
+                        Text("결제 내역")
+                    }
+                    .frame(height: listItemHeight)
+                    NavigationLink {
+                        AlarmSettingView()
+                            .customBackbutton()
+                            .onAppear {
+                                tabStore.tabBarHide = true
+                            }
+                            .onDisappear {
+                                tabStore.tabBarHide = false
+                            }
+                    } label: {
+                        Text("알림 설정")
+                    }
+                    .frame(height: listItemHeight)
+                    NavigationLink {
+                        
+                    } label: {
+                        Text("공지사항")
+                    }
+                    .frame(height: listItemHeight)
+                    NavigationLink {
+                        
+                    } label: {
+                        Text("자주 묻는 질문")
+                    }
+                    .frame(height: listItemHeight)
+                    NavigationLink {
+                        
+                    } label: {
+                        Text("서비스 이용 약관")
+                    }
+                    .frame(height: listItemHeight)
+                    Button {
+                        isShowingSignOut.toggle()
+                    } label: {
+                        Text("로그아웃")
+                    }
+                    .frame(height: listItemHeight)
+                    .listRowBackground(Color.payritBackground)
+                }
+                .listStyle(.plain)
+                .background(Color.payritBackground)
+                .font(Font.body02)
+                .disabled(notFoundUser)
+                .padding(.top, 30)
+                .padding(.trailing, 16)
                 Spacer()
             }
-            .padding(.horizontal, 16)
-            List {
-                NavigationLink {
-                    MyInfoView(tabBarVisivility: $tabBarVisivility)
-                        .customBackbutton()
-                        .toolbar(tabBarVisivility, for: .tabBar)
-                } label: {
-                    Text("계정 정보")
-                }
-                .frame(height: listItemHeight)
-                NavigationLink {
-                    PaymentHistoryView(tabBarVisivility: $tabBarVisivility)
-                        .customBackbutton()
-                        .toolbar(tabBarVisivility, for: .tabBar)
-                } label: {
-                    Text("결제 내역")
-                }
-                .frame(height: listItemHeight)
-                NavigationLink {
-                    AlarmSettingView(tabBarVisivility: $tabBarVisivility)
-                        .customBackbutton()
-                        .toolbar(tabBarVisivility, for: .tabBar)
-                } label: {
-                    Text("알림 설정")
-                }
-                .frame(height: listItemHeight)
-                NavigationLink {
-                    
-                } label: {
-                    Text("공지사항")
-                }
-                .frame(height: listItemHeight)
-                NavigationLink {
-                    
-                } label: {
-                    Text("자주 묻는 질문")
-                }
-                .frame(height: listItemHeight)
-                NavigationLink {
-                    
-                } label: {
-                    Text("서비스 이용 약관")
-                }
-                .frame(height: listItemHeight)
-                Button {
-                    isShowingSignOut.toggle()
-                } label: {
-                    Text("로그아웃")
-                }
-                .frame(height: listItemHeight)
-            }
-            .listStyle(.plain)
-            .font(Font.body02)
-            .padding(.top, 30)
-            .disabled(notFoundUser)
-            Spacer()
+        }
+        .onAppear {
+            tabStore.tabBarHide = false
         }
         .toolbar {
             ToolbarItem {
@@ -99,6 +117,8 @@ struct MyPageView: View {
 
 #Preview {
     NavigationStack {
-        MyPageView(tabBarVisivility: .constant(.hidden))
+        MyPageView()
+            .environment(TabBarStore())
+            .environment(SignInStore())
     }
 }
