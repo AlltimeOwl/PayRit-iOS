@@ -20,9 +20,8 @@ struct TokenTestData: Codable {
 
 @Observable
 class SignInStore {
-    var currenUser: User = UserDefaultsManager().getUserInfo()
-    var appleAuthorizationCode = ""
     var isSignIn: Bool = UserDefaultsManager().getIsSignInState()
+    var appleAuthorizationCode = ""
     //
     //    let parameters: [String: Any] = [
     //        "key1": "value1",
@@ -153,21 +152,14 @@ class SignInStore {
                 print("카카오톡 사용자 정보 불러오는데 실패했습니다.")
                 return
             } else {
-                if let email = kakaoUser?.kakaoAccount?.email {
-                    self.currenUser.email = email
+                if let email = kakaoUser?.kakaoAccount?.email, let name = kakaoUser?.kakaoAccount?.name, let phoneNumber = kakaoUser?.kakaoAccount?.phoneNumber {
+                    userDefault.setKakaoUserData(userData: User(name: name, email: email, phoneNumber: phoneNumber, signInCompany: "카카오톡"))
                 }
-                if let name = kakaoUser?.kakaoAccount?.name {
-                    self.currenUser.name = name
-                }
-                if let phoneNumber = kakaoUser?.kakaoAccount?.phoneNumber {
-                    self.currenUser.phoneNumber = phoneNumber
-                }
-                userDefault.setKakaoUserData(userData: User(name: self.currenUser.name, email: self.currenUser.email, phoneNumber: self.currenUser.phoneNumber, signInCompany: "카카오톡"))
                 if let aToken = oauthToken?.accessToken, let rToken = oauthToken?.refreshToken {
                     self.serverAuth(aToken: aToken, rToken: rToken)
+                    self.isSignIn = true
+                    userDefault.setIsSignInState(value: true)
                 }
-                self.isSignIn = true
-                userDefault.setIsSignInState(value: true)
             }
         }
     }
@@ -244,6 +236,8 @@ class SignInStore {
                 print("로그아웃에 실패했습니다: \(error)")
             } else {
                 print("로그아웃이 성공적으로 수행되었습니다.")
+                self.isSignIn = false
+                UserDefaultsManager().removeAll()
             }
         }
     }
@@ -254,9 +248,44 @@ class SignInStore {
                 print(error)
             } else {
                 print("unlink() success.")
-                self.currenUser.email = ""
-                self.currenUser.name = ""
-                self.currenUser.phoneNumber = ""
+                self.isSignIn = false
+                UserDefaultsManager().removeAll()
+                
+                    // 요청할 URL 생성
+                    let urlString = "https://payrit.info/api/v1/oauth/leave"
+                    guard let url = URL(string: urlString) else {
+                        print("Invalid URL")
+                        return
+                    }
+                    
+                    // URLSession 객체 생성
+                    let session = URLSession.shared
+                    
+                    // URLRequest 생성
+                    var request = URLRequest(url: url)
+                    request.httpMethod = "GET"
+                    request.setValue("application/json", forHTTPHeaderField: "accept")
+                    request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
+                    
+                    // URLSessionDataTask를 사용하여 GET 요청 생성
+                    let task = session.dataTask(with: request) { (data, response, error) in
+                        // 요청 완료 후 실행될 클로저
+                        if let error = error {
+                            print("Error: \(error)")
+                            return
+                        }
+                        guard let httpResponse = response as? HTTPURLResponse else {
+                            print("Invalid response")
+                            return
+                        }
+                        
+                        if (200..<300).contains(httpResponse.statusCode) {
+                            print("탈퇴 완료")
+                        } else {
+                            print("HTTP status code: \(httpResponse.statusCode)")
+                        }
+                    }
+                    task.resume()
             }
         }
     }

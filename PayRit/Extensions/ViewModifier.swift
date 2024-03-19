@@ -63,6 +63,7 @@ struct CertificateToDoucumentModifier: ViewModifier {
 struct PrimaryAlertModifier: ViewModifier {
     
     @Binding var isPresented: Bool
+    @Environment(TabBarStore.self) var tabStore
     let title: String
     let content: String
     let primaryButtonTitle: String?
@@ -80,6 +81,12 @@ struct PrimaryAlertModifier: ViewModifier {
                         .ignoresSafeArea()
                         .onTapGesture {
                             self.isPresented = false // 외부 영역 터치 시 내려감
+                        }
+                        .onAppear {
+                            tabStore.tabBarOpacity = true
+                        }
+                        .onDisappear {
+                            tabStore.tabBarOpacity = false
                         }
                     
                     PrimaryAlert(isPresented: $isPresented,

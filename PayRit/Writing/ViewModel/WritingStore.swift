@@ -31,7 +31,7 @@ final class WritingStore {
         return "+82 \(newNumber)"
     }
     
-    func saveCertificae(certificate: Certificate) {
+    func saveCertificae(certificate: CertificateDetail) {
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"
         urlComponents.host = "payrit.info"
@@ -49,12 +49,12 @@ final class WritingStore {
 //            print("Send Certificate : \(certificate)")
 //             HTTP 바디 설정
             let body = [
-                "writerRole": certificate.WriterRole.stringValue,
-                "amount": "\(certificate.money)",
-                "transactionDate": certificate.writingDay.replacingOccurrences(of: ".", with: "-"),
-                "repaymentStartDate": certificate.repaymentStartDate.replacingOccurrences(of: ".", with: "-"),
-                "repaymentEndDate": certificate.repaymentEndDate.replacingOccurrences(of: ".", with: "-"),
-                "specialConditions": certificate.etc ?? "",
+                "writerRole": certificate.writerRole.stringValue,
+                "amount": "\(certificate.amount)",
+                "transactionDate": Date().dateToString(),
+                "repaymentStartDate": certificate.repaymentStartDate,
+                "repaymentEndDate": certificate.repaymentEndDate,
+                "specialConditions": certificate.specialConditions ?? "",
                 "interestRate": "\(certificate.interestRate)",
                 "interestPaymentDate": certificate.interestRateDay ?? "",
                 "creditorName": certificate.creditorName,

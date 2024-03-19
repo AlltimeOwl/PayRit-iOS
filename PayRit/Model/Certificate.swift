@@ -1,174 +1,46 @@
 //
-//  Document.swift
+//  Certificate.swift
 //  PayRit
 //
-//  Created by 임대진 on 2/28/24.
+//  Created by 임대진 on 3/19/24.
 //
 
 import Foundation
-import SwiftUI
 
-enum CertificateStep: String, CodingKey, Codable {
-    case waitingApproval = "승인 대기중"
-    case waitingPayment = "결제 대기중"
-    case progress = "상환 진행중"
-}
-
-enum WriterRole: String, CodingKey, Codable {
-    case CREDITOR = "CREDITOR"
-    case DEBTOR = "DEBTOR"
-}
-
-struct Certificate: Identifiable, Hashable, Codable {
-    var id: String = UUID().uuidString
-    var writingDay: String = Date().dateToString()
-    var WriterRole: WriterRole = .CREDITOR
+struct Certificate: Hashable, Codable {
+    let paperId: Int
+    let paperRole: WriterRole
+    var transactionDate: String
+    let repaymentStartDate: String
+    let repaymentEndDate: String
+    let amount: Int
+    let paperStatus: String
+    let peerName: String
+    let dueDate: Int
+    let repaymentRate: Double
     
-    var creditorName: String
-    var creditorPhoneNumber: String
-    var creditorAddress: String
-    
-    var debtorName: String
-    var debtorPhoneNumber: String
-    var debtorAddress: String
-    
-    var repaymentStartDate: String
-    var repaymentEndDate: String
-    var money: Int
-    var interestRate: Double
-    var interestRateDay: String?
-    
-    var state: CertificateStep = .waitingApproval
-    
-    var etc: String?
-    var memo: [Memo] = [Memo]()
-    var deductedHistory: [Deducted] = [Deducted]()
-    
-//    var interestMoney: Int? {
-//        let calendar = Calendar.current
-//        let dateFormatter = DateFormatter()
-//        dateFormatter.dateFormat = "yyyy.MM.dd"
-//        let dailyInterestRate = interestRate / 365.0 / 100.0
-//        let interestAmount = totalMoney * dailyInterestRate * Double(calendar.dateComponents([.day], from: , to: dateFormatter.date(from: interestRateDay?)).day ?? 0)
-//        return interestAmount
-//    }
-    
-    var interestRateAmount: Int {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy.MM.dd"
-
-        if let targetDate = dateFormatter.date(from: repaymentEndDate), let startDate = dateFormatter.date(from: repaymentStartDate) {
-            // 대출 기간 계산
-            let totalDate = calculateDday(startDate: startDate, targetDate: targetDate) + 1
-            
-            // 일일 이자율 계산
-            let dailyInterestRate = interestRate / 100.0 / 365.0
-            
-            // 이자 계산
-            let interestAmount = Double(money) * dailyInterestRate * Double(totalDate)
-            
-            // 이자를 정수로 반환
-            return Int(interestAmount)
+    var certificateStep: CertificateStep {
+        if paperStatus == "WAITING_AGREE" {
+            return .waitingApproval
+        } else if paperStatus == "PAYMENT_REQUIRED" {
+            return .waitingPayment
+        } else if paperStatus == "COMPLETE_WRITING" {
+            return .progress
         } else {
-            return 0
-        }
-    }
-
-    var totalAmount: Int {
-        let total = (money + interestRateAmount) - (deductedHistory.reduce(0) { $0 + $1.money })
-        if total < 0 {
-            return 0
-        } else {
-            return total
-        }
-    }
-    
-    var totalMoneyFormatter: String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        return formatter.string(from: (NSNumber(value: money))) ?? String(money)
-    }
-    
-    var totalInterestRateAmountFormatter: String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        return formatter.string(from: (NSNumber(value: interestRateAmount))) ?? String(interestRateAmount)
-    }
-    
-    var totalAmountFormatter: String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        return formatter.string(from: (NSNumber(value: totalAmount))) ?? String(totalAmount)
-    }
-    
-    var dDay: Int {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy.MM.dd"
-
-        if let targetDate = dateFormatter.date(from: repaymentEndDate) {
-            let dDay = calculateDday(startDate: Date(), targetDate: targetDate)
-            return dDay
-        } else {
-            print("디데이 변환 중 오류가 발생했습니다.")
-            return 0
+            return .waitingApproval
         }
     }
     
     var writingDayCal: Int {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy.MM.dd"
+        dateFormatter.dateFormat = "yyyy-MM-dd"
 
-        if let targetDate = dateFormatter.date(from: writingDay) {
+        if let targetDate = dateFormatter.date(from: transactionDate) {
             let writingDay = calculateDday(startDate: Date(), targetDate: targetDate)
             return writingDay
         } else {
             print("작성일 변환 중 오류가 발생했습니다.")
             return 0
-        }
-    }
-    
-    var calTotalDate: Int {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy.MM.dd"
-
-        if let targetDate = dateFormatter.date(from: repaymentEndDate), let startDate = dateFormatter.date(from: repaymentStartDate) {
-            // 대출 기간 계산
-            let totalDate = calculateDday(startDate: startDate, targetDate: targetDate)
-            
-            return totalDate
-        } else {
-            return 0
-        }
-    }
-    
-    var progressValue: Double {
-        if deductedHistory.isEmpty {
-            return 0.0
-        } else {
-            let sum = deductedHistory.reduce(0) { $0 + $1.money }
-            if sum > money + interestRateAmount {
-                return 100
-            } else {
-                let percentage = Double(totalAmount) / Double(money + interestRateAmount) * 100.0
-                return (100 - percentage)            }
-        }
-    }
-    
-    var cardColor: Color {
-        let user = UserDefaultsManager().getUserInfo()
-        if creditorName == user.name {
-            return Color.payritMint
-        } else {
-            return Color.payritIntensivePink
-        }
-    }
-    
-    var cardName: String {
-        let user = UserDefaultsManager().getUserInfo()
-        if creditorName == user.name {
-            return debtorName
-        } else {
-            return creditorName
         }
     }
     
@@ -192,14 +64,9 @@ struct Certificate: Identifiable, Hashable, Codable {
             return 0
         }
     }
-    
-    static var samepleDocument: [Certificate] = [
-        Certificate(writingDay: "2024.03.05", WriterRole: .CREDITOR, creditorName: "임대진", creditorPhoneNumber: "01050097937", creditorAddress: "경기도 용인시", debtorName: "정주성1", debtorPhoneNumber: "01050097937", debtorAddress: "경기도 용인시", repaymentStartDate: "2024.02.01", repaymentEndDate: "2024.09.01", money: 1, interestRate: 0.0, state: .waitingApproval),
-        Certificate(writingDay: "2024.03.05", WriterRole: .DEBTOR, creditorName: "임대진", creditorPhoneNumber: "01050097937", creditorAddress: "경기도 용인시", debtorName: "정주성2", debtorPhoneNumber: "01050097937", debtorAddress: "경기도 용인시", repaymentStartDate: "2024.02.01", repaymentEndDate: "2024.09.01", money: 1, interestRate: 0.0, state: .waitingPayment),
-        Certificate(writingDay: "2024.03.05", WriterRole: .CREDITOR, creditorName: "정주성3", creditorPhoneNumber: "01050097937", creditorAddress: "경기도 용인시", debtorName: "임대진", debtorPhoneNumber: "01050097937", debtorAddress: "경기도 용인시", repaymentStartDate: "2024.02.01", repaymentEndDate: "2024.09.01", money: 1, interestRate: 0.0, state: .waitingApproval),
-        Certificate(writingDay: "2024.03.05", WriterRole: .DEBTOR, creditorName: "정주성4", creditorPhoneNumber: "01050097937", creditorAddress: "경기도 용인시", debtorName: "임대진", debtorPhoneNumber: "01050097937", debtorAddress: "경기도 용인시", repaymentStartDate: "2024.02.01", repaymentEndDate: "2024.09.01", money: 1, interestRate: 0.0, state: .waitingPayment)
-    ]
-    
-    static let EmptyCertificate: Certificate = Certificate(writingDay: "", creditorName: "", creditorPhoneNumber: "", creditorAddress: "", debtorName: "", debtorPhoneNumber: "", debtorAddress: "", repaymentStartDate: "", repaymentEndDate: "", money: 0, interestRate: 0.0)
-    
+//    enum CodingKeys : String, CodingKey{
+//        case name
+//        case age
+//        case birthday = "birth_date"
+//    }
 }

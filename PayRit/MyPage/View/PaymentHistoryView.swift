@@ -125,7 +125,7 @@ struct PaymentHistoryView: View {
             .padding(.top, 10)
             .padding(.horizontal, 16)
         }
-        .dismissOnEdgeDrag()
+        .dismissOnDrag()
         .navigationTitle("결제 내역")
         .navigationBarTitleDisplayMode(.inline)
     }

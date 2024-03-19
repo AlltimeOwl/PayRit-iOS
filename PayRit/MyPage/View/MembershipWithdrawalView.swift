@@ -13,6 +13,7 @@ struct MembershipWithdrawalView: View {
     @State var isShowingWithdrawalButton: Bool = false
     @State var isShowingWithdrawalCompleteButton: Bool = false
     @Environment(SignInStore.self) var signInStore
+    let mypageStore: MyPageStore = MyPageStore()
     var body: some View {
         ZStack {
             Color.payritBackground.ignoresSafeArea()
@@ -139,7 +140,7 @@ struct MembershipWithdrawalView: View {
                 .clipShape(.rect(cornerRadius: 12))
             }
         }
-        .dismissOnEdgeDrag()
+        .dismissOnDrag()
         .padding(16)
         .navigationTitle("회원탈퇴")
         .navigationBarTitleDisplayMode(.inline)
@@ -152,8 +153,9 @@ struct MembershipWithdrawalView: View {
                                 완료되었습니다.
                                 """
                       , primaryButtonTitle: nil, cancleButtonTitle: "확인", primaryAction: nil) {
-            signInStore.isSignIn = false
-            UserDefaultsManager().removeAll()
+            if mypageStore.currenUser.signInCompany == "카카오톡" {
+                signInStore.kakaoUnlink()
+            }
         }
     }
 }

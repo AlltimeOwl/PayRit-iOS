@@ -58,7 +58,7 @@ struct SelectCertificateTypeView: View {
             .padding(.top, 40)
             .padding(.horizontal, 16)
         }
-        .dismissOnEdgeDrag()
+        .dismissOnDrag()
         .navigationTitle("페이릿 작성하기")
         .navigationBarTitleDisplayMode(.inline)
     }

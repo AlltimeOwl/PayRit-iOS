@@ -41,7 +41,7 @@ struct AlarmSettingView: View {
                 Spacer()
             }
         }
-        .dismissOnEdgeDrag()
+        .dismissOnDrag()
         .navigationTitle("알림 설정")
         .navigationBarTitleDisplayMode(.inline)
         .padding(.top, 28)

@@ -14,6 +14,7 @@ enum PaymentState: String, CodingKey, CaseIterable {
 
 @Observable
 final class MyPageStore {
+    var currenUser: User = UserDefaultsManager().getUserInfo()
     var paymentHistory: [Payment] = [Payment]()
     var sortingType: PaymentState = .current
     
@@ -32,7 +33,7 @@ final class MyPageStore {
     func generateRandomPayments(count: Int) -> [Payment] {
         var payments = [Payment]()
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy.MM.dd"
+        dateFormatter.dateFormat = "yyyy-MM-dd"
         
         for _ in 0..<count {
             let formatter = NumberFormatter()

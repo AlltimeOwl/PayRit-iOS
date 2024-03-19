@@ -10,7 +10,7 @@ import Foundation
 extension Date {
     public func dateToString() -> String {
             let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy.MM.dd"
+            formatter.dateFormat = "yyyy-MM-dd"
 //            formatter.locale = Locale.current
 //            formatter.timeZone = TimeZone.current
         return formatter.string(from: self as Date)

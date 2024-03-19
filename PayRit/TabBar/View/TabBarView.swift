@@ -31,63 +31,72 @@ struct CustomTabView: View {
             if !tabStore.tabBarHide {
                 VStack {
                     Spacer()
-                    VStack {
-                        HStack {
-                            Spacer()
-                            Button {
-                                tabStore.selectedTab = .home
-                            } label: {
-                                VStack {
-                                    Image("homeIcon")
-                                        .resizable()
-                                        .frame(width: iconSize, height: iconSize)
-                                    Text("홈")
-                                        .foregroundStyle(.black)
+                        ZStack {
+                            HStack {
+                                Spacer()
+                                Button {
+                                    tabStore.selectedTab = .home
+                                } label: {
+                                    VStack {
+                                        Image("homeIcon")
+                                            .resizable()
+                                            .frame(width: iconSize, height: iconSize)
+                                        Text("홈")
+                                            .foregroundStyle(.black)
+                                    }
+                                    .opacity(tabStore.selectedTab == .home ? 1 : 0.3)
                                 }
-                                .opacity(tabStore.selectedTab == .home ? 1 : 0.3)
-                            }
-                            .frame(width: 60)
-                            Spacer()
-                            Button {
-                                tabStore.selectedTab = .write
-                            } label: {
-                                VStack {
-                                    Image("writeIcon")
-                                        .resizable()
-                                        .frame(width: iconSize, height: iconSize)
-                                    Text("작성하기")
-                                        .foregroundStyle(.black)
+                                .frame(width: 60)
+                                Spacer()
+                                Button {
+                                    tabStore.selectedTab = .write
+                                } label: {
+                                    VStack {
+                                        Image("writeIcon")
+                                            .resizable()
+                                            .frame(width: iconSize, height: iconSize)
+                                        Text("작성하기")
+                                            .foregroundStyle(.black)
+                                    }
+                                    .opacity(tabStore.selectedTab == .write ? 1 : 0.4)
                                 }
-                                .opacity(tabStore.selectedTab == .write ? 1 : 0.4)
-                            }
-                            .frame(width: 60)
-                            Spacer()
-                            Button {
-                                tabStore.selectedTab = .mypage
-                            } label: {
-                                VStack {
-                                    Image("mypageIcon")
-                                        .resizable()
-                                        .frame(width: iconSize, height: iconSize)
-                                    Text("마이페이지")
-                                        .foregroundStyle(.black)
+                                .frame(width: 60)
+                                Spacer()
+                                Button {
+                                    tabStore.selectedTab = .mypage
+                                } label: {
+                                    VStack {
+                                        Image("mypageIcon")
+                                            .resizable()
+                                            .frame(width: iconSize, height: iconSize)
+                                        Text("마이페이지")
+                                            .foregroundStyle(.black)
+                                    }
+                                    .opacity(tabStore.selectedTab == .mypage ? 1 : 0.4)
                                 }
-                                .opacity(tabStore.selectedTab == .mypage ? 1 : 0.4)
+                                .frame(width: 60)
+                                Spacer()
                             }
-                            .frame(width: 60)
-                            Spacer()
+                            .buttonStyle(.plain)
+                            .padding(.top, 10)
+                            .padding(.bottom, 35)
+                            .overlay {
+                                                        if tabStore.tabBarOpacity {
+                                UnevenRoundedRectangle(topLeadingRadius: 45, bottomLeadingRadius: 0, bottomTrailingRadius: 0, topTrailingRadius: 45, style: .circular)
+                                    .fill(.black.opacity(0.5))
+                                                        }
+                            }
                         }
-                        .buttonStyle(PlainButtonStyle())
-                        .padding(.top, 10)
-                        .padding(.bottom, 35)
-                    }
-                    .tint(.payritMint)
-                    .font(Font.caption03)
-                    .frame(maxWidth: .infinity)
-                    .background(.white)
-                    .clipShape(.rect(topLeadingRadius: 45, bottomLeadingRadius: 0, bottomTrailingRadius: 0, topTrailingRadius: 45))
-                    .shadow(color: .gray.opacity(0.2), radius: 8)
-                    
+                        .tint(.payritMint)
+                        .font(Font.caption03)
+                        .frame(maxWidth: .infinity)
+                        .background(
+                            UnevenRoundedRectangle(topLeadingRadius: 45, bottomLeadingRadius: 0, bottomTrailingRadius: 0, topTrailingRadius: 45, style: .circular)
+                                .fill(.white)
+                                .ignoresSafeArea()
+                        )
+                        //                    .clipShape(.rect(topLeadingRadius: 45, bottomLeadingRadius: 0, bottomTrailingRadius: 0, topTrailingRadius: 45))
+                        .shadow(color: .gray.opacity(0.2), radius: 8)
                 }
                 .ignoresSafeArea()
             }

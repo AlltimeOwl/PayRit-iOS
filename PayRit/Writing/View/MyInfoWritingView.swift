@@ -16,7 +16,7 @@ struct MyInfoWritingView: View {
     @State private var isPresentingZipCodeView = false
     @State private var isShowingStopAlert = false
     @State private var keyBoardFocused: Bool = false
-    @Binding var newCertificate: Certificate
+    @Binding var newCertificate: CertificateDetail
     @Binding var path: NavigationPath
     let writingStore = WritingStore()
     var isFormValid: Bool {
@@ -46,7 +46,7 @@ struct MyInfoWritingView: View {
                                 .font(Font.body03)
                             CustomTextField(foregroundStyle: .black, placeholder: "이름을 적어주세요", keyboardType: .default, text: $name)
                                 .onChange(of: name) {
-                                    switch newCertificate.WriterRole {
+                                    switch newCertificate.writerRole {
                                     case .CREDITOR
                                         : newCertificate.creditorName = name
                                     case .DEBTOR
@@ -59,7 +59,7 @@ struct MyInfoWritingView: View {
                                 .font(Font.body03)
                             CustomTextField(foregroundStyle: .black, placeholder: "숫자만 입력해주세요", keyboardType: .numberPad, text: $phoneNumber)
                                 .onChange(of: phoneNumber) {
-                                    switch newCertificate.WriterRole {
+                                    switch newCertificate.writerRole {
                                     case .CREDITOR
                                         : newCertificate.creditorPhoneNumber = writingStore.phoneNumberFormatter(number: phoneNumber)
                                     case .DEBTOR
@@ -75,7 +75,7 @@ struct MyInfoWritingView: View {
                                 CustomTextField(foregroundStyle: .black, placeholder: "우편번호", keyboardType: .numberPad, text: $zipCode)
                                     .disabled(true)
                                     .onChange(of: zipCode) {
-                                        switch newCertificate.WriterRole {
+                                        switch newCertificate.writerRole {
                                         case .DEBTOR
                                             : newCertificate.creditorAddress = address + "(\(zipCode))"
                                         case .CREDITOR
@@ -98,7 +98,7 @@ struct MyInfoWritingView: View {
                                 .disabled(true)
                             CustomTextField(foregroundStyle: .black, placeholder: "상세주소를 적어주세요", keyboardType: .default, text: $detailAddress)
                                 .onChange(of: detailAddress) {
-                                    switch newCertificate.WriterRole {
+                                    switch newCertificate.writerRole {
                                     case .DEBTOR
                                         : newCertificate.creditorAddress = address + " \(detailAddress) " + "(\(zipCode))"
                                     case .CREDITOR
@@ -128,7 +128,7 @@ struct MyInfoWritingView: View {
                 
             }
         }
-        .dismissOnEdgeDrag()
+        .dismissOnDrag()
         .navigationTitle("페이릿 작성하기")
         .navigationBarTitleDisplayMode(.inline)
         .onTapGesture { self.endTextEditing() }
@@ -169,6 +169,7 @@ struct MyInfoWritingView: View {
 
 #Preview {
     NavigationStack {
-        MyInfoWritingView(newCertificate: .constant(Certificate.EmptyCertificate), path: .constant(NavigationPath()))
+        MyInfoWritingView(newCertificate: .constant(CertificateDetail.EmptyCertificate), path: .constant(NavigationPath()))
     }
 }
+

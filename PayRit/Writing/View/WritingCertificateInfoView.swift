@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct WritingCertificateInfoView: View {
-    @State private var borrowedDate: Date = Date()
-    @State private var redemptionDate: Date = Date()
+    @State private var repaymentStartDate: Date = Date()
+    @State private var repaymentEndDate: Date = Date()
     @State private var money: String = ""
-    @State private var etc: String = ""
     @State private var interest: String = ""
     @State private var interestDate: String = ""
+    @State private var specialConditions: String = ""
     @State private var onTapBorrowedDate: Bool = false
     @State private var onTapRedemptionDate: Bool = false
     @State private var warningMessage: Bool = false
@@ -26,7 +26,7 @@ struct WritingCertificateInfoView: View {
     @State private var isShowingRedemptionDatePicker: Bool = false
     @State private var moveNextView: Bool = false
     @State private var keyBoardFocused: Bool = false
-    @State private var newCertificate: Certificate = Certificate.EmptyCertificate
+    @State private var newCertificate: CertificateDetail = CertificateDetail.EmptyCertificate
     @Binding var certificateType: WriterRole
     @Binding var path: NavigationPath
     @FocusState var interestTextFieldFocus: Bool
@@ -51,7 +51,7 @@ struct WritingCertificateInfoView: View {
                                     .foregroundStyle(Color.gray04)
                                 CustomTextField(placeholder: "금액을 입력해주세요", keyboardType: .numberPad, text: $money)
                                     .onChange(of: money) {
-                                        newCertificate.money = Int(money) ?? 0
+                                        newCertificate.amount = Int(money) ?? 0
                                     }
                             }
                             
@@ -74,7 +74,7 @@ struct WritingCertificateInfoView: View {
                                             } label: {
                                                 HStack {
                                                     if onTapBorrowedDate {
-                                                        Text(borrowedDate.dateToString())
+                                                        Text(repaymentStartDate.dateToString())
                                                             .font(Font.body02)
                                                             .foregroundStyle(.black)
                                                     } else {
@@ -113,7 +113,7 @@ struct WritingCertificateInfoView: View {
                                             } label: {
                                                 HStack {
                                                     if onTapRedemptionDate {
-                                                        Text(redemptionDate.dateToString())
+                                                        Text(repaymentEndDate.dateToString())
                                                             .font(Font.body02)
                                                             .foregroundStyle(.black)
                                                     } else {
@@ -137,9 +137,9 @@ struct WritingCertificateInfoView: View {
                                 Text("특별히 추가할 내용이 있나요? (선택)")
                                     .font(Font.body03)
                                     .foregroundStyle(Color.gray04)
-                                CustomTextField(foregroundStyle: .black, placeholder: "특별히 추가할 내용을 적어주세요", keyboardType: .default, text: $etc)
-                                    .onChange(of: etc) {
-                                        newCertificate.etc = etc
+                                CustomTextField(foregroundStyle: .black, placeholder: "특별히 추가할 내용을 적어주세요", keyboardType: .default, text: $specialConditions)
+                                    .onChange(of: specialConditions) {
+                                        newCertificate.specialConditions = specialConditions
                                     }
                             }
                             VStack(spacing: 0) {
@@ -217,7 +217,7 @@ struct WritingCertificateInfoView: View {
                                                     } else {
                                                         interest = oldValue
                                                     }
-                                                    newCertificate.interestRate = Double(interest) ?? 0.0
+                                                    newCertificate.interestRate = Float(interest) ?? 0.0
                                                 }
                                                 .onTapGesture {
                                                     withAnimation {
@@ -316,7 +316,7 @@ struct WritingCertificateInfoView: View {
                 .padding(.horizontal, keyBoardFocused ? 0 : 16)
             }
         }
-        .dismissOnEdgeDrag()
+        .dismissOnDrag()
         .scrollIndicators(.hidden)
         .navigationTitle("페이릿 작성하기")
         .navigationBarTitleDisplayMode(.inline)
@@ -340,29 +340,29 @@ struct WritingCertificateInfoView: View {
             }
         }
         .sheet(isPresented: $isShowingBorrowedDatePicker, content: {
-            DatePicker("", selection: $borrowedDate, displayedComponents: [.date])
+            DatePicker("", selection: $repaymentStartDate, displayedComponents: [.date])
                 .datePickerStyle(.graphical)
                 .presentationDetents([.height(400)])
                 .onDisappear {
-                    newCertificate.repaymentStartDate = borrowedDate.dateToString()
+                    newCertificate.repaymentStartDate = repaymentStartDate.dateToString()
                 }
         })
         .sheet(isPresented: $isShowingRedemptionDatePicker, content: {
-            DatePicker("", selection: $redemptionDate, in: borrowedDate..., displayedComponents: [.date])
+            DatePicker("", selection: $repaymentEndDate, in: repaymentStartDate..., displayedComponents: [.date])
                 .datePickerStyle(.graphical)
                 .presentationDetents([.height(400)])
                 .onDisappear {
-                    newCertificate.repaymentStartDate = borrowedDate.dateToString()
+                    newCertificate.repaymentEndDate = repaymentEndDate.dateToString()
                 }
         })
-        .onChange(of: borrowedDate) {
-            newCertificate.repaymentStartDate = borrowedDate.dateToString()
-            if borrowedDate < redemptionDate {
-                redemptionDate = borrowedDate
+        .onChange(of: repaymentStartDate) {
+            newCertificate.repaymentStartDate = repaymentStartDate.dateToString()
+            if repaymentStartDate < repaymentEndDate {
+                repaymentEndDate = repaymentStartDate
             }
         }
-        .onChange(of: redemptionDate) {
-            newCertificate.repaymentEndDate = redemptionDate.dateToString()
+        .onChange(of: repaymentEndDate) {
+            newCertificate.repaymentEndDate = repaymentEndDate.dateToString()
         }
         .primaryAlert(isPresented: $isShowingStopAlert,
                       title: "작성 중단",
@@ -384,7 +384,7 @@ struct WritingCertificateInfoView: View {
                 .customBackbutton()
         }
         .onAppear {
-            newCertificate.WriterRole = certificateType
+            newCertificate.writerRole = certificateType
         }
     }
 }

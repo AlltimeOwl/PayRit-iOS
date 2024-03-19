@@ -10,6 +10,7 @@ import SwiftUI
 struct MyInfoView: View {
     @Environment(SignInStore.self) var signInStore
     @Environment(TabBarStore.self) var tabStore
+    let mypageStore: MyPageStore = MyPageStore()
     
     var body: some View {
         ZStack {
@@ -24,7 +25,7 @@ struct MyInfoView: View {
                         .foregroundStyle(Color.gray09)
                         .overlay {
                             HStack {
-                                Text(signInStore.currenUser.name)
+                                Text(mypageStore.currenUser.name)
                                     .font(Font.body02)
                                     .foregroundStyle(Color.gray06)
                                 Spacer()
@@ -41,7 +42,7 @@ struct MyInfoView: View {
                         .foregroundStyle(Color.gray09)
                         .overlay {
                             HStack {
-                                Text(signInStore.currenUser.email)
+                                Text(mypageStore.currenUser.email)
                                     .font(Font.body02)
                                     .foregroundStyle(Color.gray06)
                                 Spacer()
@@ -58,7 +59,7 @@ struct MyInfoView: View {
                         .foregroundStyle(Color.gray09)
                         .overlay {
                             HStack {
-                                Text(signInStore.currenUser.phoneNumber)
+                                Text(mypageStore.currenUser.phoneNumber)
                                     .font(Font.body02)
                                     .foregroundStyle(Color.gray06)
                                 Spacer()
@@ -75,7 +76,7 @@ struct MyInfoView: View {
                         .foregroundStyle(Color.gray09)
                         .overlay {
                             HStack {
-                                Text(signInStore.currenUser.signInCompany)
+                                Text(mypageStore.currenUser.signInCompany)
                                     .font(Font.body02)
                                     .foregroundStyle(Color.gray06)
                                 Spacer()
@@ -95,7 +96,7 @@ struct MyInfoView: View {
                 }
             }
         }
-        .dismissOnEdgeDrag()
+        .dismissOnDrag()
         .navigationTitle("계정 정보")
         .navigationBarTitleDisplayMode(.inline)
         .padding(16)

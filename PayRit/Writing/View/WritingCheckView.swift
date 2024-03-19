@@ -12,7 +12,7 @@ struct WritingCheckView: View {
     @State private var isShowingKaKaoAlert: Bool = false
     @State private var isShowingDoneAlert: Bool = false
     @Binding var path: NavigationPath
-    @Binding var newCertificate: Certificate
+    @Binding var newCertificate: CertificateDetail
     @Environment(HomeStore.self) var homeStore
     let writingStore = WritingStore()
     var body: some View {
@@ -50,7 +50,7 @@ struct WritingCheckView: View {
                             .shadow(color: .gray.opacity(0.2), radius: 5)
                         }
                         
-                        if newCertificate.interestRateAmount != 0 || (newCertificate.interestRateDay != nil) || (newCertificate.etc != nil) {
+                        if newCertificate.interestRateAmount != 0 || (newCertificate.interestRateDay != nil) || (newCertificate.specialConditions != nil) {
                             VStack(alignment: .leading) {
                                 Text("추가사항")
                                     .font(Font.body03)
@@ -79,12 +79,12 @@ struct WritingCheckView: View {
                                         }
                                     }
                                     
-                                    if let etc = newCertificate.etc {
+                                    if let specialConditions = newCertificate.specialConditions {
                                         HStack {
                                             Text("특이사항")
                                                 .font(Font.body04)
                                             Spacer().frame(width: 70)
-                                            Text("\(etc)")
+                                            Text("\(specialConditions)")
                                                 .font(Font.body01)
                                             Spacer()
                                         }
@@ -193,7 +193,7 @@ struct WritingCheckView: View {
                 .padding(.horizontal, 16)
             }
         }
-        .dismissOnEdgeDrag()
+        .dismissOnDrag()
         .navigationTitle("차용증 내용 확인")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -238,7 +238,7 @@ struct WritingCheckView: View {
                       primaryButtonTitle: nil,
                       cancleButtonTitle: "확인",
                       primaryAction: nil) {
-            homeStore.certificates.append(newCertificate)
+//            homeStore.certificates.append(newCertificate)
             writingStore.saveCertificae(certificate: newCertificate)
             path = .init()
         }
@@ -247,6 +247,6 @@ struct WritingCheckView: View {
 
 #Preview {
     NavigationStack {
-        WritingCheckView(path: .constant(NavigationPath()), newCertificate: .constant(Certificate.samepleDocument[0]))
+        WritingCheckView(path: .constant(NavigationPath()), newCertificate: .constant(CertificateDetail.EmptyCertificate))
     }
 }

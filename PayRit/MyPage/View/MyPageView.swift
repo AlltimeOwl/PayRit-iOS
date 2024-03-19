@@ -13,6 +13,7 @@ struct MyPageView: View {
     @State var notFoundUser: Bool = false
     @Environment(SignInStore.self) var signInStore
     @Environment(TabBarStore.self) var tabStore
+    let mypageStore: MyPageStore = MyPageStore()
     var body: some View {
         ZStack {
             Color.payritBackground.ignoresSafeArea()
@@ -22,9 +23,9 @@ struct MyPageView: View {
                         .frame(height: 77)
                         .foregroundStyle(.blue)
                     VStack(alignment: .leading, spacing: 10) {
-                        Text(signInStore.currenUser.name)
+                        Text(mypageStore.currenUser.name)
                             .font(Font.title01)
-                        Text(signInStore.currenUser.email)
+                        Text(mypageStore.currenUser.email)
                             .font(.system(size: 16))
                             .foregroundStyle(Color.gray05)
                     }
@@ -110,7 +111,9 @@ struct MyPageView: View {
             }
         }
         .primaryAlert(isPresented: $isShowingSignOut, title: "로그아웃", content: "로그아웃 하시겠습니까?", primaryButtonTitle: "아니오", cancleButtonTitle: "네", primaryAction: nil) {
-            // 로그아웃
+            if mypageStore.currenUser.signInCompany == "카카오톡" {
+                signInStore.kakaoSingOut()
+            }
         }
     }
 }
