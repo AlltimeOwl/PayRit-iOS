@@ -64,7 +64,7 @@
 //                                    Text("이자 지급일")
 //                                        .font(Font.body04)
 //                                    Spacer().frame(width: 30)
-//                                    Text("매월 \(homeStore.certificates[index].interestRateDay ?? "")일")
+//                                    Text("매월 \(homeStore.certificates[index].interestPaymentDate ?? "")일")
 //                                        .foregroundStyle(!homeStore.certificates[index].repaymentEndDate.isEmpty ? .black : .clear)
 //                                        .font(Font.body01)
 //                                    Spacer()

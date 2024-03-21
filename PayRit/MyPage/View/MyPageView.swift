@@ -113,6 +113,10 @@ struct MyPageView: View {
         .primaryAlert(isPresented: $isShowingSignOut, title: "로그아웃", content: "로그아웃 하시겠습니까?", primaryButtonTitle: "아니오", cancleButtonTitle: "네", primaryAction: nil) {
             if mypageStore.currenUser.signInCompany == "카카오톡" {
                 signInStore.kakaoSingOut()
+            } else if mypageStore.currenUser.signInCompany == "애플" {
+                
+                signInStore.isSignIn = false
+                UserDefaultsManager().removeAll()
             }
         }
     }

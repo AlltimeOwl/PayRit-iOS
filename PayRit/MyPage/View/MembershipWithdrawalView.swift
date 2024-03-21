@@ -154,7 +154,11 @@ struct MembershipWithdrawalView: View {
                                 """
                       , primaryButtonTitle: nil, cancleButtonTitle: "확인", primaryAction: nil) {
             if mypageStore.currenUser.signInCompany == "카카오톡" {
-                signInStore.kakaoUnlink()
+                signInStore.kakaoUnLink()
+            } else if mypageStore.currenUser.signInCompany == "애플" {
+                
+                signInStore.isSignIn = false
+                UserDefaultsManager().removeAll()
             }
         }
     }

@@ -21,7 +21,7 @@ struct CertificateDetailView: View {
             ScrollView {
                 VStack(spacing: 0) {
                     HStack {
-                        if homeStore.certificate.writerRole == .CREDITOR {
+                        if homeStore.certificate.memberRole == "CREDITOR" {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("\(homeStore.certificate.debtorName)님께")
                                 HStack(spacing: 0) {
@@ -74,7 +74,7 @@ struct CertificateDetailView: View {
                                     .font(Font.body03)
                                     .foregroundStyle(Color.gray02)
                                 ProgressView(value: homeStore.certificate.repaymentRate, total: 100)
-                                    .progressViewStyle(CustomLinearProgressViewStyle(trackColor: Color.gray09, progressColor: homeStore.certificate.writerRole == .CREDITOR ? Color.payritMint : Color.payritIntensivePink))
+                                    .progressViewStyle(CustomLinearProgressViewStyle(trackColor: Color.gray09, progressColor: homeStore.certificate.memberRole == "CREDITOR" ? Color.payritMint : Color.payritIntensivePink))
                                 Text("\(certificateStep.rawValue) (\(Int(homeStore.certificate.repaymentRate))%)")
                                     .font(Font.caption02)
                                     .foregroundStyle(Color.gray04)
@@ -84,12 +84,12 @@ struct CertificateDetailView: View {
                         .padding(.horizontal, 16)
                         .frame(height: 170)
                         .frame(maxWidth: .infinity)
-                        .background(homeStore.certificate.writerRole == .CREDITOR ? Color.payritLightMint : Color.payritIntensiveLightPink)
+                        .background(homeStore.certificate.memberRole == "CREDITOR" ? Color.payritLightMint : Color.payritIntensiveLightPink)
                         .clipShape(.rect(cornerRadius: 12))
                         
                         // 내보내기 버튼
                         VStack(spacing: 6) {
-                            if homeStore.certificate.writerRole == .CREDITOR {
+                            if homeStore.certificate.memberRole == "CREDITOR" {
                                 //                        if true {
                                 Button {
                                 } label: {
@@ -293,7 +293,7 @@ struct CertificateDetailView: View {
                             .shadow(color: .gray.opacity(0.2), radius: 5)
                         }
                         
-                        if homeStore.certificate.interestRateAmount != 0 || (homeStore.certificate.interestRateDay != nil) || (homeStore.certificate.specialConditions != nil) {
+                        if homeStore.certificate.interestRateAmount != 0 || (homeStore.certificate.interestPaymentDate != nil) || (homeStore.certificate.specialConditions != nil) {
                             VStack(alignment: .leading) {
                                 Text("추가사항")
                                     .font(Font.body03)
@@ -310,12 +310,12 @@ struct CertificateDetailView: View {
                                         }
                                     }
                                     
-                                    if let day = homeStore.certificate.interestRateDay {
+                                    if homeStore.certificate.interestPaymentDate != 0 {
                                         HStack {
                                             Text("이자 지급일")
                                                 .font(Font.body04)
                                             Spacer().frame(width: 30)
-                                            Text("매월 \(day)일")
+                                            Text("매월 \(homeStore.certificate.interestPaymentDate)일")
                                                 .foregroundStyle(!homeStore.certificate.repaymentEndDate.isEmpty ? .black : .clear)
                                                 .font(Font.body01)
                                             Spacer()

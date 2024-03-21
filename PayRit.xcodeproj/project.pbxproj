@@ -18,6 +18,7 @@
 		BC1CF8D92B96C8D800A9BF12 /* CustomAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1CF8D82B96C8D800A9BF12 /* CustomAlert.swift */; };
 		BC1CF8DD2B96FCA200A9BF12 /* WritingCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1CF8DC2B96FCA200A9BF12 /* WritingCheckView.swift */; };
 		BC2193962BA99BC000EE7B68 /* Certificate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2193952BA99BC000EE7B68 /* Certificate.swift */; };
+		BC2193982BAC0DF000EE7B68 /* String +.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2193972BAC0DF000EE7B68 /* String +.swift */; };
 		BC29AA3B2BA1BEB9002CB968 /* CertificateSerchingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC29AA3A2BA1BEB9002CB968 /* CertificateSerchingView.swift */; };
 		BC2D51CC2B9ECD870041FD77 /* CertificateMemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2D51CB2B9ECD870041FD77 /* CertificateMemoView.swift */; };
 		BC2D51CE2B9F35260041FD77 /* CertificateDeductibleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2D51CD2B9F35260041FD77 /* CertificateDeductibleView.swift */; };
@@ -82,6 +83,7 @@
 		BC1CF8D82B96C8D800A9BF12 /* CustomAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlert.swift; sourceTree = "<group>"; };
 		BC1CF8DC2B96FCA200A9BF12 /* WritingCheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WritingCheckView.swift; sourceTree = "<group>"; };
 		BC2193952BA99BC000EE7B68 /* Certificate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Certificate.swift; sourceTree = "<group>"; };
+		BC2193972BAC0DF000EE7B68 /* String +.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String +.swift"; sourceTree = "<group>"; };
 		BC29AA3A2BA1BEB9002CB968 /* CertificateSerchingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateSerchingView.swift; sourceTree = "<group>"; };
 		BC2D51CB2B9ECD870041FD77 /* CertificateMemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateMemoView.swift; sourceTree = "<group>"; };
 		BC2D51CD2B9F35260041FD77 /* CertificateDeductibleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateDeductibleView.swift; sourceTree = "<group>"; };
@@ -246,6 +248,7 @@
 				BC595E032B8DA83600CA555E /* UIScreen +.swift */,
 				BC595E092B8DAFD600CA555E /* Font +.swift */,
 				BC595E182B8DB75600CA555E /* Color +.swift */,
+				BC2193972BAC0DF000EE7B68 /* String +.swift */,
 				BCE280D92B8F75120085D45E /* View +.swift */,
 				BC62BFF52BA1551F000A1BA5 /* Date +.swift */,
 				BCE280DB2B8F75440085D45E /* ViewModifier.swift */,
@@ -581,6 +584,7 @@
 				BC947A5D2B984AEF00295C7B /* MyInfoView.swift in Sources */,
 				BC9563502B9F3B130014010C /* MFMailView.swift in Sources */,
 				BC595E042B8DA83600CA555E /* UIScreen +.swift in Sources */,
+				BC2193982BAC0DF000EE7B68 /* String +.swift in Sources */,
 				BC595DD82B8D8AC300CA555E /* SignInView.swift in Sources */,
 				BCE280DA2B8F75120085D45E /* View +.swift in Sources */,
 				BC4876C82B9721F3006B15C0 /* PartnerInfoWritingView.swift in Sources */,

@@ -72,15 +72,30 @@ struct HomeView: View {
                         }
                 }
                 if homeStore.certificates.isEmpty {
-                    Text("""
-                        아직 거래내역이 없어요.
-                        작성하러 가볼까요?
-                        """)
-                    .frame(maxHeight: .infinity)
-                    .multilineTextAlignment(.center)
-                    .lineSpacing(4)
-                    .font(.system(size: 20))
-                    .foregroundStyle(.gray).opacity(0.6)
+                    List {
+                        VStack {
+                            Spacer()
+                            HStack {
+                                Spacer()
+                                Text("""
+                            아직 거래내역이 없어요.
+                            작성하러 가볼까요?
+                            """)
+                                .frame(maxHeight: .infinity)
+                                .multilineTextAlignment(.center)
+                                .lineSpacing(4)
+                                .font(.system(size: 20))
+                                .foregroundStyle(.gray).opacity(0.6)
+                                Spacer()
+                            }
+                            Spacer()
+                        }
+                        .frame(height: UIScreen.screenHeight * 0.5)
+                        .listRowSeparator(.hidden)
+                    }
+                    .listStyle(.plain)
+                    .listSectionSeparator(.hidden)
+                    .scrollIndicators(.hidden)
                 } else {
                     ZStack {
                         VStack(spacing: 0) {
@@ -97,18 +112,18 @@ struct HomeView: View {
                             ScrollViewReader { _ in
                                 List(homeStore.certificates, id: \.self) { certificate in
                                     Button {
-                                        certificateStep = certificate.certificateStep
-                                        if certificate.certificateStep == .waitingApproval {
-                                            isShowingWaitingApprovalAlert.toggle()
-                                        } else if certificate.certificateStep == .waitingPayment {
-                                            isShowingWaitingPaymentAlert.toggle()
-                                        } else if certificate.certificateStep == .progress {
-                                            navigationLinkToggle.toggle()
-                                        }
-//                                        Task {
-//                                            await homeStore.loadDetail(id: certificate.paperId)
+//                                        certificateStep = certificate.certificateStep
+//                                        if certificate.certificateStep == .waitingApproval {
+//                                            isShowingWaitingApprovalAlert.toggle()
+//                                        } else if certificate.certificateStep == .waitingPayment {
+//                                            isShowingWaitingPaymentAlert.toggle()
+//                                        } else if certificate.certificateStep == .progress {
 //                                            navigationLinkToggle.toggle()
 //                                        }
+                                        Task {
+                                            await homeStore.loadDetail(id: certificate.paperId)
+                                            navigationLinkToggle.toggle()
+                                        }
                                     } label: {
                                         VStack(alignment: .leading, spacing: 0) {
                                             HStack {
@@ -318,6 +333,7 @@ struct HomeView: View {
             //
             //            }
             tabStore.tabBarHide = false
+            homeStore.loadCertificates()
         }
         
         .primaryAlert(isPresented: $isShowingSignatureView, title: "본인인증", content: "본인인증 띄우기", primaryButtonTitle: "예", cancleButtonTitle: "아니오") {

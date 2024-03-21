@@ -19,14 +19,16 @@ enum WriterRole: String, CodingKey, Codable {
     case DEBTOR
 }
 
+
 struct CertificateDetail: Hashable, Codable {
     let paperId: Int
-    let paperUrl: String
+    let paperUrl: String?
     var amount: Int
-    
+    var memberRole: String
     /// 남은 금액(총액 - 일부상환액)
     var remainingAmount: Int
     var interestRate: Float
+    var interestPaymentDate: Int
     var repaymentRate: Double
     var repaymentStartDate: String
     var repaymentEndDate: String
@@ -37,9 +39,8 @@ struct CertificateDetail: Hashable, Codable {
     var debtorPhoneNumber: String
     var debtorAddress: String
     var specialConditions: String?
+    var memoListResponses: [Memo] = [Memo]()
     var repaymentHistories: [Deducted] = [Deducted]()
-    
-    //
     
 //    var writerRole: WriterRole {
 //        let userName = UserDefaultsManager().getUserInfo().name
@@ -49,10 +50,8 @@ struct CertificateDetail: Hashable, Codable {
 //            return .DEBTOR
 //        }
 //    }
-    var writerRole: WriterRole = .CREDITOR
-    var interestRateDay: String?
-    var state: CertificateStep = .waitingApproval
-    var memo: [Memo] = [Memo]()
+//    var writerRole: WriterRole = .CREDITOR
+//    var state: CertificateStep = .waitingApproval
     
     var interestRateAmount: Int {
         let dateFormatter = DateFormatter()
@@ -75,7 +74,6 @@ struct CertificateDetail: Hashable, Codable {
         }
     }
 
-    
     var totalMoneyFormatter: String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
@@ -91,7 +89,7 @@ struct CertificateDetail: Hashable, Codable {
     var totalAmountFormatter: String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
-        return formatter.string(from: (NSNumber(value: remainingAmount))) ?? String(remainingAmount)
+        return formatter.string(from: (NSNumber(value: amount + interestRateAmount))) ?? String(amount + interestRateAmount)
     }
     
     var dDay: Int {
@@ -161,5 +159,6 @@ struct CertificateDetail: Hashable, Codable {
     }
     
 //    static let EmptyCertificate: CertificateDetail = CertificateDetail(writingDay: "", creditorName: "", creditorPhoneNumber: "", creditorAddress: "", debtorName: "", debtorPhoneNumber: "", debtorAddress: "", repaymentStartDate: "", repaymentEndDate: "", money: 0, interestRate: 0.0)
-    static let EmptyCertificate: CertificateDetail = CertificateDetail(paperId: 0, paperUrl: "", amount: 0, remainingAmount: 0, interestRate: 0.0, repaymentRate: 0.0, repaymentStartDate: "", repaymentEndDate: "", creditorName: "", creditorPhoneNumber: "", creditorAddress: "", debtorName: "", debtorPhoneNumber: "", debtorAddress: "")
+    static let EmptyCertificate: CertificateDetail = CertificateDetail(paperId: 0, paperUrl: "", amount: 0, memberRole: "", remainingAmount: 0, interestRate: 0.0, interestPaymentDate: 0, repaymentRate: 0.0, repaymentStartDate: "", repaymentEndDate: "", creditorName: "", creditorPhoneNumber: "", creditorAddress: "", debtorName: "", debtorPhoneNumber: "", debtorAddress: "")
 }
+

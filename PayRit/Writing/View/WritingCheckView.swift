@@ -50,7 +50,7 @@ struct WritingCheckView: View {
                             .shadow(color: .gray.opacity(0.2), radius: 5)
                         }
                         
-                        if newCertificate.interestRateAmount != 0 || (newCertificate.interestRateDay != nil) || (newCertificate.specialConditions != nil) {
+                        if newCertificate.interestRateAmount != 0 || (newCertificate.interestPaymentDate != 0) || (newCertificate.specialConditions != nil) {
                             VStack(alignment: .leading) {
                                 Text("추가사항")
                                     .font(Font.body03)
@@ -67,12 +67,12 @@ struct WritingCheckView: View {
                                         }
                                     }
                                     
-                                    if let day = newCertificate.interestRateDay {
+                                    if newCertificate.interestPaymentDate != 0{
                                         HStack {
                                             Text("이자 지급일")
                                                 .font(Font.body04)
                                             Spacer().frame(width: 30)
-                                            Text("매월 \(day)일")
+                                            Text("매월 \(newCertificate.interestPaymentDate)일")
                                                 .foregroundStyle(!newCertificate.repaymentEndDate.isEmpty ? .black : .clear)
                                                 .font(Font.body01)
                                             Spacer()
@@ -86,6 +86,7 @@ struct WritingCheckView: View {
                                             Spacer().frame(width: 70)
                                             Text("\(specialConditions)")
                                                 .font(Font.body01)
+                                                .multilineTextAlignment(.leading)
                                             Spacer()
                                         }
                                     }

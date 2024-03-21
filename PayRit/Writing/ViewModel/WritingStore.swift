@@ -12,25 +12,6 @@ import SwiftUI
 final class WritingStore {
     var currentUser = UserDefaultsManager().getUserInfo()
     
-    func phoneNumberFormatter(number: String) -> String {
-        if number.count == 11 {
-            let firstPart = number.prefix(3)
-            let secondPart = number[number.index(number.startIndex, offsetBy: 3)..<number.index(number.startIndex, offsetBy: 7)]
-            let thirdPart = number.suffix(4)
-            return "\(firstPart)-\(secondPart)-\(thirdPart)"
-        } else {
-            return number
-        }
-    }
-    
-    func globalPhoneNumber(_ number: String) -> String {
-        var newNumber = number
-        if !newNumber.isEmpty {
-            newNumber.removeFirst()
-        }
-        return "+82 \(newNumber)"
-    }
-    
     func saveCertificae(certificate: CertificateDetail) {
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"
@@ -49,19 +30,20 @@ final class WritingStore {
 //            print("Send Certificate : \(certificate)")
 //             HTTP 바디 설정
             let body = [
-                "writerRole": certificate.writerRole.stringValue,
-                "amount": "\(certificate.amount)",
+                "writerRole": certificate.memberRole,
+                "amount": certificate.amount,
+                "calcedAmount": "\(certificate.amount + certificate.interestRateAmount)",
                 "transactionDate": Date().dateToString(),
                 "repaymentStartDate": certificate.repaymentStartDate,
                 "repaymentEndDate": certificate.repaymentEndDate,
                 "specialConditions": certificate.specialConditions ?? "",
                 "interestRate": "\(certificate.interestRate)",
-                "interestPaymentDate": certificate.interestRateDay ?? "",
+                "interestPaymentDate": certificate.interestPaymentDate,
                 "creditorName": certificate.creditorName,
-                "creditorPhoneNumber": globalPhoneNumber(certificate.creditorPhoneNumber),
+                "creditorPhoneNumber": certificate.creditorPhoneNumber.globalPhoneNumber(),
                 "creditorAddress": certificate.creditorAddress,
                 "debtorName": certificate.debtorName,
-                "debtorPhoneNumber": globalPhoneNumber(certificate.debtorPhoneNumber),
+                "debtorPhoneNumber": certificate.debtorPhoneNumber.globalPhoneNumber(),
                 "debtorAddress": certificate.debtorAddress
             ] as [String: Any]
             print("-----HTTP 전송 바디-----")

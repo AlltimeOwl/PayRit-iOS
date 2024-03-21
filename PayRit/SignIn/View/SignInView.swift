@@ -101,11 +101,13 @@ struct AppleSigninButton: View {
                         print("---------1-----------")
                         
                         // AuthorizationCode 서버에 전송하는 값 !! 1번만 사용될 수 있으며 5분간 유효 !!
-                        if let AuthorizationCode = String(data: appleIDCredential.authorizationCode ?? Data(), encoding: .utf8) {
-                            signInStore.appleAuthorizationCode = AuthorizationCode
-                            print("AuthorizationCode : \(signInStore.appleAuthorizationCode)")
+                        if  let authorizationCode = appleIDCredential.authorizationCode,
+                            let identityToken = appleIDCredential.identityToken,
+                            let authCodeString = String(data: authorizationCode, encoding: .utf8),
+                            let identifyTokenString = String(data: identityToken, encoding: .utf8) {
+                            signInStore.appleAuthorizationCode = authCodeString
+                            signInStore.appleIdentityToken = identifyTokenString
                         }
-                        
                         UserDefaultsManager().setAppleUserData(userData: User(name: name, email: email, phoneNumber: "", signInCompany: "애플", appleId: appleUserIdentifier))
                         signInStore.appleAuthCheck()
                         

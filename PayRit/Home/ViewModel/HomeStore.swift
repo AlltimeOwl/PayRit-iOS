@@ -19,7 +19,7 @@ final class HomeStore {
     var sortingType: SortingType = .recent
 //    var certificates: [Certificate] = Certificate.samepleDocument
     var certificates: [Certificate] = [Certificate]()
-    var certificate: CertificateDetail = CertificateDetail(paperId: 0, paperUrl: "", amount: 0, remainingAmount: 0, interestRate: 0.0, repaymentRate: 0.0, repaymentStartDate: "", repaymentEndDate: "", creditorName: "", creditorPhoneNumber: "", creditorAddress: "", debtorName: "", debtorPhoneNumber: "", debtorAddress: "")
+    var certificate: CertificateDetail = CertificateDetail(paperId: 0, paperUrl: "", amount: 0, memberRole: "", remainingAmount: 0, interestRate: 0.0, interestPaymentDate: 0, repaymentRate: 0.0, repaymentStartDate: "", repaymentEndDate: "", creditorName: "", creditorPhoneNumber: "", creditorAddress: "", debtorName: "", debtorPhoneNumber: "", debtorAddress: "")
     var isLoading: Bool = false
     
     init() {
@@ -82,8 +82,7 @@ final class HomeStore {
     }
     
     func loadDetail(id: Int) async {
-        print(id)
-        let urlString = "https://payrit.info/api/v1/paper/1"
+        let urlString = "https://payrit.info/api/v1/paper/\(id)"
         guard let url = URL(string: urlString) else {
             print("Invalid URL")
             return

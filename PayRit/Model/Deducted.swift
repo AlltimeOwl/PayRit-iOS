@@ -7,8 +7,8 @@
 
 import Foundation
 
-struct Deducted: Identifiable, Hashable, Codable {
-    let id: String = UUID().uuidString
-    var date: String
-    var money: Int
+struct Deducted: Hashable, Codable {
+    let id: Int
+    var repaymentDate: String
+    var repaymentAmount: Int
 }

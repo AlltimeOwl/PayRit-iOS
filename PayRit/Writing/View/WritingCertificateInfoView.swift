@@ -27,7 +27,7 @@ struct WritingCertificateInfoView: View {
     @State private var moveNextView: Bool = false
     @State private var keyBoardFocused: Bool = false
     @State private var newCertificate: CertificateDetail = CertificateDetail.EmptyCertificate
-    @Binding var certificateType: WriterRole
+    @Binding var certificateType: String
     @Binding var path: NavigationPath
     @FocusState var interestTextFieldFocus: Bool
     @Namespace var bottomID
@@ -178,7 +178,7 @@ struct WritingCertificateInfoView: View {
                                                 .onTapGesture {
                                                     interest = ""
                                                     interestDate = ""
-                                                    newCertificate.interestRateDay = nil
+                                                    newCertificate.interestPaymentDate = 0
                                                 }
                                                 .tint(Color.payritMint)
                                         }
@@ -258,7 +258,7 @@ struct WritingCertificateInfoView: View {
                                                     if Int(newValue) ?? 31 > 31 {
                                                         interestDate = "31"
                                                     }
-                                                    newCertificate.interestRateDay = interestDate
+                                                    newCertificate.interestPaymentDate = Int(interestDate) ?? 0
                                                 }
                                                 .onTapGesture {
                                                     withAnimation {
@@ -384,7 +384,7 @@ struct WritingCertificateInfoView: View {
                 .customBackbutton()
         }
         .onAppear {
-            newCertificate.writerRole = certificateType
+            newCertificate.memberRole = certificateType
         }
     }
 }
@@ -392,7 +392,7 @@ struct WritingCertificateInfoView: View {
 #Preview {
     TabView {
         NavigationStack {
-            WritingCertificateInfoView(certificateType: .constant(.DEBTOR), path: .constant(NavigationPath()))
+            WritingCertificateInfoView(certificateType: .constant("DEBTOR"), path: .constant(NavigationPath()))
                 .environment(TabBarStore())
         }
     }

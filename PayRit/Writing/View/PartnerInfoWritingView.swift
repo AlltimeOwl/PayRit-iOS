@@ -47,11 +47,10 @@ struct PartnerInfoWritingView: View {
                                 .font(Font.body03)
                             CustomTextField(foregroundStyle: .black, placeholder: "이름을 적어주세요", keyboardType: .default, text: $name)
                                 .onChange(of: name) {
-                                    switch newCertificate.writerRole {
-                                    case .DEBTOR
-                                        : newCertificate.creditorName = name
-                                    case .CREDITOR
-                                        : newCertificate.debtorName = name
+                                    if newCertificate.memberRole == "DEBTOR" {
+                                        newCertificate.creditorName = name
+                                    } else if newCertificate.memberRole == "CREDITOR" {
+                                        newCertificate.debtorName = name
                                     }
                                 }
                         }
@@ -60,11 +59,11 @@ struct PartnerInfoWritingView: View {
                                 .font(Font.body03)
                             CustomTextField(foregroundStyle: .black, placeholder: "숫자만 입력해주세요", keyboardType: .numberPad, text: $phoneNumber)
                                 .onChange(of: phoneNumber) {
-                                    switch newCertificate.writerRole {
-                                    case .DEBTOR
-                                        : newCertificate.creditorPhoneNumber = writingStore.phoneNumberFormatter(number: phoneNumber)
-                                    case .CREDITOR
-                                        : newCertificate.debtorPhoneNumber = writingStore.phoneNumberFormatter(number: phoneNumber)
+                                    phoneNumber = phoneNumber.phoneNumberPlusSlider()
+                                    if newCertificate.memberRole == "DEBTOR" {
+                                        newCertificate.creditorPhoneNumber = phoneNumber.globalPhoneNumber()
+                                    } else if newCertificate.memberRole == "CREDITOR" {
+                                        newCertificate.debtorPhoneNumber = phoneNumber.globalPhoneNumber()
                                     }
                                 }
                             
@@ -76,11 +75,10 @@ struct PartnerInfoWritingView: View {
                                 CustomTextField(foregroundStyle: .black, placeholder: "우편번호", keyboardType: .numberPad, text: $zipCode)
                                     .disabled(true)
                                     .onChange(of: zipCode) {
-                                        switch newCertificate.writerRole {
-                                        case .DEBTOR
-                                            : newCertificate.debtorAddress = address + "(\(zipCode))"
-                                        case .CREDITOR
-                                            : newCertificate.creditorAddress = address + "(\(zipCode))"
+                                        if newCertificate.memberRole == "DEBTOR" {
+                                            newCertificate.creditorAddress = address + "(\(zipCode))"
+                                        } else if newCertificate.memberRole == "CREDITOR" {
+                                            newCertificate.debtorAddress = address + "(\(zipCode))"
                                         }
                                     }
                                 Button {
@@ -99,11 +97,10 @@ struct PartnerInfoWritingView: View {
                                 .disabled(true)
                             CustomTextField(foregroundStyle: .black, placeholder: "상세주소를 적어주세요", keyboardType: .default, text: $detailAddress)
                                 .onChange(of: detailAddress) {
-                                    switch newCertificate.writerRole {
-                                    case .DEBTOR
-                                        : newCertificate.debtorAddress = address + " \(detailAddress) " + "(\(zipCode))"
-                                    case .CREDITOR
-                                        : newCertificate.creditorAddress = address + " \(detailAddress) " + "(\(zipCode))"
+                                    if newCertificate.memberRole == "DEBTOR" {
+                                        newCertificate.creditorAddress = address + " \(detailAddress) " + "(\(zipCode))"
+                                    } else if newCertificate.memberRole == "CREDITOR" {
+                                        newCertificate.debtorAddress = address + " \(detailAddress) " + "(\(zipCode))"
                                     }
                                 }
                         }
