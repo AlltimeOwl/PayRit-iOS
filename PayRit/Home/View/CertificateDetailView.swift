@@ -176,8 +176,8 @@ struct CertificateDetailView: View {
                     .padding(.top, 24)
                     
                     NavigationLink {
-//                        CertificateMemoView(index: index)
-//                            .customBackbutton()
+                        CertificateMemoView(certificateDetail: homeStore.certificate)
+                            .customBackbutton()
                     } label: {
                         VStack(spacing: 0) {
                             Rectangle()
@@ -198,16 +198,16 @@ struct CertificateDetailView: View {
                                         .padding(.leading, 16)
                                     , alignment: .leading
                                 )
-//                            Rectangle()
-//                                .foregroundStyle(Color.gray08)
-//                                .frame(height: 50)
-//                                .overlay(
-//                                    Text("총 \(homeStore.certificates[index].memo.count)개의 메모")
-//                                        .font(Font.caption02)
-//                                        .foregroundStyle(Color.gray02)
-//                                        .padding(.leading, 16)
-//                                    , alignment: .leading
-//                                )
+                            Rectangle()
+                                .foregroundStyle(Color.gray08)
+                                .frame(height: 50)
+                                .overlay(
+                                    Text("총 \(homeStore.certificate.memoListResponses.count)개의 메모")
+                                        .font(Font.caption02)
+                                        .foregroundStyle(Color.gray02)
+                                        .padding(.leading, 16)
+                                    , alignment: .leading
+                                )
                         }
                         .background()
                         .clipShape(.rect(cornerRadius: 12))
@@ -293,7 +293,7 @@ struct CertificateDetailView: View {
                             .shadow(color: .gray.opacity(0.2), radius: 5)
                         }
                         
-                        if homeStore.certificate.interestRateAmount != 0 || (homeStore.certificate.interestPaymentDate != nil) || (homeStore.certificate.specialConditions != nil) {
+                        if homeStore.certificate.interestRateAmount != 0 || (homeStore.certificate.interestPaymentDate != 0) || (homeStore.certificate.specialConditions != nil) {
                             VStack(alignment: .leading) {
                                 Text("추가사항")
                                     .font(Font.body03)

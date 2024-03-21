@@ -27,25 +27,20 @@ final class HomeStore {
     }
     
     func loadCertificates() {
-        // 요청할 URL 생성
         let urlString = "https://payrit.info/api/v1/paper/list"
         guard let url = URL(string: urlString) else {
             print("Invalid URL")
             return
         }
         
-        // URLSession 객체 생성
         let session = URLSession.shared
         
-        // URLRequest 생성
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.setValue("application/json", forHTTPHeaderField: "accept")
         request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
         
-        // URLSessionDataTask를 사용하여 GET 요청 생성
         let task = session.dataTask(with: request) { (data, response, error) in
-            // 요청 완료 후 실행될 클로저
             if let error = error {
                 print("Error: \(error)")
                 return
@@ -56,13 +51,11 @@ final class HomeStore {
             }
             
             if (200..<300).contains(httpResponse.statusCode) {
-                // 요청이 성공했을 때 데이터 처리
                 if let data = data {
                     let responseData = String(data: data, encoding: .utf8)
                     print("Response data: \(responseData ?? "No data")")
 //                    
                     do {
-                        // JSON 데이터를 구조체로 디코딩
                         let certificates = try JSONDecoder().decode([Certificate].self, from: data)
                         
                         self.certificates = certificates
@@ -110,7 +103,6 @@ final class HomeStore {
                     print("Response data: \(responseData ?? "No data")")
                     do {
                         let certificates = try JSONDecoder().decode(CertificateDetail.self, from: data)
-                        
                         self.certificate = certificates
                     } catch {
                         print("Error decoding JSON: \(error)")
@@ -163,22 +155,51 @@ final class HomeStore {
 //        }
 //    }
     
-    func todayString() -> String {
-        let today = Date()
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd" // 원하는 날짜 형식 지정
-        let dateString = dateFormatter.string(from: today)
-        return dateString
+    func memoSave(paperId: Int, content: String) {
+        var urlComponents = URLComponents()
+        urlComponents.scheme = "https"
+        urlComponents.host = "payrit.info"
+        urlComponents.path = "/api/v1/memo/\(paperId)"
+        
+        if let url = urlComponents.url {
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.setValue("*/*", forHTTPHeaderField: "accept")
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
+            let body = [
+                "content": content
+            ] as [String: Any]
+            
+            do {
+                request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
+            } catch {
+                print("Error creating JSON data")
+            }
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    print("Error: \(error)")
+                } else if let data = data, let response = response as? HTTPURLResponse {
+                    print("Response status code: \(response.statusCode)")
+                    if (200..<300).contains(response.statusCode) {
+                        do {
+                            if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                                print("JSON Response: \(json)")
+                            }
+                        } catch {
+                            print("Error parsing JSON response")
+                        }
+                    } else {
+                        print("Unexpected status code: \(response.statusCode)")
+                    }
+                } else {
+                    print("Unexpected error: No data or response")
+                }
+            }
+            task.resume()
+        }
     }
-    
-//    func memoSave(certificate: CertificateDetail, today: String, text: String) {
-//        if let index = certificates.firstIndex(where: { $0.id == certificate.id }) {
-//            var updatedCertificate = certificate
-//            let newMemo = Memo(today: today, text: text)
-//            updatedCertificate.memo.append(newMemo)
-//            certificates[index] = updatedCertificate
-//        }
-//    }
 //    
 //    func deductedSave(certificate: CertificateDetail, date: String, money: Int) {
 //        if let index = certificates.firstIndex(where: { $0.id == certificate.id }) {

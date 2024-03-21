@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct WritingCertificateInfoView: View {
+    let certificateType: String
     @State private var repaymentStartDate: Date = Date()
     @State private var repaymentEndDate: Date = Date()
     @State private var money: String = ""
@@ -27,7 +28,6 @@ struct WritingCertificateInfoView: View {
     @State private var moveNextView: Bool = false
     @State private var keyBoardFocused: Bool = false
     @State private var newCertificate: CertificateDetail = CertificateDetail.EmptyCertificate
-    @Binding var certificateType: String
     @Binding var path: NavigationPath
     @FocusState var interestTextFieldFocus: Bool
     @Namespace var bottomID
@@ -392,7 +392,7 @@ struct WritingCertificateInfoView: View {
 #Preview {
     TabView {
         NavigationStack {
-            WritingCertificateInfoView(certificateType: .constant("DEBTOR"), path: .constant(NavigationPath()))
+            WritingCertificateInfoView(certificateType: "DEBTOR", path: .constant(NavigationPath()))
                 .environment(TabBarStore())
         }
     }

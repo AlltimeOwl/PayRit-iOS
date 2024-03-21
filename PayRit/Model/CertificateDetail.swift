@@ -19,7 +19,6 @@ enum WriterRole: String, CodingKey, Codable {
     case DEBTOR
 }
 
-
 struct CertificateDetail: Hashable, Codable {
     let paperId: Int
     let paperUrl: String?
@@ -161,4 +160,3 @@ struct CertificateDetail: Hashable, Codable {
 //    static let EmptyCertificate: CertificateDetail = CertificateDetail(writingDay: "", creditorName: "", creditorPhoneNumber: "", creditorAddress: "", debtorName: "", debtorPhoneNumber: "", debtorAddress: "", repaymentStartDate: "", repaymentEndDate: "", money: 0, interestRate: 0.0)
     static let EmptyCertificate: CertificateDetail = CertificateDetail(paperId: 0, paperUrl: "", amount: 0, memberRole: "", remainingAmount: 0, interestRate: 0.0, interestPaymentDate: 0, repaymentRate: 0.0, repaymentStartDate: "", repaymentEndDate: "", creditorName: "", creditorPhoneNumber: "", creditorAddress: "", debtorName: "", debtorPhoneNumber: "", debtorAddress: "")
 }
-

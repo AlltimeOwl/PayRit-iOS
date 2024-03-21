@@ -8,20 +8,18 @@
 import SwiftUI
 
 struct HomeView: View {
+    private let menuPadding = 8.0
+    private let horizontalPadding = 16.0
     @State private var menuState = false
     @State private var isHiddenInfoBox = false
     @State private var navigationLinkToggle = false
     @State private var isShowingSignatureView = false
     @State private var isShowingWaitingApprovalAlert = false
     @State private var isShowingWaitingPaymentAlert = false
-    @Environment(SignInStore.self) var signInStore
-    @Environment(HomeStore.self) var homeStore
-    @Environment(TabBarStore.self) var tabStore
-    private let menuPadding = 8.0
-    private let horizontalPadding = 16.0
-    private let url = "https://payrit.info/"
-    let testStore = WritingStore()
     @State var certificateStep: CertificateStep?
+    @Environment(HomeStore.self) var homeStore
+    @Environment(SignInStore.self) var signInStore
+    @Environment(TabBarStore.self) var tabStore
     var body: some View {
         ZStack {
             Color.payritBackground.ignoresSafeArea()
@@ -356,7 +354,7 @@ struct HomeView: View {
 
 #Preview {
     NavigationStack {
-        HomeView()
+        HomeView(certificateStep: .progress)
             .environment(HomeStore())
             .environment(SignInStore())
             .environment(TabBarStore())
