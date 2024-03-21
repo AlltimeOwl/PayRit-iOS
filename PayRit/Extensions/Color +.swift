@@ -27,6 +27,8 @@ public extension Color {
     // MARK: - Primary
     /// 카카오 로그인 버튼 색상
     static let kakaoLoginButton = Color(hex: "#F9E001")
+    ///  앱 백그라운드 색상 FDFDFD
+    static let payritBackground = Color(hex: "FDFDFD")
     /// 민트 28D7D2
     static let payritMint = Color(hex: "28D7D2")
     /// 라이트 민트 CBF0EF
@@ -37,8 +39,8 @@ public extension Color {
     // MARK: - Secondary
     /// 핑크 FF7A90
     static let payritIntensivePink = Color(hex: "FF7A90")
-    /// 하늘색  FFCC55
-    static let payritWithYellow = Color(hex: "FFCC55")
+    /// 라이트 핑크 FFD7DD
+    static let payritIntensiveLightPink = Color(hex: "FFD7DD")
     /// System Error  레드 컬러  FE1111
     static let payritErrorRed = Color(hex: "FE1111")
     /// System Positive 청록 컬러  00DD22

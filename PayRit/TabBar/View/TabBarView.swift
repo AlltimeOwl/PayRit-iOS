@@ -7,42 +7,111 @@
 
 import SwiftUI
 
-struct TabBarView: View {
-    @State private var selectedTab = 0
-    @Binding var tabBarVisivility: Visibility
-    @Binding var signInState: Bool
+struct CustomTabView: View {
+    let iconSize: CGFloat = 24.0
+    @Environment(TabBarStore.self) var tabStore
+    
     var body: some View {
-        TabView(selection: $selectedTab) {
-            HomeView()
-            .tabItem {
-                Image(systemName: "house")
-                    .environment(\.symbolVariants, selectedTab == 0 ? .fill : .none)
-                Text("홈")
+        
+        ZStack {
+            Color.brown.ignoresSafeArea()
+            switch tabStore.selectedTab {
+            case .home:
+                NavigationStack {
+                    HomeView()
+                }
+            case .write:
+                WritingView()
+                    .tint(Color.payritMint)
+            case .mypage:
+                NavigationStack {
+                    MyPageView()
+                }
             }
-            .tag(0)
-            
-            WritingView(tabBarVisivility: $tabBarVisivility)
-            .tabItem {
-                Image(systemName: "plus.circle")
-                    .environment(\.symbolVariants, selectedTab == 1 ? .fill : .none)
-                Text("작성하기")
+            if !tabStore.tabBarHide {
+                VStack {
+                    Spacer()
+                        ZStack {
+                            HStack {
+                                Spacer()
+                                Button {
+                                    tabStore.selectedTab = .home
+                                } label: {
+                                    VStack {
+                                        Image("homeIcon")
+                                            .resizable()
+                                            .frame(width: iconSize, height: iconSize)
+                                        Text("홈")
+                                            .foregroundStyle(.black)
+                                    }
+                                    .opacity(tabStore.selectedTab == .home ? 1 : 0.3)
+                                }
+                                .frame(width: 60)
+                                Spacer()
+                                Button {
+                                    tabStore.selectedTab = .write
+                                } label: {
+                                    VStack {
+                                        Image("writeIcon")
+                                            .resizable()
+                                            .frame(width: iconSize, height: iconSize)
+                                        Text("작성하기")
+                                            .foregroundStyle(.black)
+                                    }
+                                    .opacity(tabStore.selectedTab == .write ? 1 : 0.4)
+                                }
+                                .frame(width: 60)
+                                Spacer()
+                                Button {
+                                    tabStore.selectedTab = .mypage
+                                } label: {
+                                    VStack {
+                                        Image("mypageIcon")
+                                            .resizable()
+                                            .frame(width: iconSize, height: iconSize)
+                                        Text("마이페이지")
+                                            .foregroundStyle(.black)
+                                    }
+                                    .opacity(tabStore.selectedTab == .mypage ? 1 : 0.4)
+                                }
+                                .frame(width: 60)
+                                Spacer()
+                            }
+                            .buttonStyle(.plain)
+                            .padding(.top, 10)
+                            .padding(.bottom, 35)
+                            .overlay {
+                                                        if tabStore.tabBarOpacity {
+                                UnevenRoundedRectangle(topLeadingRadius: 45, bottomLeadingRadius: 0, bottomTrailingRadius: 0, topTrailingRadius: 45, style: .circular)
+                                    .fill(.black.opacity(0.5))
+                                                        }
+                            }
+                        }
+                        .tint(.payritMint)
+                        .font(Font.caption03)
+                        .frame(maxWidth: .infinity)
+                        .background(
+                            UnevenRoundedRectangle(topLeadingRadius: 45, bottomLeadingRadius: 0, bottomTrailingRadius: 0, topTrailingRadius: 45, style: .circular)
+                                .fill(.white)
+                                .ignoresSafeArea()
+                        )
+                        //                    .clipShape(.rect(topLeadingRadius: 45, bottomLeadingRadius: 0, bottomTrailingRadius: 0, topTrailingRadius: 45))
+                        .shadow(color: .gray.opacity(0.2), radius: 8)
+                }
+                .ignoresSafeArea()
             }
-            .tag(1)
-            
-            NavigationStack {
-                MyPageView(tabBarVisivility: $tabBarVisivility, signInState: $signInState)
-            }
-            .tabItem {
-                Image(systemName: "person")
-                    .environment(\.symbolVariants, selectedTab == 2 ? .fill : .none)
-                Text("마이페이지")
-            }
-            .tag(2)
         }
-        .tint(.payritMint)
+        .onAppear {
+            tabStore.tabBarHide = false
+        }
     }
+    
 }
 
 #Preview {
-    TabBarView(tabBarVisivility: .constant(.visible), signInState: .constant(true))
+//    TabBarView(tabBarVisivility: .constant(.visible))
+    CustomTabView()
+        .environment(HomeStore())
+        .environment(SignInStore())
+        .environment(TabBarStore())
 }

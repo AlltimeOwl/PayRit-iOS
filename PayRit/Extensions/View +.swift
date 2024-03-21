@@ -12,38 +12,67 @@ extension View {
         modifier(CustomBackButton(action: action))
     }
     
-    // MARK: 키보드 올라온 상태에서, 빈공간 터치시 키보드 내리는 코드
-    // 키보드를 내리고싶은 뷰에서 .onTapGesture { self.endTextEditing() } 추가
     public func endTextEditing() {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 
-    // MARK: 토스트 메세지
-    // 토스트 메세지를 띄우고싶은 뷰에서 .toast(isShowing: $showToast, message: message) 추가
-    public func toast(isShowing: Binding<Bool>, message: String) -> some View {
-        self.modifier(ToastMessageModifier(isShowing: isShowing, message: message))
+    public func toast(isShowing: Binding<Bool>, title: String?, message: String) -> some View {
+        self.modifier(ToastMessageModifier(isShowing: isShowing, title: title, message: message))
     }
     
-    public func LoanDetailImage(isPresented: Binding<Bool>, isButtonShowing: Binding<Bool>) -> some View {
+    public func certificateToDoucument(isPresented: Binding<Bool>, primaryAction: (() -> ())? = nil, primaryAction2: (() -> ())? = nil) -> some View {
         return modifier(
-            LoanDetailImageViewModifier(isPresented: isPresented, isButtonShowing: isButtonShowing)
+            CertificateToDoucumentModifier(primaryAction: primaryAction, primaryAction2: primaryAction2, isPresented: isPresented)
         )
     }
     
-    public func PrimaryAlert(isPresented: Binding<Bool>, title: String, content: String, primaryButtonTitle: String?, cancleButtonTitle: String, primaryAction: ( () -> Void)?, cancleAction: @escaping () -> Void) -> some View {
+    public func primaryAlert(isPresented: Binding<Bool>, title: String, content: String, primaryButtonTitle: String?, cancleButtonTitle: String, primaryAction: ( () -> Void)?, cancleAction: @escaping () -> Void) -> some View {
         return modifier(
             PrimaryAlertModifier(isPresented: isPresented, title: title, content: content, primaryButtonTitle: primaryButtonTitle, cancleButtonTitle: cancleButtonTitle, primaryAction: primaryAction, cancleAction: cancleAction)
         )
     }
+    
+    func onViewDidLoad(perform action: (() -> Void)? = nil) -> some View {
+        self.modifier(ViewDidLoadModifier(action: action))
+    }
+    
+    func dismissOnDrag(minimumDragDistance: CGFloat = 100) -> some View {
+        self.modifier(DismissOnDrag(minimumDragDistance: minimumDragDistance))
+    }
+    
+    func dismissOnEdgeDrag(minimumDragDistance: CGFloat = 60, edgeWidth: CGFloat = 20) -> some View {
+        self.modifier(DismissOnEdgeDrag(minimumDragDistance: minimumDragDistance, edgeWidth: edgeWidth))
+    }
 }
 
-extension UINavigationController: ObservableObject, UIGestureRecognizerDelegate {
-    override open func viewDidLoad() {
-        super.viewDidLoad()
-        interactivePopGestureRecognizer?.delegate = self
-    }
+//extension UINavigationController: ObservableObject, UIGestureRecognizerDelegate {
+//    override open func viewDidLoad() {
+//        super.viewDidLoad()
+//        interactivePopGestureRecognizer?.delegate = self
+//    }
+//
+//    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+//        return viewControllers.count > 1
+//    }
+//}
 
-    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        return viewControllers.count > 1
+struct CustomLinearProgressViewStyle: ProgressViewStyle {
+    var trackColor: Color
+    var progressColor: Color
+
+    func makeBody(configuration: Configuration) -> some View {
+        GeometryReader { geometry in
+            ZStack(alignment: .leading) {
+                Rectangle()
+                    .frame(width: geometry.size.width, height: 4)
+                    .foregroundColor(trackColor)
+
+                Rectangle().frame(width: min(CGFloat(configuration.fractionCompleted ?? 0) * geometry.size.width, geometry.size.width), height: 4)
+                    .foregroundColor(progressColor)
+                    .cornerRadius(45.0)
+                    .animation(.linear, value: configuration.fractionCompleted)
+            }
+            .cornerRadius(45.0)
+        }
     }
 }

@@ -9,80 +9,93 @@ import SwiftUI
 
 struct WritingView: View {
     @State var path = NavigationPath()
-    @Binding var tabBarVisivility: Visibility
+    @Environment(TabBarStore.self) var tabStore
     var body: some View {
-        NavigationStack(path: $path) {
-            VStack(spacing: 20) {
-                NavigationLink(value: "selectDocumentTypeView") {
-                    Rectangle()
-                        .frame(height: 160)
-                        .foregroundStyle(Color.payritMint)
-                        .clipShape(.rect(cornerRadius: 12))
-                        .overlay {
-                            VStack(alignment: .leading) {
-                                HStack {
-                                    Text("페이릿 작성하기")
-                                        .font(Font.title01)
+        ZStack {
+            Color.payritBackground.ignoresSafeArea()
+            NavigationStack(path: $path) {
+                VStack(spacing: 20) {
+                    NavigationLink(value: "selectDocumentTypeView") {
+                        Rectangle()
+                            .frame(height: 160)
+                            .foregroundStyle(Color.payritMint)
+                            .clipShape(.rect(cornerRadius: 12))
+                            .overlay {
+                                VStack(alignment: .leading) {
+                                    HStack {
+                                        Text("페이릿 작성하기")
+                                            .font(Font.title01)
+                                            .foregroundStyle(.white)
+                                        Spacer()
+                                    }
+                                    Spacer()
+                                    Text("차용증과 동일한 효력을 가지고 있어요")
+                                        .font(Font.body03)
                                         .foregroundStyle(.white)
-                                    Spacer()
                                 }
-                                Spacer()
-                                Text("차용증과 동일한 효력을 가지고 있어요")
-                                    .font(Font.body03)
-                                    .foregroundStyle(.white)
+                                .padding(22)
                             }
-                            .padding(22)
-                        }
-                        .shadow(color: .gray.opacity(0.2), radius: 5)
-                }
-                .navigationDestination(for: String.self) { _ in
-                    SelectCertificateTypeView(tabBarVisivility: $tabBarVisivility, path: $path)
-                        .customBackbutton()
-                        .toolbar(tabBarVisivility, for: .tabBar)
-                }
-                
-                NavigationLink {
+                            .shadow(color: .gray.opacity(0.2), radius: 5)
+                    }
+                    .navigationDestination(for: String.self) { _ in
+                        SelectCertificateTypeView(path: $path)
+                            .customBackbutton()
+                            .onAppear {
+                                tabStore.tabBarHide = true
+                            }
+                    }
                     
-                } label: {
-                    Rectangle()
-                        .frame(height: 160)
-                        .foregroundStyle(Color(hex: "FFFA86"))
-                        .clipShape(.rect(cornerRadius: 12))
-                        .overlay {
-                            VStack(alignment: .leading) {
-                                HStack {
-                                    Text("약속 작성하기")
-                                        .font(Font.title01)
+                    NavigationLink {
+                        
+                    } label: {
+                        Rectangle()
+                            .frame(height: 160)
+                            .foregroundStyle(Color(hex: "FFFA86"))
+                            .clipShape(.rect(cornerRadius: 12))
+                            .overlay {
+                                VStack(alignment: .leading) {
+                                    HStack {
+                                        Text("약속 작성하기")
+                                            .font(Font.title01)
+                                        Spacer()
+                                    }
                                     Spacer()
+                                    Text("곧 출시되요!")
                                 }
-                                Spacer()
-                                Text("곧 출시되요!")
+                                .padding(22)
+                                .foregroundStyle(.black)
                             }
-                            .padding(22)
-                            .foregroundStyle(.black)
+                            .opacity(0.3)
+                    }
+                    .disabled(true)
+                    .shadow(color: .gray.opacity(0.2), radius: 5)
+                    
+                    Spacer()
+                }
+                .padding(.top, 30)
+                .padding(.horizontal, 16)
+                .toolbar {
+                    ToolbarItem(placement: .topBarLeading) {
+                        VStack {
+                            Spacer().frame(height: 20)
+                            Text("작성하기")
+                                .font(Font.title01)
                         }
-                        .opacity(0.3)
+                    }
+                    ToolbarItem(placement: .topBarTrailing) {
+                        VStack {
+                            Spacer().frame(height: 20)
+                            Image(systemName: "bell")
+                        }
+                    }
                 }
-                .disabled(true)
-                .shadow(color: .gray.opacity(0.2), radius: 5)
-                
-                Spacer()
             }
-            .padding(.top, 30)
-            .padding(.horizontal, 16)
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    VStack {
-                        Spacer().frame(height: 20)
-                        Text("작성하기")
-                            .font(Font.title01)
-                    }
-                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    VStack {
-                        Spacer().frame(height: 20)
-                        Image(systemName: "bell")
-                    }
+            .onAppear {
+                tabStore.tabBarHide = false
+            }
+            .onChange(of: path) {
+                if path.isEmpty {
+                    tabStore.tabBarHide = false
                 }
             }
         }
@@ -90,5 +103,6 @@ struct WritingView: View {
 }
 
 #Preview {
-    WritingView(tabBarVisivility: .constant(.visible))
+    WritingView()
+        .environment(TabBarStore())
 }

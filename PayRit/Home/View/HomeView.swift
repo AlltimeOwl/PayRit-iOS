@@ -9,16 +9,24 @@ import SwiftUI
 
 struct HomeView: View {
     @State private var menuState = false
-    @State private var isHiddenInfoBox = true
-    @State private var path = NavigationPath()
+    @State private var isHiddenInfoBox = false
+    @State private var navigationLinkToggle = false
+    @State private var isShowingSignatureView = false
+    @State private var isShowingWaitingApprovalAlert = false
+    @State private var isShowingWaitingPaymentAlert = false
+    @Environment(SignInStore.self) var signInStore
+    @Environment(HomeStore.self) var homeStore
+    @Environment(TabBarStore.self) var tabStore
     private let menuPadding = 8.0
     private let horizontalPadding = 16.0
-    private let homeStore = HomeStore()
-    
+    private let url = "https://payrit.info/"
+    let testStore = WritingStore()
+    @State var certificateStep: CertificateStep?
     var body: some View {
-        NavigationStack(path: $path) {
+        ZStack {
+            Color.payritBackground.ignoresSafeArea()
             VStack {
-                if isHiddenInfoBox {
+                if !isHiddenInfoBox {
                     RoundedRectangle(cornerRadius: 12)
                         .foregroundStyle(Color(hex: "E2FFF1"))
                         .frame(height: 190)
@@ -29,7 +37,7 @@ struct HomeView: View {
                                     Spacer()
                                     Button {
                                         withAnimation {
-                                            isHiddenInfoBox = false
+                                            isHiddenInfoBox.toggle()
                                         }
                                     } label: {
                                         Image(systemName: "xmark")
@@ -43,12 +51,12 @@ struct HomeView: View {
                                             페이릿,
                                             기록을 시작합니다!
                                             """)
-                                        .font(.custom("SUIT-SemiBold", size: 20))
+                                        .font(Font.title04)
                                         Button {
-                                            
+                                            isShowingWaitingApprovalAlert.toggle()
                                         } label: {
                                             Text("확인하기")
-                                                .font(.custom("SUIT-Bold", size: 14))
+                                                .font(Font.body03)
                                                 .foregroundStyle(.white)
                                         }
                                         .frame(width: 74, height: 28)
@@ -63,21 +71,36 @@ struct HomeView: View {
                             .padding(.horizontal, 35)
                         }
                 }
-                if homeStore.document.isEmpty {
-                    Text("""
-                        아직 거래내역이 없어요.
-                        작성하러 가볼까요?
-                        """)
-                    .frame(maxHeight: .infinity)
-                    .multilineTextAlignment(.center)
-                    .lineSpacing(4)
-                    .font(.system(size: 20))
-                    .foregroundStyle(.gray).opacity(0.6)
+                if homeStore.certificates.isEmpty {
+                    List {
+                        VStack {
+                            Spacer()
+                            HStack {
+                                Spacer()
+                                Text("""
+                            아직 거래내역이 없어요.
+                            작성하러 가볼까요?
+                            """)
+                                .frame(maxHeight: .infinity)
+                                .multilineTextAlignment(.center)
+                                .lineSpacing(4)
+                                .font(.system(size: 20))
+                                .foregroundStyle(.gray).opacity(0.6)
+                                Spacer()
+                            }
+                            Spacer()
+                        }
+                        .frame(height: UIScreen.screenHeight * 0.5)
+                        .listRowSeparator(.hidden)
+                    }
+                    .listStyle(.plain)
+                    .listSectionSeparator(.hidden)
+                    .scrollIndicators(.hidden)
                 } else {
                     ZStack {
                         VStack(spacing: 0) {
                             HStack {
-                                Text("총 \(homeStore.document.count)건")
+                                Text("총 \(homeStore.certificates.count)건")
                                     .font(.custom("SUIT-Medium", size: 16))
                                     .foregroundStyle(Color.gray02)
                                 Spacer()
@@ -85,69 +108,75 @@ struct HomeView: View {
                             .frame(height: 34)
                             .padding(.horizontal, horizontalPadding)
                             
-                            List(homeStore.document) { certificate in
-                                Button {
-                                    path.append(certificate)
-                                } label: {
-                                        // MARK: 문서박스
-                                    VStack(alignment: .leading, spacing: 0) {
-                                        HStack {
-                                            Text(certificate.tradeDay + " ~ " + certificate.endDay)
-                                                .font(.custom("SUIT-Medium", size: 12))
-                                                .foregroundStyle(Color.gray02)
-                                            Spacer()
-                                            Text(certificate.type.rawValue)
-                                                .foregroundStyle(certificate.type == .iLentYou ? Color.payritMint : Color.payritIntensivePink)
+                            // MARK: - 홈 카드 리스트
+                            ScrollViewReader { _ in
+                                List(homeStore.certificates, id: \.self) { certificate in
+                                    Button {
+//                                        certificateStep = certificate.certificateStep
+//                                        if certificate.certificateStep == .waitingApproval {
+//                                            isShowingWaitingApprovalAlert.toggle()
+//                                        } else if certificate.certificateStep == .waitingPayment {
+//                                            isShowingWaitingPaymentAlert.toggle()
+//                                        } else if certificate.certificateStep == .progress {
+//                                            navigationLinkToggle.toggle()
+//                                        }
+                                        Task {
+                                            await homeStore.loadDetail(id: certificate.paperId)
+                                            navigationLinkToggle.toggle()
                                         }
-                                        .padding(.top, 16)
-                                        Text(String(certificate.totalMoneyFormatter) + "원")
-                                            .font(.custom("SUIT-Bold", size: 28))
-                                            .padding(.top, 8)
-                                        
-                                        Text(certificate.recipient)
-                                            .font(Font.body03)
-                                            .foregroundStyle(Color.gray02)
-                                            .padding(.top, 8)
-                                         
-                                        VStack(alignment: .trailing, spacing: 6) {
-                                            HStack { Spacer() }
-                                            if certificate.dDay >= 0 {
-                                                Text("D - \(certificate.dDay)")
-                                                    .font(Font.body03)
+                                    } label: {
+                                        VStack(alignment: .leading, spacing: 0) {
+                                            HStack {
+                                                Text("원금상환일 \(certificate.repaymentEndDate.replacingOccurrences(of: "-", with: "."))")
+                                                    .font(Font.caption02)
                                                     .foregroundStyle(Color.gray02)
-                                            } else {
-                                                Text("D + \(-certificate.dDay)")
+                                                Spacer()
+                                                Text(certificate.paperRole == .CREDITOR ? "빌려준 돈" : "빌린 돈")
                                                     .font(Font.body03)
-                                                    .foregroundStyle(Color.gray02)
+                                                    .foregroundStyle(certificate.paperRole == .CREDITOR ? Color.payritMint : Color.payritIntensivePink)
                                             }
-                                            ProgressView(value: 50, total: 100)
-                                                .progressViewStyle(LinearProgressViewStyle(tint: certificate.type == .iLentYou ? Color.payritMint : Color.payritIntensivePink))
-                                            Text(certificate.state.rawValue + "(50%)")
-                                                .font(.custom("SUIT-Medium", size: 10))
+                                            .padding(.top, 16)
+                                            
+                                            Text("\(certificate.amount)원")
+                                                .font(Font.title01)
+                                                .padding(.top, 8)
+                                            Text(certificate.peerName)
+                                                .font(Font.title06)
+                                                .foregroundStyle(Color.gray02)
+                                                .padding(.top, 8)
+                                            
+                                            VStack(alignment: .trailing, spacing: 6) {
+                                                HStack { Spacer() }
+                                                Text(certificate.dueDate >= 0 ? "D - \(certificate.dueDate)" : "D + \(-certificate.dueDate)")
+                                                    .font(Font.body03)
+                                                    .foregroundStyle(Color.gray02)
+                                                ProgressView(value: certificate.repaymentRate, total: 100)
+                                                    .progressViewStyle(CustomLinearProgressViewStyle(trackColor: Color.gray09, progressColor: certificate.paperRole == .CREDITOR ? Color.payritMint : Color.payritIntensivePink))
+                                                Text("\(certificate.certificateStep.rawValue) (\(Int(certificate.certificateStep == .progress ? certificate.repaymentRate : 0))%)")
+                                                    .font(Font.caption02)
+                                                    .foregroundStyle(Color.gray04)
+                                            }
+                                            .padding(.bottom, 16)
                                         }
-                                        .padding(.bottom, 16)
+                                        .padding(.horizontal, horizontalPadding)
+                                        .frame(height: 170)
+                                        .frame(maxWidth: .infinity)
+                                        .background()
+                                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                                        .shadow(color: .gray.opacity(0.2), radius: 5)
                                     }
-                                    .padding(.horizontal, horizontalPadding)
-                                    .frame(height: 170)
-                                    .frame(maxWidth: .infinity)
-                                    .background()
-                                    .clipShape(.rect(cornerRadius: 12))
-                                    .shadow(color: .gray.opacity(0.2), radius: 5)
-
+                                    .listRowSeparator(.hidden)
+                                    .listRowBackground(Color.payritBackground)
                                 }
-                                .listRowSeparator(.hidden)
-                                .listRowBackground(Color.white)
-                            }
-                            .listStyle(.plain)
-                            .navigationDestination(for: Certificate.self) { certificate in
-                                LoanDetailView(certificate: .constant(certificate))
-                                    .customBackbutton()
-                                    .toolbar(.hidden, for: .tabBar)
+                                .scrollIndicators(.hidden)
+                                .listStyle(.plain)
+                                .background(Color.payritBackground)
+                                .padding(.bottom, 40)
                             }
                             Spacer()
                         }
                         
-                        // MARK: 메뉴
+                        // MARK: - 메뉴
                         VStack {
                             HStack {
                                 Spacer()
@@ -196,7 +225,7 @@ struct HomeView: View {
                                                             Button {
                                                                 homeStore.sortingType = state
                                                                 menuState.toggle()
-                                                                homeStore.sortingDocument()
+                                                                homeStore.sortingCertificates()
                                                             } label: {
                                                                 HStack {
                                                                     Text(state.rawValue)
@@ -221,42 +250,106 @@ struct HomeView: View {
                 Spacer()
             }
             .padding(.top, 20)
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
+//            .ignoresSafeArea(edges: .bottom)
+        }
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                VStack {
+                    Spacer().frame(height: 30)
+                    Text("임대진님의 기록")
+                        .font(Font.title01)
+                        .foregroundStyle(.black)
+                    Spacer().frame(height: 10)
+                }
+            }
+            ToolbarItem(placement: .topBarTrailing) {
+                HStack {
                     VStack {
                         Spacer().frame(height: 30)
-                        Text("임대진님의 기록")
-                            .font(.custom("SUIT-Regular", size: 26))
-                            .bold()
-                            .foregroundStyle(.black)
+                        NavigationLink {
+                            CertificateSerchingView()
+                                .navigationBarBackButtonHidden()
+                                .onAppear {
+                                    tabStore.tabBarHide = true
+                                }
+                        }label: {
+                            Image(systemName: "magnifyingglass")
+                                .foregroundStyle(.black)
+                        }
+                        Spacer().frame(height: 10)
+                    }
+                    VStack {
+                        Spacer().frame(height: 30)
+                        NavigationLink {
+                            Text("알림뷰")
+                                .customBackbutton()
+                                .onAppear {
+                                    tabStore.tabBarHide = true
+                                }
+                        }label: {
+                            Image(systemName: "bell")
+                                .foregroundStyle(.black)
+                        }
                         Spacer().frame(height: 10)
                     }
                 }
-                ToolbarItem(placement: .topBarTrailing) {
-                    HStack {
-                        VStack {
-                            Spacer().frame(height: 30)
-                            Button {
-                            }label: {
-                                Image(systemName: "magnifyingglass")
-                                    .foregroundStyle(.black)
-                            }
-                            Spacer().frame(height: 10)
-                        }
-                        VStack {
-                            Spacer().frame(height: 30)
-                            NavigationLink {
-                                Text("알림뷰")
-                                    .customBackbutton()
-                            }label: {
-                                Image(systemName: "bell")
-                                    .foregroundStyle(.black)
-                            }
-                            Spacer().frame(height: 10)
-                        }
-                    }
-                }
             }
+        }
+        .navigationDestination(isPresented: $navigationLinkToggle) {
+            if !homeStore.certificates.isEmpty {
+//                if !homeStore.checkIMadeIt(homeStore.certificates[index]) && homeStore.certificates[index].state == .waitingApproval {
+//                    CertificateAcceptView(index: index)
+//                        .customBackbutton()
+//                        .onAppear {
+//                            tabStore.tabBarHide = true
+//                        }
+//                } else if homeStore.checkIMadeIt(homeStore.certificates[index]) && homeStore.certificates[index].state == .waitingPayment {
+//                    CertificateAcceptView(index: index)
+//                        .customBackbutton()
+//                        .onAppear {
+//                            tabStore.tabBarHide = true
+//                        }
+//                } else {
+//                    CertificateDetailView(index: index)
+//                        .customBackbutton()
+//                        .onAppear {
+//                            tabStore.tabBarHide = true
+//                        }
+//                }
+                CertificateDetailView(certificateStep: certificateStep ?? .progress)
+                    .customBackbutton()
+                    .onAppear {
+                        tabStore.tabBarHide = true
+                    }
+            }
+        }
+        .refreshable {
+            homeStore.loadCertificates()
+        }
+        .onAppear {
+                //                    isShowingSignatureView.toggle()
+            homeStore.sortingCertificates()
+            //            if let new = homeStore.checkNewReceived() {
+            //
+            //            }
+            tabStore.tabBarHide = false
+            homeStore.loadCertificates()
+        }
+        
+        .primaryAlert(isPresented: $isShowingSignatureView, title: "본인인증", content: "본인인증 띄우기", primaryButtonTitle: "예", cancleButtonTitle: "아니오") {
+            //
+        } cancleAction: {
+            //
+        }
+        .primaryAlert(isPresented: $isShowingWaitingApprovalAlert, title: "승인 요청", content: "아직 상대방이 요청을 받지 못했나봐요! 알림을 다시 보내볼까요?", primaryButtonTitle: "네", cancleButtonTitle: "아니오") {
+            //
+        } cancleAction: {
+            //
+        }
+        .primaryAlert(isPresented: $isShowingWaitingPaymentAlert, title: "결제 진행중", content: "작성자가 결제 진행중입니다.", primaryButtonTitle: nil, cancleButtonTitle: "확인") {
+            //
+        } cancleAction: {
+            //
         }
     }
 }
@@ -264,5 +357,8 @@ struct HomeView: View {
 #Preview {
     NavigationStack {
         HomeView()
+            .environment(HomeStore())
+            .environment(SignInStore())
+            .environment(TabBarStore())
     }
 }

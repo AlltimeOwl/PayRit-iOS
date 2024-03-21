@@ -7,8 +7,8 @@
 
 import Foundation
 
-struct Memo: Identifiable, Hashable {
-    let id: String = UUID().uuidString
-    let text: String
-    let day: Date = Date()
+struct Memo: Hashable, Codable {
+    let id: Int
+    let content: String
+    let createdAt: String
 }
