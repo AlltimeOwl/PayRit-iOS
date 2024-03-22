@@ -32,11 +32,11 @@ extension View {
         )
     }
     
-    func onViewDidLoad(perform action: (() -> Void)? = nil) -> some View {
-        self.modifier(ViewDidLoadModifier(action: action))
-    }
+//    func onViewDidLoad(perform action: (() -> Void)? = nil) -> some View {
+//        self.modifier(ViewDidLoadModifier(action: action))
+//    }
     
-    func dismissOnDrag(minimumDragDistance: CGFloat = 100) -> some View {
+    func dismissOnDrag(minimumDragDistance: CGFloat = 60) -> some View {
         self.modifier(DismissOnDrag(minimumDragDistance: minimumDragDistance))
     }
     
@@ -45,16 +45,16 @@ extension View {
     }
 }
 
-//extension UINavigationController: ObservableObject, UIGestureRecognizerDelegate {
-//    override open func viewDidLoad() {
-//        super.viewDidLoad()
-//        interactivePopGestureRecognizer?.delegate = self
-//    }
-//
-//    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-//        return viewControllers.count > 1
-//    }
-//}
+extension UINavigationController: ObservableObject, UIGestureRecognizerDelegate {
+    override open func viewDidLoad() {
+        super.viewDidLoad()
+        interactivePopGestureRecognizer?.delegate = self
+    }
+
+    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return viewControllers.count > 1
+    }
+}
 
 struct CustomLinearProgressViewStyle: ProgressViewStyle {
     var trackColor: Color

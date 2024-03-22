@@ -19,7 +19,6 @@ enum WriterRole: String, CodingKey, Codable {
     case DEBTOR
 }
 
-
 struct CertificateDetail: Hashable, Codable {
     let paperId: Int
     let paperUrl: String?
@@ -35,23 +34,13 @@ struct CertificateDetail: Hashable, Codable {
     var creditorName: String
     var creditorPhoneNumber: String
     var creditorAddress: String
+    var dueDate: Int
     var debtorName: String
     var debtorPhoneNumber: String
     var debtorAddress: String
     var specialConditions: String?
     var memoListResponses: [Memo] = [Memo]()
     var repaymentHistories: [Deducted] = [Deducted]()
-    
-//    var writerRole: WriterRole {
-//        let userName = UserDefaultsManager().getUserInfo().name
-//        if creditorName == userName {
-//            return .CREDITOR
-//        } else {
-//            return .DEBTOR
-//        }
-//    }
-//    var writerRole: WriterRole = .CREDITOR
-//    var state: CertificateStep = .waitingApproval
     
     var interestRateAmount: Int {
         let dateFormatter = DateFormatter()
@@ -73,11 +62,17 @@ struct CertificateDetail: Hashable, Codable {
             return 0
         }
     }
-
+    
     var totalMoneyFormatter: String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         return formatter.string(from: (NSNumber(value: amount))) ?? String(amount)
+    }
+    
+    var totalRemainingAmountFormatter: String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        return formatter.string(from: (NSNumber(value: remainingAmount))) ?? String(remainingAmount)
     }
     
     var totalInterestRateAmountFormatter: String {
@@ -90,51 +85,6 @@ struct CertificateDetail: Hashable, Codable {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         return formatter.string(from: (NSNumber(value: amount + interestRateAmount))) ?? String(amount + interestRateAmount)
-    }
-    
-    var dDay: Int {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-
-        if let targetDate = dateFormatter.date(from: repaymentEndDate) {
-            let dDay = calculateDday(startDate: Date(), targetDate: targetDate)
-            return dDay
-        } else {
-            print("디데이 변환 중 오류가 발생했습니다.")
-            return 0
-        }
-    }
-    
-    var calTotalDate: Int {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-
-        if let targetDate = dateFormatter.date(from: repaymentEndDate), let startDate = dateFormatter.date(from: repaymentStartDate) {
-            // 대출 기간 계산
-            let totalDate = calculateDday(startDate: startDate, targetDate: targetDate)
-            
-            return totalDate
-        } else {
-            return 0
-        }
-    }
-    
-//    var cardColor: Color {
-//        let user = UserDefaultsManager().getUserInfo()
-//        if creditorName == user.name {
-//            return Color.payritMint
-//        } else {
-//            return Color.payritIntensivePink
-//        }
-//    }
-    
-    var cardName: String {
-        let user = UserDefaultsManager().getUserInfo()
-        if creditorName == user.name {
-            return debtorName
-        } else {
-            return creditorName
-        }
     }
     
     func calculateDday(startDate: Date, targetDate: Date) -> Int {
@@ -158,7 +108,5 @@ struct CertificateDetail: Hashable, Codable {
         }
     }
     
-//    static let EmptyCertificate: CertificateDetail = CertificateDetail(writingDay: "", creditorName: "", creditorPhoneNumber: "", creditorAddress: "", debtorName: "", debtorPhoneNumber: "", debtorAddress: "", repaymentStartDate: "", repaymentEndDate: "", money: 0, interestRate: 0.0)
-    static let EmptyCertificate: CertificateDetail = CertificateDetail(paperId: 0, paperUrl: "", amount: 0, memberRole: "", remainingAmount: 0, interestRate: 0.0, interestPaymentDate: 0, repaymentRate: 0.0, repaymentStartDate: "", repaymentEndDate: "", creditorName: "", creditorPhoneNumber: "", creditorAddress: "", debtorName: "", debtorPhoneNumber: "", debtorAddress: "")
+    static let EmptyCertificate: CertificateDetail = CertificateDetail(paperId: 0, paperUrl: "", amount: 0, memberRole: "", remainingAmount: 0, interestRate: 0.0, interestPaymentDate: 0, repaymentRate: 0.0, repaymentStartDate: "", repaymentEndDate: "", creditorName: "", creditorPhoneNumber: "", creditorAddress: "", dueDate: 0, debtorName: "", debtorPhoneNumber: "", debtorAddress: "")
 }
-

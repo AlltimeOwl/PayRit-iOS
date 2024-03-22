@@ -30,7 +30,7 @@ struct WritingCheckView: View {
                                     Text("금액")
                                         .font(Font.body04)
                                     Spacer().frame(width: 70)
-                                    Text("\(newCertificate.totalAmountFormatter)원")
+                                    Text("\(newCertificate.totalMoneyFormatter)원")
                                         .font(Font.body01)
                                     Spacer()
                                 }
@@ -67,7 +67,7 @@ struct WritingCheckView: View {
                                         }
                                     }
                                     
-                                    if newCertificate.interestPaymentDate != 0{
+                                    if newCertificate.interestPaymentDate != 0 {
                                         HStack {
                                             Text("이자 지급일")
                                                 .font(Font.body04)
@@ -116,18 +116,20 @@ struct WritingCheckView: View {
                                     Text("연락처")
                                         .font(Font.body04)
                                     Spacer().frame(width: 20)
-                                    Text("\(newCertificate.creditorPhoneNumber)")
+                                    Text("\(newCertificate.creditorPhoneNumber.onlyPhoneNumber())")
                                         .font(Font.body01)
                                     Spacer()
                                 }
-                                HStack {
-                                    Text("주소")
-                                        .font(Font.body04)
-                                    Spacer().frame(width: 33)
-                                    Text("\(newCertificate.creditorAddress)")
-                                        .fixedSize(horizontal: false, vertical: true)
-                                        .font(Font.body01)
-                                    Spacer()
+                                if !newCertificate.creditorAddress.isEmpty {
+                                    HStack {
+                                        Text("주소")
+                                            .font(Font.body04)
+                                        Spacer().frame(width: 33)
+                                        Text("\(newCertificate.creditorAddress)")
+                                            .fixedSize(horizontal: false, vertical: true)
+                                            .font(Font.body01)
+                                        Spacer()
+                                    }
                                 }
                             }
                             .padding(.vertical, 16)
@@ -154,18 +156,20 @@ struct WritingCheckView: View {
                                     Text("연락처")
                                         .font(Font.body04)
                                     Spacer().frame(width: 20)
-                                    Text("\(newCertificate.debtorPhoneNumber)")
+                                    Text("\(newCertificate.debtorPhoneNumber.onlyPhoneNumber())")
                                         .font(Font.body01)
                                     Spacer()
                                 }
-                                HStack {
-                                    Text("주소")
-                                        .font(Font.body04)
-                                    Spacer().frame(width: 33)
-                                    Text("\(newCertificate.debtorAddress)")
-                                        .fixedSize(horizontal: false, vertical: true)
-                                        .font(Font.body01)
-                                    Spacer()
+                                if !newCertificate.debtorAddress.isEmpty {
+                                    HStack {
+                                        Text("주소")
+                                            .font(Font.body04)
+                                        Spacer().frame(width: 33)
+                                        Text("\(newCertificate.debtorAddress)")
+                                            .fixedSize(horizontal: false, vertical: true)
+                                            .font(Font.body01)
+                                        Spacer()
+                                    }
                                 }
                             }
                             .padding(.vertical, 16)
@@ -195,7 +199,7 @@ struct WritingCheckView: View {
             }
         }
         .dismissOnDrag()
-        .navigationTitle("차용증 내용 확인")
+        .navigationTitle("페이릿 내용확인")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem {

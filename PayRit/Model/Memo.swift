@@ -8,7 +8,7 @@
 import Foundation
 
 struct Memo: Hashable, Codable {
-    let id: Int
-    let content: String
-    let createdAt: String
+    var id: Int
+    var content: String
+    var createdAt: String
 }

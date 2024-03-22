@@ -137,42 +137,48 @@ class SignInStore {
     }
     
     func appleUnLink() {
-        let urlString = "https://payrit.info/api/v1/oauth/revoke?oauthCode=\(appleAuthorizationCode)"
-        guard let url = URL(string: urlString) else {
-            print("Invalid URL")
-            return
-        }
+        var urlComponents = URLComponents()
+        urlComponents.scheme = "https"
+        urlComponents.host = "payrit.info"
+        urlComponents.path = "/api/v1/oauth/revoke"
         
-        let session = URLSession.shared
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.setValue("application/json", forHTTPHeaderField: "accept")
-        request.setValue("Bearer \(appleIdentityToken)", forHTTPHeaderField: "Authorization")
-        
-        let task = session.dataTask(with: request) { (_, response, error) in
-            if let error = error {
-                print("Error: \(error)")
-                return
-            }
-            guard let httpResponse = response as? HTTPURLResponse else {
-                print("Invalid response")
-                return
-            }
+        if let url = urlComponents.url {
             
-            if (200..<300).contains(httpResponse.statusCode) {
-                print("탈퇴 완료")
-            } else {
-                print("HTTP status code: \(httpResponse.statusCode)")
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.setValue("*/*", forHTTPHeaderField: "accept")
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
+            let body = [
+                "oauthCode": self.appleAuthorizationCode
+            ] as [String: Any]
+            
+            do {
+                request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
+            } catch {
+                print("Error creating JSON data")
             }
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    print("Error: \(error)")
+                } else if let data = data, let response = response as? HTTPURLResponse {
+                    print("Response status code: \(response.statusCode)")
+                    if (200..<300).contains(response.statusCode) {
+                        print("애플 탈퇴 완료")
+                    } else {
+                        print("Unexpected status code: \(response.statusCode)")
+                    }
+                } else {
+                    print("Unexpected error: No data or response")
+                }
+            }
+            task.resume()
         }
-        task.resume()
     }
 
     // MARK: - 카카오
     /// 카카오 로그인 시도
     func kakaoSignIn() {
-        let userDefault = UserDefaultsManager()
         if UserApi.isKakaoTalkLoginAvailable() {
             UserApi.shared.loginWithKakaoTalk(launchMethod: .CustomScheme) {(oauthToken, error) in
                 if let error = error {
@@ -254,18 +260,14 @@ class SignInStore {
                     return
                 }
                 
-                // URLSession 객체 생성
                 let session = URLSession.shared
                 
-                // URLRequest 생성
                 var request = URLRequest(url: url)
                 request.httpMethod = "GET"
                 request.setValue("application/json", forHTTPHeaderField: "accept")
                 request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
                 
-                // URLSessionDataTask를 사용하여 GET 요청 생성
                 let task = session.dataTask(with: request) { (_, response, error) in
-                    // 요청 완료 후 실행될 클로저
                     if let error = error {
                         print("Error: \(error)")
                         return

@@ -156,7 +156,7 @@ struct MembershipWithdrawalView: View {
             if mypageStore.currenUser.signInCompany == "카카오톡" {
                 signInStore.kakaoUnLink()
             } else if mypageStore.currenUser.signInCompany == "애플" {
-                
+                signInStore.appleUnLink()
                 signInStore.isSignIn = false
                 UserDefaultsManager().removeAll()
             }
