@@ -45,15 +45,15 @@ final class UserDefaultsManager {
         var accessToken = ""
         var refreshToken = ""
         if let aToken = UserDefaults.standard.string(forKey: Key.accessToken.rawValue) {
-            print("-----토큰 저장 완료-----")
-            print("A토큰 정보 : \(aToken)")
+//            print("-----토큰 저장 완료-----")
+//            print("A토큰 정보 : \(aToken)")
             accessToken = aToken
         } else {
             print("UserDefaults 엑세스 토큰 정보 없음")
         }
         if let rToken = UserDefaults.standard.string(forKey: Key.refreshToken.rawValue) {
-            print("R토큰 정보 : \(rToken)")
-            print("-----토큰 저장 완료-----")
+//            print("R토큰 정보 : \(rToken)")
+//            print("-----토큰 저장 완료-----")
             refreshToken = rToken
         } else {
             print("UserDefaults 리프레시 토큰 정보 없음")

@@ -18,6 +18,7 @@ struct Certificate: Hashable, Codable {
     let peerName: String
     let dueDate: Int
     let repaymentRate: Double
+    let isWriter: Bool
     
     var certificateStep: CertificateStep {
         if paperStatus == "WAITING_AGREE" {

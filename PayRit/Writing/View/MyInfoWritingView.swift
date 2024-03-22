@@ -34,9 +34,9 @@ struct MyInfoWritingView: View {
                     VStack(alignment: .leading, spacing: 40) {
                         VStack {
                             Text("""
-                 작성하는 분의
-                 정보를 입력해 주세요.
-                """)
+                                 작성하는 분의
+                                 정보를 입력해 주세요.
+                                """)
                             .font(Font.title03)
                             .lineSpacing(4)
                         }
@@ -45,25 +45,27 @@ struct MyInfoWritingView: View {
                             Text("이름")
                                 .font(Font.body03)
                             CustomTextField(foregroundStyle: .black, placeholder: "이름을 적어주세요", keyboardType: .default, text: $name)
-                                .onChange(of: name) {
-                                    if newCertificate.memberRole == "CREDITOR" {
-                                        newCertificate.creditorName = name
-                                    } else if newCertificate.memberRole == "DEBTOR" {
-                                        newCertificate.debtorName = name
-                                    }
-                                }
+//                                .onChange(of: name) {
+//                                    if newCertificate.memberRole == "CREDITOR" {
+//                                        newCertificate.creditorName = name
+//                                    } else if newCertificate.memberRole == "DEBTOR" {
+//                                        newCertificate.debtorName = name
+//                                    }
+//                                }
+                                .disabled(true)
                         }
                         VStack(alignment: .leading) {
                             Text("연락처")
                                 .font(Font.body03)
                             CustomTextField(foregroundStyle: .black, placeholder: "숫자만 입력해주세요", keyboardType: .numberPad, text: $phoneNumber)
-                                .onChange(of: phoneNumber) {
-                                    if newCertificate.memberRole == "CREDITOR" {
-                                        newCertificate.creditorPhoneNumber = phoneNumber.globalPhoneNumber()
-                                    } else if newCertificate.memberRole == "DEBTOR" {
-                                        newCertificate.debtorPhoneNumber = phoneNumber.globalPhoneNumber()
-                                    }
-                                }
+//                                .onChange(of: phoneNumber) {
+//                                    if newCertificate.memberRole == "CREDITOR" {
+//                                        newCertificate.creditorPhoneNumber = phoneNumber.globalPhoneNumber()
+//                                    } else if newCertificate.memberRole == "DEBTOR" {
+//                                        newCertificate.debtorPhoneNumber = phoneNumber.globalPhoneNumber()
+//                                    }
+//                                }
+                                .disabled(true)
                             
                         }
                         VStack(alignment: .leading, spacing: 8) {
@@ -182,4 +184,3 @@ struct MyInfoWritingView: View {
         MyInfoWritingView(newCertificate: .constant(CertificateDetail.EmptyCertificate), path: .constant(NavigationPath()))
     }
 }
-

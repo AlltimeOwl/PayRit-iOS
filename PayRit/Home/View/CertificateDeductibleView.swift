@@ -9,10 +9,13 @@ import SwiftUI
 
 struct CertificateDeductibleView: View {
     @State private var money: String = ""
-    @State private var onTapDatePicker: Bool = false
     @State private var date: Date = Date()
-    @State private var isShowingDatePicker: Bool = false
     @State private var keyBoardFocused: Bool = false
+    @State private var onTapDatePicker: Bool = false
+    @State private var isShowingDatePicker: Bool = false
+    @State private var isShowingExpirationAlert: Bool = false
+    @State private var isShowingExceedAlert: Bool = false
+    @State var certificateDetail: CertificateDetail
     @Environment(HomeStore.self) var homeStore
     @FocusState var focused: Bool
     var body: some View {
@@ -69,31 +72,43 @@ struct CertificateDeductibleView: View {
                         .font(Font.body03)
                         .foregroundStyle(Color.gray04)
                         .padding(.horizontal, 16)
-//                    List(homeStore.certificates[index].repaymentHistories) { deducted in
-//                        HStack {
-//                            Text(deducted.date)
-//                                .font(Font.body01)
-//                            Spacer()
-//                            Text("\(deducted.money)원")
-//                                .font(Font.body04)
-//                        }
-//                        .padding(16)
-//                        .frame(maxWidth: .infinity)
-//                        .background(.white)
-//                        .clipShape(.rect(cornerRadius: 6))
-//                        .shadow(color: Color.gray05.opacity(0.3), radius: 5)
-//                        .listRowSeparator(.hidden)
-//                    }
-//                    .listStyle(.plain)
+                    List(certificateDetail.repaymentHistories, id: \.self) { repayment in
+                        HStack {
+                            Text(repayment.repaymentDate)
+                                .font(Font.body01)
+                            Spacer()
+                            Text("\(repayment.repaymentAmount)원")
+                                .font(Font.body04)
+                        }
+                        .padding(16)
+                        .frame(maxWidth: .infinity)
+                        .background(.white)
+                        .clipShape(.rect(cornerRadius: 6))
+                        .shadow(color: Color.gray05.opacity(0.3), radius: 5)
+                        .listRowSeparator(.hidden)
+                    }
+                    .listStyle(.plain)
                 }
                 .padding(.top, 20)
                 Spacer()
                 Button {
-//                    if !money.isEmpty {
-//                        homeStore.deductedSave(certificate: homeStore.certificates[index], date: date.dateToString(), money: Int(money) ?? 1)
-//                        self.endTextEditing()
-//                    }
-//                    money = ""
+                    if certificateDetail.dueDate > 0 {
+                        if certificateDetail.amount >= Int(money) ?? 0 {
+                            if !money.isEmpty {
+                                homeStore.deductedSave(paperId: certificateDetail.paperId, repaymentDate: date.dateToString(), repaymentAmount: money)
+                                certificateDetail.repaymentHistories.append(Deducted(id: 0, repaymentDate: date.dateToString().replacingOccurrences(of: "-", with: "."), repaymentAmount: Int(money) ?? 0))
+                                homeStore.certificateDetail.repaymentHistories.append(Deducted(id: 0, repaymentDate: date.dateToString().replacingOccurrences(of: "-", with: "."), repaymentAmount: Int(money) ?? 0))
+                                self.endTextEditing()
+                                money = ""
+                            }
+                        } else {
+                            isShowingExceedAlert.toggle()
+                            self.endTextEditing()
+                        }
+                    } else {
+                        isShowingExpirationAlert.toggle()
+                        self.endTextEditing()
+                    }
                 } label: {
                     Text("입력하기")
                         .font(Font.title04)
@@ -125,12 +140,19 @@ struct CertificateDeductibleView: View {
                 .datePickerStyle(.graphical)
                 .presentationDetents([.height(400)])
         })
+        .primaryAlert(isPresented: $isShowingExpirationAlert, title: "상환 기록 불가", content: "상환일이 만료되어 상환 기록이 불가합니다.", primaryButtonTitle: nil, cancleButtonTitle: "확인") {
+        } cancleAction: {
+        }
+        .primaryAlert(isPresented: $isShowingExceedAlert, title: "상환 기록 불가", content: "상환 금액이 남은 금액을 초과하였습니다.", primaryButtonTitle: nil, cancleButtonTitle: "확인") {
+        } cancleAction: {
+        }
+
     }
 }
 
 #Preview {
     NavigationStack {
-        CertificateDeductibleView()
+        CertificateDeductibleView(certificateDetail: CertificateDetail.EmptyCertificate)
             .environment(HomeStore())
     }
 }

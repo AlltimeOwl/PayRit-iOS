@@ -35,9 +35,9 @@ struct PartnerInfoWritingView: View {
                     VStack(alignment: .leading, spacing: 40) {
                         VStack {
                             Text("""
-                         상대방의
-                         정보를 입력해 주세요.
-                        """)
+                                 상대방의
+                                 정보를 입력해 주세요.
+                                """)
                             .font(Font.title03)
                             .lineSpacing(4)
                         }
@@ -58,14 +58,26 @@ struct PartnerInfoWritingView: View {
                             Text("연락처")
                                 .font(Font.body03)
                             CustomTextField(foregroundStyle: .black, placeholder: "숫자만 입력해주세요", keyboardType: .numberPad, text: $phoneNumber)
-                                .onChange(of: phoneNumber) {
-                                    phoneNumber = phoneNumber.phoneNumberPlusSlider()
-                                    if newCertificate.memberRole == "DEBTOR" {
-                                        newCertificate.creditorPhoneNumber = phoneNumber.globalPhoneNumber()
-                                    } else if newCertificate.memberRole == "CREDITOR" {
-                                        newCertificate.debtorPhoneNumber = phoneNumber.globalPhoneNumber()
+                                .onChange(of: phoneNumber) { oldValue, newValue in
+                                    if newValue.count <= 13 {
+                                        phoneNumber = phoneNumber.phoneNumberMiddleCase()
+                                        if newCertificate.memberRole == "DEBTOR" {
+                                            newCertificate.creditorPhoneNumber = phoneNumber.globalPhoneNumber()
+                                        } else if newCertificate.memberRole == "CREDITOR" {
+                                            newCertificate.debtorPhoneNumber = phoneNumber.globalPhoneNumber()
+                                        }
+                                    } else {
+                                        phoneNumber = oldValue
                                     }
                                 }
+//                                .overlay {
+//                                    HStack {
+//                                        Text(phoneNumber.phoneNumberPlusSlider())
+//                                            .font(Font.body02)
+//                                            .padding(.horizontal, 14)
+//                                        Spacer()
+//                                    }
+//                                }
                             
                         }
                         VStack(alignment: .leading, spacing: 8) {
@@ -172,4 +184,3 @@ struct PartnerInfoWritingView: View {
         PartnerInfoWritingView(newCertificate: .constant(CertificateDetail.EmptyCertificate), path: .constant(NavigationPath()))
     }
 }
-

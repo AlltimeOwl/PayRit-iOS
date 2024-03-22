@@ -28,21 +28,21 @@ struct CertificateMemoView: View {
                 }
                 .padding(.horizontal, 16)
                 List(certificateDetail.memoListResponses, id: \.self) { memo in
-                        VStack(alignment: .leading) {
-                            Text(memo.createdAt)
-                                .font(Font.body01)
-                            HStack {
-                                Text(memo.content)
-                                    .font(Font.body04)
-                                Spacer()
-                            }
-                            .padding(16)
-                            .frame(maxWidth: .infinity)
-                            .background(.white)
-                            .clipShape(.rect(cornerRadius: 6))
-                            .shadow(color: Color.gray05.opacity(0.3), radius: 5)
+                    VStack(alignment: .leading) {
+                        Text(memo.createdAt.prefix(10).replacingOccurrences(of: "-", with: "."))
+                            .font(Font.body01)
+                        HStack {
+                            Text(memo.content)
+                                .font(Font.body04)
+                            Spacer()
                         }
-                        .listRowSeparator(.hidden)
+                        .padding(16)
+                        .frame(maxWidth: .infinity)
+                        .background(.white)
+                        .clipShape(.rect(cornerRadius: 6))
+                        .shadow(color: Color.gray05.opacity(0.3), radius: 5)
+                    }
+                    .listRowSeparator(.hidden)
                 }
                 .listStyle(.plain)
                 .padding(.top, 20)
@@ -50,10 +50,11 @@ struct CertificateMemoView: View {
                 Button {
                     if !text.isEmpty {
                         homeStore.memoSave(paperId: certificateDetail.paperId, content: text)
-                        homeStore.certificate.memoListResponses.append(Memo(id: 0, content: text, createdAt: Date().dateToString().replacingOccurrences(of: "-", with: ".")))
+                        certificateDetail.memoListResponses.append(Memo(id: 0, content: text, createdAt: Date().dateToString().replacingOccurrences(of: "-", with: ".")))
+                        homeStore.certificateDetail.memoListResponses.append(Memo(id: 0, content: text, createdAt: Date().dateToString().replacingOccurrences(of: "-", with: ".")))
                         self.endTextEditing()
+                        text = ""
                     }
-                    text = ""
                 } label: {
                     Text("입력하기")
                         .font(Font.title04)

@@ -12,10 +12,11 @@ struct HomeView: View {
     private let horizontalPadding = 16.0
     @State private var menuState = false
     @State private var isHiddenInfoBox = false
-    @State private var navigationLinkToggle = false
     @State private var isShowingSignatureView = false
     @State private var isShowingWaitingApprovalAlert = false
     @State private var isShowingWaitingPaymentAlert = false
+    @State private var navigationLinkDetailView = false
+    @State private var navigationLinkAcceptView = false
     @State var certificateStep: CertificateStep?
     @Environment(HomeStore.self) var homeStore
     @Environment(SignInStore.self) var signInStore
@@ -110,18 +111,35 @@ struct HomeView: View {
                             ScrollViewReader { _ in
                                 List(homeStore.certificates, id: \.self) { certificate in
                                     Button {
-//                                        certificateStep = certificate.certificateStep
-//                                        if certificate.certificateStep == .waitingApproval {
-//                                            isShowingWaitingApprovalAlert.toggle()
-//                                        } else if certificate.certificateStep == .waitingPayment {
-//                                            isShowingWaitingPaymentAlert.toggle()
-//                                        } else if certificate.certificateStep == .progress {
+                                        certificateStep = certificate.certificateStep
+                                        if certificate.certificateStep == .waitingApproval {
+                                            if certificate.isWriter {
+                                                isShowingWaitingApprovalAlert.toggle()
+                                            } else {
+                                                Task {
+                                                    await homeStore.loadDetail(id: certificate.paperId)
+                                                    navigationLinkAcceptView.toggle()
+                                                }
+                                            }
+                                        } else if certificate.certificateStep == .waitingPayment {
+                                            if certificate.isWriter {
+                                                Task {
+                                                    await homeStore.loadDetail(id: certificate.paperId)
+                                                    navigationLinkAcceptView.toggle()
+                                                }
+                                            } else {
+                                                isShowingWaitingPaymentAlert.toggle()
+                                            }
+                                        } else if certificate.certificateStep == .progress {
+                                            Task {
+                                                await homeStore.loadDetail(id: certificate.paperId)
+                                                navigationLinkDetailView.toggle()
+                                            }
+                                        }
+//                                        Task {
+//                                            await homeStore.loadDetail(id: certificate.paperId)
 //                                            navigationLinkToggle.toggle()
 //                                        }
-                                        Task {
-                                            await homeStore.loadDetail(id: certificate.paperId)
-                                            navigationLinkToggle.toggle()
-                                        }
                                     } label: {
                                         VStack(alignment: .leading, spacing: 0) {
                                             HStack {
@@ -284,37 +302,27 @@ struct HomeView: View {
                                 .onAppear {
                                     tabStore.tabBarHide = true
                                 }
-                        }label: {
-                            Image(systemName: "bell")
-                                .foregroundStyle(.black)
-                        }
-                        Spacer().frame(height: 10)
+                            }label: {
+                                Image(systemName: "bell")
+                                    .foregroundStyle(.black)
+                            }
+                            Spacer().frame(height: 10)
                     }
                 }
             }
         }
-        .navigationDestination(isPresented: $navigationLinkToggle) {
+        .navigationDestination(isPresented: $navigationLinkDetailView) {
             if !homeStore.certificates.isEmpty {
-//                if !homeStore.checkIMadeIt(homeStore.certificates[index]) && homeStore.certificates[index].state == .waitingApproval {
-//                    CertificateAcceptView(index: index)
-//                        .customBackbutton()
-//                        .onAppear {
-//                            tabStore.tabBarHide = true
-//                        }
-//                } else if homeStore.checkIMadeIt(homeStore.certificates[index]) && homeStore.certificates[index].state == .waitingPayment {
-//                    CertificateAcceptView(index: index)
-//                        .customBackbutton()
-//                        .onAppear {
-//                            tabStore.tabBarHide = true
-//                        }
-//                } else {
-//                    CertificateDetailView(index: index)
-//                        .customBackbutton()
-//                        .onAppear {
-//                            tabStore.tabBarHide = true
-//                        }
-//                }
                 CertificateDetailView(certificateStep: certificateStep ?? .progress)
+                    .customBackbutton()
+                    .onAppear {
+                        tabStore.tabBarHide = true
+                    }
+            }
+        }
+        .navigationDestination(isPresented: $navigationLinkAcceptView) {
+            if !homeStore.certificates.isEmpty {
+                CertificateAcceptView(certificateStep: certificateStep ?? .progress)
                     .customBackbutton()
                     .onAppear {
                         tabStore.tabBarHide = true

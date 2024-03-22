@@ -8,35 +8,44 @@
 import Foundation
 
 extension String {
-    // +82 10-5000-0000
+    /// +82 10-0000-0000 -> 010-0000-0000
     func onlyPhoneNumber() -> String {
-        if self.prefix(3) == "+82" {
-            let number = self.suffix(12)
-            return "0" + String(number)
+        if self.count == 16 {
+            if self.prefix(3) == "+82" {
+                let number = self.suffix(12)
+                return "0" + String(number)
+            } else {
+                return self
+            }
         } else {
             return self
         }
     }
     
+    /// 010-0000-0000 -> +82 10-0000-0000
     func globalPhoneNumber() -> String {
-//        if self.count == 11 {
-//            let firstPart = self.prefix(3)
-//            let secondPart = self[self.index(self.startIndex, offsetBy: 3)..<self.index(self.startIndex, offsetBy: 7)]
-//            let thirdPart = self.suffix(4)
-//            return "\(firstPart)-\(secondPart)-\(thirdPart)"
-//        } else {
-//            return self
-//        }
-        var newNumber = self.suffix(12)
-        return "+82 " + newNumber
+        if self.count == 13 {
+            return "+82 " + self.suffix(12)
+        } else {
+            return self
+        }
     }
     
-    func phoneNumberPlusSlider() -> String {
-        if self.count == 3 {
-            return self + "-"
-        } else if self.count == 8 {
-            return self + "-"
+    func phoneNumberMiddleCase() -> String {
+        let cleanNumber = components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
+        let mask = "XXX-XXXX-XXXX"
+        var result = ""
+        var startIndex = cleanNumber.startIndex
+        var endIndex = cleanNumber.endIndex
+        
+        for char in mask where startIndex < endIndex {
+            if char == "X" {
+                result.append(cleanNumber[startIndex])
+                startIndex = cleanNumber.index(after: startIndex)
+            } else {
+                result.append(char)
+            }
         }
-        return self
+        return result
     }
 }

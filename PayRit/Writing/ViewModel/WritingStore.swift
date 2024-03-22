@@ -18,17 +18,13 @@ final class WritingStore {
         urlComponents.host = "payrit.info"
         urlComponents.path = "/api/v1/paper/write"
         
-        // URL 구성 요소를 사용하여 URL 생성
         if let url = urlComponents.url {
-//            print("URL: \(url)")
             
             var request = URLRequest(url: url)
             request.httpMethod = "POST"
             request.setValue("*/*", forHTTPHeaderField: "accept")
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
-//            print("Send Certificate : \(certificate)")
-//             HTTP 바디 설정
             let body = [
                 "writerRole": certificate.memberRole,
                 "amount": certificate.amount,
@@ -55,7 +51,6 @@ final class WritingStore {
             } catch {
                 print("Error creating JSON data")
             }
-            // URLSession을 사용하여 요청 수행
             let task = URLSession.shared.dataTask(with: request) { data, response, error in
                 if let error = error {
                     print("Error: \(error)")

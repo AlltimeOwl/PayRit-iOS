@@ -107,6 +107,7 @@ struct AppleSigninButton: View {
                             let identifyTokenString = String(data: identityToken, encoding: .utf8) {
                             signInStore.appleAuthorizationCode = authCodeString
                             signInStore.appleIdentityToken = identifyTokenString
+                            print("appleAuthorizationCode : \(authCodeString)")
                         }
                         UserDefaultsManager().setAppleUserData(userData: User(name: name, email: email, phoneNumber: "", signInCompany: "애플", appleId: appleUserIdentifier))
                         signInStore.appleAuthCheck()
