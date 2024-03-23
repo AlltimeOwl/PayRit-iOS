@@ -8,13 +8,15 @@ import UIKit
 import MessageUI
 
 struct CertificateDetailView: View {
+    let paperId: Int
+    let certificateStep: CertificateStep
+    var isFormValid: Bool = false
     @State private var isShowingExportView: Bool = false
     @State private var isShowingPDFView: Bool = false
     @State private var isShowingMailView: Bool = false
+    @State private var isShowingAllRepaymentAlert: Bool = false
     @State private var result: Result<MFMailComposeResult, Error>?
     @Environment(HomeStore.self) var homeStore
-    let certificateStep: CertificateStep
-    var isFormValid: Bool = false
     var body: some View {
         ZStack {
             Color.payritBackground.ignoresSafeArea()
@@ -26,7 +28,7 @@ struct CertificateDetailView: View {
                                 Text("\(homeStore.certificateDetail.debtorName)님께")
                                 HStack(spacing: 0) {
                                     Text("총 ")
-                                    Text(homeStore.certificateDetail.totalRemainingAmountFormatter)
+                                    Text(homeStore.certificateDetail.totalMoneyFormatter)
                                         .foregroundStyle(Color.payritMint)
                                     Text("원을 빌려주었어요.")
                                 }
@@ -37,7 +39,7 @@ struct CertificateDetailView: View {
                                 Text("\(homeStore.certificateDetail.creditorName)님께")
                                 HStack(spacing: 0) {
                                     Text("총 ")
-                                    Text(homeStore.certificateDetail.totalRemainingAmountFormatter)
+                                    Text(homeStore.certificateDetail.totalMoneyFormatter)
                                         .foregroundStyle(Color.payritIntensivePink)
                                     Text("원을 빌렸어요.")
                                 }
@@ -50,7 +52,7 @@ struct CertificateDetailView: View {
                     VStack(spacing: 0) {
                         VStack(alignment: .leading, spacing: 0) {
                             HStack {
-                                Text("원금상환일 \(homeStore.certificateDetail.repaymentEndDate)")
+                                Text("원금상환일 \(homeStore.certificateDetail.repaymentEndDate.replacingOccurrences(of: "-", with: "."))")
                                     .font(Font.caption02)
                                     .foregroundStyle(Color.gray02)
                                 Spacer()
@@ -75,7 +77,7 @@ struct CertificateDetailView: View {
                                     .foregroundStyle(Color.gray02)
                                 ProgressView(value: homeStore.certificateDetail.repaymentRate, total: 100)
                                     .progressViewStyle(CustomLinearProgressViewStyle(trackColor: Color.gray09, progressColor: homeStore.certificateDetail.memberRole == "CREDITOR" ? Color.payritMint : Color.payritIntensivePink))
-                                Text("\(certificateStep.rawValue) (\(Int(homeStore.certificateDetail.repaymentRate))%)")
+                                Text("\(homeStore.certificateDetail.repaymentRate == 100.0 ? "상환 완료" : certificateStep.rawValue) (\(Int(homeStore.certificateDetail.repaymentRate))%)")
                                     .font(Font.caption02)
                                     .foregroundStyle(Color.gray04)
                             }
@@ -92,6 +94,7 @@ struct CertificateDetailView: View {
                             if homeStore.certificateDetail.memberRole == "CREDITOR" {
                                 //                        if true {
                                 Button {
+                                    isShowingAllRepaymentAlert.toggle()
                                 } label: {
                                     HStack {
                                         Image(systemName: "tag")
@@ -228,8 +231,10 @@ struct CertificateDetailView: View {
                                     HStack {
                                         Text("연락처")
                                     }
-                                    HStack {
-                                        Text("주소")
+                                    if !homeStore.certificateDetail.creditorAddress.isEmpty {
+                                        HStack {
+                                            Text("주소")
+                                        }
                                     }
                                 }
                                 .font(Font.body04)
@@ -241,8 +246,10 @@ struct CertificateDetailView: View {
                                     HStack {
                                         Text("\(homeStore.certificateDetail.creditorPhoneNumber.onlyPhoneNumber())")
                                     }
-                                    HStack {
-                                        Text("\(homeStore.certificateDetail.creditorAddress)")
+                                    if !homeStore.certificateDetail.creditorAddress.isEmpty {
+                                        HStack {
+                                            Text("\(homeStore.certificateDetail.creditorAddress)")
+                                        }
                                     }
                                 }
                                 .font(Font.body01)
@@ -267,8 +274,10 @@ struct CertificateDetailView: View {
                                     HStack {
                                         Text("연락처")
                                     }
-                                    HStack {
-                                        Text("주소")
+                                    if !homeStore.certificateDetail.debtorAddress.isEmpty {
+                                        HStack {
+                                            Text("주소")
+                                        }
                                     }
                                 }
                                 .font(Font.body04)
@@ -280,8 +289,10 @@ struct CertificateDetailView: View {
                                     HStack {
                                         Text("\(homeStore.certificateDetail.debtorPhoneNumber.onlyPhoneNumber())")
                                     }
-                                    HStack {
-                                        Text("\(homeStore.certificateDetail.debtorAddress)")
+                                    if !homeStore.certificateDetail.debtorAddress.isEmpty {
+                                        HStack {
+                                            Text("\(homeStore.certificateDetail.debtorAddress)")
+                                        }
                                     }
                                 }
                                 .font(Font.body01)
@@ -353,20 +364,11 @@ struct CertificateDetailView: View {
         .scrollIndicators(.hidden)
         .navigationTitle("페이릿 상세 페이지")
         .navigationBarTitleDisplayMode(.inline)
-        .certificateToDoucument(isPresented: $isShowingExportView, primaryAction: {
-            isShowingExportView.toggle()
-            isShowingPDFView.toggle()
-        }, primaryAction2: {
-            if MFMailComposeViewController.canSendMail() {
-                isShowingExportView.toggle()
-                isShowingMailView.toggle()
-            } else {
-                print("메일을 보낼수 없는 기기입니다.")
+        .onAppear {
+            Task {
+                await homeStore.loadDetail(id: paperId)
             }
-            if result != nil {
-                print("Result: \(String(describing: result))")
-            }
-        })
+        }
         .sheet(isPresented: $isShowingMailView) {
             let pdfURL: URL? = homeStore.generatePDF()
             MailView(result: self.$result) { mailComposer in
@@ -387,12 +389,32 @@ struct CertificateDetailView: View {
                 ShareLink("PDF로 내보내기", item: url)
             }
         })
+        .certificateToDoucument(isPresented: $isShowingExportView, primaryAction: {
+            isShowingExportView.toggle()
+            isShowingPDFView.toggle()
+        }, primaryAction2: {
+            if MFMailComposeViewController.canSendMail() {
+                isShowingExportView.toggle()
+                isShowingMailView.toggle()
+            } else {
+                print("메일을 보낼수 없는 기기입니다.")
+            }
+            if result != nil {
+                print("Result: \(String(describing: result))")
+            }
+        })
+        .primaryAlert(isPresented: $isShowingAllRepaymentAlert, title: "전체 상환 기록", content: "남은 금액 \(homeStore.certificateDetail.totalRemainingAmountFormatter)원을 전체 상환 하시겠습니까?", primaryButtonTitle: "네", cancleButtonTitle: "아니오") {
+            homeStore.deductedSave(paperId: paperId, repaymentDate: Date().dateToString(), repaymentAmount: String(homeStore.certificateDetail.remainingAmount))
+            homeStore.certificateDetail.remainingAmount = 0
+            homeStore.certificateDetail.repaymentRate = 100.0
+        } cancleAction: {
+        }
     }
 }
 
 #Preview {
     NavigationStack {
-        CertificateDetailView(certificateStep: .progress)
+        CertificateDetailView(paperId: 0, certificateStep: .progress)
             .environment(HomeStore())
     }
 }

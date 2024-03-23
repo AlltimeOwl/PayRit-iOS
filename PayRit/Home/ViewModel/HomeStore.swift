@@ -18,10 +18,21 @@ enum SortingType: String, CodingKey, CaseIterable {
 final class HomeStore {
     var sortingType: SortingType = .recent
     var certificates: [Certificate] = [Certificate]()
-    var certificateDetail: CertificateDetail = CertificateDetail(paperId: 0, paperUrl: "", amount: 0, memberRole: "", remainingAmount: 0, interestRate: 0.0, interestPaymentDate: 0, repaymentRate: 0.0, repaymentStartDate: "", repaymentEndDate: "", creditorName: "", creditorPhoneNumber: "", creditorAddress: "", dueDate: 0, debtorName: "", debtorPhoneNumber: "", debtorAddress: "")
-    var isLoading: Bool = false
+    var certificateDetail: CertificateDetail = CertificateDetail.testCertofocateDetail
+    var isLoading: Bool = true
     
-    func loadCertificates() {
+    func sortingCertificates() {
+        switch sortingType {
+        case .recent:
+            self.certificates.sort { $0.writingDayCal > $1.writingDayCal }
+        case .old:
+            self.certificates.sort { $0.writingDayCal < $1.writingDayCal }
+        case .expiration:
+            self.certificates.sort { $0.dueDate < $1.dueDate }
+        }
+    }
+    
+    func loadCertificates() async {
         let urlString = "https://payrit.info/api/v1/paper/list"
         guard let url = URL(string: urlString) else {
             print("Invalid URL")
@@ -50,7 +61,16 @@ final class HomeStore {
                     let responseData = String(data: data, encoding: .utf8)
                     print("Response data: \(responseData ?? "No data")")
                     do {
-                        let certificates = try JSONDecoder().decode([Certificate].self, from: data)
+                        var certificates = try JSONDecoder().decode([Certificate].self, from: data)
+                        
+                        switch self.sortingType {
+                        case .recent:
+                            certificates.sort { $0.writingDayCal > $1.writingDayCal }
+                        case .old:
+                            certificates.sort { $0.writingDayCal < $1.writingDayCal }
+                        case .expiration:
+                            certificates.sort { $0.dueDate < $1.dueDate }
+                        }
                         self.certificates = certificates
                     } catch {
                         print("Error decoding JSON: \(error)")
@@ -124,7 +144,7 @@ final class HomeStore {
         request.setValue("*/*", forHTTPHeaderField: "accept")
         request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
         
-        let task = session.dataTask(with: request) { (data, response, error) in
+        let task = session.dataTask(with: request) { (_, response, error) in
             if let error = error {
                 print("Error: \(error)")
                 return
@@ -141,18 +161,6 @@ final class HomeStore {
             
         }
         task.resume()
-    }
-    
-    func sortingCertificates() {
-//        self.certificates = certificates.sorted {
-//            switch sortingType {
-//            case .recent:
-//                return $0.writingDayCal > $1.writingDayCal
-//            case .old:
-//                return $0.writingDayCal < $1.writingDayCal
-//            case .expiration:
-//                return $0.dDay < $1.dDay
-//            }}
     }
     
     func memoSave(paperId: Int, content: String) {
@@ -177,10 +185,10 @@ final class HomeStore {
             } catch {
                 print("Error creating JSON data")
             }
-            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            let task = URLSession.shared.dataTask(with: request) { _, response, error in
                 if let error = error {
                     print("Error: \(error)")
-                } else if let data = data, let response = response as? HTTPURLResponse {
+                } else if let response = response as? HTTPURLResponse {
                     print("Response status code: \(response.statusCode)")
                     if (200..<300).contains(response.statusCode) {
                         print("response.statusCode [\(response.statusCode) 메모 작성 성공")
@@ -194,7 +202,7 @@ final class HomeStore {
             task.resume()
         }
     }
-//    
+    
     func deductedSave(paperId: Int, repaymentDate: String, repaymentAmount: String) {
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"
@@ -213,19 +221,18 @@ final class HomeStore {
                 "repaymentDate": repaymentDate,
                 "repaymentAmount": repaymentAmount
             ] as [String: Any]
-            print("deductedSave Body: \(body)")
             do {
                 request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
             } catch {
                 print("Error creating JSON data")
             }
-            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            let task = URLSession.shared.dataTask(with: request) { _, response, error in
                 if let error = error {
                     print("Error: \(error)")
-                } else if let data = data, let response = response as? HTTPURLResponse {
+                } else if let response = response as? HTTPURLResponse {
                     print("Response status code: \(response.statusCode)")
                     if (200..<300).contains(response.statusCode) {
-                        print("response.statusCode [\(response.statusCode) 상환 내역 작성 성공")
+                        print("상환 내역 작성 성공")
                     } else {
                         print("Unexpected status code: \(response.statusCode)")
                     }
