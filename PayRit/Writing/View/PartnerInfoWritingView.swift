@@ -14,8 +14,10 @@ struct PartnerInfoWritingView: View {
     @State private var zipCode = ""
     @State private var address = ""
     @State private var detailAddress = ""
-    @State private var isPresentingZipCodeView = false
-    @State private var isShowingStopAlert = false
+    @State private var moveNextView: Bool = false
+    @State private var notEnoughPhoneNumberLength: Bool = false
+    @State private var isPresentingZipCodeView: Bool = false
+    @State private var isShowingStopAlert: Bool = false
     @State private var keyBoardFocused: Bool = false
     @Binding var newCertificate: CertificateDetail
     @Binding var path: NavigationPath
@@ -70,15 +72,11 @@ struct PartnerInfoWritingView: View {
                                         phoneNumber = oldValue
                                     }
                                 }
-//                                .overlay {
-//                                    HStack {
-//                                        Text(phoneNumber.phoneNumberPlusSlider())
-//                                            .font(Font.body02)
-//                                            .padding(.horizontal, 14)
-//                                        Spacer()
-//                                    }
-//                                }
-                            
+                            if notEnoughPhoneNumberLength {
+                                Text("전화번호를 확인해주세요")
+                                    .font(Font.caption01)
+                                    .foregroundStyle(Color.payritErrorRed)
+                            }
                         }
                         VStack(alignment: .leading, spacing: 8) {
                             Text("주소 (선택사항)")
@@ -120,9 +118,12 @@ struct PartnerInfoWritingView: View {
                     .padding(.top, 30)
                     .padding(.horizontal, 16)
                 }
-                NavigationLink {
-                    WritingCheckView(path: $path, newCertificate: $newCertificate)
-                        .customBackbutton()
+                Button {
+                    if phoneNumber.count < 13 {
+                        notEnoughPhoneNumberLength = true
+                    } else {
+                        moveNextView.toggle()
+                    }
                 } label: {
                     Text("다음")
                         .font(Font.title04)
@@ -136,45 +137,46 @@ struct PartnerInfoWritingView: View {
                 .padding(.bottom, keyBoardFocused ? 0 : 16)
                 .padding(.horizontal, keyBoardFocused ? 0 : 16)
             }
-        }
-        .dismissOnDrag()
-        .navigationTitle("페이릿 작성하기")
-        .navigationBarTitleDisplayMode(.inline)
-        .onTapGesture { self.endTextEditing() }
-        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillChangeFrameNotification)) { _ in
-            keyBoardFocused = true
-        }
-        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
-            keyBoardFocused = false
-        }
-        .toolbar {
-            ToolbarItem {
-                Button {
-                    isShowingStopAlert.toggle()
-                } label: {
-                    Image(systemName: "xmark")
-                        .foregroundStyle(.black)
+            .toolbar {
+                ToolbarItem {
+                    Button {
+                        isShowingStopAlert.toggle()
+                    } label: {
+                        Image(systemName: "xmark")
+                            .foregroundStyle(.black)
+                    }
                 }
             }
-        }
-        .primaryAlert(isPresented: $isShowingStopAlert,
-                      title: "작성 중단",
-                      content: """
-                        지금 작성을 중단하시면
-                        처음부터 다시 작성해야해요.
-                        작성 전 페이지로 돌아갈까요?
-                        """,
-                      primaryButtonTitle: "아니오",
-                      cancleButtonTitle: "네") {
-        } cancleAction: {
-            path = .init()
-        }
-        .sheet(isPresented: $isPresentingZipCodeView) {
-            KakaoAdressView(address: $address, zonecode: $zipCode, isPresented: $isPresentingZipCodeView)
-                .edgesIgnoringSafeArea(.all)
-        }
-        .onAppear {
-            print(newCertificate)
+            .dismissOnDrag()
+            .navigationTitle("페이릿 작성하기")
+            .navigationBarTitleDisplayMode(.inline)
+            .onTapGesture { self.endTextEditing() }
+            .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillChangeFrameNotification)) { _ in
+                keyBoardFocused = true
+            }
+            .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
+                keyBoardFocused = false
+            }
+            .sheet(isPresented: $isPresentingZipCodeView) {
+                KakaoAdressView(address: $address, zonecode: $zipCode, isPresented: $isPresentingZipCodeView)
+                    .edgesIgnoringSafeArea(.all)
+            }
+            .navigationDestination(isPresented: $moveNextView) {
+                WritingCheckView(path: $path, newCertificate: $newCertificate)
+                    .customBackbutton()
+            }
+            .primaryAlert(isPresented: $isShowingStopAlert,
+                          title: "작성 중단",
+                          content: """
+                            지금 작성을 중단하시면
+                            처음부터 다시 작성해야해요.
+                            작성 전 페이지로 돌아갈까요?
+                            """,
+                          primaryButtonTitle: "아니오",
+                          cancleButtonTitle: "네") {
+            } cancleAction: {
+                path = .init()
+            }
         }
     }
 }

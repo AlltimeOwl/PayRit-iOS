@@ -8,20 +8,20 @@
 import SwiftUI
 
 struct MyPageView: View {
+    let mypageStore: MyPageStore = MyPageStore()
     @State var listItemHeight: CGFloat = 40
     @State var isShowingSignOut: Bool = false
+    @State var isShowingSafariView: Bool = false
     @State var notFoundUser: Bool = false
     @Environment(SignInStore.self) var signInStore
     @Environment(TabBarStore.self) var tabStore
-    let mypageStore: MyPageStore = MyPageStore()
     var body: some View {
         ZStack {
             Color.payritBackground.ignoresSafeArea()
             VStack(alignment: .leading, spacing: 0) {
                 HStack(spacing: 16) {
-                    Circle()
-                        .frame(height: 77)
-                        .foregroundStyle(.blue)
+                    Image(systemName: "person.crop.circle.fill")
+                        .font(.system(size: 70))
                     VStack(alignment: .leading, spacing: 10) {
                         Text(mypageStore.currenUser.name)
                             .font(Font.title01)
@@ -79,8 +79,8 @@ struct MyPageView: View {
                         Text("자주 묻는 질문")
                     }
                     .frame(height: listItemHeight)
-                    NavigationLink {
-                        
+                    Button {
+                        isShowingSafariView.toggle()
                     } label: {
                         Text("서비스 이용 약관")
                     }
@@ -101,22 +101,27 @@ struct MyPageView: View {
                 .padding(.trailing, 16)
                 Spacer()
             }
-        }
-        .onAppear {
-            tabStore.tabBarHide = false
-        }
-        .toolbar {
-            ToolbarItem {
-                Text("")
+            .onAppear {
+                tabStore.tabBarHide = false
             }
-        }
-        .primaryAlert(isPresented: $isShowingSignOut, title: "로그아웃", content: "로그아웃 하시겠습니까?", primaryButtonTitle: "아니오", cancleButtonTitle: "네", primaryAction: nil) {
-            if mypageStore.currenUser.signInCompany == "카카오톡" {
-                signInStore.kakaoSingOut()
-            } else if mypageStore.currenUser.signInCompany == "애플" {
-                
-                signInStore.isSignIn = false
-                UserDefaultsManager().removeAll()
+            .toolbar {
+                ToolbarItem {
+                    Text("")
+                }
+            }
+            .sheet(isPresented: $isShowingSafariView) {
+                if let url = URL(string: "https://picayune-rhinoceros-77c.notion.site/57721e2e46bf46b7a15cc05afec24fc3") {
+                    SafariView(url: url)
+                }
+            }
+            .primaryAlert(isPresented: $isShowingSignOut, title: "로그아웃", content: "로그아웃 하시겠습니까?", primaryButtonTitle: "아니오", cancleButtonTitle: "네", primaryAction: nil) {
+                if mypageStore.currenUser.signInCompany == "카카오톡" {
+                    signInStore.kakaoSingOut()
+                } else if mypageStore.currenUser.signInCompany == "애플" {
+                    
+                    signInStore.isSignIn = false
+                    UserDefaultsManager().removeAll()
+                }
             }
         }
     }

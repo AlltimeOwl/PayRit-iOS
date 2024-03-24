@@ -12,7 +12,7 @@ struct WritingCertificateInfoView: View {
     @State private var repaymentStartDate: Date = Date()
     @State private var repaymentEndDate: Date = Date()
     @State private var money: String = ""
-    @State private var interest: String = ""
+    @State private var interestRate: String = ""
     @State private var interestDate: String = ""
     @State private var specialConditions: String = ""
     @State private var onTapBorrowedDate: Bool = false
@@ -25,6 +25,7 @@ struct WritingCertificateInfoView: View {
     @State private var isShowingFormToastMessage: Bool = false
     @State private var isShowingBorrowedDatePicker: Bool = false
     @State private var isShowingRedemptionDatePicker: Bool = false
+    @State private var isShowingNotYetService: Bool = false
     @State private var moveNextView: Bool = false
     @State private var keyBoardFocused: Bool = false
     @State private var newCertificate: CertificateDetail = CertificateDetail.EmptyCertificate
@@ -33,7 +34,7 @@ struct WritingCertificateInfoView: View {
     @Namespace var bottomID
     var isFormValid: Bool {
         if calToggle {
-            return !money.isEmpty && onTapBorrowedDate && !interest.isEmpty
+            return !money.isEmpty && onTapBorrowedDate && !interestRate.isEmpty
         } else {
             return !money.isEmpty && onTapBorrowedDate
         }
@@ -50,9 +51,22 @@ struct WritingCertificateInfoView: View {
                                     .font(Font.body03)
                                     .foregroundStyle(Color.gray04)
                                 CustomTextField(placeholder: "금액을 입력해주세요", keyboardType: .numberPad, text: $money)
-                                    .onChange(of: money) {
-                                        newCertificate.amount = Int(money) ?? 0
+                                    .onChange(of: money) { oldValue, _ in
+                                        if let money = Int(money) {
+                                            if money <= 30000000 {
+                                                newCertificate.primeAmount = money
+                                            } else {
+                                                self.money = "30000000"
+                                                newCertificate.primeAmount = 30000000
+                                                isShowingNotYetService = true
+                                            }
+                                        }
                                     }
+                                if isShowingNotYetService {
+                                    Text("서비스 이용금액은 최대 3천만원 입니다.")
+                                        .font(Font.caption01)
+                                        .foregroundStyle(Color.payritErrorRed)
+                                }
                             }
                             
                             VStack(alignment: .leading) {
@@ -176,7 +190,7 @@ struct WritingCertificateInfoView: View {
                                             Spacer()
                                             Toggle("", isOn: $calToggle)
                                                 .onTapGesture {
-                                                    interest = ""
+                                                    interestRate = ""
                                                     interestDate = ""
                                                     newCertificate.interestPaymentDate = 0
                                                 }
@@ -201,23 +215,23 @@ struct WritingCertificateInfoView: View {
                                             .foregroundStyle(Color.gray04)
                                             .padding(.top, 4)
                                             
-                                            CustomTextField(placeholder: "숫자를 입력해주세요", keyboardType: .decimalPad, text: $interest, isFocused: interestTextFieldFocus)
-                                                .onChange(of: interest) { oldValue, newValue in
+                                            CustomTextField(placeholder: "숫자를 입력해주세요", keyboardType: .decimalPad, text: $interestRate, isFocused: interestTextFieldFocus)
+                                                .onChange(of: interestRate) { oldValue, newValue in
                                                     if newValue.count < 6 {
                                                         if newValue.filter({ $0 == "." }).count >= 2 {
-                                                            interest = oldValue
+                                                            interestRate = oldValue
                                                         } else {
-                                                            if !interest.isEmpty && interest != "." {
+                                                            if !interestRate.isEmpty && interestRate != "." {
                                                                 if Float(newValue) ?? 20.0 >= 20.0 {
-                                                                    interest = "19.99"
+                                                                    interestRate = "19.99"
                                                                     warningMessage = true
                                                                 }
                                                             }
                                                         }
                                                     } else {
-                                                        interest = oldValue
+                                                        interestRate = oldValue
                                                     }
-                                                    newCertificate.interestRate = Float(interest) ?? 0.0
+                                                    newCertificate.interestRate = Float(interestRate) ?? 0.0
                                                 }
                                                 .onTapGesture {
                                                     withAnimation {
@@ -284,7 +298,7 @@ struct WritingCertificateInfoView: View {
                                         Text("\(newCertificate.totalAmountFormatter)")
                                             .foregroundStyle(Color.payritMint)
                                     } else {
-                                        Text(newCertificate.totalMoneyFormatter)
+                                        Text(newCertificate.primeAmountFomatter)
                                             .foregroundStyle(Color.payritMint)
                                     }
                                     Text("원을 상환해야해요!")

@@ -8,16 +8,21 @@
 import SwiftUI
 
 struct CertificateSerchingView: View {
-    @State private var searchWord: String = ""
-    @State private var menuState = false
-    @State private var isHiddenInfoBox = false
-    @State private var navigationLinkToggle = false
-    @State private var index: Int = 0
-    @State private var filterCount: Int = 0
-    @Environment(HomeStore.self) var homeStore
-    @FocusState private var interestFocused: Bool
     private let menuPadding = 8.0
     private let horizontalPadding = 16.0
+    @State private var paperId = 0
+    @State private var searchWord: String = ""
+    @State private var filterCount: Int = 0
+    @State private var menuState = false
+    @State private var isHiddenInfoBox = false
+    @State private var isShowingSignatureView = false
+    @State private var isShowingWaitingApprovalAlert = false
+    @State private var isShowingWaitingPaymentAlert = false
+    @State private var navigationLinkDetailView = false
+    @State private var navigationLinkAcceptView = false
+    @State var certificateStep: CertificateStep?
+    @Environment(HomeStore.self) var homeStore
+    @FocusState private var interestFocused: Bool
     
     var body: some View {
         ZStack {
@@ -54,31 +59,43 @@ struct CertificateSerchingView: View {
                 .padding(.bottom, 10)
                 ZStack {
                     VStack(spacing: 0) {
-                        HStack {
-                            Text("총 \(filterCount)건")
-                                .font(.custom("SUIT-Medium", size: 16))
-                                .foregroundStyle(Color.gray02)
-                            Spacer()
+                        if filterCount > 0 {
+                            HStack {
+                                Text("총 \(filterCount)건")
+                                    .font(.custom("SUIT-Medium", size: 16))
+                                    .foregroundStyle(Color.gray02)
+                                Spacer()
+                            }
+                            .frame(height: 34)
+                            .padding(.horizontal, horizontalPadding)
                         }
-                        .frame(height: 34)
-                        .padding(.horizontal, horizontalPadding)
                         
                         // MARK: - 홈 카드 리스트
                         List(homeStore.certificates, id: \.self) { certificate in
                             if certificate.peerName.contains(searchWord) {
                                 Button {
-    //                                self.index = index
-    //                                if certificate.certificateStep == .waitingApproval {
-    //                                    isShowingWaitingApprovalAlert.toggle()
-    //                                } else if certificate.certificateStep == .waitingPayment {
-    //                                    isShowingWaitingPaymentAlert.toggle()
-    //                                } else if certificate.certificateStep == .progress {
-    //                                    navigationLinkToggle.toggle()
-    //                                }
+                                    print("asdasd")
+                                    certificateStep = certificate.certificateStep
+                                    paperId = certificate.paperId
+                                    if certificate.certificateStep == .waitingApproval {
+                                        if certificate.isWriter {
+                                            isShowingWaitingApprovalAlert.toggle()
+                                        } else {
+                                            navigationLinkAcceptView.toggle()
+                                        }
+                                    } else if certificate.certificateStep == .waitingPayment {
+                                        if certificate.isWriter {
+                                            navigationLinkAcceptView.toggle()
+                                        } else {
+                                            isShowingWaitingPaymentAlert.toggle()
+                                        }
+                                    } else if certificate.certificateStep == .progress {
+                                        navigationLinkDetailView.toggle()
+                                    }
                                 } label: {
                                     VStack(alignment: .leading, spacing: 0) {
                                         HStack {
-                                            Text("원금상환일 \(certificate.repaymentEndDate)")
+                                            Text("원금상환일 \(certificate.repaymentEndDate.replacingOccurrences(of: "-", with: "."))")
                                                 .font(Font.caption02)
                                                 .foregroundStyle(Color.gray02)
                                             Spacer()
@@ -116,7 +133,6 @@ struct CertificateSerchingView: View {
                                     .clipShape(RoundedRectangle(cornerRadius: 12))
                                     .shadow(color: .gray.opacity(0.2), radius: 5)
                                 }
-                                .padding(.bottom, index == homeStore.certificates.count - 1 ? 40 : 0)
                                 .listRowSeparator(.hidden)
                                 .listRowBackground(Color.payritBackground)
                             }
@@ -128,94 +144,117 @@ struct CertificateSerchingView: View {
                     }
                     
                     // MARK: - 메뉴
-                    VStack {
-                        HStack {
-                            Spacer()
-                            Button {
-                                withAnimation {
-                                    menuState.toggle()
-                                }
-                            } label: {
-                                if menuState == false {
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .stroke(Color(hex: "F2F2F2"), lineWidth: 2)
-                                        .frame(width: 120, height: menuState ? 88 : 34)
-                                        .background(Color.white)
-                                        .clipShape(.rect(cornerRadius: 12))
-                                        .shadow(color: .gray.opacity(0.2), radius: 5)
-                                        .overlay {
-                                            VStack(alignment: .leading) {
-                                                HStack {
-                                                    Text(homeStore.sortingType.stringValue)
-                                                    Spacer()
-                                                    Image(systemName: "chevron.down")
-                                                }
-                                            }
-                                            .padding(.horizontal, menuPadding)
-                                        }
-                                } else {
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .stroke(Color(hex: "F2F2F2"), lineWidth: 2)
-                                        .frame(width: 120, height: menuState ? 90 : 34)
-                                        .background(Color.white)
-                                        .clipShape(.rect(cornerRadius: 12))
-                                        .shadow(color: .gray.opacity(0.2), radius: 5)
-                                        .overlay {
-                                            VStack(alignment: .leading, spacing: 10) {
-                                                Button {
-                                                    menuState.toggle()
-                                                } label: {
+                    if filterCount > 0 {
+                        VStack {
+                            HStack {
+                                Spacer()
+                                Button {
+                                    withAnimation {
+                                        menuState.toggle()
+                                    }
+                                } label: {
+                                    if menuState == false {
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .stroke(Color(hex: "F2F2F2"), lineWidth: 2)
+                                            .frame(width: 120, height: menuState ? 88 : 34)
+                                            .background(Color.white)
+                                            .clipShape(.rect(cornerRadius: 12))
+                                            .shadow(color: .gray.opacity(0.2), radius: 5)
+                                            .overlay {
+                                                VStack(alignment: .leading) {
                                                     HStack {
                                                         Text(homeStore.sortingType.stringValue)
                                                         Spacer()
-                                                        Image(systemName: "chevron.up")
+                                                        Image(systemName: "chevron.down")
                                                     }
                                                 }
-                                                ForEach(SortingType.allCases, id: \.self) { state in
-                                                    if state != homeStore.sortingType {
-                                                        Button {
-                                                            homeStore.sortingType = state
-                                                            menuState.toggle()
-                                                            homeStore.sortingCertificates()
-                                                        } label: {
-                                                            HStack {
-                                                                Text(state.rawValue)
-                                                                Spacer()
+                                                .padding(.horizontal, menuPadding)
+                                            }
+                                    } else {
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .stroke(Color(hex: "F2F2F2"), lineWidth: 2)
+                                            .frame(width: 120, height: menuState ? 90 : 34)
+                                            .background(Color.white)
+                                            .clipShape(.rect(cornerRadius: 12))
+                                            .shadow(color: .gray.opacity(0.2), radius: 5)
+                                            .overlay {
+                                                VStack(alignment: .leading, spacing: 10) {
+                                                    Button {
+                                                        menuState.toggle()
+                                                    } label: {
+                                                        HStack {
+                                                            Text(homeStore.sortingType.stringValue)
+                                                            Spacer()
+                                                            Image(systemName: "chevron.up")
+                                                        }
+                                                    }
+                                                    ForEach(SortingType.allCases, id: \.self) { state in
+                                                        if state != homeStore.sortingType {
+                                                            Button {
+                                                                homeStore.sortingType = state
+                                                                menuState.toggle()
+                                                                homeStore.sortingCertificates()
+                                                            } label: {
+                                                                HStack {
+                                                                    Text(state.rawValue)
+                                                                    Spacer()
+                                                                }
                                                             }
                                                         }
                                                     }
                                                 }
+                                                .padding(.horizontal, menuPadding)
                                             }
-                                            .padding(.horizontal, menuPadding)
-                                        }
+                                    }
                                 }
                             }
+                            Spacer()
                         }
-                        Spacer()
+                        .font(Font.body03)
+                        .foregroundStyle(Color.gray02)
+                        .padding(.horizontal, horizontalPadding)
                     }
-                    .font(Font.body03)
-                    .foregroundStyle(Color.gray02)
-                    .padding(.horizontal, horizontalPadding)
                 }
                 Spacer()
             }
         }
         .dismissOnDrag()
-        .onTapGesture { self.endTextEditing() }
-        .navigationDestination(isPresented: $navigationLinkToggle) {
-//            if !homeStore.checkIMadeIt(homeStore.certificates[index]) && homeStore.certificates[index].state == .waitingApproval {
-//                CertificateAcceptView(index: index)
-//                    .customBackbutton()
-//            } else {
-//                CertificateDetailView(index: index)
-//                    .customBackbutton()
-//            }
+        .navigationDestination(isPresented: $navigationLinkDetailView) {
+            if !homeStore.certificates.isEmpty {
+                if let setp = certificateStep {
+                    CertificateDetailView(paperId: paperId, certificateStep: setp)
+                        .customBackbutton()
+                }
+            }
+        }
+        .navigationDestination(isPresented: $navigationLinkAcceptView) {
+            if !homeStore.certificates.isEmpty {
+                if let setp = certificateStep {
+                    CertificateAcceptView(paperId: paperId, certificateStep: setp)
+                        .customBackbutton()
+                }
+            }
         }
         .onChange(of: searchWord) {
             filterCount = homeStore.certificates.filter { $0.peerName.contains(searchWord) }.count
         }
         .onAppear {
             interestFocused = true
+        }
+        .primaryAlert(isPresented: $isShowingSignatureView, title: "본인인증", content: "본인인증 띄우기", primaryButtonTitle: "예", cancleButtonTitle: "아니오") {
+            //
+        } cancleAction: {
+            //
+        }
+        .primaryAlert(isPresented: $isShowingWaitingApprovalAlert, title: "승인 요청", content: "아직 상대방이 요청을 받지 못했나봐요! 알림을 다시 보내볼까요?", primaryButtonTitle: "네", cancleButtonTitle: "아니오") {
+            //
+        } cancleAction: {
+            //
+        }
+        .primaryAlert(isPresented: $isShowingWaitingPaymentAlert, title: "결제 진행중", content: "작성자가 결제 진행중입니다.", primaryButtonTitle: nil, cancleButtonTitle: "확인") {
+            //
+        } cancleAction: {
+            //
         }
     }
 }

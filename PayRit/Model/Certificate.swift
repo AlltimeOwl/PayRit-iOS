@@ -32,6 +32,12 @@ struct Certificate: Hashable, Codable {
         }
     }
     
+    var amountFormatter: String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        return formatter.string(from: (NSNumber(value: amount))) ?? String(amount)
+    }
+    
     var writingDayCal: Int {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"

@@ -27,6 +27,11 @@ struct CertificateDeductibleView: View {
                         .font(Font.body03)
                         .foregroundStyle(Color.gray04)
                     CustomTextField(placeholder: "금액을 입력해주세요", keyboardType: .numberPad, text: $money, isFocused: focused)
+                        .onChange(of: money) { _, newValue in
+                            if Int(newValue) ?? homeStore.certificateDetail.remainingAmount > homeStore.certificateDetail.remainingAmount {
+                                money = String(homeStore.certificateDetail.remainingAmount)
+                            }
+                        }
                 }
                 .padding(.horizontal, 16)
                 
@@ -58,8 +63,7 @@ struct CertificateDeductibleView: View {
                                         }
                                         Spacer()
                                     }
-                                }
-                                    .padding(.leading, 14)
+                                }.padding(.leading, 14)
                                 , alignment: .leading
                             )
                         Image(systemName: "calendar")
@@ -90,15 +94,16 @@ struct CertificateDeductibleView: View {
                     .listStyle(.plain)
                 }
                 .padding(.top, 20)
-                Spacer()
                 Button {
                     if certificateDetail.dueDate > 0 {
-                        if certificateDetail.amount >= Int(money) ?? 0 {
-                            if !money.isEmpty {
+                        if certificateDetail.remainingAmount >= Int(money) ?? 0 {
+                            if !money.isEmpty && money != "0"{
+                                self.endTextEditing()
                                 homeStore.deductedSave(paperId: certificateDetail.paperId, repaymentDate: date.dateToString(), repaymentAmount: money)
                                 certificateDetail.repaymentHistories.append(Deducted(id: 0, repaymentDate: date.dateToString().replacingOccurrences(of: "-", with: "."), repaymentAmount: Int(money) ?? 0))
-                                homeStore.certificateDetail.repaymentHistories.append(Deducted(id: 0, repaymentDate: date.dateToString().replacingOccurrences(of: "-", with: "."), repaymentAmount: Int(money) ?? 0))
-                                self.endTextEditing()
+                                homeStore.certificateDetail.remainingAmount -= Int(money) ?? 0
+                                money = ""
+                            } else {
                                 money = ""
                             }
                         } else {
