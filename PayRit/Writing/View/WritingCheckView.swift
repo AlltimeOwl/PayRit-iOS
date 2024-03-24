@@ -31,7 +31,7 @@ struct WritingCheckView: View {
                                         .font(Font.body04)
                                     Spacer()
                                     HStack {
-                                        Text("\(newCertificate.totalAmountFormatter)원")
+                                        Text("\(newCertificate.primeAmountFomatter)원")
                                             .font(Font.body01)
                                         Spacer()
                                     }
@@ -83,7 +83,6 @@ struct WritingCheckView: View {
                                             Spacer()
                                             HStack {
                                                 Text("매월 \(newCertificate.interestPaymentDate)일")
-                                                    .foregroundStyle(!newCertificate.repaymentEndDate.isEmpty ? .black : .clear)
                                                     .font(Font.body01)
                                                 Spacer()
                                             }

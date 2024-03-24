@@ -19,6 +19,15 @@
 		BC1CF8DD2B96FCA200A9BF12 /* WritingCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1CF8DC2B96FCA200A9BF12 /* WritingCheckView.swift */; };
 		BC2193962BA99BC000EE7B68 /* Certificate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2193952BA99BC000EE7B68 /* Certificate.swift */; };
 		BC2193982BAC0DF000EE7B68 /* String +.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2193972BAC0DF000EE7B68 /* String +.swift */; };
+		BC21939A2BAF34A000EE7B68 /* SafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2193992BAF34A000EE7B68 /* SafariView.swift */; };
+		BC21939C2BB015D700EE7B68 /* Int +.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC21939B2BB015D700EE7B68 /* Int +.swift */; };
+		BC21939F2BB038B200EE7B68 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = BC21939E2BB038B200EE7B68 /* FirebaseAnalytics */; };
+		BC2193A12BB038B200EE7B68 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = BC2193A02BB038B200EE7B68 /* FirebaseMessaging */; };
+		BC2193A32BB03A0500EE7B68 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BC2193A22BB03A0500EE7B68 /* GoogleService-Info.plist */; };
+		BC2193A62BB03D7F00EE7B68 /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2193A52BB03D7F00EE7B68 /* NotificationView.swift */; };
+		BC2193A82BB03D8C00EE7B68 /* PayritNoti.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2193A72BB03D8C00EE7B68 /* PayritNoti.swift */; };
+		BC2193AB2BB0416400EE7B68 /* NotificationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2193AA2BB0416400EE7B68 /* NotificationStore.swift */; };
+		BC2193B02BB06EB600EE7B68 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = BC2193AD2BB066E700EE7B68 /* Config.xcconfig */; };
 		BC29AA3B2BA1BEB9002CB968 /* CertificateSerchingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC29AA3A2BA1BEB9002CB968 /* CertificateSerchingView.swift */; };
 		BC2D51CC2B9ECD870041FD77 /* CertificateMemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2D51CB2B9ECD870041FD77 /* CertificateMemoView.swift */; };
 		BC2D51CE2B9F35260041FD77 /* CertificateDeductibleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2D51CD2B9F35260041FD77 /* CertificateDeductibleView.swift */; };
@@ -84,6 +93,13 @@
 		BC1CF8DC2B96FCA200A9BF12 /* WritingCheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WritingCheckView.swift; sourceTree = "<group>"; };
 		BC2193952BA99BC000EE7B68 /* Certificate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Certificate.swift; sourceTree = "<group>"; };
 		BC2193972BAC0DF000EE7B68 /* String +.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String +.swift"; sourceTree = "<group>"; };
+		BC2193992BAF34A000EE7B68 /* SafariView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariView.swift; sourceTree = "<group>"; };
+		BC21939B2BB015D700EE7B68 /* Int +.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int +.swift"; sourceTree = "<group>"; };
+		BC2193A22BB03A0500EE7B68 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		BC2193A52BB03D7F00EE7B68 /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
+		BC2193A72BB03D8C00EE7B68 /* PayritNoti.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayritNoti.swift; sourceTree = "<group>"; };
+		BC2193AA2BB0416400EE7B68 /* NotificationStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationStore.swift; sourceTree = "<group>"; };
+		BC2193AD2BB066E700EE7B68 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		BC29AA3A2BA1BEB9002CB968 /* CertificateSerchingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateSerchingView.swift; sourceTree = "<group>"; };
 		BC2D51CB2B9ECD870041FD77 /* CertificateMemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateMemoView.swift; sourceTree = "<group>"; };
 		BC2D51CD2B9F35260041FD77 /* CertificateDeductibleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateDeductibleView.swift; sourceTree = "<group>"; };
@@ -139,6 +155,8 @@
 			files = (
 				BC595DFB2B8D941900CA555E /* KakaoSDKCertCore in Frameworks */,
 				BC595DF92B8D941900CA555E /* KakaoSDKCert in Frameworks */,
+				BC2193A12BB038B200EE7B68 /* FirebaseMessaging in Frameworks */,
+				BC21939F2BB038B200EE7B68 /* FirebaseAnalytics in Frameworks */,
 				BC595DF52B8D941900CA555E /* KakaoSDK in Frameworks */,
 				BC595DFD2B8D941900CA555E /* KakaoSDKCommon in Frameworks */,
 				BC595DF72B8D941900CA555E /* KakaoSDKAuth in Frameworks */,
@@ -168,6 +186,31 @@
 			path = Font;
 			sourceTree = "<group>";
 		};
+		BC2193A42BB03D6600EE7B68 /* Nofitication */ = {
+			isa = PBXGroup;
+			children = (
+				BC2193A92BB03E5B00EE7B68 /* View */,
+				BC2193AC2BB0442F00EE7B68 /* ViewModel */,
+			);
+			path = Nofitication;
+			sourceTree = "<group>";
+		};
+		BC2193A92BB03E5B00EE7B68 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				BC2193A52BB03D7F00EE7B68 /* NotificationView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		BC2193AC2BB0442F00EE7B68 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				BC2193AA2BB0416400EE7B68 /* NotificationStore.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		BC388DB32B904B6F005D1279 /* Content */ = {
 			isa = PBXGroup;
 			children = (
@@ -179,6 +222,7 @@
 		BC595DC92B8D8AC300CA555E = {
 			isa = PBXGroup;
 			children = (
+				BC2193AD2BB066E700EE7B68 /* Config.xcconfig */,
 				BC595DD42B8D8AC300CA555E /* PayRit */,
 				BC595DD32B8D8AC300CA555E /* Products */,
 			);
@@ -208,6 +252,7 @@
 				BC595DEB2B8D8E0800CA555E /* Model */,
 				BC595DE82B8D8DD600CA555E /* TabBar */,
 				BC595E262B8DDFC800CA555E /* Home */,
+				BC2193A42BB03D6600EE7B68 /* Nofitication */,
 				BCE280DD2B9020BE0085D45E /* Writing */,
 				BC5C572A2B977B6800A55CC7 /* KakaoAddress */,
 				BC595DFE2B8DA1E200CA555E /* SignIn */,
@@ -249,6 +294,7 @@
 				BC595E092B8DAFD600CA555E /* Font +.swift */,
 				BC595E182B8DB75600CA555E /* Color +.swift */,
 				BC2193972BAC0DF000EE7B68 /* String +.swift */,
+				BC21939B2BB015D700EE7B68 /* Int +.swift */,
 				BCE280D92B8F75120085D45E /* View +.swift */,
 				BC62BFF52BA1551F000A1BA5 /* Date +.swift */,
 				BCE280DB2B8F75440085D45E /* ViewModifier.swift */,
@@ -260,6 +306,7 @@
 			isa = PBXGroup;
 			children = (
 				BC595E0B2B8DB0B500CA555E /* Info.plist */,
+				BC2193A22BB03A0500EE7B68 /* GoogleService-Info.plist */,
 				BC595DD92B8D8AC400CA555E /* Assets.xcassets */,
 				BC1219702BA6D2FD00B575F8 /* Font */,
 			);
@@ -275,6 +322,7 @@
 				BC1219602BA1D6FC00B575F8 /* Deducted.swift */,
 				BC68291E2B9CEE87009EF3F5 /* Memo.swift */,
 				BC62BFF12BA02481000A1BA5 /* Payment.swift */,
+				BC2193A72BB03D8C00EE7B68 /* PayritNoti.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -292,6 +340,7 @@
 			children = (
 				BC95634F2B9F3B130014010C /* MFMailView.swift */,
 				BC1219662BA32E4700B575F8 /* PDFKitView.swift */,
+				BC2193992BAF34A000EE7B68 /* SafariView.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -469,6 +518,8 @@
 				BC595DF82B8D941900CA555E /* KakaoSDKCert */,
 				BC595DFA2B8D941900CA555E /* KakaoSDKCertCore */,
 				BC595DFC2B8D941900CA555E /* KakaoSDKCommon */,
+				BC21939E2BB038B200EE7B68 /* FirebaseAnalytics */,
+				BC2193A02BB038B200EE7B68 /* FirebaseMessaging */,
 			);
 			productName = PayRit;
 			productReference = BC595DD22B8D8AC300CA555E /* PayRit.app */;
@@ -501,6 +552,7 @@
 			mainGroup = BC595DC92B8D8AC300CA555E;
 			packageReferences = (
 				BC595DF32B8D941900CA555E /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */,
+				BC21939D2BB038B200EE7B68 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			productRefGroup = BC595DD32B8D8AC300CA555E /* Products */;
 			projectDirPath = "";
@@ -517,10 +569,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				BCD942512B8F0CCC00BF61CD /* .swiftlint.yml in Resources */,
+				BC2193A32BB03A0500EE7B68 /* GoogleService-Info.plist in Resources */,
 				BC6829192B9CA836009EF3F5 /* SUIT-Regular.otf in Resources */,
 				BC595DDD2B8D8AC400CA555E /* Preview Assets.xcassets in Resources */,
 				BC6F65332B9CA37A00FB9FA7 /* SUIT-SemiBold.otf in Resources */,
 				BC595E252B8DC9AC00CA555E /* Launch Screen.storyboard in Resources */,
+				BC2193B02BB06EB600EE7B68 /* Config.xcconfig in Resources */,
 				BC68291B2B9CACC6009EF3F5 /* SUIT-Medium.otf in Resources */,
 				BC595DDA2B8D8AC400CA555E /* Assets.xcassets in Resources */,
 				BC6F65352B9CA3C100FB9FA7 /* SUIT-Bold.otf in Resources */,
@@ -577,6 +631,7 @@
 				BCE280E42B903BE50085D45E /* SelectCertificateTypeView.swift in Sources */,
 				BC1219692BA35B1000B575F8 /* CertificateToDoucumentView.swift in Sources */,
 				BCD9425B2B8F639A00BF61CD /* CustomTextField.swift in Sources */,
+				BC21939C2BB015D700EE7B68 /* Int +.swift in Sources */,
 				BC1219672BA32E4700B575F8 /* PDFKitView.swift in Sources */,
 				BC1219652BA29FE700B575F8 /* CertificateAcceptView.swift in Sources */,
 				BC1CF8D92B96C8D800A9BF12 /* CustomAlert.swift in Sources */,
@@ -592,8 +647,11 @@
 				BC2193962BA99BC000EE7B68 /* Certificate.swift in Sources */,
 				BC2D51CE2B9F35260041FD77 /* CertificateDeductibleView.swift in Sources */,
 				BC9E55CE2B956B7300B100C6 /* CertificateDetailView.swift in Sources */,
+				BC2193A82BB03D8C00EE7B68 /* PayritNoti.swift in Sources */,
 				BC1219742BA7204600B575F8 /* TabBarStore.swift in Sources */,
+				BC21939A2BAF34A000EE7B68 /* SafariView.swift in Sources */,
 				BC1219612BA1D6FC00B575F8 /* Deducted.swift in Sources */,
+				BC2193A62BB03D7F00EE7B68 /* NotificationView.swift in Sources */,
 				BC29AA3B2BA1BEB9002CB968 /* CertificateSerchingView.swift in Sources */,
 				BCD942532B8F0E0600BF61CD /* LaunchScreenTest.swift in Sources */,
 				BCD942572B8F1D5400BF61CD /* MyPageView.swift in Sources */,
@@ -612,6 +670,7 @@
 				BC6F652B2B9B355200FB9FA7 /* User.swift in Sources */,
 				BC62BFF82BA15695000A1BA5 /* WritingStore.swift in Sources */,
 				BC6F652D2B9B394800FB9FA7 /* MembershipWithdrawalView.swift in Sources */,
+				BC2193AB2BB0416400EE7B68 /* NotificationStore.swift in Sources */,
 				BC595E282B8DDFDD00CA555E /* HomeView.swift in Sources */,
 				BC388DB52B904BAB005D1279 /* ContentView.swift in Sources */,
 				BC595E0A2B8DAFD600CA555E /* Font +.swift in Sources */,
@@ -748,6 +807,7 @@
 		};
 		BC595DE12B8D8AC400CA555E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BC2193AD2BB066E700EE7B68 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -786,6 +846,7 @@
 		};
 		BC595DE22B8D8AC400CA555E /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BC2193AD2BB066E700EE7B68 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -846,6 +907,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		BC21939D2BB038B200EE7B68 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.23.0;
+			};
+		};
 		BC595DF32B8D941900CA555E /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kakao/kakao-ios-sdk";
@@ -857,6 +926,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		BC21939E2BB038B200EE7B68 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BC21939D2BB038B200EE7B68 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		BC2193A02BB038B200EE7B68 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BC21939D2BB038B200EE7B68 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
 		BC595DF42B8D941900CA555E /* KakaoSDK */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = BC595DF32B8D941900CA555E /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;

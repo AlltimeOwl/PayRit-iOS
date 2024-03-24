@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct CertificateAcceptView: View {
+    let paperId: Int
     let certificateStep: CertificateStep
     @State private var checkBox: Bool = false
     @Environment(HomeStore.self) var homeStore: HomeStore
@@ -28,7 +29,7 @@ struct CertificateAcceptView: View {
                                         .font(Font.body04)
                                     Spacer()
                                     HStack {
-                                        Text("\(homeStore.certificateDetail.totalMoneyFormatter)원")
+                                        Text("\(homeStore.certificateDetail.primeAmountFomatter)원")
                                             .font(Font.body01)
                                         Spacer()
                                     }
@@ -78,19 +79,18 @@ struct CertificateAcceptView: View {
                                             Spacer()
                                             HStack {
                                                 Text("매월 \(homeStore.certificateDetail.interestPaymentDate)일")
-                                                    .foregroundStyle(!homeStore.certificateDetail.repaymentEndDate.isEmpty ? .black : .clear)
                                                     .font(Font.body01)
                                                 Spacer()
                                             }
                                             .frame(width: 220)
                                         }
                                     }
-                                    if homeStore.certificateDetail.specialConditions != nil {
+                                    if let specialConditions = homeStore.certificateDetail.specialConditions {
                                         HStack {
                                             Text("특이사항")
                                                 .font(Font.body04)
                                             Spacer()
-                                            Text("\(homeStore.certificateDetail.specialConditions ?? "")")
+                                            Text("\(specialConditions)")
                                                 .font(Font.body01)
                                                 .frame(width: 220)
                                             Spacer()
@@ -125,7 +125,7 @@ struct CertificateAcceptView: View {
                                         .font(Font.body04)
                                     Spacer()
                                     HStack {
-                                        Text("\(homeStore.certificateDetail.creditorPhoneNumber.onlyPhoneNumber())")
+                                        Text("\(homeStore.certificateDetail.creditorPhoneNumber.onlyPhoneNumber().replacingOccurrences(of: "-", with: "."))")
                                             .font(Font.body01)
                                         Spacer()
                                     }
@@ -172,7 +172,7 @@ struct CertificateAcceptView: View {
                                         .font(Font.body04)
                                     Spacer()
                                     HStack {
-                                        Text("\(homeStore.certificateDetail.debtorPhoneNumber.onlyPhoneNumber())")
+                                        Text("\(homeStore.certificateDetail.debtorPhoneNumber.onlyPhoneNumber().replacingOccurrences(of: "-", with: "."))")
                                             .font(Font.body01)
                                         Spacer()
                                     }
@@ -252,6 +252,9 @@ struct CertificateAcceptView: View {
         .navigationTitle("페이릿 내용 확인")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
+            Task {
+                await homeStore.loadDetail(id: paperId)
+            }
         }
         .toolbar {
         }
@@ -260,7 +263,7 @@ struct CertificateAcceptView: View {
 
 #Preview {
     NavigationStack {
-        CertificateAcceptView(certificateStep: .progress)
+        CertificateAcceptView(paperId: 0, certificateStep: .progress)
             .environment(HomeStore())
     }
 }

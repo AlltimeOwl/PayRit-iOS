@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct CertificateDocumentView: View {
-    let certificateDetail = CertificateDetail(paperId: 0, paperUrl: "", amount: 100000000, memberRole: "", remainingAmount: 10000000, interestRate: 10.0, interestPaymentDate: 15, repaymentRate: 0.0, repaymentStartDate: "2024.01.01", repaymentEndDate: "2024.04.01", creditorName: "임대진", creditorPhoneNumber: "010.5009.7937", creditorAddress: "경기도 용인시 수지구 신봉동 876", dueDate: 10, debtorName: "홍길동", debtorPhoneNumber: "010.1919.1919", debtorAddress: "경기도 용인시 수지구 신봉동 192930", specialConditions: "특약사항", memoListResponses: [Memo](), repaymentHistories: [Deducted]())
+//    let certificateDetail = CertificateDetail(paperId: 0, paperUrl: "",memberRole: "", primeAmount: 200000,interest: 20000, amount: 220000, remainingAmount: 10000000, interestRate: 10.0, interestPaymentDate: 15, repaymentRate: 0.0, repaymentStartDate: "2024.01.01", repaymentEndDate: "2024.04.01", creditorName: "임대진", creditorPhoneNumber: "010.5009.7937", creditorAddress: "경기도 용인시 수지구 신봉동 876", dueDate: 10, debtorName: "홍길동", debtorPhoneNumber: "010.1919.1919", debtorAddress: "경기도 용인시 수지구 신봉동 192930", specialConditions: "특약사항", memoListResponses: [Memo](), repaymentHistories: [Deducted]())
+    let certificateDetail: CertificateDetail
     var body: some View {
         VStack {
             Text("차   용   증")
@@ -39,7 +40,7 @@ struct CertificateDocumentView: View {
                         Spacer()
                     }
                     HStack {
-                        Text("\(certificateDetail.creditorPhoneNumber.replacingOccurrences(of: "-", with: "."))")
+                        Text("\(certificateDetail.creditorPhoneNumber.onlyPhoneNumber().replacingOccurrences(of: "-", with: "."))")
                         Spacer()
                     }
                     HStack {
@@ -73,7 +74,7 @@ struct CertificateDocumentView: View {
                         Spacer()
                     }
                     HStack {
-                        Text("\(certificateDetail.debtorPhoneNumber.replacingOccurrences(of: "-", with: "."))")
+                        Text("\(certificateDetail.debtorPhoneNumber.onlyPhoneNumber().replacingOccurrences(of: "-", with: "."))")
                         Spacer()
                     }
                     HStack {
@@ -111,7 +112,7 @@ struct CertificateDocumentView: View {
                         .foregroundStyle(.black)
                     VStack(alignment: .leading) {
                         HStack {
-                            Text("원금  \(certificateDetail.amount)  원정")
+                            Text("원금  \(certificateDetail.amount.numberToKorean())  원정")
                             Spacer()
                             Text("(  \(certificateDetail.amount)  원 )")
                         }
@@ -119,24 +120,29 @@ struct CertificateDocumentView: View {
                         Divider()
                             .foregroundStyle(.black)
                         HStack {
-                            Spacer()
                             Text("연 ( \(String(format: "%.2f", certificateDetail.interestRate)) % )")
                             Spacer()
                             Divider()
                                 .foregroundStyle(.black)
                             Spacer()
                             Text("매월 ( \(certificateDetail.interestPaymentDate) 일 ) 에 지급")
-                            Spacer()
                         }
+                        .padding(.horizontal, 10)
                         Divider()
                             .foregroundStyle(.black)
-                        Text(" 년 월 일")
+                        Text("\(certificateDetail.repaymentEndDate)")
                             .padding(.horizontal, 10)
 
                         Divider()
                             .foregroundStyle(.black)
-                        Text("없음")
-                            .padding(.horizontal, 10)
+                        if let etc = certificateDetail.specialConditions {
+                            Text(etc)
+                                .padding(.horizontal, 10)
+                        } else {
+                            Text("etc")
+                                .padding(.horizontal, 10)
+                                .foregroundStyle(.clear)
+                        }
 
                     }
                     .padding(.vertical, 10)
@@ -157,18 +163,18 @@ struct CertificateDocumentView: View {
             .frame(height: 50)
             .padding(.top, 50)
             
-            Text("2024년 00월 00일")
-                .padding(.top, 100)
+            Text(certificateDetail.transactionDate.stringDateToKorea())
+                .padding(.vertical, 40)
             Spacer()
             HStack {
                 Spacer()
-                Text("채 권 자 :                  (인)")
+                Text("채 권 자 :    \(certificateDetail.creditorName)    (인)")
                     .padding(.trailing, 40)
             }
-            .padding(.bottom, 20)
+            .padding(.vertical, 10)
             HStack {
                 Spacer()
-                Text("채 무 자 :                  (인)")
+                Text("채 무 자 :    \(certificateDetail.debtorName)    (인)")
                     .padding(.trailing, 40)
             }
             Spacer()
@@ -180,5 +186,5 @@ struct CertificateDocumentView: View {
 }
 
 #Preview {
-    CertificateDocumentView()
+    CertificateDocumentView(certificateDetail: CertificateDetail.testCertofocateDetail)
 }

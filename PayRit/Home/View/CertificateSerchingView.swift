@@ -221,14 +221,18 @@ struct CertificateSerchingView: View {
         .dismissOnDrag()
         .navigationDestination(isPresented: $navigationLinkDetailView) {
             if !homeStore.certificates.isEmpty {
-                CertificateDetailView(paperId: paperId, certificateStep: certificateStep ?? .progress)
-                    .customBackbutton()
+                if let setp = certificateStep {
+                    CertificateDetailView(paperId: paperId, certificateStep: setp)
+                        .customBackbutton()
+                }
             }
         }
         .navigationDestination(isPresented: $navigationLinkAcceptView) {
             if !homeStore.certificates.isEmpty {
-                CertificateAcceptView(certificateStep: certificateStep ?? .progress)
-                    .customBackbutton()
+                if let setp = certificateStep {
+                    CertificateAcceptView(paperId: paperId, certificateStep: setp)
+                        .customBackbutton()
+                }
             }
         }
         .onChange(of: searchWord) {

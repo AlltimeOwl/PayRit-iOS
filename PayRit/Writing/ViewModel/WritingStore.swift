@@ -12,6 +12,20 @@ import SwiftUI
 final class WritingStore {
     var currentUser = UserDefaultsManager().getUserInfo()
     
+//    func calInterestAmount(start: String, end: String, rate: Float, primeAmount: Int) -> Int {
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.dateFormat = "yyyy-MM-dd"
+//
+//        if let targetDate = dateFormatter.date(from: end), let startDate = dateFormatter.date(from: start) {
+//            let totalDate = calculateDday(startDate: startDate, targetDate: targetDate) + 1
+//            let dailyInterestRate = rate / 100.0 / 365.0
+//            let interestAmount = Double(primeAmount) * Double(dailyInterestRate) * Double(totalDate)
+//            return Int(interestAmount)
+//        } else {
+//            return 0
+//        }
+//    }
+    
     func saveCertificae(certificate: CertificateDetail) {
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"
@@ -27,8 +41,8 @@ final class WritingStore {
             request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
             let body = [
                 "writerRole": certificate.memberRole,
-                "amount": certificate.amount,
-                "calcedAmount": "\(certificate.amount + certificate.interestRateAmount)",
+                "amount": certificate.primeAmount,
+                "interest": "\(certificate.interestRateAmount)",
                 "transactionDate": Date().dateToString(),
                 "repaymentStartDate": certificate.repaymentStartDate,
                 "repaymentEndDate": certificate.repaymentEndDate,
@@ -77,34 +91,4 @@ final class WritingStore {
             task.resume() // 작업 시작
         }
     }
-    
-    func convertToKoreanNumber(_ number: Int) -> String {
-        let numbers = ["영", "일", "이", "삼", "사", "오", "육", "칠", "팔", "구"]
-        let units = ["", "십", "백", "천"]
-        let largeUnits = ["", "만", "억", "조", "경", "해"]
-        
-        var result = ""
-        var number = number
-        var unitIndex = 0
-        
-        while number > 0 {
-            let digit = number % 10
-            let unit = units[unitIndex % 4]
-            let largeUnit = largeUnits[unitIndex / 4]
-            
-            if digit != 0 {
-                result = numbers[digit] + unit + result
-            }
-            
-            number /= 10
-            unitIndex += 1
-            
-            if unitIndex % 4 == 0 {
-                result = largeUnit + result
-            }
-        }
-        
-        return result.isEmpty ? "영" : result
-    }
-
 }

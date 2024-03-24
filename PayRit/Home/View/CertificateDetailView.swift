@@ -28,7 +28,7 @@ struct CertificateDetailView: View {
                                 Text("\(homeStore.certificateDetail.debtorName)님께")
                                 HStack(spacing: 0) {
                                     Text("총 ")
-                                    Text(homeStore.certificateDetail.totalMoneyFormatter)
+                                    Text(homeStore.certificateDetail.amountFormatter)
                                         .foregroundStyle(Color.payritMint)
                                     Text("원을 빌려주었어요.")
                                 }
@@ -39,7 +39,7 @@ struct CertificateDetailView: View {
                                 Text("\(homeStore.certificateDetail.creditorName)님께")
                                 HStack(spacing: 0) {
                                     Text("총 ")
-                                    Text(homeStore.certificateDetail.totalMoneyFormatter)
+                                    Text(homeStore.certificateDetail.amountFormatter)
                                         .foregroundStyle(Color.payritIntensivePink)
                                     Text("원을 빌렸어요.")
                                 }
@@ -64,7 +64,7 @@ struct CertificateDetailView: View {
                                 .foregroundStyle(Color.gray04)
                                 .padding(.top, 14)
                             
-                            Text(String(homeStore.certificateDetail.totalRemainingAmountFormatter) + "원")
+                            Text(String(homeStore.certificateDetail.remainingAmountFormatter) + "원")
                                 .font(Font.title01)
                                 .padding(.top, 2)
                             
@@ -244,7 +244,7 @@ struct CertificateDetailView: View {
                                         Text("\(homeStore.certificateDetail.creditorName)")
                                     }
                                     HStack {
-                                        Text("\(homeStore.certificateDetail.creditorPhoneNumber.onlyPhoneNumber())")
+                                        Text("\(homeStore.certificateDetail.creditorPhoneNumber.onlyPhoneNumber().replacingOccurrences(of: "-", with: "."))")
                                     }
                                     if !homeStore.certificateDetail.creditorAddress.isEmpty {
                                         HStack {
@@ -287,7 +287,7 @@ struct CertificateDetailView: View {
                                         Text("\(homeStore.certificateDetail.debtorName)")
                                     }
                                     HStack {
-                                        Text("\(homeStore.certificateDetail.debtorPhoneNumber.onlyPhoneNumber())")
+                                        Text("\(homeStore.certificateDetail.debtorPhoneNumber.onlyPhoneNumber().replacingOccurrences(of: "-", with: "."))")
                                     }
                                     if !homeStore.certificateDetail.debtorAddress.isEmpty {
                                         HStack {
@@ -303,43 +303,46 @@ struct CertificateDetailView: View {
                             .clipShape(.rect(cornerRadius: 12))
                             .shadow(color: .gray.opacity(0.2), radius: 5)
                         }
-                        
-                        if homeStore.certificateDetail.interestRateAmount > 0 || (homeStore.certificateDetail.interestPaymentDate > 0) || ((homeStore.certificateDetail.specialConditions?.isEmpty) == nil) {
+                        if homeStore.certificateDetail.interestRate != 0 || homeStore.certificateDetail.interestPaymentDate != 0 || homeStore.certificateDetail.specialConditions != nil {
                             VStack(alignment: .leading) {
                                 Text("추가사항")
                                     .font(Font.body03)
                                     .foregroundStyle(Color.gray04)
                                 VStack(alignment: .leading, spacing: 12) {
-                                    if homeStore.certificateDetail.interestRateAmount != 0 {
+                                    if homeStore.certificateDetail.interestRate != 0 {
                                         HStack {
-                                            Text("이자")
+                                            Text("이자율")
                                                 .font(Font.body04)
-                                            Spacer().frame(width: 70)
-                                            Text("\(homeStore.certificateDetail.interestRateAmount)원")
-                                                .font(Font.body01)
                                             Spacer()
+                                            HStack {
+                                                Text("\(String(format: "%.2f", homeStore.certificateDetail.interestRate))%")
+                                                    .font(Font.body01)
+                                                Spacer()
+                                            }
+                                            .frame(width: 220)
                                         }
                                     }
-                                    
                                     if homeStore.certificateDetail.interestPaymentDate != 0 {
                                         HStack {
                                             Text("이자 지급일")
                                                 .font(Font.body04)
-                                            Spacer().frame(width: 30)
-                                            Text("매월 \(homeStore.certificateDetail.interestPaymentDate)일")
-                                                .foregroundStyle(!homeStore.certificateDetail.repaymentEndDate.isEmpty ? .black : .clear)
-                                                .font(Font.body01)
                                             Spacer()
+                                            HStack {
+                                                Text("매월 \(homeStore.certificateDetail.interestPaymentDate)일")
+                                                    .font(Font.body01)
+                                                Spacer()
+                                            }
+                                            .frame(width: 220)
                                         }
                                     }
-                                    
                                     if let specialConditions = homeStore.certificateDetail.specialConditions {
                                         HStack {
                                             Text("특이사항")
                                                 .font(Font.body04)
-                                            Spacer().frame(width: 70)
+                                            Spacer()
                                             Text("\(specialConditions)")
                                                 .font(Font.body01)
+                                                .frame(width: 220)
                                             Spacer()
                                         }
                                     }
@@ -359,11 +362,11 @@ struct CertificateDetailView: View {
                 .padding(.horizontal, 16)
                 .padding(.top, 20)
             }
+            .scrollIndicators(.hidden)
+            .navigationTitle("페이릿 상세 페이지")
+            .navigationBarTitleDisplayMode(.inline)
         }
         .dismissOnDrag()
-        .scrollIndicators(.hidden)
-        .navigationTitle("페이릿 상세 페이지")
-        .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             Task {
                 await homeStore.loadDetail(id: paperId)
@@ -403,7 +406,7 @@ struct CertificateDetailView: View {
                 print("Result: \(String(describing: result))")
             }
         })
-        .primaryAlert(isPresented: $isShowingAllRepaymentAlert, title: "전체 상환 기록", content: "남은 금액 \(homeStore.certificateDetail.totalRemainingAmountFormatter)원을 전체 상환 하시겠습니까?", primaryButtonTitle: "네", cancleButtonTitle: "아니오") {
+        .primaryAlert(isPresented: $isShowingAllRepaymentAlert, title: "전체 상환 기록", content: "남은 금액 \(homeStore.certificateDetail.remainingAmountFormatter)원을 전체 상환 하시겠습니까?", primaryButtonTitle: "네", cancleButtonTitle: "아니오") {
             homeStore.deductedSave(paperId: paperId, repaymentDate: Date().dateToString(), repaymentAmount: String(homeStore.certificateDetail.remainingAmount))
             homeStore.certificateDetail.remainingAmount = 0
             homeStore.certificateDetail.repaymentRate = 100.0

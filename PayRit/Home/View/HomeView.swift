@@ -149,7 +149,7 @@ struct HomeView: View {
                                                 }
                                                 .padding(.top, 16)
                                                 
-                                                Text("\(certificate.amount)원")
+                                                Text("\(certificate.amountFormatter)원")
                                                     .font(Font.title01)
                                                     .padding(.top, 8)
                                                 Text(certificate.peerName)
@@ -263,67 +263,70 @@ struct HomeView: View {
                 Spacer()
             }
             .padding(.top, 20)
-//            .ignoresSafeArea(edges: .bottom)
-        }
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                VStack {
-                    Spacer().frame(height: 30)
-                    Text("임대진님의 기록")
-                        .font(Font.title01)
-                        .foregroundStyle(.black)
-                    Spacer().frame(height: 10)
-                }
-            }
-            ToolbarItem(placement: .topBarTrailing) {
-                HStack {
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
                     VStack {
                         Spacer().frame(height: 30)
-                        NavigationLink {
-                            CertificateSerchingView()
-                                .navigationBarBackButtonHidden()
-                                .onAppear {
-                                    tabStore.tabBarHide = true
-                                }
-                        }label: {
-                            Image(systemName: "magnifyingglass")
-                                .foregroundStyle(.black)
-                        }
+                        Text("임대진님의 기록")
+                            .font(Font.title01)
+                            .foregroundStyle(.black)
                         Spacer().frame(height: 10)
                     }
-                    VStack {
-                        Spacer().frame(height: 30)
-                        NavigationLink {
-                            Text("알림뷰")
-                                .customBackbutton()
-                                .onAppear {
-                                    tabStore.tabBarHide = true
-                                }
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    HStack {
+                        VStack {
+                            Spacer().frame(height: 30)
+                            NavigationLink {
+                                CertificateSerchingView()
+                                    .navigationBarBackButtonHidden()
+                                    .onAppear {
+                                        tabStore.tabBarHide = true
+                                    }
                             }label: {
-                                Image(systemName: "bell")
+                                Image(systemName: "magnifyingglass")
                                     .foregroundStyle(.black)
                             }
                             Spacer().frame(height: 10)
+                        }
+                        VStack {
+                            Spacer().frame(height: 30)
+                            NavigationLink {
+                                NotificationView()
+                                    .customBackbutton()
+                                    .onAppear {
+                                        tabStore.tabBarHide = true
+                                    }
+                                }label: {
+                                    Image(systemName: "bell")
+                                        .foregroundStyle(.black)
+                                }
+                                Spacer().frame(height: 10)
+                        }
                     }
                 }
             }
         }
         .navigationDestination(isPresented: $navigationLinkDetailView) {
             if !homeStore.certificates.isEmpty {
-                CertificateDetailView(paperId: paperId, certificateStep: certificateStep ?? .progress)
-                    .customBackbutton()
-                    .onAppear {
-                        tabStore.tabBarHide = true
-                    }
+                if let setp = certificateStep {
+                    CertificateDetailView(paperId: paperId, certificateStep: setp)
+                        .customBackbutton()
+                        .onAppear {
+                            tabStore.tabBarHide = true
+                        }
+                }
             }
         }
         .navigationDestination(isPresented: $navigationLinkAcceptView) {
             if !homeStore.certificates.isEmpty {
-                CertificateAcceptView(certificateStep: certificateStep ?? .progress)
-                    .customBackbutton()
-                    .onAppear {
-                        tabStore.tabBarHide = true
-                    }
+                if let setp = certificateStep {
+                    CertificateAcceptView(paperId: paperId, certificateStep: setp)
+                        .customBackbutton()
+                        .onAppear {
+                            tabStore.tabBarHide = true
+                        }
+                }
             }
         }
         .refreshable {
@@ -337,7 +340,6 @@ struct HomeView: View {
             tabStore.tabBarHide = false
             Task {
                 await homeStore.loadCertificates()
-                homeStore.isLoading = false
             }
         }
         .primaryAlert(isPresented: $isShowingSignatureView, title: "본인인증", content: "본인인증 띄우기", primaryButtonTitle: "예", cancleButtonTitle: "아니오") {
@@ -360,7 +362,7 @@ struct HomeView: View {
 
 #Preview {
     NavigationStack {
-        HomeView(certificateStep: .progress)
+        HomeView()
             .environment(HomeStore())
             .environment(SignInStore())
             .environment(TabBarStore())

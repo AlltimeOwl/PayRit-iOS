@@ -13,6 +13,7 @@ final class UserDefaultsManager {
         case isSignIn
         case userAppleId, userName, userEmail, userPhoneNumber, signInCompany, signature
         case accessToken, refreshToken
+        case noti
     }
     
     /// 카카오 정보저장
@@ -84,9 +85,34 @@ final class UserDefaultsManager {
         return check
     }
     
+    /// 디바이스 userDefault 전체 삭제
     func removeAll() {
         Key.allCases.forEach {
             UserDefaults.standard.removeObject(forKey: $0.rawValue)
         }
+    }
+    
+    func notiRemoveAll() {
+        UserDefaults.standard.removeObject(forKey: Key.noti.rawValue)
+    }
+    
+    func saveNotifications(_ notifications: [PayritNoti]) {
+        let encoder = JSONEncoder()
+        if let encoded = try? encoder.encode(notifications) {
+            UserDefaults.standard.set(encoded, forKey: Key.noti.rawValue)
+        }
+    }
+    
+    func loadNotifications() -> [PayritNoti] {
+        if let data = UserDefaults.standard.data(forKey: Key.noti.rawValue) {
+            let decoder = JSONDecoder()
+            do {
+                let notifications = try decoder.decode([PayritNoti].self, from: data)
+                return notifications
+            } catch {
+                print("Failed to decode notifications: \(error)")
+            }
+        }
+        return []
     }
 }

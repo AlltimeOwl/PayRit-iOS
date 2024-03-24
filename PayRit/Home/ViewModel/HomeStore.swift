@@ -76,12 +76,14 @@ final class HomeStore {
                         print("Error decoding JSON: \(error)")
                     }
                 }
+                self.isLoading = false
             } else {
                 print("HTTP status code: \(httpResponse.statusCode)")
                 if let data = data {
                     let responseData = String(data: data, encoding: .utf8)
                     print("\(httpResponse.statusCode) data: \(responseData ?? "No data")")
                 }
+                self.isLoading = false
             }
         }
         task.resume()
@@ -115,8 +117,11 @@ final class HomeStore {
                     let responseData = String(data: data, encoding: .utf8)
                     print("Response data: \(responseData ?? "No data")")
                     do {
-                        let certificates = try JSONDecoder().decode(CertificateDetail.self, from: data)
-                        self.certificateDetail = certificates
+                        let certificate = try JSONDecoder().decode(CertificateDetail.self, from: data)
+                        self.certificateDetail = certificate
+                        if self.certificateDetail.specialConditions == "" {
+                            self.certificateDetail.specialConditions = nil
+                        }
                     } catch {
                         print("Error decoding JSON: \(error)")
                     }
@@ -244,9 +249,9 @@ final class HomeStore {
         }
     }
     
-    @MainActor 
+    @MainActor
     func generatePDF() -> URL {
-        let renderer = ImageRenderer(content: CertificateDocumentView())
+        let renderer = ImageRenderer(content: CertificateDocumentView(certificateDetail: self.certificateDetail))
         
         let url = URL.documentsDirectory.appending(path: "\(Date().dateToString()) 페이릿 차용증.pdf")
         

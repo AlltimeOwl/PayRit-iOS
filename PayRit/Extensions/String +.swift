@@ -48,4 +48,13 @@ extension String {
         }
         return result
     }
+    
+    func stringDateToKorea() -> String {
+        let array = self.components(separatedBy: "-")
+        if array.count == 3 {
+            return "\(array[0]) 년 \(array[1]) 월 \(array[2]) 일"
+        } else {
+            return self
+        }
+    }
 }

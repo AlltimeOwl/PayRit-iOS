@@ -22,15 +22,26 @@ enum WriterRole: String, CodingKey, Codable {
 struct CertificateDetail: Hashable, Codable {
     let paperId: Int
     let paperUrl: String?
-    var amount: Int
     var memberRole: String
+    
+    /// 순수 원금
+    var primeAmount: Int
+    
+    /// 이자액
+    var interest: Int
+    
+    /// 총액( 원금 + 이자 )
+    var amount: Int
+    
     /// 남은 금액(총액 - 일부상환액)
     var remainingAmount: Int
+    
     var interestRate: Float
     var interestPaymentDate: Int
     var repaymentRate: Double
     var repaymentStartDate: String
     var repaymentEndDate: String
+    var transactionDate: String
     var creditorName: String
     var creditorPhoneNumber: String
     var creditorAddress: String
@@ -49,39 +60,45 @@ struct CertificateDetail: Hashable, Codable {
         if let targetDate = dateFormatter.date(from: repaymentEndDate), let startDate = dateFormatter.date(from: repaymentStartDate) {
             let totalDate = calculateDday(startDate: startDate, targetDate: targetDate) + 1
             let dailyInterestRate = interestRate / 100.0 / 365.0
-            let interestAmount = Double(amount) * Double(dailyInterestRate) * Double(totalDate)
+            let interestAmount = Double(primeAmount) * Double(dailyInterestRate) * Double(totalDate)
             return Int(interestAmount)
         } else {
             return 0
         }
     }
     
-    /// amount 값 포멧
-    var totalMoneyFormatter: String {
+    /// primeAmount 순수 원금 값 포멧
+    var primeAmountFomatter: String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
-        return formatter.string(from: (NSNumber(value: amount))) ?? String(amount)
+        return formatter.string(from: (NSNumber(value: primeAmount))) ?? String(primeAmount)
     }
     
     /// remainingAmount 값 포멧
-    var totalRemainingAmountFormatter: String {
+    var remainingAmountFormatter: String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         return formatter.string(from: (NSNumber(value: remainingAmount))) ?? String(remainingAmount)
     }
     
-    /// interestRateAmount 값 (이자금액) 포멧
-    var totalInterestRateAmountFormatter: String {
+    /// 서버에서 받은 interest 이자금액 포멧
+    var interestFormatter: String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
-        return formatter.string(from: (NSNumber(value: interestRateAmount))) ?? String(interestRateAmount)
+        return formatter.string(from: (NSNumber(value: interest))) ?? String(interest)
+    }
+    /// amount (원금 + 이자) 포멧
+    var amountFormatter: String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        return formatter.string(from: (NSNumber(value: amount))) ?? String(amount)
     }
     
-    /// amount + interestRateAmount 포멧
+    /// 작성시 사용하는 원금 + 이자 금액 포멧
     var totalAmountFormatter: String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
-        return formatter.string(from: (NSNumber(value: amount + interestRateAmount))) ?? String(amount + interestRateAmount)
+        return formatter.string(from: (NSNumber(value: primeAmount + interestRateAmount))) ?? String(primeAmount + interestRateAmount)
     }
     
     func calculateDday(startDate: Date, targetDate: Date) -> Int {
@@ -105,6 +122,6 @@ struct CertificateDetail: Hashable, Codable {
         }
     }
     
-    static let EmptyCertificate: CertificateDetail = CertificateDetail(paperId: 0, paperUrl: "", amount: 0, memberRole: "", remainingAmount: 0, interestRate: 0.0, interestPaymentDate: 0, repaymentRate: 0.0, repaymentStartDate: "", repaymentEndDate: "", creditorName: "", creditorPhoneNumber: "", creditorAddress: "", dueDate: 0, debtorName: "", debtorPhoneNumber: "", debtorAddress: "")
-    static let testCertofocateDetail: CertificateDetail = CertificateDetail(paperId: 0, paperUrl: "", amount: 100000000, memberRole: "CREDITOR", remainingAmount: 100000000, interestRate: 19.99, interestPaymentDate: 10, repaymentRate: 0.0, repaymentStartDate: "2024-03-01", repaymentEndDate: "2026-03-01", creditorName: "임대진", creditorPhoneNumber: "010-5009-7937", creditorAddress: "주소주소주소주소주소주소주소주소주소주소주소주소주소", dueDate: 0, debtorName: "상대방", debtorPhoneNumber: "010-5050-5050", debtorAddress: "")
+    static let EmptyCertificate: CertificateDetail = CertificateDetail(paperId: 0, paperUrl: "", memberRole: "", primeAmount: 0, interest: 0, amount: 0, remainingAmount: 0, interestRate: 0.0, interestPaymentDate: 0, repaymentRate: 0.0, repaymentStartDate: "", repaymentEndDate: "",transactionDate: "" , creditorName: "", creditorPhoneNumber: "", creditorAddress: "", dueDate: 0, debtorName: "", debtorPhoneNumber: "", debtorAddress: "")
+    static let testCertofocateDetail: CertificateDetail = CertificateDetail(paperId: 0, paperUrl: "", memberRole: "CREDITOR", primeAmount: 100000000, interest: 10000000, amount: 110000000, remainingAmount: 100000000, interestRate: 19.99, interestPaymentDate: 10, repaymentRate: 0.0, repaymentStartDate: "2024-03-01", repaymentEndDate: "2026-03-01", transactionDate: "2024-03-01", creditorName: "임대진", creditorPhoneNumber: "010-5009-7937", creditorAddress: "주소주소주소주소주소주소주소주소주소주소주소주소주소", dueDate: 0, debtorName: "상대방", debtorPhoneNumber: "010-5050-5050", debtorAddress: "")
 }
