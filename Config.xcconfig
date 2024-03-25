@@ -8,5 +8,5 @@
 // Configuration settings file format documentation can be found at:
 // https://help.apple.com/xcode/#/dev745c5c974
 
-KAKAO_APP_KEY = 
-KAKAO_URL_KEY = 
+KAKAO_APP_KEY = 804faa43c8ef17f50ff27c0df82defbf
+KAKAO_URL_KEY = kakao804faa43c8ef17f50ff27c0df82defbf
