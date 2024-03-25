@@ -158,10 +158,10 @@ class SignInStore {
             } catch {
                 print("Error creating JSON data")
             }
-            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            let task = URLSession.shared.dataTask(with: request) { _, response, error in
                 if let error = error {
                     print("Error: \(error)")
-                } else if let data = data, let response = response as? HTTPURLResponse {
+                } else if let response = response as? HTTPURLResponse {
                     print("Response status code: \(response.statusCode)")
                     if (200..<300).contains(response.statusCode) {
                         print("애플 탈퇴 완료")

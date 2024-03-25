@@ -51,7 +51,7 @@ struct WritingCertificateInfoView: View {
                                     .font(Font.body03)
                                     .foregroundStyle(Color.gray04)
                                 CustomTextField(placeholder: "금액을 입력해주세요", keyboardType: .numberPad, text: $money)
-                                    .onChange(of: money) { oldValue, _ in
+                                    .onChange(of: money) { _, _ in
                                         if let money = Int(money) {
                                             if money <= 30000000 {
                                                 newCertificate.primeAmount = money

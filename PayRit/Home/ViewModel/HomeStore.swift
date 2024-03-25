@@ -18,7 +18,7 @@ enum SortingType: String, CodingKey, CaseIterable {
 final class HomeStore {
     var sortingType: SortingType = .recent
     var certificates: [Certificate] = [Certificate]()
-    var certificateDetail: CertificateDetail = CertificateDetail.testCertofocateDetail
+    var certificateDetail: CertificateDetail = CertificateDetail.EmptyCertificate
     var isLoading: Bool = true
     
     func sortingCertificates() {
