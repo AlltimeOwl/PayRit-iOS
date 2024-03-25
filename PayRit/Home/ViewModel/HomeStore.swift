@@ -17,8 +17,8 @@ enum SortingType: String, CodingKey, CaseIterable {
 @Observable
 final class HomeStore {
     var sortingType: SortingType = .recent
-    var certificates: [Certificate] = [Certificate]()
-    var certificateDetail: CertificateDetail = CertificateDetail.EmptyCertificate
+    var certificates: [Certificate] = /*[Certificate]()*/Certificate.sameple
+    var certificateDetail: CertificateDetail = CertificateDetail.testCertofocateDetail
     var isLoading: Bool = true
     
     func sortingCertificates() {
@@ -119,7 +119,7 @@ final class HomeStore {
                     do {
                         let certificate = try JSONDecoder().decode(CertificateDetail.self, from: data)
                         self.certificateDetail = certificate
-                        if self.certificateDetail.specialConditions == "" {
+                        if ((self.certificateDetail.specialConditions?.isEmpty) != nil) {
                             self.certificateDetail.specialConditions = nil
                         }
                     } catch {

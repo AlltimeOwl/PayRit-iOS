@@ -30,6 +30,7 @@
 		<string>SUIT-Bold.otf</string>
 		<string>SUIT-Regular.otf</string>
 		<string>SUIT-Medium.otf</string>
+		<string>SUIT-ExtraBold.otf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array/>

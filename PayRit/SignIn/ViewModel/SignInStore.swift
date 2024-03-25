@@ -13,6 +13,11 @@ import CryptoKit
 import AuthenticationServices
 import Alamofire
 
+enum WhileSigIn {
+    case waiting
+    case doing
+}
+
 enum SiginInType: String, CodingKey, CaseIterable {
     case apple = "APPLE"
     case kakao = "KAKAO"
@@ -33,64 +38,9 @@ struct TokenTestData: Codable {
 @Observable
 class SignInStore {
     var isSignIn: Bool = UserDefaultsManager().getIsSignInState()
+    var whileSigIn: WhileSigIn = .waiting
     var appleAuthorizationCode = ""
     var appleIdentityToken = ""
-    
-//    func getAppleRefreshToken(code: String, completionHandler: @escaping (AppleTokenResponse) -> Void) {
-//        let url = "https://appleid.apple.com/auth/token"
-//        let header: HTTPHeaders = ["Content-Type": "application/x-www-form-urlencoded"]
-//        let parameters: Parameters = [
-//            "client_id": "앱번들id",
-//            "client_secret": "1번의jwt토큰",
-//            "code": code,
-//            "grant_type": "authorization_code"
-//        ]
-//
-//        AF.request(url,
-//                   method: .post,
-//                   parameters: parameters,
-//                   headers: header)
-//        .validate(statusCode: 200..<300)
-//        .responseData { response in
-//            switch response.result {
-//            case .success:
-//                guard let data = response.data else { return }
-//                let responseData = JSON(data)
-//                print(responseData)
-//
-//                guard let output = try? JSONDecoder().decode(AppleTokenResponse.self, from: data) else {
-//                    print("Error: JSON Data Parsing failed")
-//                    return
-//                }
-//
-//                completionHandler(output)
-//            case .failure:
-//                print("애플 토큰 발급 실패 - \(response.error.debugDescription)")
-//            }
-//        }
-//    }
-//    func revokeAppleToken(clientSecret: String, token: String, completionHandler: @escaping () -> Void) {
-//        let url = "https://appleid.apple.com/auth/revoke"
-//        let header: HTTPHeaders = ["Content-Type": "application/x-www-form-urlencoded"]
-//        let parameters: Parameters = [
-//            "client_id": "com.daejinlim.PayRit",
-//            "client_secret": clientSecret,
-//            "token": token
-//        ]
-//
-//        AF.request(url,
-//                   method: .post,
-//                   parameters: parameters,
-//                   headers: header)
-//        .validate(statusCode: 200..<300)
-//        .responseData { response in
-//            guard let statusCode = response.response?.statusCode else { return }
-//            if statusCode == 200 {
-//                print("애플 토큰 삭제 성공!")
-//                completionHandler()
-//            }
-//        }
-//    }
     
     // MARK: - 애플
     func appleAuthCheck() {
@@ -158,10 +108,10 @@ class SignInStore {
             } catch {
                 print("Error creating JSON data")
             }
-            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            let task = URLSession.shared.dataTask(with: request) { _, response, error in
                 if let error = error {
                     print("Error: \(error)")
-                } else if let data = data, let response = response as? HTTPURLResponse {
+                } else if let response = response as? HTTPURLResponse {
                     print("Response status code: \(response.statusCode)")
                     if (200..<300).contains(response.statusCode) {
                         print("애플 탈퇴 완료")
@@ -232,6 +182,27 @@ class SignInStore {
         }
     }
     
+    func kakaoAuthCheck() {
+        // 토큰 존재 여부 확인하기
+        if (AuthApi.hasToken()) {
+            UserApi.shared.accessTokenInfo { (_, error) in
+                if let error = error {
+                    if let sdkError = error as? SdkError, sdkError.isInvalidTokenError() == true  {
+                        //로그인 필요
+                        self.isSignIn = false
+                    } else {
+                        //기타 에러
+                    }
+                } else {
+                    //토큰 유효성 체크 성공(필요 시 토큰 갱신됨)
+                }
+            }
+        } else {
+            //로그인 필요
+            self.isSignIn = false
+        }
+    }
+    
     func kakaoSingOut() {
         UserApi.shared.logout { error in
             if let error = error {
@@ -291,13 +262,13 @@ class SignInStore {
     // MARK: - 공용
     /// 서버에 JWT 보내고 Bearer를 userDefault에 저장
     func serverAuth(aToken: String, rToken: String, company: SiginInType, completion: @escaping (Result<Bool, Error>) -> Void) {
+        self.whileSigIn = .doing
         let userDefault = UserDefaultsManager()
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"
         urlComponents.host = "www.payrit.info"
         urlComponents.path = "/api/v1/oauth/\(company.rawValue)"
         
-        // URL 구성 요소를 사용하여 URL 생성
         guard let url = urlComponents.url else {
             completion(.failure(ServerAuthError.invalidURL))
             return
@@ -306,12 +277,10 @@ class SignInStore {
         print("URL: \(url)")
         
         var request = URLRequest(url: url)
-        request.httpMethod = "POST" // 요청에 사용할 HTTP 메서드 설정
-        // HTTP 헤더 설정
+        request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "accept")
         
-        // HTTP 바디 설정
         let body = [
             "accessToken": aToken,
             "refreshToken": rToken
@@ -325,7 +294,6 @@ class SignInStore {
             return
         }
         
-        // URLSession을 사용하여 요청 수행
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                 print("Error: \(error)")
@@ -341,8 +309,7 @@ class SignInStore {
             
             print("Response status code: \(httpResponse.statusCode)")
             
-            if httpResponse.statusCode == 200 {
-                // Handle successful response
+            if (200..<300).contains(httpResponse.statusCode) {
                 guard let responseData = data else {
                     print("Invalid data")
                     completion(.failure(ServerAuthError.invalidData))
@@ -364,7 +331,6 @@ class SignInStore {
                         return
                     }
                     
-                    // accessToken을 저장합니다. 이 예제에서는 UserDefaults를 사용하여 저장합니다.
                     userDefault.setBearerToken(accessToken, refreshToken)
                     print("-----토큰 로드 성공-----")
                     print("aToken : \(accessToken)")
@@ -376,10 +342,11 @@ class SignInStore {
                     print("Error parsing JSON response: \(error)")
                     completion(.failure(error))
                 }
+                self.whileSigIn = .waiting
             } else {
-                // Handle other status codes
                 print("Unexpected status code: \(httpResponse.statusCode)")
                 completion(.failure(ServerAuthError.invalidResponse))
+                self.whileSigIn = .waiting
             }
         }
         task.resume() // 작업 시작

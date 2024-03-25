@@ -12,6 +12,7 @@ enum CertificateStep: String, CodingKey, Codable {
     case waitingApproval = "승인 대기중"
     case waitingPayment = "결제 대기중"
     case progress = "상환 진행중"
+    case complete = "상환 완료"
 }
 
 enum WriterRole: String, CodingKey, Codable {

@@ -95,7 +95,6 @@ struct CertificateDeductibleView: View {
                 }
                 .padding(.top, 20)
                 Button {
-                    if certificateDetail.dueDate > 0 {
                         if certificateDetail.remainingAmount >= Int(money) ?? 0 {
                             if !money.isEmpty && money != "0"{
                                 self.endTextEditing()
@@ -106,14 +105,7 @@ struct CertificateDeductibleView: View {
                             } else {
                                 money = ""
                             }
-                        } else {
-                            isShowingExceedAlert.toggle()
-                            self.endTextEditing()
                         }
-                    } else {
-                        isShowingExpirationAlert.toggle()
-                        self.endTextEditing()
-                    }
                 } label: {
                     Text("입력하기")
                         .font(Font.title04)
@@ -144,14 +136,8 @@ struct CertificateDeductibleView: View {
             DatePicker("", selection: $date, displayedComponents: [.date])
                 .datePickerStyle(.graphical)
                 .presentationDetents([.height(400)])
+                .tint(Color.payritMint)
         })
-        .primaryAlert(isPresented: $isShowingExpirationAlert, title: "상환 기록 불가", content: "상환일이 만료되어 상환 기록이 불가합니다.", primaryButtonTitle: nil, cancleButtonTitle: "확인") {
-        } cancleAction: {
-        }
-        .primaryAlert(isPresented: $isShowingExceedAlert, title: "상환 기록 불가", content: "상환 금액이 남은 금액을 초과하였습니다.", primaryButtonTitle: nil, cancleButtonTitle: "확인") {
-        } cancleAction: {
-        }
-
     }
 }
 

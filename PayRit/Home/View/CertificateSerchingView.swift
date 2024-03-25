@@ -38,10 +38,12 @@ struct CertificateSerchingView: View {
                     }
                     VStack {
                         Capsule()
+                            .stroke(Color.payritMint, lineWidth: 1)
+                            .background(Color.gray08)
+                            .clipShape(.capsule)
                             .frame(width: UIScreen.screenWidth * 0.75, height: 40)
-                            .foregroundStyle(Color.gray08)
                             .overlay {
-                                TextField("", text: $searchWord)
+                                TextField("검색어를 입력해 주세요", text: $searchWord)
                                     .focused($interestFocused)
                                     .font(Font.body03)
                                     .padding(.horizontal, 16)
@@ -74,7 +76,6 @@ struct CertificateSerchingView: View {
                         List(homeStore.certificates, id: \.self) { certificate in
                             if certificate.peerName.contains(searchWord) {
                                 Button {
-                                    print("asdasd")
                                     certificateStep = certificate.certificateStep
                                     paperId = certificate.paperId
                                     if certificate.certificateStep == .waitingApproval {
@@ -95,39 +96,48 @@ struct CertificateSerchingView: View {
                                 } label: {
                                     VStack(alignment: .leading, spacing: 0) {
                                         HStack {
-                                            Text("원금상환일 \(certificate.repaymentEndDate.replacingOccurrences(of: "-", with: "."))")
-                                                .font(Font.caption02)
-                                                .foregroundStyle(Color.gray02)
+                                            Text("원금상환일 \(certificate.repaymentEndDate.stringDateToKorea())")
+                                                .font(Font.caption01)
                                             Spacer()
-                                            Text(certificate.paperRole == .CREDITOR ? "빌려준 돈" : "빌린 돈")
-                                                .font(Font.body03)
-                                                .foregroundStyle(certificate.paperRole == .CREDITOR ? Color.payritMint : Color.payritIntensivePink)
-                                        }
-                                        .padding(.top, 16)
-                                        
-                                        Text("\(certificate.amount)원")
-                                            .font(Font.title01)
-                                            .padding(.top, 8)
-                                        Text(certificate.peerName)
-                                            .font(Font.title06)
-                                            .foregroundStyle(Color.gray02)
-                                            .padding(.top, 8)
-                                        
-                                        VStack(alignment: .trailing, spacing: 6) {
-                                            HStack { Spacer() }
                                             Text(certificate.dueDate >= 0 ? "D - \(certificate.dueDate)" : "D + \(-certificate.dueDate)")
-                                                .font(Font.body03)
-                                                .foregroundStyle(Color.gray02)
+                                                .font(Font.custom("SUIT-Bold", size: 14))
+                                        }
+                                        .foregroundStyle(.white)
+                                        .padding(.horizontal, 12)
+                                        .padding(.vertical, 10)
+                                        .background(certificate.paperRole == .CREDITOR ? Color.payritMint : Color.payritIntensivePink)
+                                        .clipShape(.rect(cornerRadius: 8))
+                                        .padding(.top, 14)
+                                        
+                                        Text("\(certificate.amountFormatter)원")
+                                            .font(Font.title01)
+                                            .padding(.top, 22)
+                                        
+                                        VStack(alignment: .trailing, spacing: 0) {
+                                            HStack {
+                                                Text(certificate.peerName)
+                                                    .font(Font.title06)
+                                                    .foregroundStyle(.black)
+                                                Spacer()
+                                                Text(certificate.paperRole == .CREDITOR ? "빌려준 돈" : "빌린 돈")
+                                                    .font(Font.body03)
+                                                    .foregroundStyle(certificate.paperRole == .CREDITOR ? Color.payritMint : Color.payritIntensivePink)
+                                            }
+                                            
                                             ProgressView(value: certificate.repaymentRate, total: 100)
                                                 .progressViewStyle(CustomLinearProgressViewStyle(trackColor: Color.gray09, progressColor: certificate.paperRole == .CREDITOR ? Color.payritMint : Color.payritIntensivePink))
-                                            Text("\(certificate.certificateStep.rawValue) (\(Int(certificate.certificateStep == .progress ? certificate.repaymentRate : 0))%)")
+                                                .frame(height: 6)
+                                                .padding(.top, 14)
+                                            
+                                            Text("\(certificate.certificateStep?.rawValue ?? "") (\(Int(certificate.repaymentRate))%)")
                                                 .font(Font.caption02)
                                                 .foregroundStyle(Color.gray04)
+                                                .padding(.top, 4)
+                                                .padding(.bottom, 14)
                                         }
-                                        .padding(.bottom, 16)
+                                        .padding(.top, 4)
                                     }
                                     .padding(.horizontal, horizontalPadding)
-                                    .frame(height: 170)
                                     .frame(maxWidth: .infinity)
                                     .background()
                                     .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -241,21 +251,21 @@ struct CertificateSerchingView: View {
         .onAppear {
             interestFocused = true
         }
-        .primaryAlert(isPresented: $isShowingSignatureView, title: "본인인증", content: "본인인증 띄우기", primaryButtonTitle: "예", cancleButtonTitle: "아니오") {
-            //
-        } cancleAction: {
-            //
-        }
-        .primaryAlert(isPresented: $isShowingWaitingApprovalAlert, title: "승인 요청", content: "아직 상대방이 요청을 받지 못했나봐요! 알림을 다시 보내볼까요?", primaryButtonTitle: "네", cancleButtonTitle: "아니오") {
-            //
-        } cancleAction: {
-            //
-        }
-        .primaryAlert(isPresented: $isShowingWaitingPaymentAlert, title: "결제 진행중", content: "작성자가 결제 진행중입니다.", primaryButtonTitle: nil, cancleButtonTitle: "확인") {
-            //
-        } cancleAction: {
-            //
-        }
+//        .primaryAlert(isPresented: $isShowingSignatureView, title: "본인인증", content: "본인인증 띄우기", primaryButtonTitle: "예", cancleButtonTitle: "아니오") {
+//            //
+//        } cancleAction: {
+//            //
+//        }
+//        .primaryAlert(isPresented: $isShowingWaitingApprovalAlert, title: "승인 요청", content: "아직 상대방이 요청을 받지 못했나봐요! 알림을 다시 보내볼까요?", primaryButtonTitle: "네", cancleButtonTitle: "아니오") {
+//            //
+//        } cancleAction: {
+//            //
+//        }
+//        .primaryAlert(isPresented: $isShowingWaitingPaymentAlert, title: "결제 진행중", content: "작성자가 결제 진행중입니다.", primaryButtonTitle: nil, cancleButtonTitle: "확인") {
+//            //
+//        } cancleAction: {
+//            //
+//        }
     }
 }
 

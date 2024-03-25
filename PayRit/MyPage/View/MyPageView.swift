@@ -13,6 +13,7 @@ struct MyPageView: View {
     @State var isShowingSignOut: Bool = false
     @State var isShowingSafariView: Bool = false
     @State var notFoundUser: Bool = false
+    @Environment(HomeStore.self) var homeStore
     @Environment(SignInStore.self) var signInStore
     @Environment(TabBarStore.self) var tabStore
     var body: some View {
@@ -118,10 +119,10 @@ struct MyPageView: View {
                 if mypageStore.currenUser.signInCompany == "카카오톡" {
                     signInStore.kakaoSingOut()
                 } else if mypageStore.currenUser.signInCompany == "애플" {
-                    
                     signInStore.isSignIn = false
                     UserDefaultsManager().removeAll()
                 }
+                homeStore.certificates = [Certificate]()
             }
         }
     }
@@ -130,6 +131,7 @@ struct MyPageView: View {
 #Preview {
     NavigationStack {
         MyPageView()
+            .environment(HomeStore())
             .environment(TabBarStore())
             .environment(SignInStore())
     }

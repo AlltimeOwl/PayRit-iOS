@@ -28,6 +28,9 @@
 		BC2193A82BB03D8C00EE7B68 /* PayritNoti.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2193A72BB03D8C00EE7B68 /* PayritNoti.swift */; };
 		BC2193AB2BB0416400EE7B68 /* NotificationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2193AA2BB0416400EE7B68 /* NotificationStore.swift */; };
 		BC2193B02BB06EB600EE7B68 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = BC2193AD2BB066E700EE7B68 /* Config.xcconfig */; };
+		BC2193B42BB12DCF00EE7B68 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = BC2193B32BB12DBF00EE7B68 /* PrivacyInfo.xcprivacy */; };
+		BC2193B72BB1472400EE7B68 /* CarouselView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2193B62BB1472400EE7B68 /* CarouselView.swift */; };
+		BC2193B92BB1BAF900EE7B68 /* SUIT-ExtraBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = BC2193B82BB1BAF900EE7B68 /* SUIT-ExtraBold.otf */; };
 		BC29AA3B2BA1BEB9002CB968 /* CertificateSerchingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC29AA3A2BA1BEB9002CB968 /* CertificateSerchingView.swift */; };
 		BC2D51CC2B9ECD870041FD77 /* CertificateMemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2D51CB2B9ECD870041FD77 /* CertificateMemoView.swift */; };
 		BC2D51CE2B9F35260041FD77 /* CertificateDeductibleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2D51CD2B9F35260041FD77 /* CertificateDeductibleView.swift */; };
@@ -100,6 +103,9 @@
 		BC2193A72BB03D8C00EE7B68 /* PayritNoti.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayritNoti.swift; sourceTree = "<group>"; };
 		BC2193AA2BB0416400EE7B68 /* NotificationStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationStore.swift; sourceTree = "<group>"; };
 		BC2193AD2BB066E700EE7B68 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		BC2193B32BB12DBF00EE7B68 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		BC2193B62BB1472400EE7B68 /* CarouselView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselView.swift; sourceTree = "<group>"; };
+		BC2193B82BB1BAF900EE7B68 /* SUIT-ExtraBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SUIT-ExtraBold.otf"; sourceTree = "<group>"; };
 		BC29AA3A2BA1BEB9002CB968 /* CertificateSerchingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateSerchingView.swift; sourceTree = "<group>"; };
 		BC2D51CB2B9ECD870041FD77 /* CertificateMemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateMemoView.swift; sourceTree = "<group>"; };
 		BC2D51CD2B9F35260041FD77 /* CertificateDeductibleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateDeductibleView.swift; sourceTree = "<group>"; };
@@ -182,6 +188,7 @@
 				BC68291A2B9CACC6009EF3F5 /* SUIT-Medium.otf */,
 				BC6F65322B9CA37A00FB9FA7 /* SUIT-SemiBold.otf */,
 				BC6F65342B9CA3C100FB9FA7 /* SUIT-Bold.otf */,
+				BC2193B82BB1BAF900EE7B68 /* SUIT-ExtraBold.otf */,
 			);
 			path = Font;
 			sourceTree = "<group>";
@@ -211,6 +218,14 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
+		BC2193B52BB146FD00EE7B68 /* CarouselView */ = {
+			isa = PBXGroup;
+			children = (
+				BC2193B62BB1472400EE7B68 /* CarouselView.swift */,
+			);
+			path = CarouselView;
+			sourceTree = "<group>";
+		};
 		BC388DB32B904B6F005D1279 /* Content */ = {
 			isa = PBXGroup;
 			children = (
@@ -223,6 +238,7 @@
 			isa = PBXGroup;
 			children = (
 				BC2193AD2BB066E700EE7B68 /* Config.xcconfig */,
+				BC2193B32BB12DBF00EE7B68 /* PrivacyInfo.xcprivacy */,
 				BC595DD42B8D8AC300CA555E /* PayRit */,
 				BC595DD32B8D8AC300CA555E /* Products */,
 			);
@@ -406,6 +422,7 @@
 				BC2D51CB2B9ECD870041FD77 /* CertificateMemoView.swift */,
 				BC2D51CD2B9F35260041FD77 /* CertificateDeductibleView.swift */,
 				BC1219642BA29FE700B575F8 /* CertificateAcceptView.swift */,
+				BC2193B52BB146FD00EE7B68 /* CarouselView */,
 				BC12196E2BA5F1D700B575F8 /* ExportView */,
 			);
 			path = View;
@@ -569,8 +586,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				BCD942512B8F0CCC00BF61CD /* .swiftlint.yml in Resources */,
+				BC2193B42BB12DCF00EE7B68 /* PrivacyInfo.xcprivacy in Resources */,
 				BC2193A32BB03A0500EE7B68 /* GoogleService-Info.plist in Resources */,
 				BC6829192B9CA836009EF3F5 /* SUIT-Regular.otf in Resources */,
+				BC2193B92BB1BAF900EE7B68 /* SUIT-ExtraBold.otf in Resources */,
 				BC595DDD2B8D8AC400CA555E /* Preview Assets.xcassets in Resources */,
 				BC6F65332B9CA37A00FB9FA7 /* SUIT-SemiBold.otf in Resources */,
 				BC595E252B8DC9AC00CA555E /* Launch Screen.storyboard in Resources */,
@@ -667,6 +686,7 @@
 				BC2D51CC2B9ECD870041FD77 /* CertificateMemoView.swift in Sources */,
 				BC1CF8D72B961F5600A9BF12 /* MyInfoWritingView.swift in Sources */,
 				BC595DD62B8D8AC300CA555E /* PayRitApp.swift in Sources */,
+				BC2193B72BB1472400EE7B68 /* CarouselView.swift in Sources */,
 				BC6F652B2B9B355200FB9FA7 /* User.swift in Sources */,
 				BC62BFF82BA15695000A1BA5 /* WritingStore.swift in Sources */,
 				BC6F652D2B9B394800FB9FA7 /* MembershipWithdrawalView.swift in Sources */,

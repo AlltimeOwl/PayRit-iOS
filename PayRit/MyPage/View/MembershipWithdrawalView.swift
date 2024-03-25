@@ -12,6 +12,7 @@ struct MembershipWithdrawalView: View {
     @State var isShowingMenu: Bool = false
     @State var isShowingWithdrawalButton: Bool = false
     @State var isShowingWithdrawalCompleteButton: Bool = false
+    @Environment(HomeStore.self) var homeStore
     @Environment(SignInStore.self) var signInStore
     let mypageStore: MyPageStore = MyPageStore()
     var body: some View {
@@ -160,6 +161,7 @@ struct MembershipWithdrawalView: View {
                 signInStore.isSignIn = false
                 UserDefaultsManager().removeAll()
             }
+            homeStore.certificates = [Certificate]()
         }
     }
 }
@@ -167,6 +169,7 @@ struct MembershipWithdrawalView: View {
 #Preview {
     NavigationStack {
         MembershipWithdrawalView()
+            .environment(HomeStore())
             .environment(SignInStore())
     }
 }

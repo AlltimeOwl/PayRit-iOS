@@ -19,11 +19,10 @@ struct CertificateAcceptView: View {
             VStack(spacing: 0) {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 24) {
-                        VStack(alignment: .leading) {
-                            Text("거래내역")
-                                .font(Font.body03)
-                                .foregroundStyle(Color.gray04)
                             VStack(alignment: .leading, spacing: 12) {
+                                Text("거래내역")
+                                    .font(Font.body03)
+                                    .foregroundStyle(Color.gray04)
                                 HStack {
                                     Text("금액")
                                         .font(Font.body04)
@@ -52,13 +51,106 @@ struct CertificateAcceptView: View {
                             .background(Color.white)
                             .clipShape(.rect(cornerRadius: 12))
                             .shadow(color: .gray.opacity(0.2), radius: 5)
-                        }
-                        if homeStore.certificateDetail.interestRate != 0 || homeStore.certificateDetail.interestPaymentDate != 0 || homeStore.certificateDetail.specialConditions != nil {
-                            VStack(alignment: .leading) {
-                                Text("추가사항")
+                        
+                            VStack(alignment: .leading, spacing: 12) {
+                                Text("빌려준 사람")
                                     .font(Font.body03)
                                     .foregroundStyle(Color.gray04)
+                                HStack {
+                                    Text("이름")
+                                        .font(Font.body04)
+                                    Spacer()
+                                    HStack {
+                                        Text("\(homeStore.certificateDetail.creditorName)")
+                                            .font(Font.body01)
+                                        Spacer()
+                                    }
+                                    .frame(width: 220)
+                                }
+                                HStack {
+                                    Text("연락처")
+                                        .font(Font.body04)
+                                    Spacer()
+                                    HStack {
+                                        Text("\(homeStore.certificateDetail.creditorPhoneNumber.onlyPhoneNumber().replacingOccurrences(of: "-", with: "."))")
+                                            .font(Font.body01)
+                                        Spacer()
+                                    }
+                                    .frame(width: 220)
+                                }
+                                if !homeStore.certificateDetail.creditorAddress.isEmpty {
+                                    HStack(alignment: .top) {
+                                        Text("주소")
+                                            .font(Font.body04)
+                                        Spacer()
+                                        HStack {
+                                            Text("\(homeStore.certificateDetail.creditorAddress)")
+                                                .fixedSize(horizontal: false, vertical: true)
+                                                .font(Font.body01)
+                                            Spacer()
+                                        }
+                                        .frame(width: 220)
+                                    }
+                                }
+                            }
+                            .padding(.vertical, 16)
+                            .padding(.horizontal, 20)
+                            .background(.white)
+                            .clipShape(.rect(cornerRadius: 12))
+                            .shadow(color: .gray.opacity(0.2), radius: 5)
+                        
+                            VStack(alignment: .leading, spacing: 12) {
+                                Text("빌린 사람")
+                                    .font(Font.body03)
+                                    .foregroundStyle(Color.gray04)
+                                HStack {
+                                    Text("이름")
+                                        .font(Font.body04)
+                                    Spacer()
+                                    HStack {
+                                        Text("\(homeStore.certificateDetail.debtorName)")
+                                            .font(Font.body01)
+                                        Spacer()
+                                    }
+                                    .frame(width: 220)
+                                }
+                                HStack {
+                                    Text("연락처")
+                                        .font(Font.body04)
+                                    Spacer()
+                                    HStack {
+                                        Text("\(homeStore.certificateDetail.debtorPhoneNumber.onlyPhoneNumber().replacingOccurrences(of: "-", with: "."))")
+                                            .font(Font.body01)
+                                        Spacer()
+                                    }
+                                    .frame(width: 220)
+                                }
+                                if !homeStore.certificateDetail.debtorAddress.isEmpty {
+                                    HStack(alignment: .top) {
+                                        Text("주소")
+                                            .font(Font.body04)
+                                        Spacer()
+                                        HStack {
+                                            Text("\(homeStore.certificateDetail.debtorAddress)")
+                                                .fixedSize(horizontal: false, vertical: true)
+                                                .font(Font.body01)
+                                            Spacer()
+                                        }
+                                        .frame(width: 220)
+                                    }
+                                }
+                            }
+                            .padding(.vertical, 16)
+                            .padding(.horizontal, 20)
+                            .background(.white)
+                            .clipShape(.rect(cornerRadius: 12))
+                            .shadow(color: .gray.opacity(0.2), radius: 5)
+                        
+                        if homeStore.certificateDetail.interestRate != 0 || homeStore.certificateDetail.interestPaymentDate != 0 || homeStore.certificateDetail.specialConditions != nil {
                                 VStack(alignment: .leading, spacing: 12) {
+                                    Text("추가사항")
+                                        .font(Font.body03)
+                                        .foregroundStyle(Color.gray04)
                                     if homeStore.certificateDetail.interestRate != 0 {
                                         HStack {
                                             Text("이자율")
@@ -102,101 +194,8 @@ struct CertificateAcceptView: View {
                                 .background(Color(hex: "E5FDFC"))
                                 .clipShape(.rect(cornerRadius: 12))
                                 .shadow(color: .gray.opacity(0.2), radius: 5)
-                            }
                         }
-                        VStack(alignment: .leading) {
-                            Text("빌려준 사람")
-                                .font(Font.body03)
-                                .foregroundStyle(Color.gray04)
-                            VStack(alignment: .leading, spacing: 12) {
-                                HStack {
-                                    Text("이름")
-                                        .font(Font.body04)
-                                    Spacer()
-                                    HStack {
-                                        Text("\(homeStore.certificateDetail.creditorName)")
-                                            .font(Font.body01)
-                                        Spacer()
-                                    }
-                                    .frame(width: 220)
-                                }
-                                HStack {
-                                    Text("연락처")
-                                        .font(Font.body04)
-                                    Spacer()
-                                    HStack {
-                                        Text("\(homeStore.certificateDetail.creditorPhoneNumber.onlyPhoneNumber().replacingOccurrences(of: "-", with: "."))")
-                                            .font(Font.body01)
-                                        Spacer()
-                                    }
-                                    .frame(width: 220)
-                                }
-                                HStack {
-                                    Text("주소")
-                                        .font(Font.body04)
-                                    Spacer()
-                                    HStack {
-                                        Text("\(homeStore.certificateDetail.creditorAddress)")
-                                            .fixedSize(horizontal: false, vertical: true)
-                                            .font(Font.body01)
-                                        Spacer()
-                                    }
-                                    .frame(width: 220)
-                                }
-                            }
-                            .padding(.vertical, 16)
-                            .padding(.horizontal, 20)
-                            .background(.white)
-                            .clipShape(.rect(cornerRadius: 12))
-                            .shadow(color: .gray.opacity(0.2), radius: 5)
-                        }
-                        
-                        VStack(alignment: .leading) {
-                            Text("빌린 사람")
-                                .font(Font.body03)
-                                .foregroundStyle(Color.gray04)
-                            VStack(alignment: .leading, spacing: 12) {
-                                HStack {
-                                    Text("이름")
-                                        .font(Font.body04)
-                                    Spacer()
-                                    HStack {
-                                        Text("\(homeStore.certificateDetail.debtorName)")
-                                            .font(Font.body01)
-                                        Spacer()
-                                    }
-                                    .frame(width: 220)
-                                }
-                                HStack {
-                                    Text("연락처")
-                                        .font(Font.body04)
-                                    Spacer()
-                                    HStack {
-                                        Text("\(homeStore.certificateDetail.debtorPhoneNumber.onlyPhoneNumber().replacingOccurrences(of: "-", with: "."))")
-                                            .font(Font.body01)
-                                        Spacer()
-                                    }
-                                    .frame(width: 220)
-                                }
-                                HStack {
-                                    Text("주소")
-                                        .font(Font.body04)
-                                    Spacer()
-                                    HStack {
-                                        Text("\(homeStore.certificateDetail.debtorAddress)")
-                                            .fixedSize(horizontal: false, vertical: true)
-                                            .font(Font.body01)
-                                        Spacer()
-                                    }
-                                    .frame(width: 220)
-                                }
-                            }
-                            .padding(.vertical, 16)
-                            .padding(.horizontal, 20)
-                            .background(.white)
-                            .clipShape(.rect(cornerRadius: 12))
-                            .shadow(color: .gray.opacity(0.2), radius: 5)
-                        }
+                            
                         Button {
                             checkBox.toggle()
                         } label: {

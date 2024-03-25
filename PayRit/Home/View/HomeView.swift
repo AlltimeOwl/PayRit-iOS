@@ -27,49 +27,8 @@ struct HomeView: View {
             Color.payritBackground.ignoresSafeArea()
             VStack {
                 if !isHiddenInfoBox {
-                    RoundedRectangle(cornerRadius: 12)
-                        .foregroundStyle(Color(hex: "E2FFF1"))
-                        .frame(height: 190)
-                        .padding(.horizontal, horizontalPadding)
-                        .overlay {
-                            VStack(alignment: .leading) {
-                                HStack {
-                                    Spacer()
-                                    Button {
-                                        withAnimation {
-                                            isHiddenInfoBox.toggle()
-                                        }
-                                    } label: {
-                                        Image(systemName: "xmark")
-                                            .foregroundStyle(.black)
-                                    }
-                                }
-                                .padding(.top, 15)
-                                HStack {
-                                    VStack(alignment: .leading) {
-                                        Text("""
-                                            페이릿,
-                                            기록을 시작합니다!
-                                            """)
-                                        .font(Font.title04)
-                                        Button {
-                                            isShowingWaitingApprovalAlert.toggle()
-                                        } label: {
-                                            Text("확인하기")
-                                                .font(Font.body03)
-                                                .foregroundStyle(.white)
-                                        }
-                                        .frame(width: 74, height: 28)
-                                        .background(.black)
-                                        .clipShape(.rect(cornerRadius: 19))
-                                    }
-                                    Spacer()
-                                    Image("homeBoxImage")
-                                }
-                                Spacer()
-                            }
-                            .padding(.horizontal, 35)
-                        }
+                    CarouselView()
+                        .padding(.horizontal, 16)
                 }
                 if homeStore.isLoading {
                     VStack {
@@ -135,43 +94,54 @@ struct HomeView: View {
                                                 }
                                             } else if certificate.certificateStep == .progress {
                                                 navigationLinkDetailView.toggle()
+                                            } else if certificate.certificateStep == .complete {
+                                                navigationLinkDetailView.toggle()
                                             }
                                         } label: {
                                             VStack(alignment: .leading, spacing: 0) {
                                                 HStack {
-                                                    Text("원금상환일 \(certificate.repaymentEndDate.replacingOccurrences(of: "-", with: "."))")
-                                                        .font(Font.caption02)
-                                                        .foregroundStyle(Color.gray02)
+                                                    Text("원금상환일 \(certificate.repaymentEndDate.stringDateToKorea())")
+                                                        .font(Font.caption01)
                                                     Spacer()
-                                                    Text(certificate.paperRole == .CREDITOR ? "빌려준 돈" : "빌린 돈")
-                                                        .font(Font.body03)
-                                                        .foregroundStyle(certificate.paperRole == .CREDITOR ? Color.payritMint : Color.payritIntensivePink)
+                                                    Text(certificate.dueDate >= 0 ? "D - \(certificate.dueDate)" : "D + \(-certificate.dueDate)")
+                                                        .font(Font.custom("SUIT-Bold", size: 14))
                                                 }
-                                                .padding(.top, 16)
+                                                .foregroundStyle(.white)
+                                                .padding(.horizontal, 12)
+                                                .padding(.vertical, 10)
+                                                .background(certificate.paperRole == .CREDITOR ? Color.payritMint : Color.payritIntensivePink)
+                                                .clipShape(.rect(cornerRadius: 8))
+                                                .padding(.top, 14)
                                                 
                                                 Text("\(certificate.amountFormatter)원")
                                                     .font(Font.title01)
-                                                    .padding(.top, 8)
-                                                Text(certificate.peerName)
-                                                    .font(Font.title06)
-                                                    .foregroundStyle(Color.gray02)
-                                                    .padding(.top, 8)
+                                                    .padding(.top, 22)
                                                 
-                                                VStack(alignment: .trailing, spacing: 6) {
-                                                    HStack { Spacer() }
-                                                    Text(certificate.dueDate >= 0 ? "D - \(certificate.dueDate)" : "D + \(-certificate.dueDate)")
-                                                        .font(Font.body03)
-                                                        .foregroundStyle(Color.gray02)
+                                                VStack(alignment: .trailing, spacing: 0) {
+                                                    HStack {
+                                                        Text(certificate.peerName)
+                                                            .font(Font.title06)
+                                                            .foregroundStyle(.black)
+                                                        Spacer()
+                                                        Text(certificate.paperRole == .CREDITOR ? "빌려준 돈" : "빌린 돈")
+                                                            .font(Font.body03)
+                                                            .foregroundStyle(certificate.paperRole == .CREDITOR ? Color.payritMint : Color.payritIntensivePink)
+                                                    }
+                                                    
                                                     ProgressView(value: certificate.repaymentRate, total: 100)
                                                         .progressViewStyle(CustomLinearProgressViewStyle(trackColor: Color.gray09, progressColor: certificate.paperRole == .CREDITOR ? Color.payritMint : Color.payritIntensivePink))
-                                                    Text("\(certificate.repaymentRate == 100.0 ? "상환 완료" : certificate.certificateStep.rawValue) (\(Int(certificate.certificateStep == .progress ? certificate.repaymentRate : 0))%)")
+                                                        .frame(height: 6)
+                                                        .padding(.top, 14)
+                                                    
+                                                    Text("\(certificate.certificateStep?.rawValue ?? "") (\(Int(certificate.repaymentRate))%)")
                                                         .font(Font.caption02)
                                                         .foregroundStyle(Color.gray04)
+                                                        .padding(.top, 4)
+                                                        .padding(.bottom, 14)
                                                 }
-                                                .padding(.bottom, 16)
+                                                .padding(.top, 4)
                                             }
                                             .padding(.horizontal, horizontalPadding)
-                                            .frame(height: 170)
                                             .frame(maxWidth: .infinity)
                                             .background()
                                             .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -262,12 +232,12 @@ struct HomeView: View {
                 }
                 Spacer()
             }
-            .padding(.top, 20)
+            .padding(.top, 40)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     VStack {
                         Spacer().frame(height: 30)
-                        Text("임대진님의 기록")
+                        Text("\(UserDefaultsManager().getUserInfo().name) 님의 기록")
                             .font(Font.title01)
                             .foregroundStyle(.black)
                         Spacer().frame(height: 10)
