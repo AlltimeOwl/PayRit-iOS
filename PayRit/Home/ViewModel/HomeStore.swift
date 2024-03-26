@@ -268,4 +268,52 @@ final class HomeStore {
         }
         return url
     }
+    
+    func kakaoMessageTest(paperId: Int, repaymentDate: String, repaymentAmount: String) {
+        var urlComponents = URLComponents()
+        urlComponents.scheme = "https"
+        urlComponents.host = "bizmsg-web.kakaoenterprise.com"
+        urlComponents.path = "/v1/message/send"
+        
+        if let url = urlComponents.url {
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.setValue("*/*", forHTTPHeaderField: "accept")
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
+            let body = [
+                "client_id": "1050643",
+                "message_type": "AT",
+                "sender_key": "string",
+                "phone_number": "string",
+                "message": "string",
+                "template_code": "string",
+                "sms_message": "string",
+                "sms_type": "SM",
+                "etc1": "string",
+                "sender_no": "string"
+            ] as [String: Any]
+            do {
+                request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
+            } catch {
+                print("Error creating JSON data")
+            }
+            let task = URLSession.shared.dataTask(with: request) { _, response, error in
+                if let error = error {
+                    print("Error: \(error)")
+                } else if let response = response as? HTTPURLResponse {
+                    print("Response status code: \(response.statusCode)")
+                    if (200..<300).contains(response.statusCode) {
+                        print("상환 내역 작성 성공")
+                    } else {
+                        print("Unexpected status code: \(response.statusCode)")
+                    }
+                } else {
+                    print("Unexpected error: No data or response")
+                }
+            }
+            task.resume()
+        }
+    }
 }

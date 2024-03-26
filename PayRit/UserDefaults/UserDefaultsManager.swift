@@ -13,7 +13,7 @@ final class UserDefaultsManager {
         case isSignIn
         case userAppleId, userName, userEmail, userPhoneNumber, signInCompany, signature
         case accessToken, refreshToken
-        case noti
+        case noti, FCMtoken
     }
     
     /// 카카오 정보저장
@@ -94,6 +94,15 @@ final class UserDefaultsManager {
     
     func notiRemoveAll() {
         UserDefaults.standard.removeObject(forKey: Key.noti.rawValue)
+    }
+    
+    func saveFCMtoken(token: String) {
+        UserDefaults.standard.setValue(token, forKey: Key.FCMtoken.rawValue)
+    }
+    
+    func loadFCMtoken() -> String {
+        let token = UserDefaults.standard.string(forKey: Key.FCMtoken.rawValue) ?? ""
+        return token
     }
     
     func saveNotifications(_ notifications: [PayritNoti]) {

@@ -100,7 +100,7 @@ struct HomeView: View {
                                         } label: {
                                             VStack(alignment: .leading, spacing: 0) {
                                                 HStack {
-                                                    Text("원금상환일 \(certificate.repaymentEndDate.stringDateToKorea())")
+                                                    Text("원금상환일   \(certificate.repaymentEndDate.stringDateToKorea())")
                                                         .font(Font.caption01)
                                                     Spacer()
                                                     Text(certificate.dueDate >= 0 ? "D - \(certificate.dueDate)" : "D + \(-certificate.dueDate)")

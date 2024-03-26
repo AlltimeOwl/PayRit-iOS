@@ -13,13 +13,12 @@ import KakaoSDKAuth
 import AuthenticationServices
 
 struct SignInView: View {
-    @State var test = ""
     @Environment(SignInStore.self) var signInStore
     @Environment(\.dismiss) var dismiss
     var body: some View {
         NavigationStack {
             ZStack {
-                Image("testImage")
+                Image("firstImage")
                     .resizable()
                     .frame(height: UIScreen.screenHeight)
                 Image("payRitText")

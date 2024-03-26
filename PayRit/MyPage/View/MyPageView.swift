@@ -46,11 +46,13 @@ struct MyPageView: View {
                     }
                     .frame(height: listItemHeight)
                     NavigationLink {
-                        PaymentHistoryView()
+                        Text("준비중 입니다.")
                             .customBackbutton()
                             .onAppear {
                                 tabStore.tabBarHide = true
                             }
+//                        PaymentHistoryView()
+//                            .customBackbutton()
                     } label: {
                         Text("결제 내역")
                     }
@@ -69,13 +71,21 @@ struct MyPageView: View {
                     }
                     .frame(height: listItemHeight)
                     NavigationLink {
-                        
+                        Text("준비중 입니다.")
+                            .customBackbutton()
+                            .onAppear {
+                                tabStore.tabBarHide = true
+                            }
                     } label: {
                         Text("공지사항")
                     }
                     .frame(height: listItemHeight)
                     NavigationLink {
-                        
+                        Text("준비중 입니다.")
+                            .customBackbutton()
+                            .onAppear {
+                                tabStore.tabBarHide = true
+                            }
                     } label: {
                         Text("자주 묻는 질문")
                     }

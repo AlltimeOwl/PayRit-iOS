@@ -282,7 +282,7 @@ struct WritingCheckView: View {
 
 #Preview {
     NavigationStack {
-        WritingCheckView(path: .constant(NavigationPath()), newCertificate: .constant(CertificateDetail.testCertofocateDetail))
+        WritingCheckView(path: .constant(NavigationPath()), newCertificate: .constant(CertificateDetail.EmptyCertificate))
             .environment(HomeStore())
     }
 }

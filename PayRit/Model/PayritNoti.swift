@@ -13,9 +13,4 @@ struct PayritNoti: Identifiable, Hashable, Codable {
     let title: String
     let body: String
     var clicked: Bool = false
-    
-    static let testNoti: [PayritNoti] = [PayritNoti(title: "페이릿 승인 요청", body: "박이릿님께서 페이릿 승인 요청을 보내셨습니다."),
-                                           PayritNoti(title: "페이릿 승인 요청", body: "박이릿님께서 페이릿 승인 요청을 보내셨습니다."),
-                                           PayritNoti(title: "페이릿 승인 요청", body: "박이릿님께서 페이릿 승인 요청을 보내셨습니다."),
-                                           PayritNoti(title: "페이릿 승인 요청", body: "박이릿님께서 페이릿 승인 요청을 보내셨습니다.")]
 }

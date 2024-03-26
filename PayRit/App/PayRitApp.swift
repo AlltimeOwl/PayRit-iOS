@@ -86,15 +86,12 @@ extension AppDelegate: MessagingDelegate {
     
     // fcm 등록 토큰을 받았을 때
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-        
+        guard let fcmToken = fcmToken else {
+                    return
+                }
         print("토큰을 받았다")
-        // Store this token to firebase and retrieve when to send message to someone...
-        let dataDict: [String: String] = ["token": fcmToken ?? ""]
-        
-        // Store token in Firestore For Sending Notifications From Server in Future...
-        
-        print(dataDict)
-        
+        print(fcmToken)
+        UserDefaultsManager().saveFCMtoken(token: fcmToken)
     }
 }
 

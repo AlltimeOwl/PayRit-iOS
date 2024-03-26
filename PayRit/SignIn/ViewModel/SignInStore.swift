@@ -30,17 +30,14 @@ enum ServerAuthError: Error {
     case parsingError
 }
 
-struct TokenTestData: Codable {
-    let accessToken: String
-    let refreshToken: String
-}
-
 @Observable
 class SignInStore {
     var isSignIn: Bool = UserDefaultsManager().getIsSignInState()
+    var singinRevoke: Bool = false
     var whileSigIn: WhileSigIn = .waiting
     var appleAuthorizationCode = ""
     var appleIdentityToken = ""
+    var firebasePushtoken = ""
     
     // MARK: - 애플
     func appleAuthCheck() {
@@ -184,21 +181,21 @@ class SignInStore {
     
     func kakaoAuthCheck() {
         // 토큰 존재 여부 확인하기
-        if (AuthApi.hasToken()) {
+        if AuthApi.hasToken() {
             UserApi.shared.accessTokenInfo { (_, error) in
                 if let error = error {
                     if let sdkError = error as? SdkError, sdkError.isInvalidTokenError() == true  {
-                        //로그인 필요
+                        // 로그인 필요
                         self.isSignIn = false
                     } else {
-                        //기타 에러
+                        // 기타 에러
                     }
                 } else {
-                    //토큰 유효성 체크 성공(필요 시 토큰 갱신됨)
+                    // 토큰 유효성 체크 성공(필요 시 토큰 갱신됨)
                 }
             }
         } else {
-            //로그인 필요
+            // 로그인 필요
             self.isSignIn = false
         }
     }
@@ -274,8 +271,6 @@ class SignInStore {
             return
         }
         
-        print("URL: \(url)")
-        
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -283,7 +278,8 @@ class SignInStore {
         
         let body = [
             "accessToken": aToken,
-            "refreshToken": rToken
+            "refreshToken": rToken,
+            "firebaseToken": userDefault.loadFCMtoken()
         ] as [String: Any]
         
         do {

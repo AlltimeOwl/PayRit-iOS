@@ -123,6 +123,5 @@ struct CertificateDetail: Hashable, Codable {
         }
     }
     
-    static let EmptyCertificate: CertificateDetail = CertificateDetail(paperId: 0, paperUrl: "", memberRole: "", primeAmount: 0, interest: 0, amount: 0, remainingAmount: 0, interestRate: 0.0, interestPaymentDate: 0, repaymentRate: 0.0, repaymentStartDate: "", repaymentEndDate: "",transactionDate: "" , creditorName: "", creditorPhoneNumber: "", creditorAddress: "", dueDate: 0, debtorName: "", debtorPhoneNumber: "", debtorAddress: "")
-    static let testCertofocateDetail: CertificateDetail = CertificateDetail(paperId: 0, paperUrl: "", memberRole: "CREDITOR", primeAmount: 100000000, interest: 10000000, amount: 110000000, remainingAmount: 100000000, interestRate: 19.99, interestPaymentDate: 10, repaymentRate: 0.0, repaymentStartDate: "2024-03-01", repaymentEndDate: "2026-03-01", transactionDate: "2024-03-01", creditorName: "임대진", creditorPhoneNumber: "010-5009-7937", creditorAddress: "주소주소주소주소주소주소주소주소주소주소주소주소주소", dueDate: 0, debtorName: "상대방", debtorPhoneNumber: "010-5050-5050", debtorAddress: "")
+    static let EmptyCertificate: CertificateDetail = CertificateDetail(paperId: 0, paperUrl: "", memberRole: "", primeAmount: 0, interest: 0, amount: 0, remainingAmount: 0, interestRate: 0.0, interestPaymentDate: 0, repaymentRate: 0.0, repaymentStartDate: "", repaymentEndDate: "",transactionDate: "", creditorName: "", creditorPhoneNumber: "", creditorAddress: "", dueDate: 0, debtorName: "", debtorPhoneNumber: "", debtorAddress: "")
 }
