@@ -354,11 +354,12 @@ struct WritingCertificateInfoView: View {
             }
         }
         .sheet(isPresented: $isShowingBorrowedDatePicker, content: {
-            DatePicker("", selection: $repaymentStartDate, displayedComponents: [.date])
+            DatePicker("", selection: $repaymentStartDate, in: Date()..., displayedComponents: [.date])
                 .datePickerStyle(.graphical)
                 .presentationDetents([.height(400)])
                 .onDisappear {
                     newCertificate.repaymentStartDate = repaymentStartDate.dateToString()
+                    repaymentEndDate = repaymentStartDate
                 }
         })
         .sheet(isPresented: $isShowingRedemptionDatePicker, content: {
@@ -371,9 +372,6 @@ struct WritingCertificateInfoView: View {
         })
         .onChange(of: repaymentStartDate) {
             newCertificate.repaymentStartDate = repaymentStartDate.dateToString()
-            if repaymentStartDate < repaymentEndDate {
-                repaymentEndDate = repaymentStartDate
-            }
         }
         .onChange(of: repaymentEndDate) {
             newCertificate.repaymentEndDate = repaymentEndDate.dateToString()

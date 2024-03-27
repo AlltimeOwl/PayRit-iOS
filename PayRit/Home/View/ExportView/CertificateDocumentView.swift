@@ -186,5 +186,5 @@ struct CertificateDocumentView: View {
 }
 
 #Preview {
-    CertificateDocumentView(certificateDetail: CertificateDetail.testCertofocateDetail)
+    CertificateDocumentView(certificateDetail: CertificateDetail.EmptyCertificate)
 }

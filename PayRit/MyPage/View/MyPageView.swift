@@ -13,6 +13,7 @@ struct MyPageView: View {
     @State var isShowingSignOut: Bool = false
     @State var isShowingSafariView: Bool = false
     @State var notFoundUser: Bool = false
+    @Environment(HomeStore.self) var homeStore
     @Environment(SignInStore.self) var signInStore
     @Environment(TabBarStore.self) var tabStore
     var body: some View {
@@ -45,11 +46,13 @@ struct MyPageView: View {
                     }
                     .frame(height: listItemHeight)
                     NavigationLink {
-                        PaymentHistoryView()
+                        Text("준비중 입니다.")
                             .customBackbutton()
                             .onAppear {
                                 tabStore.tabBarHide = true
                             }
+//                        PaymentHistoryView()
+//                            .customBackbutton()
                     } label: {
                         Text("결제 내역")
                     }
@@ -68,13 +71,21 @@ struct MyPageView: View {
                     }
                     .frame(height: listItemHeight)
                     NavigationLink {
-                        
+                        Text("준비중 입니다.")
+                            .customBackbutton()
+                            .onAppear {
+                                tabStore.tabBarHide = true
+                            }
                     } label: {
                         Text("공지사항")
                     }
                     .frame(height: listItemHeight)
                     NavigationLink {
-                        
+                        Text("준비중 입니다.")
+                            .customBackbutton()
+                            .onAppear {
+                                tabStore.tabBarHide = true
+                            }
                     } label: {
                         Text("자주 묻는 질문")
                     }
@@ -118,10 +129,9 @@ struct MyPageView: View {
                 if mypageStore.currenUser.signInCompany == "카카오톡" {
                     signInStore.kakaoSingOut()
                 } else if mypageStore.currenUser.signInCompany == "애플" {
-                    
                     signInStore.isSignIn = false
-                    UserDefaultsManager().removeAll()
                 }
+                homeStore.certificates = [Certificate]()
             }
         }
     }
@@ -130,6 +140,7 @@ struct MyPageView: View {
 #Preview {
     NavigationStack {
         MyPageView()
+            .environment(HomeStore())
             .environment(TabBarStore())
             .environment(SignInStore())
     }

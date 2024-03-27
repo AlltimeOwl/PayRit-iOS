@@ -20,15 +20,17 @@ struct Certificate: Hashable, Codable {
     let repaymentRate: Double
     let isWriter: Bool
     
-    var certificateStep: CertificateStep {
+    var certificateStep: CertificateStep? {
         if paperStatus == "WAITING_AGREE" {
             return .waitingApproval
         } else if paperStatus == "PAYMENT_REQUIRED" {
             return .waitingPayment
         } else if paperStatus == "COMPLETE_WRITING" {
             return .progress
+        } else if paperStatus == "EXPIRED" {
+            return .complete
         } else {
-            return .waitingApproval
+            return nil
         }
     }
     
@@ -71,9 +73,8 @@ struct Certificate: Hashable, Codable {
             return 0
         }
     }
-//    enum CodingKeys : String, CodingKey{
-//        case name
-//        case age
-//        case birthday = "birth_date"
-//    }
+    static let sameple = [Certificate(paperId: 0, paperRole: WriterRole(rawValue: "CREDITOR") ?? .CREDITOR, transactionDate: "2024-01.01", repaymentStartDate: "2024-01-01", repaymentEndDate: "2024-04-04", amount: 100000, paperStatus: "COMPLETE_WRITING", peerName: "상대방", dueDate: 10, repaymentRate: 70.0, isWriter: true),
+                          Certificate(paperId: 0, paperRole: WriterRole(rawValue: "CREDITOR") ?? .CREDITOR, transactionDate: "2024-01.01", repaymentStartDate: "2024-01-01", repaymentEndDate: "2024-04-04", amount: 100000, paperStatus: "COMPLETE_WRITING", peerName: "상대방", dueDate: 10, repaymentRate: 70.0, isWriter: true),
+                          Certificate(paperId: 0, paperRole: WriterRole(rawValue: "CREDITOR") ?? .CREDITOR, transactionDate: "2024-01.01", repaymentStartDate: "2024-01-01", repaymentEndDate: "2024-04-04", amount: 100000, paperStatus: "COMPLETE_WRITING", peerName: "상대방", dueDate: 10, repaymentRate: 70.0, isWriter: true),
+                          Certificate(paperId: 0, paperRole: WriterRole(rawValue: "CREDITOR") ?? .CREDITOR, transactionDate: "2024-01.01", repaymentStartDate: "2024-01-01", repaymentEndDate: "2024-04-04", amount: 100000, paperStatus: "COMPLETE_WRITING", peerName: "상대방", dueDate: 10, repaymentRate: 70.0, isWriter: true)]
 }

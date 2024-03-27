@@ -13,8 +13,10 @@ struct MyInfoWritingView: View {
     @State private var zipCode = ""
     @State private var address = ""
     @State private var detailAddress = ""
+    @State private var moveNextView: Bool = false
     @State private var isPresentingZipCodeView = false
     @State private var isShowingStopAlert = false
+    @State private var notEnoughPhoneNumberLength: Bool = false
     @State private var keyBoardFocused: Bool = false
     @Binding var newCertificate: CertificateDetail
     @Binding var path: NavigationPath
@@ -45,35 +47,41 @@ struct MyInfoWritingView: View {
                             Text("이름")
                                 .font(Font.body03)
                             CustomTextField(foregroundStyle: .black, placeholder: "이름을 적어주세요", keyboardType: .default, text: $name)
-//                                .onChange(of: name) {
-//                                    if newCertificate.memberRole == "CREDITOR" {
-//                                        newCertificate.creditorName = name
-//                                    } else if newCertificate.memberRole == "DEBTOR" {
-//                                        newCertificate.debtorName = name
-//                                    }
-//                                }
-                                .disabled(true)
+                                .onChange(of: name) {
+                                    if newCertificate.memberRole == "CREDITOR" {
+                                        newCertificate.creditorName = name
+                                    } else if newCertificate.memberRole == "DEBTOR" {
+                                        newCertificate.debtorName = name
+                                    }
+                                }
                         }
                         VStack(alignment: .leading) {
                             Text("연락처")
                                 .font(Font.body03)
                             CustomTextField(foregroundStyle: .black, placeholder: "숫자만 입력해주세요", keyboardType: .numberPad, text: $phoneNumber)
-//                                .onChange(of: phoneNumber) {
-//                                    if newCertificate.memberRole == "CREDITOR" {
-//                                        newCertificate.creditorPhoneNumber = phoneNumber.globalPhoneNumber()
-//                                    } else if newCertificate.memberRole == "DEBTOR" {
-//                                        newCertificate.debtorPhoneNumber = phoneNumber.globalPhoneNumber()
-//                                    }
-//                                }
-                                .disabled(true)
-                            
+                                .onChange(of: phoneNumber) { oldValue, newValue in
+                                    if newValue.count <= 13 {
+                                        phoneNumber = phoneNumber.phoneNumberMiddleCase()
+                                        if newCertificate.memberRole == "CREDITOR" {
+                                            newCertificate.creditorPhoneNumber = phoneNumber.globalPhoneNumber()
+                                        } else if newCertificate.memberRole == "DEBTOR" {
+                                            newCertificate.debtorPhoneNumber = phoneNumber.globalPhoneNumber()
+                                        }
+                                    } else {
+                                        phoneNumber = oldValue
+                                    }
+                                }
+                            if notEnoughPhoneNumberLength {
+                                Text("전화번호를 확인해주세요")
+                                    .font(Font.caption01)
+                                    .foregroundStyle(Color.payritErrorRed)
+                            }
                         }
                         VStack(alignment: .leading, spacing: 8) {
                             Text("주소 (선택사항)")
                                 .font(Font.body03)
                             HStack(alignment: .bottom) {
                                 CustomTextField(foregroundStyle: .black, placeholder: "우편번호", keyboardType: .numberPad, text: $zipCode)
-                                    .disabled(true)
                                     .onChange(of: zipCode) {
                                         if newCertificate.memberRole == "CREDITOR" {
                                             newCertificate.creditorAddress = address + "(\(zipCode))"
@@ -108,9 +116,12 @@ struct MyInfoWritingView: View {
                     .padding(.top, 30)
                     .padding(.horizontal, 16)
                 }
-                NavigationLink {
-                    PartnerInfoWritingView(newCertificate: $newCertificate, path: $path)
-                        .customBackbutton()
+                Button {
+                    if phoneNumber.count < 13 {
+                        notEnoughPhoneNumberLength = true
+                    } else {
+                        moveNextView.toggle()
+                    }
                 } label: {
                     Text("다음")
                         .font(Font.title04)
@@ -175,6 +186,10 @@ struct MyInfoWritingView: View {
         .sheet(isPresented: $isPresentingZipCodeView) {
             KakaoAdressView(address: $address, zonecode: $zipCode, isPresented: $isPresentingZipCodeView)
                 .edgesIgnoringSafeArea(.all)
+        }
+        .navigationDestination(isPresented: $moveNextView) {
+            PartnerInfoWritingView(newCertificate: $newCertificate, path: $path)
+                .customBackbutton()
         }
     }
 }

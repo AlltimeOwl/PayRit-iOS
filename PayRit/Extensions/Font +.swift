@@ -37,7 +37,7 @@ public extension Font {
         return Font.custom("SUIT-SemiBold", size: 18)
     }
     
-    /// SUIT-Bold 18
+    /// SUIT-Bold 16
     static var body01: Font {
         return Font.custom("SUIT-Bold", size: 16)
     }

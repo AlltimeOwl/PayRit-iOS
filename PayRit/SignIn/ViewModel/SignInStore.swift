@@ -13,6 +13,11 @@ import CryptoKit
 import AuthenticationServices
 import Alamofire
 
+enum WhileSigIn {
+    case waiting
+    case doing
+}
+
 enum SiginInType: String, CodingKey, CaseIterable {
     case apple = "APPLE"
     case kakao = "KAKAO"
@@ -25,74 +30,64 @@ enum ServerAuthError: Error {
     case parsingError
 }
 
-struct TokenTestData: Codable {
-    let accessToken: String
-    let refreshToken: String
-}
-
 @Observable
 class SignInStore {
     var isSignIn: Bool = UserDefaultsManager().getIsSignInState()
+    var singinRevoke: Bool = false
+    var whileSigIn: WhileSigIn = .waiting
     var appleAuthorizationCode = ""
     var appleIdentityToken = ""
-    
-//    func getAppleRefreshToken(code: String, completionHandler: @escaping (AppleTokenResponse) -> Void) {
-//        let url = "https://appleid.apple.com/auth/token"
-//        let header: HTTPHeaders = ["Content-Type": "application/x-www-form-urlencoded"]
-//        let parameters: Parameters = [
-//            "client_id": "앱번들id",
-//            "client_secret": "1번의jwt토큰",
-//            "code": code,
-//            "grant_type": "authorization_code"
-//        ]
-//
-//        AF.request(url,
-//                   method: .post,
-//                   parameters: parameters,
-//                   headers: header)
-//        .validate(statusCode: 200..<300)
-//        .responseData { response in
-//            switch response.result {
-//            case .success:
-//                guard let data = response.data else { return }
-//                let responseData = JSON(data)
-//                print(responseData)
-//
-//                guard let output = try? JSONDecoder().decode(AppleTokenResponse.self, from: data) else {
-//                    print("Error: JSON Data Parsing failed")
-//                    return
-//                }
-//
-//                completionHandler(output)
-//            case .failure:
-//                print("애플 토큰 발급 실패 - \(response.error.debugDescription)")
-//            }
-//        }
-//    }
-//    func revokeAppleToken(clientSecret: String, token: String, completionHandler: @escaping () -> Void) {
-//        let url = "https://appleid.apple.com/auth/revoke"
-//        let header: HTTPHeaders = ["Content-Type": "application/x-www-form-urlencoded"]
-//        let parameters: Parameters = [
-//            "client_id": "com.daejinlim.PayRit",
-//            "client_secret": clientSecret,
-//            "token": token
-//        ]
-//
-//        AF.request(url,
-//                   method: .post,
-//                   parameters: parameters,
-//                   headers: header)
-//        .validate(statusCode: 200..<300)
-//        .responseData { response in
-//            guard let statusCode = response.response?.statusCode else { return }
-//            if statusCode == 200 {
-//                print("애플 토큰 삭제 성공!")
-//                completionHandler()
-//            }
-//        }
-//    }
+    var firebasePushtoken = ""
     
     // MARK: - 애플
+    func handleAppleSignInResult(_ result: Result<ASAuthorization, Error>) {
+        switch result {
+        case .success(let authResults):
+            print("Apple Login Successful")
+            switch authResults.credential {
+            case let appleIDCredential as ASAuthorizationAppleIDCredential:
+                // 계정 정보 가져오기
+                let appleUserIdentifier = appleIDCredential.user
+                let fullName = appleIDCredential.fullName
+                let name = (fullName?.familyName ?? "") + (fullName?.givenName ?? "")
+                let email = appleIDCredential.email ?? ""
+                
+//                let IdentityToken = String(data: appleIDCredential.identityToken ?? Data(), encoding: .utf8)
+//                print("---------1-----------")
+//                print("UserIdentifier : \(appleUserIdentifier)")
+//                print("fullName : \(String(describing: fullName)))")
+//                print("name : \(name)")
+//                print("email : \(String(describing: email))")
+//                print("IdentityToken : \(IdentityToken ?? "")")
+//                print("---------1-----------")
+                
+                // AuthorizationCode 서버에 전송하는 값 !! 1번만 사용될 수 있으며 5분간 유효 !! appleIDCredential.user
+                if  let authorizationCode = appleIDCredential.authorizationCode,
+                    let identityToken = appleIDCredential.identityToken,
+                    let authCodeString = String(data: authorizationCode, encoding: .utf8),
+                    let identifyTokenString = String(data: identityToken, encoding: .utf8) {
+                    self.appleAuthorizationCode = authCodeString
+                    self.appleIdentityToken = identifyTokenString
+                    print("appleAuthorizationCode : \(authCodeString)")
+                    print("appleIdentityToken : \(identifyTokenString)")
+                    UserDefaultsManager().setAppleIdTokenString(appleIdTokenString: identifyTokenString)
+                }
+                if name.isEmpty && email.isEmpty {
+                    UserDefaultsManager().setAppleSignIn(appleId: appleUserIdentifier, signInCompany: "애플")
+                } else {
+                    UserDefaultsManager().setAppleUserData(userData: User(name: name, email: email, phoneNumber: "", signInCompany: "애플", appleId: appleUserIdentifier))
+                }
+                appleAuthCheck()
+                
+            default:
+                break
+            }
+        case .failure(let error):
+            print(error.localizedDescription)
+            print("error")
+        }
+    }
+    
     func appleAuthCheck() {
         let appleIDProvider = ASAuthorizationAppleIDProvider()
         appleIDProvider.getCredentialState(forUserID: UserDefaultsManager().getAppleUserId()) { (credentialState, _) in
@@ -100,9 +95,9 @@ class SignInStore {
             case .authorized:
                 print("애플 authorized")
                 // The Apple ID credential is valid.
-                DispatchQueue.main.async {
+//                DispatchQueue.global().async {
                     // authorized된 상태이므로 바로 로그인 완료 화면으로 이동
-                    self.serverAuth(aToken: self.appleIdentityToken, rToken: "rToken", company: .apple) { result in
+                self.serverAuth(aToken: UserDefaultsManager().getAppleIdTokenString(), rToken: "rToken", company: .apple) { result in
                         switch result {
                         case .success(true):
                             print("서버 Sign in succeeded")
@@ -118,7 +113,7 @@ class SignInStore {
                             UserDefaultsManager().setIsSignInState(value: false)
                         }
                     }
-                }
+//                }
             case .revoked:
                 // 인증이 취소됨
                 print("애플 revoked")
@@ -215,6 +210,7 @@ class SignInStore {
                     userDefault.setKakaoUserData(userData: User(name: name, email: email, phoneNumber: phoneNumber, signInCompany: "카카오톡"))
                 }
                 if let aToken = oauthToken?.accessToken, let rToken = oauthToken?.refreshToken {
+                    UserDefaultsManager().setKakaoToken(kakaoToken: aToken)
                     self.serverAuth(aToken: aToken, rToken: rToken, company: .kakao) { result in
                         switch result {
                         case .success(true):
@@ -229,6 +225,45 @@ class SignInStore {
                     }
                 }
             }
+        }
+    }
+    
+    func kakaoAuthCheck() {
+        let userDefault = UserDefaultsManager()
+        // 토큰 존재 여부 확인하기
+        if AuthApi.hasToken() {
+            UserApi.shared.accessTokenInfo { (_, error) in
+                if let error = error {
+                    if let sdkError = error as? SdkError, sdkError.isInvalidTokenError() == true {
+                        // 로그인 필요
+                        self.isSignIn = false
+                    } else {
+                        // 기타 에러
+                    }
+                } else {
+                    // 토큰 유효성 체크 성공(필요 시 토큰 갱신됨)
+                    let token = userDefault.getKakaoToken()
+                    self.serverAuth(aToken: token, rToken: "rToken", company: .kakao) { result in
+                        switch result {
+                        case .success(true):
+                            print("Sign in succeeded")
+                            self.isSignIn = true
+                            userDefault.setIsSignInState(value: true)
+                        case .success(false):
+                            print("Sign in failed")
+                            self.isSignIn = false
+                            UserDefaultsManager().setIsSignInState(value: false)
+                        case .failure(let error):
+                            print("Error: \(error)")
+                            self.isSignIn = false
+                            UserDefaultsManager().setIsSignInState(value: false)
+                        }
+                    }
+                }
+            }
+        } else {
+            // 로그인 필요
+            self.isSignIn = false
         }
     }
     
@@ -287,101 +322,106 @@ class SignInStore {
             }
         }
     }
-    
+//    func getToken() -> S
     // MARK: - 공용
     /// 서버에 JWT 보내고 Bearer를 userDefault에 저장
     func serverAuth(aToken: String, rToken: String, company: SiginInType, completion: @escaping (Result<Bool, Error>) -> Void) {
+        self.whileSigIn = .doing
         let userDefault = UserDefaultsManager()
-        var urlComponents = URLComponents()
-        urlComponents.scheme = "https"
-        urlComponents.host = "www.payrit.info"
-        urlComponents.path = "/api/v1/oauth/\(company.rawValue)"
-        
-        // URL 구성 요소를 사용하여 URL 생성
-        guard let url = urlComponents.url else {
-            completion(.failure(ServerAuthError.invalidURL))
-            return
-        }
-        
-        print("URL: \(url)")
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST" // 요청에 사용할 HTTP 메서드 설정
-        // HTTP 헤더 설정
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("application/json", forHTTPHeaderField: "accept")
-        
-        // HTTP 바디 설정
-        let body = [
-            "accessToken": aToken,
-            "refreshToken": rToken
-        ] as [String: Any]
-        
-        do {
-            request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
-        } catch {
-            print("Error creating JSON data")
-            completion(.failure(error))
-            return
-        }
-        
-        // URLSession을 사용하여 요청 수행
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
-                print("Error: \(error)")
+        Task {
+            await userDefault.loadFCMtoken()
+            let firebaseToken = userDefault.firebaseToken ?? ""
+            var urlComponents = URLComponents()
+            urlComponents.scheme = "https"
+            urlComponents.host = "www.payrit.info"
+            urlComponents.path = "/api/v1/oauth/\(company.rawValue)"
+            
+            guard let url = urlComponents.url else {
+                completion(.failure(ServerAuthError.invalidURL))
+                return
+            }
+            print("--------firebaseTokenfirebaseToken---------")
+            print(firebaseToken)
+            print("--------firebaseTokenfirebaseToken---------")
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.setValue("application/json", forHTTPHeaderField: "accept")
+            
+            let body = [
+                "accessToken": aToken,
+                "refreshToken": rToken,
+                "firebaseToken": firebaseToken
+            ] as [String: Any]
+            print("--------bodybodybody---------")
+            print(body)
+            print("--------bodybodybody---------")
+            
+            do {
+                request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
+            } catch {
+                print("Error creating JSON data")
                 completion(.failure(error))
                 return
             }
             
-            guard let httpResponse = response as? HTTPURLResponse else {
-                print("Invalid response")
-                completion(.failure(ServerAuthError.invalidResponse))
-                return
-            }
-            
-            print("Response status code: \(httpResponse.statusCode)")
-            
-            if httpResponse.statusCode == 200 {
-                // Handle successful response
-                guard let responseData = data else {
-                    print("Invalid data")
-                    completion(.failure(ServerAuthError.invalidData))
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    print("Error: \(error)")
+                    completion(.failure(error))
                     return
                 }
                 
-                do {
-                    guard let json = try JSONSerialization.jsonObject(with: responseData, options: []) as? [String: Any] else {
-                        print("Parsing error")
-                        completion(.failure(ServerAuthError.parsingError))
-                        return
-                    }
-                    
-                    print("JSON Response: \(json)")
-                    
-                    guard let accessToken = json["accessToken"] as? String, let refreshToken = json["refreshToken"] as? String else {
-                        print("Access token or refresh token not found")
-                        completion(.failure(ServerAuthError.parsingError))
-                        return
-                    }
-                    
-                    // accessToken을 저장합니다. 이 예제에서는 UserDefaults를 사용하여 저장합니다.
-                    userDefault.setBearerToken(accessToken, refreshToken)
-                    print("-----토큰 로드 성공-----")
-                    print("aToken : \(accessToken)")
-                    print("rToken : \(refreshToken)")
-                    print("-----토큰 로드 성공-----")
-                    
-                    completion(.success(true))
-                } catch {
-                    print("Error parsing JSON response: \(error)")
-                    completion(.failure(error))
+                guard let httpResponse = response as? HTTPURLResponse else {
+                    print("Invalid response")
+                    completion(.failure(ServerAuthError.invalidResponse))
+                    return
                 }
-            } else {
-                // Handle other status codes
-                print("Unexpected status code: \(httpResponse.statusCode)")
-                completion(.failure(ServerAuthError.invalidResponse))
+                
+                print("Response status code: \(httpResponse.statusCode)")
+                
+                if (200..<300).contains(httpResponse.statusCode) {
+                    guard let responseData = data else {
+                        print("Invalid data")
+                        completion(.failure(ServerAuthError.invalidData))
+                        return
+                    }
+                    
+                    do {
+                        guard let json = try JSONSerialization.jsonObject(with: responseData, options: []) as? [String: Any] else {
+                            print("Parsing error")
+                            completion(.failure(ServerAuthError.parsingError))
+                            return
+                        }
+                        
+                        print("JSON Response: \(json)")
+                        
+                        guard let accessToken = json["accessToken"] as? String, let refreshToken = json["refreshToken"] as? String else {
+                            print("Access token or refresh token not found")
+                            completion(.failure(ServerAuthError.parsingError))
+                            return
+                        }
+                        
+                        userDefault.setBearerToken(accessToken, refreshToken)
+                        print("-----토큰 로드 성공-----")
+                        print("aToken : \(accessToken)")
+                        print("rToken : \(refreshToken)")
+                        print("-----토큰 로드 성공-----")
+                        
+                        completion(.success(true))
+                    } catch {
+                        print("Error parsing JSON response: \(error)")
+                        completion(.failure(error))
+                    }
+                    self.whileSigIn = .waiting
+                } else {
+                    print("Unexpected status code: \(httpResponse.statusCode)")
+                    completion(.failure(ServerAuthError.invalidResponse))
+                    self.whileSigIn = .waiting
+                }
             }
+            task.resume() // 작업 시작
         }
-        task.resume() // 작업 시작
     }
 }

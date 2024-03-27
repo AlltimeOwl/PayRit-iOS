@@ -23,11 +23,13 @@
 		BC21939C2BB015D700EE7B68 /* Int +.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC21939B2BB015D700EE7B68 /* Int +.swift */; };
 		BC21939F2BB038B200EE7B68 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = BC21939E2BB038B200EE7B68 /* FirebaseAnalytics */; };
 		BC2193A12BB038B200EE7B68 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = BC2193A02BB038B200EE7B68 /* FirebaseMessaging */; };
-		BC2193A32BB03A0500EE7B68 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BC2193A22BB03A0500EE7B68 /* GoogleService-Info.plist */; };
 		BC2193A62BB03D7F00EE7B68 /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2193A52BB03D7F00EE7B68 /* NotificationView.swift */; };
 		BC2193A82BB03D8C00EE7B68 /* PayritNoti.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2193A72BB03D8C00EE7B68 /* PayritNoti.swift */; };
 		BC2193AB2BB0416400EE7B68 /* NotificationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2193AA2BB0416400EE7B68 /* NotificationStore.swift */; };
 		BC2193B02BB06EB600EE7B68 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = BC2193AD2BB066E700EE7B68 /* Config.xcconfig */; };
+		BC2193B42BB12DCF00EE7B68 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = BC2193B32BB12DBF00EE7B68 /* PrivacyInfo.xcprivacy */; };
+		BC2193B72BB1472400EE7B68 /* CarouselView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2193B62BB1472400EE7B68 /* CarouselView.swift */; };
+		BC2193B92BB1BAF900EE7B68 /* SUIT-ExtraBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = BC2193B82BB1BAF900EE7B68 /* SUIT-ExtraBold.otf */; };
 		BC29AA3B2BA1BEB9002CB968 /* CertificateSerchingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC29AA3A2BA1BEB9002CB968 /* CertificateSerchingView.swift */; };
 		BC2D51CC2B9ECD870041FD77 /* CertificateMemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2D51CB2B9ECD870041FD77 /* CertificateMemoView.swift */; };
 		BC2D51CE2B9F35260041FD77 /* CertificateDeductibleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2D51CD2B9F35260041FD77 /* CertificateDeductibleView.swift */; };
@@ -58,6 +60,7 @@
 		BC6829192B9CA836009EF3F5 /* SUIT-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = BC6829182B9CA836009EF3F5 /* SUIT-Regular.otf */; };
 		BC68291B2B9CACC6009EF3F5 /* SUIT-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = BC68291A2B9CACC6009EF3F5 /* SUIT-Medium.otf */; };
 		BC68291F2B9CEE87009EF3F5 /* Memo.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC68291E2B9CEE87009EF3F5 /* Memo.swift */; };
+		BC6E3FD12BB2A06000A4E004 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BC6E3FD02BB2A06000A4E004 /* GoogleService-Info.plist */; };
 		BC6F652B2B9B355200FB9FA7 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6F652A2B9B355200FB9FA7 /* User.swift */; };
 		BC6F652D2B9B394800FB9FA7 /* MembershipWithdrawalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6F652C2B9B394800FB9FA7 /* MembershipWithdrawalView.swift */; };
 		BC6F652F2B9B3D9000FB9FA7 /* MyPageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6F652E2B9B3D9000FB9FA7 /* MyPageStore.swift */; };
@@ -69,7 +72,6 @@
 		BC9E55CE2B956B7300B100C6 /* CertificateDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC9E55CD2B956B7300B100C6 /* CertificateDetailView.swift */; };
 		BCC9EC042B8F09A6001E18F0 /* CertificateDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCC9EC032B8F09A6001E18F0 /* CertificateDetail.swift */; };
 		BCD942512B8F0CCC00BF61CD /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = BCD942502B8F0CCC00BF61CD /* .swiftlint.yml */; };
-		BCD942532B8F0E0600BF61CD /* LaunchScreenTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD942522B8F0E0600BF61CD /* LaunchScreenTest.swift */; };
 		BCD942572B8F1D5400BF61CD /* MyPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD942562B8F1D5400BF61CD /* MyPageView.swift */; };
 		BCD9425B2B8F639A00BF61CD /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD9425A2B8F639A00BF61CD /* CustomTextField.swift */; };
 		BCE280DA2B8F75120085D45E /* View +.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCE280D92B8F75120085D45E /* View +.swift */; };
@@ -95,11 +97,13 @@
 		BC2193972BAC0DF000EE7B68 /* String +.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String +.swift"; sourceTree = "<group>"; };
 		BC2193992BAF34A000EE7B68 /* SafariView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariView.swift; sourceTree = "<group>"; };
 		BC21939B2BB015D700EE7B68 /* Int +.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int +.swift"; sourceTree = "<group>"; };
-		BC2193A22BB03A0500EE7B68 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		BC2193A52BB03D7F00EE7B68 /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
 		BC2193A72BB03D8C00EE7B68 /* PayritNoti.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayritNoti.swift; sourceTree = "<group>"; };
 		BC2193AA2BB0416400EE7B68 /* NotificationStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationStore.swift; sourceTree = "<group>"; };
 		BC2193AD2BB066E700EE7B68 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		BC2193B32BB12DBF00EE7B68 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		BC2193B62BB1472400EE7B68 /* CarouselView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselView.swift; sourceTree = "<group>"; };
+		BC2193B82BB1BAF900EE7B68 /* SUIT-ExtraBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SUIT-ExtraBold.otf"; sourceTree = "<group>"; };
 		BC29AA3A2BA1BEB9002CB968 /* CertificateSerchingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateSerchingView.swift; sourceTree = "<group>"; };
 		BC2D51CB2B9ECD870041FD77 /* CertificateMemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateMemoView.swift; sourceTree = "<group>"; };
 		BC2D51CD2B9F35260041FD77 /* CertificateDeductibleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateDeductibleView.swift; sourceTree = "<group>"; };
@@ -127,6 +131,7 @@
 		BC6829182B9CA836009EF3F5 /* SUIT-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SUIT-Regular.otf"; sourceTree = "<group>"; };
 		BC68291A2B9CACC6009EF3F5 /* SUIT-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SUIT-Medium.otf"; sourceTree = "<group>"; };
 		BC68291E2B9CEE87009EF3F5 /* Memo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Memo.swift; sourceTree = "<group>"; };
+		BC6E3FD02BB2A06000A4E004 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		BC6F652A2B9B355200FB9FA7 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		BC6F652C2B9B394800FB9FA7 /* MembershipWithdrawalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MembershipWithdrawalView.swift; sourceTree = "<group>"; };
 		BC6F652E2B9B3D9000FB9FA7 /* MyPageStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageStore.swift; sourceTree = "<group>"; };
@@ -138,7 +143,6 @@
 		BC9E55CD2B956B7300B100C6 /* CertificateDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateDetailView.swift; sourceTree = "<group>"; };
 		BCC9EC032B8F09A6001E18F0 /* CertificateDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateDetail.swift; sourceTree = "<group>"; };
 		BCD942502B8F0CCC00BF61CD /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
-		BCD942522B8F0E0600BF61CD /* LaunchScreenTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenTest.swift; sourceTree = "<group>"; };
 		BCD942562B8F1D5400BF61CD /* MyPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageView.swift; sourceTree = "<group>"; };
 		BCD9425A2B8F639A00BF61CD /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
 		BCE280D92B8F75120085D45E /* View +.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View +.swift"; sourceTree = "<group>"; };
@@ -182,6 +186,7 @@
 				BC68291A2B9CACC6009EF3F5 /* SUIT-Medium.otf */,
 				BC6F65322B9CA37A00FB9FA7 /* SUIT-SemiBold.otf */,
 				BC6F65342B9CA3C100FB9FA7 /* SUIT-Bold.otf */,
+				BC2193B82BB1BAF900EE7B68 /* SUIT-ExtraBold.otf */,
 			);
 			path = Font;
 			sourceTree = "<group>";
@@ -211,6 +216,14 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
+		BC2193B52BB146FD00EE7B68 /* CarouselView */ = {
+			isa = PBXGroup;
+			children = (
+				BC2193B62BB1472400EE7B68 /* CarouselView.swift */,
+			);
+			path = CarouselView;
+			sourceTree = "<group>";
+		};
 		BC388DB32B904B6F005D1279 /* Content */ = {
 			isa = PBXGroup;
 			children = (
@@ -223,6 +236,7 @@
 			isa = PBXGroup;
 			children = (
 				BC2193AD2BB066E700EE7B68 /* Config.xcconfig */,
+				BC2193B32BB12DBF00EE7B68 /* PrivacyInfo.xcprivacy */,
 				BC595DD42B8D8AC300CA555E /* PayRit */,
 				BC595DD32B8D8AC300CA555E /* Products */,
 			);
@@ -306,8 +320,8 @@
 			isa = PBXGroup;
 			children = (
 				BC595E0B2B8DB0B500CA555E /* Info.plist */,
-				BC2193A22BB03A0500EE7B68 /* GoogleService-Info.plist */,
 				BC595DD92B8D8AC400CA555E /* Assets.xcassets */,
+				BC6E3FD02BB2A06000A4E004 /* GoogleService-Info.plist */,
 				BC1219702BA6D2FD00B575F8 /* Font */,
 			);
 			path = Config;
@@ -383,7 +397,6 @@
 			isa = PBXGroup;
 			children = (
 				BC595E242B8DC9AC00CA555E /* Launch Screen.storyboard */,
-				BCD942522B8F0E0600BF61CD /* LaunchScreenTest.swift */,
 			);
 			path = LaunchScreen;
 			sourceTree = "<group>";
@@ -406,6 +419,7 @@
 				BC2D51CB2B9ECD870041FD77 /* CertificateMemoView.swift */,
 				BC2D51CD2B9F35260041FD77 /* CertificateDeductibleView.swift */,
 				BC1219642BA29FE700B575F8 /* CertificateAcceptView.swift */,
+				BC2193B52BB146FD00EE7B68 /* CarouselView */,
 				BC12196E2BA5F1D700B575F8 /* ExportView */,
 			);
 			path = View;
@@ -569,8 +583,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				BCD942512B8F0CCC00BF61CD /* .swiftlint.yml in Resources */,
-				BC2193A32BB03A0500EE7B68 /* GoogleService-Info.plist in Resources */,
+				BC6E3FD12BB2A06000A4E004 /* GoogleService-Info.plist in Resources */,
+				BC2193B42BB12DCF00EE7B68 /* PrivacyInfo.xcprivacy in Resources */,
 				BC6829192B9CA836009EF3F5 /* SUIT-Regular.otf in Resources */,
+				BC2193B92BB1BAF900EE7B68 /* SUIT-ExtraBold.otf in Resources */,
 				BC595DDD2B8D8AC400CA555E /* Preview Assets.xcassets in Resources */,
 				BC6F65332B9CA37A00FB9FA7 /* SUIT-SemiBold.otf in Resources */,
 				BC595E252B8DC9AC00CA555E /* Launch Screen.storyboard in Resources */,
@@ -653,7 +669,6 @@
 				BC1219612BA1D6FC00B575F8 /* Deducted.swift in Sources */,
 				BC2193A62BB03D7F00EE7B68 /* NotificationView.swift in Sources */,
 				BC29AA3B2BA1BEB9002CB968 /* CertificateSerchingView.swift in Sources */,
-				BCD942532B8F0E0600BF61CD /* LaunchScreenTest.swift in Sources */,
 				BCD942572B8F1D5400BF61CD /* MyPageView.swift in Sources */,
 				BCC9EC042B8F09A6001E18F0 /* CertificateDetail.swift in Sources */,
 				BCE280E02B9021EE0085D45E /* WritingView.swift in Sources */,
@@ -667,6 +682,7 @@
 				BC2D51CC2B9ECD870041FD77 /* CertificateMemoView.swift in Sources */,
 				BC1CF8D72B961F5600A9BF12 /* MyInfoWritingView.swift in Sources */,
 				BC595DD62B8D8AC300CA555E /* PayRitApp.swift in Sources */,
+				BC2193B72BB1472400EE7B68 /* CarouselView.swift in Sources */,
 				BC6F652B2B9B355200FB9FA7 /* User.swift in Sources */,
 				BC62BFF82BA15695000A1BA5 /* WritingStore.swift in Sources */,
 				BC6F652D2B9B394800FB9FA7 /* MembershipWithdrawalView.swift in Sources */,
@@ -719,6 +735,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -738,7 +755,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -782,6 +799,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -795,7 +813,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -813,27 +831,31 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = PayRit/PayRit.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"PayRit/Preview Content\"";
-				DEVELOPMENT_TEAM = 3URYLCPH2H;
+				DEVELOPMENT_TEAM = ND7D3QSWBP;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PayRit/Config/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.daejinlim.PayRit;
+				PRODUCT_BUNDLE_IDENTIFIER = com.alltimeowl.PayRit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -852,27 +874,31 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = PayRit/PayRit.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"PayRit/Preview Content\"";
-				DEVELOPMENT_TEAM = 3URYLCPH2H;
+				DEVELOPMENT_TEAM = ND7D3QSWBP;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PayRit/Config/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.daejinlim.PayRit;
+				PRODUCT_BUNDLE_IDENTIFIER = com.alltimeowl.PayRit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -920,7 +946,7 @@
 			repositoryURL = "https://github.com/kakao/kakao-ios-sdk";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 2.20.0;
+				minimumVersion = 2.21.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

@@ -45,5 +45,4 @@ extension Int {
         
         return result
     }
-
 }

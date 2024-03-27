@@ -11,371 +11,409 @@ struct CertificateDetailView: View {
     let paperId: Int
     let certificateStep: CertificateStep
     var isFormValid: Bool = false
-    @State private var isLoading: Bool = true
     @State private var isShowingExportView: Bool = false
     @State private var isShowingPDFView: Bool = false
     @State private var isShowingMailView: Bool = false
+    @State private var isShowingRemindAlert: Bool = false
+    @State private var isShowingUnReadyAlert: Bool = false
     @State private var isShowingAllRepaymentAlert: Bool = false
     @State private var result: Result<MFMailComposeResult, Error>?
     @Environment(HomeStore.self) var homeStore
     var body: some View {
         ZStack {
             Color.payritBackground.ignoresSafeArea()
-            if isLoading {
-                ProgressView()
-            } else {
-                ScrollView {
-                    VStack(spacing: 0) {
-                        HStack {
-                            if homeStore.certificateDetail.memberRole == "CREDITOR" {
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text("\(homeStore.certificateDetail.debtorName)님께")
-                                    HStack(spacing: 0) {
-                                        Text("총 ")
-                                        Text(homeStore.certificateDetail.amountFormatter)
-                                            .foregroundStyle(Color.payritMint)
-                                        Text("원을 빌려주었어요.")
-                                    }
+            ScrollView {
+                VStack(spacing: 0) {
+                    HStack {
+                        if homeStore.certificateDetail.memberRole == "CREDITOR" {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("\(homeStore.certificateDetail.debtorName)님께")
+                                HStack(spacing: 0) {
+                                    Text("총 ")
+                                    Text(homeStore.certificateDetail.amountFormatter)
+                                        .foregroundStyle(Color.payritMint)
+                                    Text("원을 빌려주었어요.")
                                 }
-                                .font(Font.title03)
-                            } else {
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text("\(homeStore.certificateDetail.creditorName)님께")
-                                    HStack(spacing: 0) {
-                                        Text("총 ")
-                                        Text(homeStore.certificateDetail.amountFormatter)
-                                            .foregroundStyle(Color.payritIntensivePink)
-                                        Text("원을 빌렸어요.")
-                                    }
-                                }
-                                .font(Font.title03)
                             }
-                            Spacer()
+                            .font(Font.title03)
+                        } else {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("\(homeStore.certificateDetail.creditorName)님께")
+                                HStack(spacing: 0) {
+                                    Text("총 ")
+                                    Text(homeStore.certificateDetail.amountFormatter)
+                                        .foregroundStyle(Color.payritIntensivePink)
+                                    Text("원을 빌렸어요.")
+                                }
+                            }
+                            .font(Font.title03)
                         }
+                        Spacer()
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 0) {
+                        HStack {
+                            Text("원금상환일   \(homeStore.certificateDetail.repaymentEndDate.stringDateToKorea())")
+                                .font(Font.caption01)
+                            Spacer()
+                            Text(homeStore.certificateDetail.dueDate >= 0 ? "D - \(homeStore.certificateDetail.dueDate)" : "D + \(-homeStore.certificateDetail.dueDate)")
+                                .font(Font.custom("SUIT-Bold", size: 14))
+                        }
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 10)
+                        .background(homeStore.certificateDetail.memberRole == "CREDITOR" ? Color(hex: "00C2BD") : Color(hex: "F95873"))
+                        .clipShape(.rect(cornerRadius: 8))
+                        .padding(.top, 14)
                         
-                        VStack(spacing: 0) {
-                            VStack(alignment: .leading, spacing: 0) {
-                                HStack {
-                                    Text("원금상환일 \(homeStore.certificateDetail.repaymentEndDate.replacingOccurrences(of: "-", with: "."))")
-                                        .font(Font.caption02)
-                                        .foregroundStyle(Color.gray02)
-                                    Spacer()
-                                }
-                                .padding(.top, 16)
-                                
-                                Text("남은 금액")
-                                    .font(Font.body03)
-                                    .foregroundStyle(Color.gray04)
-                                    .padding(.top, 14)
-                                
-                                Text(String(homeStore.certificateDetail.remainingAmountFormatter) + "원")
-                                    .font(Font.title01)
-                                    .padding(.top, 2)
-                                
-                                Spacer()
-                                
-                                VStack(alignment: .trailing, spacing: 6) {
-                                    HStack { Spacer() }
-                                    Text(homeStore.certificateDetail.dueDate >= 0 ? "D - \(homeStore.certificateDetail.dueDate)" : "D + \(-homeStore.certificateDetail.dueDate)")
-                                        .font(Font.body03)
-                                        .foregroundStyle(Color.gray02)
-                                    ProgressView(value: homeStore.certificateDetail.repaymentRate, total: 100)
-                                        .progressViewStyle(CustomLinearProgressViewStyle(trackColor: Color.gray09, progressColor: homeStore.certificateDetail.memberRole == "CREDITOR" ? Color.payritMint : Color.payritIntensivePink))
-                                    Text("\(homeStore.certificateDetail.repaymentRate == 100.0 ? "상환 완료" : certificateStep.rawValue) (\(Int(homeStore.certificateDetail.repaymentRate))%)")
-                                        .font(Font.caption02)
-                                        .foregroundStyle(Color.gray04)
-                                }
-                                .padding(.bottom, 16)
-                            }
-                            .padding(.horizontal, 16)
-                            .frame(height: 170)
-                            .frame(maxWidth: .infinity)
-                            .background(homeStore.certificateDetail.memberRole == "CREDITOR" ? Color.payritLightMint : Color.payritIntensiveLightPink)
-                            .clipShape(.rect(cornerRadius: 12))
+                        Text("남은 금액")
+                            .font(Font.custom("SUIT-Bold", size: 14))
+                            .padding(.top, 12)
+                        
+                        Text((homeStore.certificateDetail.remainingAmountFormatter) + "원")
+                            .font(Font.custom("SUIT-ExtraBold", size: 26))
+                            .padding(.top, 2)
+                        
+                        VStack(alignment: .trailing, spacing: 0) {
+                            ProgressView(value: homeStore.certificateDetail.repaymentRate, total: 100)
+                                .progressViewStyle(CustomLinearProgressViewStyle(trackColor: .white, progressColor: homeStore.certificateDetail.memberRole == "CREDITOR" ? Color(hex: "00C2BD") : Color(hex: "F95873")))
+                                .frame(height: 6)
+                                .padding(.top, 12)
                             
-                            // 내보내기 버튼
-                            VStack(spacing: 6) {
-                                if homeStore.certificateDetail.memberRole == "CREDITOR" {
-                                    //                        if true {
+                            Text("\(certificateStep.rawValue) (\(Int(homeStore.certificateDetail.repaymentRate))%)")
+                                .font(Font.caption01)
+                                .padding(.top, 4)
+                                .padding(.bottom, 12)
+                        }
+                    }
+                    .padding(.horizontal, 14)
+                    .frame(maxWidth: .infinity)
+                    .foregroundStyle(.white)
+                    .background(homeStore.certificateDetail.memberRole == "CREDITOR" ? Color.payritMint : Color.payritIntensivePink)
+                    .clipShape(.rect(cornerRadius: 12))
+                    .padding(.top, 24)
+                    
+                    VStack(spacing: 0) {
+                        if homeStore.certificateDetail.memberRole == "CREDITOR" {
+                            VStack(spacing: 0) {
+                                HStack {
                                     Button {
                                         isShowingAllRepaymentAlert.toggle()
                                     } label: {
                                         HStack {
-                                            Image(systemName: "tag")
-                                            Text("전체 상환 기록")
+                                            VStack(alignment: .leading, spacing: 6) {
+                                                Text("전체 상환")
+                                                    .font(Font.title06)
+                                                    .foregroundStyle(.black)
+                                                Text("기록하기")
+                                                    .font(Font.body03)
+                                                    .foregroundStyle(Color.gray05)
+                                            }
+                                            Spacer()
+                                            Image("cash")
                                         }
-                                        .frame(height: 40)
-                                        .frame(maxWidth: .infinity)
-                                        .foregroundStyle(.white)
-                                        .background(Color.payritMint)
-                                        .clipShape(.rect(cornerRadius: 8))
                                     }
+                                    
+                                    Spacer()
+                                    Rectangle()
+                                        .foregroundStyle(Color.gray08)
+                                        .frame(width: 2)
+                                        .background()
+                                        .frame(width: 20, height: 40)
+                                    Spacer()
+                                    
                                     NavigationLink {
                                         CertificateDeductibleView(certificateDetail: homeStore.certificateDetail)
                                             .customBackbutton()
                                     } label: {
                                         HStack {
-                                            Image(systemName: "tag")
-                                            Text("일부 상환 기록")
+                                            VStack(alignment: .leading, spacing: 6) {
+                                                Text("일부 상환")
+                                                    .font(Font.title06)
+                                                    .foregroundStyle(.black)
+                                                Text("기록하기")
+                                                    .font(Font.body03)
+                                                    .foregroundStyle(Color.gray05)
+                                            }
+                                            Spacer()
+                                            Image("coins")
                                         }
-                                        .frame(height: 40)
-                                        .frame(maxWidth: .infinity)
-                                        .foregroundStyle(Color.payritMint)
-                                        .background(
-                                            RoundedRectangle(cornerRadius: 8)
-                                                .stroke(Color.payritMint, lineWidth: 2)
-                                        )
-                                    }
-                                    Button {
-                                    } label: {
-                                        HStack {
-                                            Image(systemName: "paperplane")
-                                            Text("상환 재촉하기")
-                                        }
-                                        .frame(height: 40)
-                                        .frame(maxWidth: .infinity)
-                                        .foregroundStyle(Color.payritMint)
-                                        .background(
-                                            RoundedRectangle(cornerRadius: 8)
-                                                .stroke(Color.payritMint, lineWidth: 2)
-                                        )
-                                    }
-                                    Button {
-                                        isShowingExportView.toggle()
-                                    } label: {
-                                        HStack {
-                                            Image(systemName: "doc")
-                                            Text("PDF·메일 내보내기")
-                                        }
-                                        .frame(height: 40)
-                                        .frame(maxWidth: .infinity)
-                                        .foregroundStyle(Color.payritMint)
-                                        .background(
-                                            RoundedRectangle(cornerRadius: 8)
-                                                .stroke(Color.payritMint, lineWidth: 2)
-                                        )
-                                    }
-                                } else {
-                                    Button {
-                                        isShowingExportView.toggle()
-                                    } label: {
-                                        HStack {
-                                            Image(systemName: "doc")
-                                            Text("PDF·메일 내보내기")
-                                        }
-                                        .frame(height: 40)
-                                        .frame(maxWidth: .infinity)
-                                        .foregroundStyle(Color.payritMint)
-                                        .background(
-                                            RoundedRectangle(cornerRadius: 8)
-                                                .stroke(Color.payritMint, lineWidth: 2)
-                                        )
                                     }
                                 }
-                            }
-                            .font(Font.body03)
-                            .padding(.horizontal, 9)
-                            .padding(.vertical, 16)
-                        }
-                        .background(Color.white)
-                        .clipShape(.rect(cornerRadius: 12))
-                        .shadow(color: .gray.opacity(0.2), radius: 5)
-                        .padding(.top, 24)
-                        
-                        NavigationLink {
-                            CertificateMemoView(certificateDetail: homeStore.certificateDetail)
-                                .customBackbutton()
-                        } label: {
-                            VStack(spacing: 0) {
-                                Rectangle()
-                                    .foregroundStyle(Color.white)
-                                    .frame(height: 105)
-                                    .overlay(
-                                        VStack(alignment: .leading, spacing: 10) {
-                                            Text("개인 메모")
-                                                .font(Font.body01)
-                                                .foregroundStyle(.black)
-                                            Text("최근 날짜의 메모가 요약으로 보여집니다.")
-                                                .font(Font.body03)
-                                                .foregroundStyle(Color.gray05)
-                                                .multilineTextAlignment(.leading)
-                                            Spacer()
-                                        }
-                                            .padding(.top, 16)
-                                            .padding(.leading, 16)
-                                        , alignment: .leading
-                                    )
+                                .frame(height: 48)
+                                .padding(.bottom, 12)
+                                
                                 Rectangle()
                                     .foregroundStyle(Color.gray08)
-                                    .frame(height: 50)
-                                    .overlay(
-                                        Text("총 \(homeStore.certificateDetail.memoListResponses.count)개의 메모")
-                                            .font(Font.caption02)
-                                            .foregroundStyle(Color.gray02)
-                                            .padding(.leading, 16)
-                                        , alignment: .leading
-                                    )
+                                    .frame(height: 2)
+                                    .background()
+                                    .frame(height: 14)
+                                
+                                HStack {
+                                    Button {
+                                        isShowingRemindAlert.toggle()
+                                    } label: {
+                                        HStack {
+                                            VStack(alignment: .leading, spacing: 6) {
+                                                Text("상환 알림")
+                                                    .font(Font.title06)
+                                                    .foregroundStyle(.black)
+                                                Text("재촉하기")
+                                                    .font(Font.body03)
+                                                    .foregroundStyle(Color.gray05)
+                                            }
+                                            Spacer()
+                                        }
+                                    }
+                                    
+                                    Spacer()
+                                    Rectangle()
+                                        .foregroundStyle(Color.gray08)
+                                        .frame(width: 2)
+                                        .background()
+                                        .frame(width: 20, height: 40)
+                                    Spacer()
+                                    
+                                    Button {
+                                        isShowingExportView.toggle()
+                                    } label: {
+                                        HStack {
+                                            VStack(alignment: .leading, spacing: 6) {
+                                                Text("PDF·이메일")
+                                                    .font(Font.title06)
+                                                    .foregroundStyle(.black)
+                                                Text("내보내기")
+                                                    .font(Font.body03)
+                                                    .foregroundStyle(Color.gray05)
+                                            }
+                                            Spacer()
+                                        }
+                                    }
+                                }
+                                .frame(height: 48)
+                                .padding(.top, 12)
                             }
+                            .padding(.vertical, 16)
+                            .padding(.horizontal, 20)
                             .background()
                             .clipShape(.rect(cornerRadius: 12))
                             .shadow(color: .gray.opacity(0.2), radius: 5)
-                        }
-                        .padding(.top, 14)
-                        
-                        VStack(alignment: .leading, spacing: 24) {
-                            VStack(alignment: .leading) {
-                                Text("빌려준 사람")
-                                    .font(Font.body03)
-                                    .foregroundStyle(Color.gray04)
-                                HStack(alignment: .center, spacing: 20) {
-                                    VStack(alignment: .leading, spacing: 8) {
-                                        HStack {
-                                            Text("이름")
-                                        }
-                                        HStack {
-                                            Text("연락처")
-                                        }
-                                        if !homeStore.certificateDetail.creditorAddress.isEmpty {
-                                            HStack {
-                                                Text("주소")
-                                            }
-                                        }
-                                    }
-                                    .font(Font.body04)
-                                    
-                                    VStack(alignment: .leading, spacing: 8) {
-                                        HStack {
-                                            Text("\(homeStore.certificateDetail.creditorName)")
-                                        }
-                                        HStack {
-                                            Text("\(homeStore.certificateDetail.creditorPhoneNumber.onlyPhoneNumber().replacingOccurrences(of: "-", with: "."))")
-                                        }
-                                        if !homeStore.certificateDetail.creditorAddress.isEmpty {
-                                            HStack {
-                                                Text("\(homeStore.certificateDetail.creditorAddress)")
-                                            }
-                                        }
-                                    }
-                                    .font(Font.body01)
-                                    Spacer()
-                                }
-                                .padding(20)
-                                .background(Color.white)
-                                .clipShape(.rect(cornerRadius: 12))
-                                .shadow(color: .gray.opacity(0.2), radius: 5)
-                            }
                             
-                            // 빌린 사람 정보
-                            VStack(alignment: .leading) {
-                                Text("빌린 사람")
-                                    .font(Font.body03)
-                                    .foregroundStyle(Color.gray04)
-                                HStack(alignment: .center, spacing: 20) {
-                                    VStack(alignment: .leading, spacing: 8) {
-                                        HStack {
-                                            Text("이름")
-                                        }
-                                        HStack {
-                                            Text("연락처")
-                                        }
-                                        if !homeStore.certificateDetail.debtorAddress.isEmpty {
-                                            HStack {
-                                                Text("주소")
-                                            }
-                                        }
-                                    }
-                                    .font(Font.body04)
-                                    
-                                    VStack(alignment: .leading, spacing: 8) {
-                                        HStack {
-                                            Text("\(homeStore.certificateDetail.debtorName)")
-                                        }
-                                        HStack {
-                                            Text("\(homeStore.certificateDetail.debtorPhoneNumber.onlyPhoneNumber().replacingOccurrences(of: "-", with: "."))")
-                                        }
-                                        if !homeStore.certificateDetail.debtorAddress.isEmpty {
-                                            HStack {
-                                                Text("\(homeStore.certificateDetail.debtorAddress)")
-                                            }
-                                        }
-                                    }
-                                    .font(Font.body01)
+                        } else {
+                            Button {
+                                isShowingExportView.toggle()
+                            } label: {
+                                HStack(spacing: 0) {
+                                    Text("PDF·이메일")
+                                        .font(Font.title06)
                                     Spacer()
+                                    Text("내보내기")
+                                        .font(Font.body01)
+                                        .foregroundStyle(Color.gray05)
                                 }
-                                .padding(20)
-                                .background(Color.white)
+                                .foregroundStyle(.black)
+                                .padding(.vertical, 26)
+                                .padding(.horizontal, 12)
+                                .background()
                                 .clipShape(.rect(cornerRadius: 12))
                                 .shadow(color: .gray.opacity(0.2), radius: 5)
                             }
-                            if homeStore.certificateDetail.interestRate != 0 || homeStore.certificateDetail.interestPaymentDate != 0 || homeStore.certificateDetail.specialConditions != nil {
-                                VStack(alignment: .leading) {
-                                    Text("추가사항")
-                                        .font(Font.body03)
-                                        .foregroundStyle(Color.gray04)
-                                    VStack(alignment: .leading, spacing: 12) {
-                                        if homeStore.certificateDetail.interestRate != 0 {
-                                            HStack {
-                                                Text("이자율")
-                                                    .font(Font.body04)
-                                                Spacer()
-                                                HStack {
-                                                    Text("\(String(format: "%.2f", homeStore.certificateDetail.interestRate))%")
-                                                        .font(Font.body01)
-                                                    Spacer()
-                                                }
-                                                .frame(width: 220)
-                                            }
-                                        }
-                                        if homeStore.certificateDetail.interestPaymentDate != 0 {
-                                            HStack {
-                                                Text("이자 지급일")
-                                                    .font(Font.body04)
-                                                Spacer()
-                                                HStack {
-                                                    Text("매월 \(homeStore.certificateDetail.interestPaymentDate)일")
-                                                        .font(Font.body01)
-                                                    Spacer()
-                                                }
-                                                .frame(width: 220)
-                                            }
-                                        }
-                                        if let specialConditions = homeStore.certificateDetail.specialConditions {
-                                            HStack {
-                                                Text("특이사항")
-                                                    .font(Font.body04)
-                                                Spacer()
-                                                Text("\(specialConditions)")
-                                                    .font(Font.body01)
-                                                    .frame(width: 220)
-                                                Spacer()
-                                            }
-                                        }
-                                    }
-                                    .padding(.vertical, 16)
-                                    .padding(.horizontal, 20)
-                                    .background(Color(hex: "E5FDFC"))
-                                    .clipShape(.rect(cornerRadius: 12))
-                                    .shadow(color: .gray.opacity(0.2), radius: 5)
+                        }
+                    }
+                    .padding(.vertical, 24)
+                    
+                    NavigationLink {
+                        CertificateMemoView(certificateDetail: homeStore.certificateDetail)
+                            .customBackbutton()
+                    } label: {
+                        HStack(spacing: 0) {
+                            Text("개인 메모")
+                                .font(Font.body01)
+                            Spacer()
+                            Text("\(homeStore.certificateDetail.memoListResponses.count)건 >")
+                                .font(Font.title06)
+                        }
+                        .foregroundStyle(.black)
+                        .padding(.vertical, 26)
+                        .padding(.horizontal, 12)
+                        .background()
+                        .clipShape(.rect(cornerRadius: 12))
+                        .shadow(color: .gray.opacity(0.2), radius: 5)
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 24) {
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("빌려준 사람")
+                                .font(Font.body03)
+                                .foregroundStyle(Color.gray05)
+                            HStack {
+                                HStack {
+                                    Text("이름")
+                                        .font(Font.body04)
+                                    Spacer()
                                 }
+                                .frame(width: 60)
+                                Text("\(homeStore.certificateDetail.creditorName)")
+                                    .font(Font.body01)
+                                Spacer()
+                            }
+                            .padding(.leading, 8)
+                            
+                            HStack {
+                                HStack {
+                                    Text("연락처")
+                                        .font(Font.body04)
+                                    Spacer()
+                                }
+                                .frame(width: 60)
+                                Text("\(homeStore.certificateDetail.creditorPhoneNumber.onlyPhoneNumber())")
+                                    .font(Font.body01)
+                                Spacer()
+                            }
+                            .padding(.leading, 8)
+                            
+                            if !homeStore.certificateDetail.creditorAddress.isEmpty {
+                                HStack(alignment: .top) {
+                                    HStack {
+                                        Text("주소")
+                                            .font(Font.body04)
+                                        Spacer()
+                                    }
+                                    .frame(width: 60)
+                                    Text("\(homeStore.certificateDetail.creditorAddress)")
+                                        .font(Font.body01)
+                                    Spacer()
+                                }
+                                .padding(.leading, 8)
                             }
                         }
-                        .padding(.top, 20)
-                        .font(.system(size: 18))
-                        Spacer()
+                        .padding(.vertical, 16)
+                        .padding(.horizontal, 20)
+                        .background(Color.white)
+                        .clipShape(.rect(cornerRadius: 12))
+                        .shadow(color: .gray.opacity(0.2), radius: 5)
+                        
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("빌린 사람")
+                                .font(Font.body03)
+                                .foregroundStyle(Color.gray05)
+                            HStack {
+                                HStack {
+                                    Text("이름")
+                                        .font(Font.body04)
+                                    Spacer()
+                                }
+                                .frame(width: 60)
+                                Text("\(homeStore.certificateDetail.debtorName)")
+                                    .font(Font.body01)
+                                Spacer()
+                            }
+                            .padding(.leading, 8)
+                            
+                            HStack {
+                                HStack {
+                                    Text("연락처")
+                                        .font(Font.body04)
+                                    Spacer()
+                                }
+                                .frame(width: 60)
+                                Text("\(homeStore.certificateDetail.debtorPhoneNumber.onlyPhoneNumber())")
+                                    .font(Font.body01)
+                                Spacer()
+                            }
+                            .padding(.leading, 8)
+                            
+                            if !homeStore.certificateDetail.debtorAddress.isEmpty {
+                                HStack(alignment: .top) {
+                                    HStack {
+                                        Text("주소")
+                                            .font(Font.body04)
+                                        Spacer()
+                                    }
+                                    .frame(width: 60)
+                                    Text("\(homeStore.certificateDetail.debtorAddress)")
+                                        .font(Font.body01)
+                                    Spacer()
+                                }
+                                .padding(.leading, 8)
+                            }
+                        }
+                        .padding(.vertical, 16)
+                        .padding(.horizontal, 20)
+                        .background(Color.white)
+                        .clipShape(.rect(cornerRadius: 12))
+                        .shadow(color: .gray.opacity(0.2), radius: 5)
+                        
+                        if homeStore.certificateDetail.interestRate > 0 || homeStore.certificateDetail.interestPaymentDate != 0 || homeStore.certificateDetail.specialConditions != nil {
+                            VStack(alignment: .leading, spacing: 12) {
+                                Text("추가사항")
+                                    .font(Font.body03)
+                                    .foregroundStyle(homeStore.certificateDetail.memberRole == "CREDITOR" ? Color.payritMint : Color.payritIntensivePink)
+                                
+                                if homeStore.certificateDetail.interestRate > 0 {
+                                    HStack {
+                                        HStack {
+                                            Text("이자율")
+                                                .font(Font.body04)
+                                            Spacer()
+                                        }
+                                        .frame(width: 80)
+                                        Text("\(String(format: "%.2f", homeStore.certificateDetail.interestRate))%")
+                                            .font(Font.body01)
+                                        Spacer()
+                                    }
+                                    .padding(.leading, 8)
+                                }
+                                
+                                if homeStore.certificateDetail.interestPaymentDate != 0 {
+                                    HStack {
+                                        HStack {
+                                            Text("이자 지급일")
+                                                .font(Font.body04)
+                                            Spacer()
+                                        }
+                                        .frame(width: 80)
+                                        Text("매월 \(homeStore.certificateDetail.interestPaymentDate)일")
+                                            .font(Font.body01)
+                                        Spacer()
+                                    }
+                                    .padding(.leading, 8)
+                                }
+                                if let specialConditions = homeStore.certificateDetail.specialConditions {
+                                    HStack(alignment: .top) {
+                                        HStack {
+                                            Text("특이사항")
+                                                .font(Font.body04)
+                                            Spacer()
+                                        }
+                                        .frame(width: 80)
+                                        Text("\(specialConditions)")
+                                            .font(Font.body01)
+                                        Spacer()
+                                    }
+                                    .padding(.leading, 8)
+                                }
+                            }
+                            .padding(.vertical, 16)
+                            .padding(.horizontal, 20)
+                            .background(Color.white)
+                            .clipShape(.rect(cornerRadius: 12))
+                            .shadow(color: .gray.opacity(0.2), radius: 5)
+                        }
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.top, 20)
+                    .padding(.top, 24)
+                    Spacer()
                 }
-                .scrollIndicators(.hidden)
-                .navigationTitle("페이릿 상세 페이지")
-                .navigationBarTitleDisplayMode(.inline)
+                .padding(.horizontal, 16)
+                .padding(.top, 20)
             }
+            .scrollIndicators(.hidden)
+            .navigationTitle("페이릿 상세 페이지")
+            .navigationBarTitleDisplayMode(.inline)
         }
         .dismissOnDrag()
         .onAppear {
             Task {
                 await homeStore.loadDetail(id: paperId)
-                self.isLoading = false
             }
         }
         .sheet(isPresented: $isShowingMailView) {
@@ -413,11 +451,22 @@ struct CertificateDetailView: View {
             }
         })
         .primaryAlert(isPresented: $isShowingAllRepaymentAlert, title: "전체 상환 기록", content: "남은 금액 \(homeStore.certificateDetail.remainingAmountFormatter)원을 전체 상환 하시겠습니까?", primaryButtonTitle: "네", cancleButtonTitle: "아니오") {
-            homeStore.deductedSave(paperId: paperId, repaymentDate: Date().dateToString(), repaymentAmount: String(homeStore.certificateDetail.remainingAmount))
-            homeStore.certificateDetail.remainingAmount = 0
-            homeStore.certificateDetail.repaymentRate = 100.0
+            if homeStore.certificateDetail.remainingAmount > 0 {
+                homeStore.deductedSave(paperId: paperId, repaymentDate: Date().dateToString(), repaymentAmount: String(homeStore.certificateDetail.remainingAmount))
+                homeStore.certificateDetail.remainingAmount = 0
+                homeStore.certificateDetail.repaymentRate = 100.0
+                homeStore.certificateDetail.repaymentHistories.append(Deducted(id: 0, repaymentDate: Date().dateToString().replacingOccurrences(of: "-", with: "."), repaymentAmount: homeStore.certificateDetail.remainingAmount))
+            }
         } cancleAction: {
         }
+        .primaryAlert(isPresented: $isShowingRemindAlert, title: "문자로 재촉하기", content: "상환 요청 메시지를 문자(MMS)로 전송하시겠습니까?", primaryButtonTitle: "네", cancleButtonTitle: "아니오") {
+            isShowingUnReadyAlert.toggle()
+        } cancleAction: {
+        }
+        .primaryAlert(isPresented: $isShowingUnReadyAlert, title: "재촉하기 준비중입니다.", content: "빠른 시일 내에 제공드리겠습니다.", primaryButtonTitle: nil, cancleButtonTitle: "네") {
+        } cancleAction: {
+        }
+
     }
 }
 

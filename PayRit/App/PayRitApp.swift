@@ -16,13 +16,10 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         Thread.sleep(forTimeInterval: 1.0)
         
-        // 파이어베이스 설정
         FirebaseApp.configure()
         
-        // Setting Up Notifications...
         // 원격 알림 등록
         if #available(iOS 10.0, *) {
-            // For iOS 10 display notification (sent via APNS)
             UNUserNotificationCenter.current().delegate = self
             
             let authOption: UNAuthorizationOptions = [.alert, .badge, .sound]
@@ -37,8 +34,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         
         application.registerForRemoteNotifications()
         
-        // Setting Up Cloud Messaging...
-        // 메세징 델리겟
         Messaging.messaging().delegate = self
         
         UNUserNotificationCenter.current().delegate = self
@@ -53,17 +48,15 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
 @main
 struct PayRitApp: App {
-    @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
+    let userDefault = UserDefaultsManager().getUserInfo().signInCompany
     @State var signInStore: SignInStore = SignInStore()
     @State var homeStore: HomeStore = HomeStore()
     @State var tabStore: TabBarStore = TabBarStore()
+    @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
+    
     init() {
         if let APIKey = Bundle.main.object(forInfoDictionaryKey: "KAKAO_APP_KEY") as? String {
             KakaoSDK.initSDK(appKey: APIKey)
-        }
-        
-        if UserDefaultsManager().getUserInfo().signInCompany == "애플" {
-            signInStore.appleAuthCheck()
         }
     }
     
@@ -73,28 +66,32 @@ struct PayRitApp: App {
                 .environment(signInStore)
                 .environment(homeStore)
                 .environment(tabStore)
+                .onAppear {
+                    if userDefault == "애플" {
+                        signInStore.appleAuthCheck()
+                        print("애플 auth check")
+                    } else if userDefault == "카카오톡" {
+                        signInStore.kakaoAuthCheck()
+                        print("카카오 auth check")
+                    }
+                }
         }
     }
 }
 
-// Cloud Messaging...
 extension AppDelegate: MessagingDelegate {
     
     // fcm 등록 토큰을 받았을 때
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-        
+        guard let fcmToken = fcmToken else {
+                    return
+                }
         print("토큰을 받았다")
-        // Store this token to firebase and retrieve when to send message to someone...
-        let dataDict: [String: String] = ["token": fcmToken ?? ""]
-        
-        // Store token in Firestore For Sending Notifications From Server in Future...
-        
-        print(dataDict)
-        
+        print(fcmToken)
+        UserDefaultsManager().saveFCMtoken(token: fcmToken)
     }
 }
 
-// User Notifications...[AKA InApp Notification...]
 @available(iOS 10, *)
 extension AppDelegate: UNUserNotificationCenterDelegate {
     

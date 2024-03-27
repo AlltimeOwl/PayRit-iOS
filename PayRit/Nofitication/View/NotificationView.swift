@@ -10,10 +10,6 @@ import SwiftUI
 struct NotificationView: View {
     let notificationStore: NotificationStore = NotificationStore()
     @State var notis: [PayritNoti] = [PayritNoti]()
-    @State var test: [PayritNoti] = [PayritNoti(title: "결제요청알림", body: "박이릿님에게 일부 상환 갱신 요청드려요. 받은 금액을 페이릿 상세 페이지에 입력해주세요!"),
-                              PayritNoti(title: "승인요청알림", body: "박이릿님에게 차용증 승인 요청을 완료했어요. 승인 재요청을 원하시면 홈 -> 차용증 카드 -> 더보기 버튼을 눌러 재요청해주세요."),
-                              PayritNoti(title: "결제요청알림", body: "2월 26일에 작성된 약속에 관한 결제가 진행되지 않았습니다."),
-                              PayritNoti(title: "회원가입 알림", body: "페이릿에 오신것을 환영합니다.")]
     var body: some View {
         ZStack {
             Color(hex: "F9F9F9").ignoresSafeArea()
