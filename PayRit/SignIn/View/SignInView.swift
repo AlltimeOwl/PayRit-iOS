@@ -46,12 +46,22 @@ struct SignInView: View {
                         .cornerRadius(5)
                         .padding(.horizontal, 30)
                         
-                        AppleSigninButton()
-                            .frame(height: 48)
-                            .padding(.horizontal, 30)
-                            .padding(.bottom, 58)
+                        SignInWithAppleButton(
+                            .continue
+                            ,
+                            onRequest: { request in
+                                request.requestedScopes = [.fullName, .email]
+                            },
+                            onCompletion: signInStore.handleAppleSignInResult(_:)
+                        )
+                        .signInWithAppleButtonStyle(.black)
+                        .cornerRadius(5)
+                        .frame(height: 48)
+                        .padding(.horizontal, 30)
+                        .padding(.bottom, 58)
                     }
                 }
+                
                 if signInStore.whileSigIn == .doing {
                     ProgressView()
                 }
@@ -71,21 +81,5 @@ struct SignInView: View {
     NavigationStack {
         SignInView()
             .environment(SignInStore())
-    }
-}
-
-struct AppleSigninButton: View {
-    @Environment(SignInStore.self) var signInStore
-    var body: some View {
-        SignInWithAppleButton(
-            .continue
-            ,
-            onRequest: { request in
-                request.requestedScopes = [.fullName, .email]
-            },
-            onCompletion: signInStore.handleAppleSignInResult(_:)
-        )
-        .signInWithAppleButtonStyle(.black)
-        .cornerRadius(5)
     }
 }

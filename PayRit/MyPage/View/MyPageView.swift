@@ -130,7 +130,6 @@ struct MyPageView: View {
                     signInStore.kakaoSingOut()
                 } else if mypageStore.currenUser.signInCompany == "애플" {
                     signInStore.isSignIn = false
-                    UserDefaultsManager().removeAll()
                 }
                 homeStore.certificates = [Certificate]()
             }

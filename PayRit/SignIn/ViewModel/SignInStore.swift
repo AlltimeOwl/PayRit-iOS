@@ -210,6 +210,7 @@ class SignInStore {
                     userDefault.setKakaoUserData(userData: User(name: name, email: email, phoneNumber: phoneNumber, signInCompany: "카카오톡"))
                 }
                 if let aToken = oauthToken?.accessToken, let rToken = oauthToken?.refreshToken {
+                    UserDefaultsManager().setKakaoToken(kakaoToken: aToken)
                     self.serverAuth(aToken: aToken, rToken: rToken, company: .kakao) { result in
                         switch result {
                         case .success(true):
@@ -228,6 +229,7 @@ class SignInStore {
     }
     
     func kakaoAuthCheck() {
+        let userDefault = UserDefaultsManager()
         // 토큰 존재 여부 확인하기
         if AuthApi.hasToken() {
             UserApi.shared.accessTokenInfo { (_, error) in
@@ -240,6 +242,23 @@ class SignInStore {
                     }
                 } else {
                     // 토큰 유효성 체크 성공(필요 시 토큰 갱신됨)
+                    let token = userDefault.getKakaoToken()
+                    self.serverAuth(aToken: token, rToken: "rToken", company: .kakao) { result in
+                        switch result {
+                        case .success(true):
+                            print("Sign in succeeded")
+                            self.isSignIn = true
+                            userDefault.setIsSignInState(value: true)
+                        case .success(false):
+                            print("Sign in failed")
+                            self.isSignIn = false
+                            UserDefaultsManager().setIsSignInState(value: false)
+                        case .failure(let error):
+                            print("Error: \(error)")
+                            self.isSignIn = false
+                            UserDefaultsManager().setIsSignInState(value: false)
+                        }
+                    }
                 }
             }
         } else {
@@ -309,97 +328,100 @@ class SignInStore {
     func serverAuth(aToken: String, rToken: String, company: SiginInType, completion: @escaping (Result<Bool, Error>) -> Void) {
         self.whileSigIn = .doing
         let userDefault = UserDefaultsManager()
-        let firebaseToken = userDefault.loadFCMtoken()
-        var urlComponents = URLComponents()
-        urlComponents.scheme = "https"
-        urlComponents.host = "www.payrit.info"
-        urlComponents.path = "/api/v1/oauth/\(company.rawValue)"
-        
-        guard let url = urlComponents.url else {
-            completion(.failure(ServerAuthError.invalidURL))
-            return
-        }
-        print("--------firebaseTokenfirebaseToken---------")
-        print(firebaseToken)
-        print("--------firebaseTokenfirebaseToken---------")
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("application/json", forHTTPHeaderField: "accept")
-        
-        let body = [
-            "accessToken": aToken,
-            "refreshToken": rToken,
-            "firebaseToken": firebaseToken
-        ] as [String: Any]
-        print("--------bodybodybody---------")
-        print(body)
-        print("--------bodybodybody---------")
-        
-        do {
-            request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
-        } catch {
-            print("Error creating JSON data")
-            completion(.failure(error))
-            return
-        }
-        
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
-                print("Error: \(error)")
+        Task {
+            await userDefault.loadFCMtoken()
+            let firebaseToken = userDefault.firebaseToken ?? ""
+            var urlComponents = URLComponents()
+            urlComponents.scheme = "https"
+            urlComponents.host = "www.payrit.info"
+            urlComponents.path = "/api/v1/oauth/\(company.rawValue)"
+            
+            guard let url = urlComponents.url else {
+                completion(.failure(ServerAuthError.invalidURL))
+                return
+            }
+            print("--------firebaseTokenfirebaseToken---------")
+            print(firebaseToken)
+            print("--------firebaseTokenfirebaseToken---------")
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.setValue("application/json", forHTTPHeaderField: "accept")
+            
+            let body = [
+                "accessToken": aToken,
+                "refreshToken": rToken,
+                "firebaseToken": firebaseToken
+            ] as [String: Any]
+            print("--------bodybodybody---------")
+            print(body)
+            print("--------bodybodybody---------")
+            
+            do {
+                request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
+            } catch {
+                print("Error creating JSON data")
                 completion(.failure(error))
                 return
             }
             
-            guard let httpResponse = response as? HTTPURLResponse else {
-                print("Invalid response")
-                completion(.failure(ServerAuthError.invalidResponse))
-                return
-            }
-            
-            print("Response status code: \(httpResponse.statusCode)")
-            
-            if (200..<300).contains(httpResponse.statusCode) {
-                guard let responseData = data else {
-                    print("Invalid data")
-                    completion(.failure(ServerAuthError.invalidData))
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    print("Error: \(error)")
+                    completion(.failure(error))
                     return
                 }
                 
-                do {
-                    guard let json = try JSONSerialization.jsonObject(with: responseData, options: []) as? [String: Any] else {
-                        print("Parsing error")
-                        completion(.failure(ServerAuthError.parsingError))
-                        return
-                    }
-                    
-                    print("JSON Response: \(json)")
-                    
-                    guard let accessToken = json["accessToken"] as? String, let refreshToken = json["refreshToken"] as? String else {
-                        print("Access token or refresh token not found")
-                        completion(.failure(ServerAuthError.parsingError))
-                        return
-                    }
-                    
-                    userDefault.setBearerToken(accessToken, refreshToken)
-                    print("-----토큰 로드 성공-----")
-                    print("aToken : \(accessToken)")
-                    print("rToken : \(refreshToken)")
-                    print("-----토큰 로드 성공-----")
-                    
-                    completion(.success(true))
-                } catch {
-                    print("Error parsing JSON response: \(error)")
-                    completion(.failure(error))
+                guard let httpResponse = response as? HTTPURLResponse else {
+                    print("Invalid response")
+                    completion(.failure(ServerAuthError.invalidResponse))
+                    return
                 }
-                self.whileSigIn = .waiting
-            } else {
-                print("Unexpected status code: \(httpResponse.statusCode)")
-                completion(.failure(ServerAuthError.invalidResponse))
-                self.whileSigIn = .waiting
+                
+                print("Response status code: \(httpResponse.statusCode)")
+                
+                if (200..<300).contains(httpResponse.statusCode) {
+                    guard let responseData = data else {
+                        print("Invalid data")
+                        completion(.failure(ServerAuthError.invalidData))
+                        return
+                    }
+                    
+                    do {
+                        guard let json = try JSONSerialization.jsonObject(with: responseData, options: []) as? [String: Any] else {
+                            print("Parsing error")
+                            completion(.failure(ServerAuthError.parsingError))
+                            return
+                        }
+                        
+                        print("JSON Response: \(json)")
+                        
+                        guard let accessToken = json["accessToken"] as? String, let refreshToken = json["refreshToken"] as? String else {
+                            print("Access token or refresh token not found")
+                            completion(.failure(ServerAuthError.parsingError))
+                            return
+                        }
+                        
+                        userDefault.setBearerToken(accessToken, refreshToken)
+                        print("-----토큰 로드 성공-----")
+                        print("aToken : \(accessToken)")
+                        print("rToken : \(refreshToken)")
+                        print("-----토큰 로드 성공-----")
+                        
+                        completion(.success(true))
+                    } catch {
+                        print("Error parsing JSON response: \(error)")
+                        completion(.failure(error))
+                    }
+                    self.whileSigIn = .waiting
+                } else {
+                    print("Unexpected status code: \(httpResponse.statusCode)")
+                    completion(.failure(ServerAuthError.invalidResponse))
+                    self.whileSigIn = .waiting
+                }
             }
+            task.resume() // 작업 시작
         }
-        task.resume() // 작업 시작
     }
 }
