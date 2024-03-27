@@ -40,6 +40,54 @@ class SignInStore {
     var firebasePushtoken = ""
     
     // MARK: - 애플
+    func handleAppleSignInResult(_ result: Result<ASAuthorization, Error>) {
+        switch result {
+        case .success(let authResults):
+            print("Apple Login Successful")
+            switch authResults.credential {
+            case let appleIDCredential as ASAuthorizationAppleIDCredential:
+                // 계정 정보 가져오기
+                let appleUserIdentifier = appleIDCredential.user
+                let fullName = appleIDCredential.fullName
+                let name = (fullName?.familyName ?? "") + (fullName?.givenName ?? "")
+                let email = appleIDCredential.email ?? ""
+                
+//                let IdentityToken = String(data: appleIDCredential.identityToken ?? Data(), encoding: .utf8)
+//                print("---------1-----------")
+//                print("UserIdentifier : \(appleUserIdentifier)")
+//                print("fullName : \(String(describing: fullName)))")
+//                print("name : \(name)")
+//                print("email : \(String(describing: email))")
+//                print("IdentityToken : \(IdentityToken ?? "")")
+//                print("---------1-----------")
+                
+                // AuthorizationCode 서버에 전송하는 값 !! 1번만 사용될 수 있으며 5분간 유효 !! appleIDCredential.user
+                if  let authorizationCode = appleIDCredential.authorizationCode,
+                    let identityToken = appleIDCredential.identityToken,
+                    let authCodeString = String(data: authorizationCode, encoding: .utf8),
+                    let identifyTokenString = String(data: identityToken, encoding: .utf8) {
+                    self.appleAuthorizationCode = authCodeString
+                    self.appleIdentityToken = identifyTokenString
+                    print("appleAuthorizationCode : \(authCodeString)")
+                    print("appleIdentityToken : \(identifyTokenString)")
+                    UserDefaultsManager().setAppleIdTokenString(appleIdTokenString: identifyTokenString)
+                }
+                if name.isEmpty && email.isEmpty {
+                    UserDefaultsManager().setAppleSignIn(appleId: appleUserIdentifier, signInCompany: "애플")
+                } else {
+                    UserDefaultsManager().setAppleUserData(userData: User(name: name, email: email, phoneNumber: "", signInCompany: "애플", appleId: appleUserIdentifier))
+                }
+                appleAuthCheck()
+                
+            default:
+                break
+            }
+        case .failure(let error):
+            print(error.localizedDescription)
+            print("error")
+        }
+    }
+    
     func appleAuthCheck() {
         let appleIDProvider = ASAuthorizationAppleIDProvider()
         appleIDProvider.getCredentialState(forUserID: UserDefaultsManager().getAppleUserId()) { (credentialState, _) in
@@ -47,9 +95,9 @@ class SignInStore {
             case .authorized:
                 print("애플 authorized")
                 // The Apple ID credential is valid.
-                DispatchQueue.main.async {
+//                DispatchQueue.global().async {
                     // authorized된 상태이므로 바로 로그인 완료 화면으로 이동
-                    self.serverAuth(aToken: self.appleIdentityToken, rToken: "rToken", company: .apple) { result in
+                self.serverAuth(aToken: UserDefaultsManager().getAppleIdTokenString(), rToken: "rToken", company: .apple) { result in
                         switch result {
                         case .success(true):
                             print("서버 Sign in succeeded")
@@ -65,7 +113,7 @@ class SignInStore {
                             UserDefaultsManager().setIsSignInState(value: false)
                         }
                     }
-                }
+//                }
             case .revoked:
                 // 인증이 취소됨
                 print("애플 revoked")
@@ -255,12 +303,13 @@ class SignInStore {
             }
         }
     }
-    
+//    func getToken() -> S
     // MARK: - 공용
     /// 서버에 JWT 보내고 Bearer를 userDefault에 저장
     func serverAuth(aToken: String, rToken: String, company: SiginInType, completion: @escaping (Result<Bool, Error>) -> Void) {
         self.whileSigIn = .doing
         let userDefault = UserDefaultsManager()
+        let firebaseToken = userDefault.loadFCMtoken()
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"
         urlComponents.host = "www.payrit.info"
@@ -270,6 +319,9 @@ class SignInStore {
             completion(.failure(ServerAuthError.invalidURL))
             return
         }
+        print("--------firebaseTokenfirebaseToken---------")
+        print(firebaseToken)
+        print("--------firebaseTokenfirebaseToken---------")
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -279,8 +331,11 @@ class SignInStore {
         let body = [
             "accessToken": aToken,
             "refreshToken": rToken,
-            "firebaseToken": userDefault.loadFCMtoken()
+            "firebaseToken": firebaseToken
         ] as [String: Any]
+        print("--------bodybodybody---------")
+        print(body)
+        print("--------bodybodybody---------")
         
         do {
             request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])

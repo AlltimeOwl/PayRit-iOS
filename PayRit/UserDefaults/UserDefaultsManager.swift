@@ -9,9 +9,10 @@ import Foundation
 
 @Observable
 final class UserDefaultsManager {
+    var user: User?
     enum Key: String, CaseIterable {
         case isSignIn
-        case userAppleId, userName, userEmail, userPhoneNumber, signInCompany, signature
+        case userAppleId, userName, userEmail, userPhoneNumber, signInCompany, signature, appleIdTokenString
         case accessToken, refreshToken
         case noti, FCMtoken
     }
@@ -32,6 +33,16 @@ final class UserDefaultsManager {
         UserDefaults.standard.setValue(userData.signInCompany, forKey: Key.signInCompany.rawValue)
     }
     
+    func setAppleSignIn(appleId: String, signInCompany: String) {
+        UserDefaults.standard.setValue(appleId, forKey: Key.userAppleId.rawValue)
+        UserDefaults.standard.setValue(signInCompany, forKey: Key.signInCompany.rawValue)
+    }
+    
+    func setAppleIdTokenString(appleIdTokenString: String) {
+        UserDefaults.standard.setValue(appleIdTokenString, forKey: Key.appleIdTokenString.rawValue)
+    }
+    
+    
     func setBearerToken(_ aToken: String, _ rToken: String) {
         UserDefaults.standard.setValue(aToken, forKey: Key.accessToken.rawValue)
         UserDefaults.standard.setValue(rToken, forKey: Key.refreshToken.rawValue)
@@ -40,6 +51,11 @@ final class UserDefaultsManager {
     /// 자동로그인 값 저장
     func setIsSignInState(value: Bool) {
         UserDefaults.standard.setValue(value, forKey: Key.isSignIn.rawValue)
+    }
+    
+    func getAppleIdTokenString() -> String {
+        let setAppleIdTokenString = UserDefaults.standard.string(forKey: Key.appleIdTokenString.rawValue) ?? ""
+        return setAppleIdTokenString
     }
     
     func getBearerToken() -> (aToken: String, rToken: String) {
@@ -71,6 +87,16 @@ final class UserDefaultsManager {
         let appleId = UserDefaults.standard.string(forKey: Key.isSignIn.rawValue)
         let signature = UserDefaults.standard.bool(forKey: Key.signature.rawValue)
         return User(name: name, email: email, phoneNumber: phoneNumber, signInCompany: company, appleId: appleId, signature: signature)
+    }
+    
+    func getUserInfoAsync() async {
+        let name = UserDefaults.standard.string(forKey: Key.userName.rawValue) ?? ""
+        let email = UserDefaults.standard.string(forKey: Key.userEmail.rawValue) ?? ""
+        let phoneNumber = UserDefaults.standard.string(forKey: Key.userPhoneNumber.rawValue) ?? ""
+        let company = UserDefaults.standard.string(forKey: Key.signInCompany.rawValue) ?? ""
+        let appleId = UserDefaults.standard.string(forKey: Key.isSignIn.rawValue)
+        let signature = UserDefaults.standard.bool(forKey: Key.signature.rawValue)
+        self.user = User(name: name, email: email, phoneNumber: phoneNumber, signInCompany: company, appleId: appleId, signature: signature)
     }
     
     /// 저장된 애플 유저 고유 아이디값 반환

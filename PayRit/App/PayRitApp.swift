@@ -53,7 +53,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
 @main
 struct PayRitApp: App {
-    let userDefault = UserDefaultsManager().getUserInfo()
+    let userDefault = UserDefaultsManager().getUserInfo().signInCompany
     @State var signInStore: SignInStore = SignInStore()
     @State var homeStore: HomeStore = HomeStore()
     @State var tabStore: TabBarStore = TabBarStore()
@@ -64,10 +64,13 @@ struct PayRitApp: App {
             KakaoSDK.initSDK(appKey: APIKey)
         }
         
-        if userDefault.signInCompany == "애플" {
+        if userDefault == "애플" {
             signInStore.appleAuthCheck()
-        } else if userDefault.signInCompany == "카카오톡" {
+            
+            print("애플 auth check")
+        } else if userDefault == "카카오톡" {
             signInStore.kakaoAuthCheck()
+            print("카카오 auth check")
         }
     }
     

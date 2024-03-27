@@ -10,7 +10,7 @@ import KakaoSDKCommon
 import KakaoSDKAuth
 
 struct ContentView: View {
-    let userDefault = UserDefaultsManager().getUserInfo()
+    let userDefault = UserDefaultsManager()
     @State private var isShowingReloginAlert: Bool = false
     @Environment(SignInStore.self) var signInStore
     
@@ -18,12 +18,17 @@ struct ContentView: View {
         if signInStore.isSignIn {
             CustomTabView()
                 .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
-                    if userDefault.signInCompany == "애플" {
-                        signInStore.appleAuthCheck()
-                        print("애플 auth check")
-                    } else if userDefault.signInCompany == "카카오톡" {
-                        signInStore.kakaoAuthCheck()
-                        print("카카오 auth check")
+                    Task {
+                        await userDefault.getUserInfoAsync()
+                        if let user = userDefault.user {
+                            if user.signInCompany == "애플" {
+                                signInStore.appleAuthCheck()
+                                print("foreground 애플 auth check")
+                            } else if user.signInCompany == "카카오톡" {
+                                signInStore.kakaoAuthCheck()
+                                print("foreground 카카오 auth check")
+                            }
+                        }
                     }
                 }
         } else {
