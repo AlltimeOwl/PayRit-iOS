@@ -184,7 +184,7 @@ class SignInStore {
         if AuthApi.hasToken() {
             UserApi.shared.accessTokenInfo { (_, error) in
                 if let error = error {
-                    if let sdkError = error as? SdkError, sdkError.isInvalidTokenError() == true  {
+                    if let sdkError = error as? SdkError, sdkError.isInvalidTokenError() == true {
                         // 로그인 필요
                         self.isSignIn = false
                     } else {

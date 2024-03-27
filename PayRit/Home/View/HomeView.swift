@@ -303,21 +303,17 @@ struct HomeView: View {
             await homeStore.loadCertificates()
         }
         .onAppear {
-            //                    isShowingSignatureView.toggle()
-            //            if let new = homeStore.checkNewReceived() {
-            //
-            //            }
             tabStore.tabBarHide = false
             Task {
                 await homeStore.loadCertificates()
             }
         }
-        .primaryAlert(isPresented: $isShowingSignatureView, title: "본인인증", content: "본인인증 띄우기", primaryButtonTitle: "예", cancleButtonTitle: "아니오") {
-            //
-        } cancleAction: {
-            //
-        }
-        .primaryAlert(isPresented: $isShowingWaitingApprovalAlert, title: "승인 요청", content: "아직 상대방이 요청을 받지 못했나봐요! 알림을 다시 보내볼까요?", primaryButtonTitle: "네", cancleButtonTitle: "아니오") {
+//        .primaryAlert(isPresented: $isShowingSignatureView, title: "본인인증", content: "본인인증 띄우기", primaryButtonTitle: "예", cancleButtonTitle: "아니오") {
+//            //
+//        } cancleAction: {
+//            //
+//        }
+        .primaryAlert(isPresented: $isShowingWaitingApprovalAlert, title: "승인 요청", content: "아직 상대방이 승인하지 않았습니다.", primaryButtonTitle: nil, cancleButtonTitle: "확인") {
             //
         } cancleAction: {
             //

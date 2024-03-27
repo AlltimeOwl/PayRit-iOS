@@ -123,5 +123,5 @@ struct CertificateDetail: Hashable, Codable {
         }
     }
     
-    static let EmptyCertificate: CertificateDetail = CertificateDetail(paperId: 0, paperUrl: "", memberRole: "", primeAmount: 0, interest: 0, amount: 0, remainingAmount: 0, interestRate: 0.0, interestPaymentDate: 0, repaymentRate: 0.0, repaymentStartDate: "", repaymentEndDate: "",transactionDate: "", creditorName: "", creditorPhoneNumber: "", creditorAddress: "", dueDate: 0, debtorName: "", debtorPhoneNumber: "", debtorAddress: "")
+    static let EmptyCertificate: CertificateDetail = CertificateDetail(paperId: 0, paperUrl: "", memberRole: "", primeAmount: 0, interest: 0, amount: 0, remainingAmount: 0, interestRate: 0.0, interestPaymentDate: 0, repaymentRate: 0.0, repaymentStartDate: "", repaymentEndDate: "", transactionDate: "", creditorName: "", creditorPhoneNumber: "", creditorAddress: "", dueDate: 0, debtorName: "", debtorPhoneNumber: "", debtorAddress: "")
 }

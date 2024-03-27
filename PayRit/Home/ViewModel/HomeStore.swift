@@ -119,7 +119,7 @@ final class HomeStore {
                     do {
                         let certificate = try JSONDecoder().decode(CertificateDetail.self, from: data)
                         self.certificateDetail = certificate
-                        if ((self.certificateDetail.specialConditions?.isEmpty) != nil) {
+                        if (self.certificateDetail.specialConditions?.isEmpty) != nil {
                             self.certificateDetail.specialConditions = nil
                         }
                     } catch {
@@ -137,37 +137,50 @@ final class HomeStore {
         task.resume()
     }
     
+    @MainActor
     func acceptCertificate(paperId: Int) {
         let urlString = "https://payrit.info/api/v1/paper/approve/accept/\(paperId)"
-        guard let url = URL(string: urlString) else {
-            print("Invalid URL")
-            return
-        }
-        let session = URLSession.shared
+        let pdfURL: URL = self.generatePDF()
+        guard let url = URL(string: urlString) else { return }
+        guard let pdfData = try? Data(contentsOf: pdfURL) else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
-        request.setValue("*/*", forHTTPHeaderField: "accept")
+        
+        let boundary = UUID().uuidString
+        let contentType = "multipart/form-data; boundary=\(boundary)"
+        request.setValue(contentType, forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
         
-        let task = session.dataTask(with: request) { (_, response, error) in
+        var body = Data()
+        
+        body.append("--\(boundary)\r\n".data(using: .utf8)!)
+        body.append("Content-Disposition: form-data; name=\"file\"; filename=\"document.pdf\"\r\n".data(using: .utf8)!)
+        body.append("Content-Type: application/pdf\r\n\r\n".data(using: .utf8)!)
+        body.append(pdfData)
+        body.append("\r\n".data(using: .utf8)!)
+        body.append("--\(boundary)--\r\n".data(using: .utf8)!)
+        
+        let session = URLSession(configuration: .default)
+        session.configuration.timeoutIntervalForRequest = TimeInterval(20)
+        session.configuration.timeoutIntervalForResource = TimeInterval(20)
+        
+        let task = session.uploadTask(with: request, from: body) { _, response, error in
             if let error = error {
                 print("Error: \(error)")
-                return
-            }
-            guard let httpResponse = response as? HTTPURLResponse else {
-                print("Invalid response")
-                return
-            }
-            if (200..<300).contains(httpResponse.statusCode) {
-                print("차용증 승인 요청 성공")
+            } else if let response = response as? HTTPURLResponse {
+                print("Response status code: \(response.statusCode)")
+                if (200..<300).contains(response.statusCode) {
+                    print("PDF 파일 업로드 성공")
+                } else {
+                    print("Unexpected status code: \(response.statusCode)")
+                }
             } else {
-                print("HTTP status code: \(httpResponse.statusCode)")
+                print("Unexpected error: No data or response")
             }
-            
         }
         task.resume()
     }
-    
+
     func memoSave(paperId: Int, content: String) {
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"
@@ -181,6 +194,7 @@ final class HomeStore {
             request.setValue("*/*", forHTTPHeaderField: "accept")
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
+            
             let body = [
                 "content": content
             ] as [String: Any]
@@ -206,6 +220,34 @@ final class HomeStore {
             }
             task.resume()
         }
+    }
+    
+    func memoDelete(paperId: Int) {
+        let urlString = "https://payrit.info/api/v1/memo/\(paperId)"
+        guard let url = URL(string: urlString) else { return }
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = "DELETE"
+        request.setValue("*/*", forHTTPHeaderField: "accept")
+        request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
+        
+        let task = session.dataTask(with: request) { (_, response, error) in
+            if let error = error {
+                print("Error: \(error)")
+                return
+            }
+            guard let httpResponse = response as? HTTPURLResponse else {
+                print("Invalid response")
+                return
+            }
+            if (200..<300).contains(httpResponse.statusCode) {
+                print("메모 삭제 성공")
+            } else {
+                print("HTTP status code: \(httpResponse.statusCode)")
+            }
+            
+        }
+        task.resume()
     }
     
     func deductedSave(paperId: Int, repaymentDate: String, repaymentAmount: String) {
@@ -267,53 +309,5 @@ final class HomeStore {
             pdf.closePDF()
         }
         return url
-    }
-    
-    func kakaoMessageTest(paperId: Int, repaymentDate: String, repaymentAmount: String) {
-        var urlComponents = URLComponents()
-        urlComponents.scheme = "https"
-        urlComponents.host = "bizmsg-web.kakaoenterprise.com"
-        urlComponents.path = "/v1/message/send"
-        
-        if let url = urlComponents.url {
-            
-            var request = URLRequest(url: url)
-            request.httpMethod = "POST"
-            request.setValue("*/*", forHTTPHeaderField: "accept")
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
-            let body = [
-                "client_id": "1050643",
-                "message_type": "AT",
-                "sender_key": "string",
-                "phone_number": "string",
-                "message": "string",
-                "template_code": "string",
-                "sms_message": "string",
-                "sms_type": "SM",
-                "etc1": "string",
-                "sender_no": "string"
-            ] as [String: Any]
-            do {
-                request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
-            } catch {
-                print("Error creating JSON data")
-            }
-            let task = URLSession.shared.dataTask(with: request) { _, response, error in
-                if let error = error {
-                    print("Error: \(error)")
-                } else if let response = response as? HTTPURLResponse {
-                    print("Response status code: \(response.statusCode)")
-                    if (200..<300).contains(response.statusCode) {
-                        print("상환 내역 작성 성공")
-                    } else {
-                        print("Unexpected status code: \(response.statusCode)")
-                    }
-                } else {
-                    print("Unexpected error: No data or response")
-                }
-            }
-            task.resume()
-        }
     }
 }

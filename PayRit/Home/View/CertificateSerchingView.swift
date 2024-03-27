@@ -92,6 +92,8 @@ struct CertificateSerchingView: View {
                                         }
                                     } else if certificate.certificateStep == .progress {
                                         navigationLinkDetailView.toggle()
+                                    } else if certificate.certificateStep == .complete {
+                                        navigationLinkDetailView.toggle()
                                     }
                                 } label: {
                                     VStack(alignment: .leading, spacing: 0) {
@@ -251,21 +253,21 @@ struct CertificateSerchingView: View {
         .onAppear {
             interestFocused = true
         }
-//        .primaryAlert(isPresented: $isShowingSignatureView, title: "본인인증", content: "본인인증 띄우기", primaryButtonTitle: "예", cancleButtonTitle: "아니오") {
-//            //
-//        } cancleAction: {
-//            //
-//        }
-//        .primaryAlert(isPresented: $isShowingWaitingApprovalAlert, title: "승인 요청", content: "아직 상대방이 요청을 받지 못했나봐요! 알림을 다시 보내볼까요?", primaryButtonTitle: "네", cancleButtonTitle: "아니오") {
-//            //
-//        } cancleAction: {
-//            //
-//        }
-//        .primaryAlert(isPresented: $isShowingWaitingPaymentAlert, title: "결제 진행중", content: "작성자가 결제 진행중입니다.", primaryButtonTitle: nil, cancleButtonTitle: "확인") {
-//            //
-//        } cancleAction: {
-//            //
-//        }
+        .primaryAlert(isPresented: $isShowingSignatureView, title: "본인인증", content: "본인인증 띄우기", primaryButtonTitle: "예", cancleButtonTitle: "아니오") {
+            //
+        } cancleAction: {
+            //
+        }
+        .primaryAlert(isPresented: $isShowingWaitingApprovalAlert, title: "승인 요청", content: "아직 상대방이 요청을 받지 못했나봐요! 알림을 다시 보내볼까요?", primaryButtonTitle: "네", cancleButtonTitle: "아니오") {
+            //
+        } cancleAction: {
+            //
+        }
+        .primaryAlert(isPresented: $isShowingWaitingPaymentAlert, title: "결제 진행중", content: "작성자가 결제 진행중입니다.", primaryButtonTitle: nil, cancleButtonTitle: "확인") {
+            //
+        } cancleAction: {
+            //
+        }
     }
 }
 

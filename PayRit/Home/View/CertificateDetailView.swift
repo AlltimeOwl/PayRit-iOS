@@ -14,6 +14,8 @@ struct CertificateDetailView: View {
     @State private var isShowingExportView: Bool = false
     @State private var isShowingPDFView: Bool = false
     @State private var isShowingMailView: Bool = false
+    @State private var isShowingRemindAlert: Bool = false
+    @State private var isShowingUnReadyAlert: Bool = false
     @State private var isShowingAllRepaymentAlert: Bool = false
     @State private var result: Result<MFMailComposeResult, Error>?
     @Environment(HomeStore.self) var homeStore
@@ -148,6 +150,7 @@ struct CertificateDetailView: View {
                                 
                                 HStack {
                                     Button {
+                                        isShowingRemindAlert.toggle()
                                     } label: {
                                         HStack {
                                             VStack(alignment: .leading, spacing: 6) {
@@ -456,6 +459,14 @@ struct CertificateDetailView: View {
             }
         } cancleAction: {
         }
+        .primaryAlert(isPresented: $isShowingRemindAlert, title: "문자로 재촉하기", content: "상환 요청 메시지를 문자(MMS)로 전송하시겠습니까?", primaryButtonTitle: "네", cancleButtonTitle: "아니오") {
+            isShowingUnReadyAlert.toggle()
+        } cancleAction: {
+        }
+        .primaryAlert(isPresented: $isShowingUnReadyAlert, title: "재촉하기 준비중입니다.", content: "빠른 시일 내에 제공드리겠습니다.", primaryButtonTitle: nil, cancleButtonTitle: "네") {
+        } cancleAction: {
+        }
+
     }
 }
 
