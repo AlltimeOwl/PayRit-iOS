@@ -51,6 +51,7 @@ struct NotificationView: View {
                 .scrollIndicators(.hidden)
             }
         }
+        .dismissOnDrag()
         .navigationTitle("알림")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
