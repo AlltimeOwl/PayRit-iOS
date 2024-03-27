@@ -120,7 +120,7 @@ struct MyPageView: View {
                     Text("")
                 }
             }
-            .sheet(isPresented: $isShowingSafariView) {
+            .fullScreenCover(isPresented: $isShowingSafariView) {
                 if let url = URL(string: "https://picayune-rhinoceros-77c.notion.site/57721e2e46bf46b7a15cc05afec24fc3") {
                     SafariView(url: url)
                 }
