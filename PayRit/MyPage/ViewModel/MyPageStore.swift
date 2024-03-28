@@ -14,11 +14,14 @@ enum PaymentState: String, CodingKey, CaseIterable {
 
 @Observable
 final class MyPageStore {
-    var currenUser: User = UserDefaultsManager().getUserInfo()
+    var currentUser: User = UserDefaultsManager().getUserInfo()
     var paymentHistory: [Payment] = [Payment]()
     var sortingType: PaymentState = .current
     
     init() {
+        if UserDefaultsManager().getUserInfo().signInCompany == "애플" {
+            currentUser = UserDefaultsManager().getAppleUserInfo()
+        }
         paymentHistory = generateRandomPayments(count: 10)
     }
     

@@ -38,30 +38,45 @@ struct HomeView: View {
                     }
                 } else {
                     if homeStore.certificates.isEmpty {
-                        List {
-                            VStack {
-                                Spacer()
-                                HStack {
+                        ZStack {
+                            List {
+                                VStack {
                                     Spacer()
-                                    Text("""
-                            아직 거래내역이 없어요.
-                            작성하러 가볼까요?
-                            """)
-                                    .frame(maxHeight: .infinity)
-                                    .multilineTextAlignment(.center)
-                                    .lineSpacing(4)
-                                    .font(.system(size: 20))
-                                    .foregroundStyle(.gray).opacity(0.6)
+                                    HStack {
+                                        Spacer()
+                                        Text("""
+                                아직 거래내역이 없어요.
+                                작성하러 가볼까요?
+                                """)
+                                        .frame(maxHeight: .infinity)
+                                        .multilineTextAlignment(.center)
+                                        .lineSpacing(4)
+                                        .font(.system(size: 20))
+                                        .foregroundStyle(.gray).opacity(0.6)
+                                        Spacer()
+                                    }
                                     Spacer()
                                 }
-                                Spacer()
+                                .frame(height: UIScreen.screenHeight * 0.5)
+                                .listRowSeparator(.hidden)
                             }
-                            .frame(height: UIScreen.screenHeight * 0.5)
-                            .listRowSeparator(.hidden)
+                            .listStyle(.plain)
+                            .listSectionSeparator(.hidden)
+                            .scrollIndicators(.hidden)
+                            VStack(spacing: -4) {
+                                Spacer()
+                                RoundedRectangle(cornerRadius: 12)
+                                    .frame(width: 190, height: 44)
+                                    .overlay {
+                                        Text("차용증·약속 작성하러 가기")
+                                            .foregroundStyle(.white)
+                                            .font(.custom("SUIT-Bold", size: 14))
+                                    }
+                                Image(systemName: "arrowtriangle.down.fill")
+                            }
+                            .foregroundStyle(Color.gray04)
+                            .padding(.bottom, 50)
                         }
-                        .listStyle(.plain)
-                        .listSectionSeparator(.hidden)
-                        .scrollIndicators(.hidden)
                     } else {
                         ZStack {
                             VStack(spacing: 0) {
@@ -237,9 +252,15 @@ struct HomeView: View {
                 ToolbarItem(placement: .topBarLeading) {
                     VStack {
                         Spacer().frame(height: 30)
-                        Text("\(UserDefaultsManager().getUserInfo().name) 님의 기록")
-                            .font(Font.title01)
-                            .foregroundStyle(.black)
+                        if UserDefaultsManager().getUserInfo().signInCompany == "애플" {
+                            Text("\(UserDefaultsManager().getAppleUserInfo().name) 님의 기록")
+                                .font(Font.title01)
+                                .foregroundStyle(.black)
+                        } else {
+                            Text("\(UserDefaultsManager().getUserInfo().name) 님의 기록")
+                                .font(Font.title01)
+                                .foregroundStyle(.black)
+                        }
                         Spacer().frame(height: 10)
                     }
                 }

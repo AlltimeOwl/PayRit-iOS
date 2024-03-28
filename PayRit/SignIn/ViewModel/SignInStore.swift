@@ -274,7 +274,6 @@ class SignInStore {
             } else {
                 print("로그아웃이 성공적으로 수행되었습니다.")
                 self.isSignIn = false
-                UserDefaultsManager().removeAll()
             }
         }
     }

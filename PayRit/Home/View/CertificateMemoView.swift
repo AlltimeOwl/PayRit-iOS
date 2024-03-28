@@ -8,11 +8,12 @@
 import SwiftUI
 
 struct CertificateMemoView: View {
+    @State var paperId: Int
+    @State private var memoId: Int?
+    @State private var memoArray: [Memo] = [Memo]()
     @State private var text: String = ""
-    @State private var memoId: Int = 0
     @State private var keyBoardFocused: Bool = false
     @State private var isShowingDeleteAlert: Bool = false
-    @State var certificateDetail: CertificateDetail
     @Environment(HomeStore.self) var homeStore
     var body: some View {
         ZStack {
@@ -30,7 +31,8 @@ struct CertificateMemoView: View {
                         }
                 }
                 .padding(.horizontal, 16)
-                List(certificateDetail.memoListResponses, id: \.self) { memo in
+                
+                List($memoArray, id: \.self) { $memo in
                     VStack(alignment: .leading) {
                         Text(memo.createdAt.prefix(10).replacingOccurrences(of: "-", with: "."))
                             .font(Font.body01)
@@ -38,13 +40,14 @@ struct CertificateMemoView: View {
                             Text(memo.content)
                                 .font(Font.body04)
                             Spacer()
-//                            Button {
-//                                memoId = memo.id
-//                                isShowingDeleteAlert.toggle()
-//                            } label: {
-//                                Image("trashIcon")
-//                            }
-//                            .frame(width: 24, height: 24)
+                            Button {
+                                isShowingDeleteAlert.toggle()
+                                self.memoId = memo.id
+                            } label: {
+                                Image("trashIcon")
+                            }
+                            .frame(width: 24, height: 24)
+                            .buttonStyle(BorderlessButtonStyle())
                         }
                         .padding(16)
                         .frame(maxWidth: .infinity)
@@ -59,9 +62,13 @@ struct CertificateMemoView: View {
                 Spacer()
                 Button {
                     if !text.isEmpty {
-                        homeStore.memoSave(paperId: certificateDetail.paperId, content: text)
-                        certificateDetail.memoListResponses.append(Memo(id: 0, content: text, createdAt: Date().dateToString().replacingOccurrences(of: "-", with: ".")))
-                        homeStore.certificateDetail.memoListResponses.append(Memo(id: 0, content: text, createdAt: Date().dateToString().replacingOccurrences(of: "-", with: ".")))
+                        homeStore.memoSave(paperId: paperId, content: text) { (memoArray, error) in
+                            if let error = error {
+                                print("Error occurred: \(error)")
+                            } else if let memoArray = memoArray {
+                                self.memoArray = memoArray
+                            }
+                        }
                         self.endTextEditing()
                         text = ""
                     }
@@ -88,18 +95,36 @@ struct CertificateMemoView: View {
         .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
             keyBoardFocused = false
         }
-//        .primaryAlert(isPresented: $isShowingDeleteAlert, title: "삭제", content: "메모를 삭제하시겠습니까?", primaryButtonTitle: "네", cancleButtonTitle: "아니오") {
-//            homeStore.memoDelete(paperId: memoId)
-//            certificateDetail.memoListResponses.removeAll(where: {$0.id == memoId})
-//        } cancleAction: {
-//            
-//        }
+        .onAppear {
+            Task {
+                homeStore.loadMemo(id: paperId) { (memoArray, error) in
+                    if let error = error {
+                        print("Error occurred: \(error)")
+                    } else if let memoArray = memoArray {
+                        self.memoArray = memoArray
+                    }
+                }
+            }
+        }
+        .primaryAlert(isPresented: $isShowingDeleteAlert, title: "삭제", content: "메모를 삭제하시겠습니까?", primaryButtonTitle: "네", cancleButtonTitle: "아니오") {
+            if let memoId = memoId {
+                homeStore.memoDelete(paperId: paperId, memoId: memoId) { (memoArray, error) in
+                    if let error = error {
+                        print("Error occurred: \(error)")
+                    } else if let memoArray = memoArray {
+                        self.memoArray = memoArray
+                    }
+                }
+            }
+        } cancleAction: {
+            
+        }
     }
 }
 
 #Preview {
     NavigationStack {
-        CertificateMemoView(certificateDetail: CertificateDetail.EmptyCertificate)
+        CertificateMemoView(paperId: 0)
             .environment(HomeStore())
     }
 }

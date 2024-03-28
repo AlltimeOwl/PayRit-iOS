@@ -25,7 +25,7 @@ struct MyInfoView: View {
                         .foregroundStyle(Color.gray09)
                         .overlay {
                             HStack {
-                                Text(mypageStore.currenUser.name)
+                                Text(mypageStore.currentUser.name)
                                     .font(Font.body02)
                                     .foregroundStyle(Color.gray06)
                                 Spacer()
@@ -42,7 +42,7 @@ struct MyInfoView: View {
                         .foregroundStyle(Color.gray09)
                         .overlay {
                             HStack {
-                                Text(mypageStore.currenUser.email)
+                                Text(mypageStore.currentUser.email)
                                     .font(Font.body02)
                                     .foregroundStyle(Color.gray06)
                                 Spacer()
@@ -59,7 +59,7 @@ struct MyInfoView: View {
                         .foregroundStyle(Color.gray09)
                         .overlay {
                             HStack {
-                                Text(mypageStore.currenUser.phoneNumber)
+                                Text(mypageStore.currentUser.phoneNumber)
                                     .font(Font.body02)
                                     .foregroundStyle(Color.gray06)
                                 Spacer()
@@ -76,7 +76,7 @@ struct MyInfoView: View {
                         .foregroundStyle(Color.gray09)
                         .overlay {
                             HStack {
-                                Text(mypageStore.currenUser.signInCompany)
+                                Text(mypageStore.currentUser.signInCompany)
                                     .font(Font.body02)
                                     .foregroundStyle(Color.gray06)
                                 Spacer()

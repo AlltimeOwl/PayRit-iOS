@@ -22,6 +22,7 @@ struct CertificateSerchingView: View {
     @State private var navigationLinkAcceptView = false
     @State var certificateStep: CertificateStep?
     @Environment(HomeStore.self) var homeStore
+    @Environment(\.dismiss) private var dismiss
     @FocusState private var interestFocused: Bool
     
     var body: some View {
@@ -31,6 +32,7 @@ struct CertificateSerchingView: View {
                 HStack {
                     VStack {
                         Button {
+                            dismiss()
                         }label: {
                             Image(systemName: "chevron.left")
                                 .foregroundStyle(.black)

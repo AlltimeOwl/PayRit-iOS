@@ -24,9 +24,9 @@ struct MyPageView: View {
                     Image(systemName: "person.crop.circle.fill")
                         .font(.system(size: 70))
                     VStack(alignment: .leading, spacing: 10) {
-                        Text(mypageStore.currenUser.name)
+                        Text(mypageStore.currentUser.name)
                             .font(Font.title01)
-                        Text(mypageStore.currenUser.email)
+                        Text(mypageStore.currentUser.email)
                             .font(.system(size: 16))
                             .foregroundStyle(Color.gray05)
                     }
@@ -120,15 +120,15 @@ struct MyPageView: View {
                     Text("")
                 }
             }
-            .sheet(isPresented: $isShowingSafariView) {
+            .fullScreenCover(isPresented: $isShowingSafariView) {
                 if let url = URL(string: "https://picayune-rhinoceros-77c.notion.site/57721e2e46bf46b7a15cc05afec24fc3") {
                     SafariView(url: url)
                 }
             }
             .primaryAlert(isPresented: $isShowingSignOut, title: "로그아웃", content: "로그아웃 하시겠습니까?", primaryButtonTitle: "아니오", cancleButtonTitle: "네", primaryAction: nil) {
-                if mypageStore.currenUser.signInCompany == "카카오톡" {
+                if mypageStore.currentUser.signInCompany == "카카오톡" {
                     signInStore.kakaoSingOut()
-                } else if mypageStore.currenUser.signInCompany == "애플" {
+                } else if mypageStore.currentUser.signInCompany == "애플" {
                     signInStore.isSignIn = false
                 }
                 homeStore.certificates = [Certificate]()
