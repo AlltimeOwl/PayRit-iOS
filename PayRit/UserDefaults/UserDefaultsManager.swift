@@ -14,7 +14,8 @@ final class UserDefaultsManager {
     
     enum Key: String, CaseIterable {
         case isSignIn
-        case userAppleId, userName, userEmail, userPhoneNumber, signInCompany, signature
+        case userName, userEmail, userPhoneNumber, signInCompany, signature
+        case userAppleId, userAppleName, userAppleEmail
         case accessToken, refreshToken, appleIdTokenString, kakaoToken
         case noti, FCMtoken
     }
@@ -29,8 +30,8 @@ final class UserDefaultsManager {
     
     /// 애플 정보저장
     func setAppleUserData(userData: User) {
-        UserDefaults.standard.setValue(userData.name, forKey: Key.userName.rawValue)
-        UserDefaults.standard.setValue(userData.email, forKey: Key.userEmail.rawValue)
+        UserDefaults.standard.setValue(userData.name, forKey: Key.userAppleName.rawValue)
+        UserDefaults.standard.setValue(userData.email, forKey: Key.userAppleEmail.rawValue)
         UserDefaults.standard.setValue(userData.appleId, forKey: Key.userAppleId.rawValue)
         UserDefaults.standard.setValue(userData.signInCompany, forKey: Key.signInCompany.rawValue)
     }
@@ -92,6 +93,17 @@ final class UserDefaultsManager {
         let name = UserDefaults.standard.string(forKey: Key.userName.rawValue) ?? ""
         let email = UserDefaults.standard.string(forKey: Key.userEmail.rawValue) ?? ""
         let phoneNumber = UserDefaults.standard.string(forKey: Key.userPhoneNumber.rawValue) ?? ""
+        let company = UserDefaults.standard.string(forKey: Key.signInCompany.rawValue) ?? ""
+        let appleId = UserDefaults.standard.string(forKey: Key.isSignIn.rawValue)
+        let signature = UserDefaults.standard.bool(forKey: Key.signature.rawValue)
+        return User(name: name, email: email, phoneNumber: phoneNumber, signInCompany: company, appleId: appleId, signature: signature)
+    }
+    
+    /// 애플 유저 정보 반환
+    func getAppleUserInfo() -> User {
+        let name = UserDefaults.standard.string(forKey: Key.userAppleName.rawValue) ?? ""
+        let email = UserDefaults.standard.string(forKey: Key.userAppleEmail.rawValue) ?? ""
+        let phoneNumber = /*UserDefaults.standard.string(forKey: Key.userPhoneNumber.rawValue) ??*/ ""
         let company = UserDefaults.standard.string(forKey: Key.signInCompany.rawValue) ?? ""
         let appleId = UserDefaults.standard.string(forKey: Key.isSignIn.rawValue)
         let signature = UserDefaults.standard.bool(forKey: Key.signature.rawValue)

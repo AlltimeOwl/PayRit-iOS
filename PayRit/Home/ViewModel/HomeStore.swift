@@ -19,7 +19,6 @@ final class HomeStore {
     var sortingType: SortingType = .recent
     var certificates: [Certificate] = [Certificate]()
     var certificateDetail: CertificateDetail = CertificateDetail.EmptyCertificate
-    var memo: [Memo] = [Memo]()
     var isLoading: Bool = true
     
     func sortingCertificates() {
@@ -33,6 +32,7 @@ final class HomeStore {
         }
     }
     
+    // MARK: - 차용증 불러오기
     func loadCertificates() async {
         let urlString = "https://payrit.info/api/v1/paper/list"
         guard let url = URL(string: urlString) else {
@@ -138,6 +138,7 @@ final class HomeStore {
         task.resume()
     }
     
+    // MARK: - 차용증 수락
     @MainActor
     func acceptCertificate(paperId: Int) {
         let urlString = "https://payrit.info/api/v1/paper/approve/accept/\(paperId)"
@@ -182,6 +183,7 @@ final class HomeStore {
         task.resume()
     }
     
+    // MARK: - 메모
     func loadMemo(id: Int, completion: @escaping ([Memo]?, Error?) -> Void) {
         let urlString = "https://payrit.info/api/v1/memo/\(id)"
         guard let url = URL(string: urlString) else {
@@ -317,6 +319,7 @@ final class HomeStore {
         task.resume()
     }
     
+    // MARK: - 상환
     func deductedSave(paperId: Int, repaymentDate: String, repaymentAmount: String) {
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"
@@ -358,6 +361,7 @@ final class HomeStore {
         }
     }
     
+    // MARK: - PDF변환
     @MainActor
     func generatePDF() -> URL {
         let renderer = ImageRenderer(content: CertificateDocumentView(certificateDetail: self.certificateDetail))

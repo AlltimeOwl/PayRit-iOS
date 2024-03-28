@@ -148,17 +148,33 @@ struct MyInfoWritingView: View {
             keyBoardFocused = false
         }
         .onAppear {
-            let userDefault = UserDefaultsManager().getUserInfo()
-            if newCertificate.memberRole == "CREDITOR" {
-                newCertificate.creditorName = userDefault.name
-                newCertificate.creditorPhoneNumber = userDefault.phoneNumber
-                self.name = userDefault.name
-                self.phoneNumber = userDefault.phoneNumber.onlyPhoneNumber()
-            } else if newCertificate.memberRole == "DEBTOR" {
-                newCertificate.debtorName = userDefault.name
-                newCertificate.debtorPhoneNumber = userDefault.phoneNumber
-                self.name = userDefault.name
-                self.phoneNumber = userDefault.phoneNumber.onlyPhoneNumber()
+            
+            if UserDefaultsManager().getUserInfo().signInCompany == "애플" {
+                let userDefault = UserDefaultsManager().getAppleUserInfo()
+                if newCertificate.memberRole == "CREDITOR" {
+                    newCertificate.creditorName = userDefault.name
+                    newCertificate.creditorPhoneNumber = userDefault.phoneNumber
+                    self.name = userDefault.name
+                    self.phoneNumber = userDefault.phoneNumber.onlyPhoneNumber()
+                } else if newCertificate.memberRole == "DEBTOR" {
+                    newCertificate.debtorName = userDefault.name
+                    newCertificate.debtorPhoneNumber = userDefault.phoneNumber
+                    self.name = userDefault.name
+                    self.phoneNumber = userDefault.phoneNumber.onlyPhoneNumber()
+                }
+            } else {
+                let userDefault = UserDefaultsManager().getUserInfo()
+                if newCertificate.memberRole == "CREDITOR" {
+                    newCertificate.creditorName = userDefault.name
+                    newCertificate.creditorPhoneNumber = userDefault.phoneNumber
+                    self.name = userDefault.name
+                    self.phoneNumber = userDefault.phoneNumber.onlyPhoneNumber()
+                } else if newCertificate.memberRole == "DEBTOR" {
+                    newCertificate.debtorName = userDefault.name
+                    newCertificate.debtorPhoneNumber = userDefault.phoneNumber
+                    self.name = userDefault.name
+                    self.phoneNumber = userDefault.phoneNumber.onlyPhoneNumber()
+                }
             }
         }
         .toolbar {

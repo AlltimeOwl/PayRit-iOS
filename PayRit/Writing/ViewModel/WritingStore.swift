@@ -12,6 +12,11 @@ import SwiftUI
 final class WritingStore {
     var currentUser = UserDefaultsManager().getUserInfo()
     
+    init() {
+        if UserDefaultsManager().getUserInfo().signInCompany == "애플" {
+            currentUser = UserDefaultsManager().getAppleUserInfo()
+        }
+    }
 //    func calInterestAmount(start: String, end: String, rate: Float, primeAmount: Int) -> Int {
 //        let dateFormatter = DateFormatter()
 //        dateFormatter.dateFormat = "yyyy-MM-dd"

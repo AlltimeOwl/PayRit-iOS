@@ -252,9 +252,15 @@ struct HomeView: View {
                 ToolbarItem(placement: .topBarLeading) {
                     VStack {
                         Spacer().frame(height: 30)
-                        Text("\(UserDefaultsManager().getUserInfo().name) 님의 기록")
-                            .font(Font.title01)
-                            .foregroundStyle(.black)
+                        if UserDefaultsManager().getUserInfo().signInCompany == "애플" {
+                            Text("\(UserDefaultsManager().getAppleUserInfo().name) 님의 기록")
+                                .font(Font.title01)
+                                .foregroundStyle(.black)
+                        } else {
+                            Text("\(UserDefaultsManager().getUserInfo().name) 님의 기록")
+                                .font(Font.title01)
+                                .foregroundStyle(.black)
+                        }
                         Spacer().frame(height: 10)
                     }
                 }

@@ -154,9 +154,9 @@ struct MembershipWithdrawalView: View {
                                 완료되었습니다.
                                 """
                       , primaryButtonTitle: nil, cancleButtonTitle: "확인", primaryAction: nil) {
-            if mypageStore.currenUser.signInCompany == "카카오톡" {
+            if mypageStore.currentUser.signInCompany == "카카오톡" {
                 signInStore.kakaoUnLink()
-            } else if mypageStore.currenUser.signInCompany == "애플" {
+            } else if mypageStore.currentUser.signInCompany == "애플" {
                 signInStore.appleUnLink()
                 signInStore.isSignIn = false
                 UserDefaultsManager().removeAll()
