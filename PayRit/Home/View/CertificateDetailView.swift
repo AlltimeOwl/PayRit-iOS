@@ -222,7 +222,7 @@ struct CertificateDetailView: View {
                     .padding(.vertical, 24)
                     
                     NavigationLink {
-                        CertificateMemoView(certificateDetail: homeStore.certificateDetail)
+                        CertificateMemoView(paperId: paperId)
                             .customBackbutton()
                     } label: {
                         HStack(spacing: 0) {

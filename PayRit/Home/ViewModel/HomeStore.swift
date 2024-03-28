@@ -19,6 +19,7 @@ final class HomeStore {
     var sortingType: SortingType = .recent
     var certificates: [Certificate] = [Certificate]()
     var certificateDetail: CertificateDetail = CertificateDetail.EmptyCertificate
+    var memo: [Memo] = [Memo]()
     var isLoading: Bool = true
     
     func sortingCertificates() {
@@ -180,15 +181,56 @@ final class HomeStore {
         }
         task.resume()
     }
+    
+    func loadMemo(id: Int, completion: @escaping ([Memo]?, Error?) -> Void) {
+        let urlString = "https://payrit.info/api/v1/memo/\(id)"
+        guard let url = URL(string: urlString) else {
+            print("Invalid URL")
+            return
+        }
+        
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("application/json", forHTTPHeaderField: "accept")
+        request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                print("Error: \(error)")
+                completion(nil, error)
+                return
+            }
+            guard let httpResponse = response as? HTTPURLResponse else {
+                print("Invalid response")
+                return
+            }
+            
+            if (200..<300).contains(httpResponse.statusCode) {
+                if let data = data {
+                    do {
+                        let memo = try JSONDecoder().decode([Memo].self, from: data)
+                        completion(memo, nil)
+                    } catch {
+                        print("Error decoding JSON: \(error)")
+                        completion(nil, error)
+                    }
+                }
+            } else {
+                print("HTTP status code: \(httpResponse.statusCode)")
+                completion(nil, nil)
+            }
+        }
+        task.resume()
+    }
 
-    func memoSave(paperId: Int, content: String) {
+    func memoSave(paperId: Int, content: String, completion: @escaping ([Memo]?, Error?) -> Void) {
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"
         urlComponents.host = "payrit.info"
         urlComponents.path = "/api/v1/memo/\(paperId)"
         
         if let url = urlComponents.url {
-            
             var request = URLRequest(url: url)
             request.httpMethod = "POST"
             request.setValue("*/*", forHTTPHeaderField: "accept")
@@ -197,33 +239,49 @@ final class HomeStore {
             
             let body = [
                 "content": content
-            ] as [String: Any]
+            ]
             
             do {
                 request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
             } catch {
                 print("Error creating JSON data")
+                return
             }
-            let task = URLSession.shared.dataTask(with: request) { _, response, error in
+            
+            let task = URLSession.shared.dataTask(with: request) { (_, response, error) in
                 if let error = error {
                     print("Error: \(error)")
-                } else if let response = response as? HTTPURLResponse {
-                    print("Response status code: \(response.statusCode)")
-                    if (200..<300).contains(response.statusCode) {
-                        print("response.statusCode [\(response.statusCode) 메모 작성 성공")
-                    } else {
-                        print("Unexpected status code: \(response.statusCode)")
+                    completion(nil, error)
+                    return
+                }
+                
+                guard let httpResponse = response as? HTTPURLResponse else {
+                    print("Invalid response")
+                    completion(nil, nil)
+                    return
+                }
+                
+                if (200..<300).contains(httpResponse.statusCode) {
+                    print("Response status code: \(httpResponse.statusCode)")
+                    self.loadMemo(id: paperId) { (memoArray, error) in
+                        if let error = error {
+                            print("Error occurred: \(error)")
+                            completion(nil, error)
+                        } else if let memoArray = memoArray {
+                            completion(memoArray, nil)
+                        }
                     }
                 } else {
-                    print("Unexpected error: No data or response")
+                    print("Unexpected status code: \(httpResponse.statusCode)")
+                    completion(nil, nil)
                 }
             }
             task.resume()
         }
     }
-    
-    func memoDelete(paperId: Int) {
-        let urlString = "https://payrit.info/api/v1/memo/\(paperId)"
+
+    func memoDelete(paperId: Int, memoId: Int, completion: @escaping ([Memo]?, Error?) -> Void) {
+        let urlString = "https://payrit.info/api/v1/memo/\(memoId)"
         guard let url = URL(string: urlString) else { return }
         let session = URLSession.shared
         var request = URLRequest(url: url)
@@ -234,18 +292,27 @@ final class HomeStore {
         let task = session.dataTask(with: request) { (_, response, error) in
             if let error = error {
                 print("Error: \(error)")
-                return
+                completion(nil, error)
             }
             guard let httpResponse = response as? HTTPURLResponse else {
                 print("Invalid response")
+                completion(nil, nil)
                 return
             }
             if (200..<300).contains(httpResponse.statusCode) {
                 print("메모 삭제 성공")
+                self.loadMemo(id: paperId) { (memoArray, error) in
+                    if let error = error {
+                        print("Error occurred: \(error)")
+                        completion(nil, error)
+                    } else if let memoArray = memoArray {
+                        completion(memoArray, nil)
+                    }
+                }
             } else {
                 print("HTTP status code: \(httpResponse.statusCode)")
+                completion(nil, nil)
             }
-            
         }
         task.resume()
     }

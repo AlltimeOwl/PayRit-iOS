@@ -43,7 +43,7 @@ struct CarouselView: View {
         .tabViewStyle(PageTabViewStyle())
         .frame(height: 190)
         .fullScreenCover(isPresented: $isShowingSheet) {
-            if let url = URL(string: "https://bit.ly/3xib1WC") {
+            if let url = URL(string: "https://payrit.info") {
                 SafariView(url: url)
             }
         }
