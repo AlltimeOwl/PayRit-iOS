@@ -236,7 +236,6 @@
 			isa = PBXGroup;
 			children = (
 				BC2193AD2BB066E700EE7B68 /* Config.xcconfig */,
-				BC2193B32BB12DBF00EE7B68 /* PrivacyInfo.xcprivacy */,
 				BC595DD42B8D8AC300CA555E /* PayRit */,
 				BC595DD32B8D8AC300CA555E /* Products */,
 			);
@@ -253,6 +252,7 @@
 		BC595DD42B8D8AC300CA555E /* PayRit */ = {
 			isa = PBXGroup;
 			children = (
+				BC2193B32BB12DBF00EE7B68 /* PrivacyInfo.xcprivacy */,
 				BC12196A2BA4010500B575F8 /* PayRit.entitlements */,
 				BCD942502B8F0CCC00BF61CD /* .swiftlint.yml */,
 				BC595DEA2B8D8DF300CA555E /* Config */,
@@ -852,7 +852,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.alltimeowl.PayRit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -895,7 +895,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.alltimeowl.PayRit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

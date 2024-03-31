@@ -97,7 +97,9 @@ struct HomeView: View {
                                             paperId = certificate.paperId
                                             if certificate.certificateStep == .waitingApproval {
                                                 if certificate.isWriter {
-                                                    isShowingWaitingApprovalAlert.toggle()
+                                                    // 본인인증 적용시 사용
+//                                                    isShowingWaitingApprovalAlert.toggle()
+                                                    navigationLinkDetailView.toggle()
                                                 } else {
                                                     navigationLinkAcceptView.toggle()
                                                 }

@@ -18,7 +18,7 @@ struct SignInView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Image("firstImage")
+                Image("firstImage2")
                     .resizable()
                     .frame(height: UIScreen.screenHeight)
                 Image("payRitText")

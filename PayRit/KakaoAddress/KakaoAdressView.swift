@@ -75,6 +75,9 @@ class KakaoAdressVC: UIViewController, WKScriptMessageHandler, WKNavigationDeleg
         let request = URLRequest(url: url)
         webView.load(request)
         indicator.startAnimating()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.indicator.stopAnimating()
+        }
     }
 
     private func setConstraints() {
