@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BC020FEF2BBEC2FE00116A6B /* iamport-ios in Frameworks */ = {isa = PBXBuildFile; productRef = BC020FEE2BBEC2FE00116A6B /* iamport-ios */; };
 		BC1219612BA1D6FC00B575F8 /* Deducted.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1219602BA1D6FC00B575F8 /* Deducted.swift */; };
 		BC1219652BA29FE700B575F8 /* CertificateAcceptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1219642BA29FE700B575F8 /* CertificateAcceptView.swift */; };
 		BC1219672BA32E4700B575F8 /* PDFKitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1219662BA32E4700B575F8 /* PDFKitView.swift */; };
@@ -164,6 +165,7 @@
 				BC595DF52B8D941900CA555E /* KakaoSDK in Frameworks */,
 				BC595DFD2B8D941900CA555E /* KakaoSDKCommon in Frameworks */,
 				BC595DF72B8D941900CA555E /* KakaoSDKAuth in Frameworks */,
+				BC020FEF2BBEC2FE00116A6B /* iamport-ios in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -534,6 +536,7 @@
 				BC595DFC2B8D941900CA555E /* KakaoSDKCommon */,
 				BC21939E2BB038B200EE7B68 /* FirebaseAnalytics */,
 				BC2193A02BB038B200EE7B68 /* FirebaseMessaging */,
+				BC020FEE2BBEC2FE00116A6B /* iamport-ios */,
 			);
 			productName = PayRit;
 			productReference = BC595DD22B8D8AC300CA555E /* PayRit.app */;
@@ -567,6 +570,7 @@
 			packageReferences = (
 				BC595DF32B8D941900CA555E /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */,
 				BC21939D2BB038B200EE7B68 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				BC020FED2BBEC2FE00116A6B /* XCRemoteSwiftPackageReference "iamport-ios" */,
 			);
 			productRefGroup = BC595DD32B8D8AC300CA555E /* Products */;
 			projectDirPath = "";
@@ -933,6 +937,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		BC020FED2BBEC2FE00116A6B /* XCRemoteSwiftPackageReference "iamport-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/iamport/iamport-ios?tab=readme-ov-file";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.4.1;
+			};
+		};
 		BC21939D2BB038B200EE7B68 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -952,6 +964,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		BC020FEE2BBEC2FE00116A6B /* iamport-ios */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BC020FED2BBEC2FE00116A6B /* XCRemoteSwiftPackageReference "iamport-ios" */;
+			productName = "iamport-ios";
+		};
 		BC21939E2BB038B200EE7B68 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = BC21939D2BB038B200EE7B68 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

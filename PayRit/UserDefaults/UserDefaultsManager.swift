@@ -135,7 +135,9 @@ final class UserDefaultsManager {
     /// 디바이스 userDefault 전체 삭제
     func removeAll() {
         Key.allCases.forEach {
-            UserDefaults.standard.removeObject(forKey: $0.rawValue)
+            if $0 != .userAppleName || $0 != .userAppleEmail {
+                UserDefaults.standard.removeObject(forKey: $0.rawValue)
+            }
         }
     }
     

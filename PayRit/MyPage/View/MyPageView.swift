@@ -132,6 +132,7 @@ struct MyPageView: View {
                     signInStore.isSignIn = false
                 }
                 homeStore.certificates = [Certificate]()
+                tabStore.selectedTab = .home
             }
         }
     }
