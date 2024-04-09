@@ -10,8 +10,6 @@ import SwiftUI
 struct HomeView: View {
     private let menuPadding = 8.0
     private let horizontalPadding = 16.0
-    @State private var test = false
-    @State private var testString = ""
     @State private var paperId = 0
     @State private var menuState = false
     @State private var isHiddenInfoBox = false
@@ -298,23 +296,9 @@ struct HomeView: View {
                             }
                             Spacer().frame(height: 10)
                         }
-                        VStack {
-                            Spacer().frame(height: 30)
-                            Button {
-                                test.toggle()
-                            }label: {
-                                Image(systemName: "bell")
-                                    .foregroundStyle(.black)
-                            }
-                            Spacer().frame(height: 10)
-                        }
                     }
                 }
             }
-        }
-        .sheet(isPresented: $test) {
-            ImportPassView(rsp: $testString, isPresented: $test)
-                .edgesIgnoringSafeArea(.all)
         }
         .navigationDestination(isPresented: $navigationLinkDetailView) {
             if !homeStore.certificates.isEmpty {

@@ -9,8 +9,8 @@ import SwiftUI
 
 struct MyInfoView: View {
     @Environment(SignInStore.self) var signInStore
+    @Environment(MyPageStore.self) var mypageStore
     @Environment(TabBarStore.self) var tabStore
-    let mypageStore: MyPageStore = MyPageStore()
     
     var body: some View {
         ZStack {
@@ -109,6 +109,7 @@ struct MyInfoView: View {
     NavigationStack {
         MyInfoView()
             .environment(SignInStore())
+            .environment(MyPageStore())
             .environment(TabBarStore())
     }
 }

@@ -51,6 +51,7 @@ struct PayRitApp: App {
     let signInCompany = UserDefaultsManager().getUserInfo().signInCompany
     @State var signInStore: SignInStore = SignInStore()
     @State var homeStore: HomeStore = HomeStore()
+    @State var mypageStore: MyPageStore = MyPageStore()
     @State var tabStore: TabBarStore = TabBarStore()
     @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
     
@@ -65,7 +66,9 @@ struct PayRitApp: App {
             ContentView()
                 .environment(signInStore)
                 .environment(homeStore)
+                .environment(mypageStore)
                 .environment(tabStore)
+                .environmentObject(IamportStore())
                 .onAppear {
                     if signInCompany == "애플" {
                         signInStore.appleAuthCheck()

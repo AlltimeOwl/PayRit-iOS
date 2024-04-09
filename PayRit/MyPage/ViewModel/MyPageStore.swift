@@ -14,15 +14,21 @@ enum PaymentState: String, CodingKey, CaseIterable {
 
 @Observable
 final class MyPageStore {
-    var currentUser: User = UserDefaultsManager().getUserInfo()
+    let userDefaultsManager = UserDefaultsManager()
+    var currentUser: User = User(name: "", email: "", phoneNumber: "", signInCompany: "")
+    var userCertInfo: CertificationInfo?
     var paymentHistory: [Payment] = [Payment]()
     var sortingType: PaymentState = .current
+    var impAuth: Bool = false
     
     init() {
-        if UserDefaultsManager().getUserInfo().signInCompany == "애플" {
-            currentUser = UserDefaultsManager().getAppleUserInfo()
+        if userDefaultsManager.getUserInfo().signInCompany == "애플" {
+            currentUser = userDefaultsManager.getAppleUserInfo()
+        } else if userDefaultsManager.getUserInfo().signInCompany == "카카오톡" {
+            currentUser = userDefaultsManager.getUserInfo()
         }
         paymentHistory = generateRandomPayments(count: 10)
+        checkIMPAuth()
     }
     
     func sortingPayment() {
@@ -49,5 +55,86 @@ final class MyPageStore {
         }
         
         return payments
+    }
+    
+    func checkIMPAuth() {
+        let urlString = "https://payrit.info/api/v1/oauth/check"
+        guard let url = URL(string: urlString) else {
+            print("Invalid URL")
+            return
+        }
+        
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("application/json", forHTTPHeaderField: "accept")
+        request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                print("Error: \(error)")
+                return
+            }
+            guard let httpResponse = response as? HTTPURLResponse else {
+                print("Invalid response")
+                return
+            }
+            
+            if httpResponse.statusCode == 204 {
+                print("본인인증 완료된 계정")
+                self.impAuth = true
+            } else {
+                print("HTTP status code: \(httpResponse.statusCode)")
+                if let data = data {
+                    let responseData = String(data: data, encoding: .utf8)
+                    print("\(httpResponse.statusCode) data: \(responseData ?? "No data")")
+                }
+                self.impAuth = false
+            }
+        }
+        task.resume()
+    }
+    
+    func loadCertInfo() {
+        let urlString = "https://payrit.info/api/v1/profile/certification"
+        guard let url = URL(string: urlString) else {
+            print("Invalid URL")
+            return
+        }
+        
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("application/json", forHTTPHeaderField: "accept")
+        request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                print("Error: \(error)")
+                return
+            }
+            guard let httpResponse = response as? HTTPURLResponse else {
+                print("Invalid response")
+                return
+            }
+            
+            if httpResponse.statusCode == 200 {
+                if let data = data {
+                    do {
+                        let userCertInfo = try JSONDecoder().decode(CertificationInfo.self, from: data)
+                        self.userCertInfo = userCertInfo
+                    } catch {
+                        print("Error decoding JSON: \(error)")
+                    }
+                }
+            } else {
+                print("HTTP status code: \(httpResponse.statusCode)")
+                if let data = data {
+                    let responseData = String(data: data, encoding: .utf8)
+                    print("\(httpResponse.statusCode) data: \(responseData ?? "No data")")
+                }
+            }
+        }
+        task.resume()
     }
 }

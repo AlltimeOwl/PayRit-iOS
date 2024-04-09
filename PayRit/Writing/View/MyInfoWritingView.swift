@@ -8,6 +8,14 @@
 import SwiftUI
 
 struct MyInfoWritingView: View {
+    let writingStore = WritingStore()
+    var isFormValid: Bool {
+        if !name.isEmpty && !phoneNumber.isEmpty {
+            return true
+        } else {
+            return false
+        }
+    }
     @State private var name: String = ""
     @State private var phoneNumber: String = ""
     @State private var zipCode = ""
@@ -20,14 +28,7 @@ struct MyInfoWritingView: View {
     @State private var keyBoardFocused: Bool = false
     @Binding var newCertificate: CertificateDetail
     @Binding var path: NavigationPath
-    let writingStore = WritingStore()
-    var isFormValid: Bool {
-        if !name.isEmpty && !phoneNumber.isEmpty {
-            return true
-        } else {
-            return false
-        }
-    }
+    @Environment(MyPageStore.self) var mypageStore
     var body: some View {
         ZStack {
             Color.payritBackground.ignoresSafeArea()
@@ -49,9 +50,9 @@ struct MyInfoWritingView: View {
                             CustomTextField(foregroundStyle: .black, placeholder: "이름을 적어주세요", keyboardType: .default, text: $name)
                                 .onChange(of: name) {
                                     if newCertificate.memberRole == "CREDITOR" {
-                                        newCertificate.creditorName = name
+                                        newCertificate.creditorName = mypageStore.userCertInfo?.certificationName ?? ""
                                     } else if newCertificate.memberRole == "DEBTOR" {
-                                        newCertificate.debtorName = name
+                                        newCertificate.debtorName = mypageStore.userCertInfo?.certificationName ?? ""
                                     }
                                 }
                         }
@@ -63,9 +64,9 @@ struct MyInfoWritingView: View {
                                     if newValue.count <= 13 {
                                         phoneNumber = phoneNumber.phoneNumberMiddleCase()
                                         if newCertificate.memberRole == "CREDITOR" {
-                                            newCertificate.creditorPhoneNumber = phoneNumber.globalPhoneNumber()
+                                            newCertificate.creditorPhoneNumber = mypageStore.userCertInfo?.certificationPhoneNumber ?? "".globalPhoneNumber()
                                         } else if newCertificate.memberRole == "DEBTOR" {
-                                            newCertificate.debtorPhoneNumber = phoneNumber.globalPhoneNumber()
+                                            newCertificate.debtorPhoneNumber = mypageStore.userCertInfo?.certificationPhoneNumber ?? "".globalPhoneNumber()
                                         }
                                     } else {
                                         phoneNumber = oldValue

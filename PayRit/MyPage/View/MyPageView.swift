@@ -8,21 +8,44 @@
 import SwiftUI
 
 struct MyPageView: View {
-    let mypageStore: MyPageStore = MyPageStore()
     @State var listItemHeight: CGFloat = 40
     @State var isShowingSignOut: Bool = false
     @State var isShowingSafariView: Bool = false
     @State var notFoundUser: Bool = false
     @Environment(HomeStore.self) var homeStore
+    @Environment(MyPageStore.self) var mypageStore
     @Environment(SignInStore.self) var signInStore
     @Environment(TabBarStore.self) var tabStore
     var body: some View {
         ZStack {
             Color.payritBackground.ignoresSafeArea()
             VStack(alignment: .leading, spacing: 0) {
-                VStack(alignment: .leading, spacing: 10) {
+                VStack(alignment: .leading, spacing: 4) {
                     Text(mypageStore.currentUser.name)
                         .font(Font.title01)
+                    if mypageStore.impAuth {
+                        HStack(alignment: .bottom, spacing: 4) {
+                            NavigationLink {
+                                MyCertInfoView()
+                                    .customBackbutton()
+                                    .onAppear {
+                                        tabStore.tabBarHide = true
+                                    }
+                            } label: {
+                                Text("본인인증 완료됨")
+                                Image(systemName: "checkmark.seal.fill")
+                            }
+                        }
+                        .font(Font.body02)
+                        .foregroundStyle(Color.payritMint)
+                    } else {
+                        HStack(alignment: .bottom, spacing: 4) {
+                            Text("본인인증 미완료")
+                            Image(systemName: "checkmark.seal")
+                        }
+                        .font(Font.body02)
+                        .foregroundStyle(Color.payritIntensivePink)
+                    }
                     Text(mypageStore.currentUser.email)
                         .font(.system(size: 16))
                         .foregroundStyle(Color.gray05)
@@ -109,6 +132,9 @@ struct MyPageView: View {
             }
             .onAppear {
                 tabStore.tabBarHide = false
+                if !mypageStore.impAuth {
+                    mypageStore.checkIMPAuth()
+                }
             }
             .toolbar {
                 ToolbarItem {
@@ -137,6 +163,7 @@ struct MyPageView: View {
     NavigationStack {
         MyPageView()
             .environment(HomeStore())
+            .environment(MyPageStore())
             .environment(TabBarStore())
             .environment(SignInStore())
     }

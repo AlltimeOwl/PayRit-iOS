@@ -13,6 +13,7 @@ struct ContentView: View {
     let userDefault = UserDefaultsManager()
     @State private var isShowingReloginAlert: Bool = false
     @Environment(SignInStore.self) var signInStore
+    @Environment(MyPageStore.self) var mypageStore
     
     var body: some View {
         if signInStore.isSignIn {
@@ -29,6 +30,19 @@ struct ContentView: View {
                                 print("foreground 카카오 auth check")
                             }
                         }
+                    }
+                }
+                .onAppear {
+                    Task {
+                        await userDefault.getUserInfoAsync()
+                        if let user = userDefault.user {
+                            if user.signInCompany == "애플" {
+                                mypageStore.currentUser = userDefault.getAppleUserInfo()
+                            } else if user.signInCompany == "카카오톡" {
+                                mypageStore.currentUser = userDefault.getUserInfo()
+                            }
+                        }
+                        mypageStore.checkIMPAuth()
                     }
                 }
         } else {

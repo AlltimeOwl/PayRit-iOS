@@ -11,11 +11,13 @@ import SwiftUI
 @Observable
 final class WritingStore {
     var currentUser = UserDefaultsManager().getUserInfo()
+    var impAuth = false
     
     init() {
         if UserDefaultsManager().getUserInfo().signInCompany == "애플" {
             currentUser = UserDefaultsManager().getAppleUserInfo()
         }
+        checkIMPAuth()
     }
 //    func calInterestAmount(start: String, end: String, rate: Float, primeAmount: Int) -> Int {
 //        let dateFormatter = DateFormatter()
@@ -30,6 +32,51 @@ final class WritingStore {
 //            return 0
 //        }
 //    }
+    func checkIMPAuth() {
+        let urlString = "https://payrit.info/api/v1/oauth/check"
+        guard let url = URL(string: urlString) else {
+            print("Invalid URL")
+            return
+        }
+        
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("application/json", forHTTPHeaderField: "accept")
+        request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                print("Error: \(error)")
+                return
+            }
+            guard let httpResponse = response as? HTTPURLResponse else {
+                print("Invalid response")
+                return
+            }
+            
+            if (200..<300).contains(httpResponse.statusCode) {
+                if let data = data {
+                    let responseData = String(data: data, encoding: .utf8)
+                    print("Response data: \(responseData ?? "No data")")
+                    do {
+                        let certificate = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+                        let impAuth = certificate?["success"] as? Bool ?? false
+                        self.impAuth = impAuth
+                    } catch {
+                        print("Error decoding JSON: \(error)")
+                    }
+                }
+            } else {
+                print("HTTP status code: \(httpResponse.statusCode)")
+                if let data = data {
+                    let responseData = String(data: data, encoding: .utf8)
+                    print("\(httpResponse.statusCode) data: \(responseData ?? "No data")")
+                }
+            }
+        }
+        task.resume()
+    }
     
     func saveCertificae(certificate: CertificateDetail) {
         var urlComponents = URLComponents()
