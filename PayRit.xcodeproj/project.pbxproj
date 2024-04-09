@@ -195,9 +195,9 @@
 			children = (
 				BC0210292BC4E09D00116A6B /* Utils.swift */,
 				BC0210222BC4E07500116A6B /* Model */,
-				BC0210332BC5A19000116A6B /* ViewModel */,
 				BC02100B2BC4DFFD00116A6B /* Certificate */,
 				BC0210312BC5A16500116A6B /* Payment */,
+				BC0210332BC5A19000116A6B /* ViewModel */,
 			);
 			path = Import;
 			sourceTree = "<group>";
@@ -206,7 +206,6 @@
 			isa = PBXGroup;
 			children = (
 				BC0210212BC4E06F00116A6B /* View */,
-				BC0210122BC4E06500116A6B /* IMPCertificationView.swift */,
 			);
 			path = Certificate;
 			sourceTree = "<group>";
@@ -214,6 +213,7 @@
 		BC0210212BC4E06F00116A6B /* View */ = {
 			isa = PBXGroup;
 			children = (
+				BC0210122BC4E06500116A6B /* IMPCertificationView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -708,6 +708,7 @@
 		};
 		BCD942592B8F1FAA00BF61CD /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);

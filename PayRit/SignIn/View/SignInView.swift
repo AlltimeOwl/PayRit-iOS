@@ -65,6 +65,16 @@ struct SignInView: View {
                 if signInStore.whileSigIn == .doing {
                     ProgressView()
                 }
+                if !signInStore.serverIsClosed {
+                    // 서버 점검 중 알림 표시
+                    Text("서버가 점검 중입니다.\n잠시 후 다시 시도해주세요.")
+                        .font(Font.title06)
+                        .multilineTextAlignment(.center)
+                        .frame(width: 350, height: 150)
+                        .background(.white.opacity(0.7))
+                        .clipShape(.rect(cornerRadius: 20))
+                        .padding(.bottom, 300)
+                }
             }
             .ignoresSafeArea(.all)
             .onAppear {
@@ -74,6 +84,7 @@ struct SignInView: View {
                 
             }
         }
+        
     }
 }
 

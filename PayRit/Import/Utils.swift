@@ -153,4 +153,3 @@ struct GradientBackgroundStyle: ButtonStyle {
                 .cornerRadius(20)
     }
 }
-

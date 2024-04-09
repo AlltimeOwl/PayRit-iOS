@@ -24,6 +24,11 @@ public enum ItemType: Int, CaseIterable {
         }
     }
 }
+enum AuthType {
+    case once
+    case account
+    case payment
+}
 
 public class IamportStore: ObservableObject, Then {
     
@@ -40,8 +45,13 @@ public class IamportStore: ObservableObject, Then {
     
     @Published var isPayment: Bool = false
     @Published var isCert: Bool = false
-    @Published var showResult: Bool = false
+    
+    /// 계정 본인인증 여부
     @Published var authResult: Bool = false
+    /// 차용증 승인시 본인인증 결과
+    @Published var acceptAuthResult: Bool = false
+    /// 결제 시도후 결과
+    @Published var paymentResult: Bool = false
     var iamportResponse: IamportResponse?
     
     init() {
@@ -136,7 +146,8 @@ public class IamportStore: ObservableObject, Then {
     }
     
     // 결제 완료 후 콜백 함수 (예시)
-    func iamportCallback(_ response: IamportResponse?) {
+    func iamportCallback(type: AuthType, _ response: IamportResponse?) -> Bool {
+        var result = false
         print("------------------------------------------")
         print("결과 왔습니다~~")
         if let res = response {
@@ -145,12 +156,19 @@ public class IamportStore: ObservableObject, Then {
         print("------------------------------------------")
         
         iamportResponse = response
-        if let response, let uid = response.imp_uid {
-            sendCertificateResult(uid: uid)
-            authResult = response.success ?? false
+        if type == .once {
+            if let response, let uid = response.imp_uid {
+                authResult = response.success ?? false
+                result = authResult
+            }
+        } else {
+            if let response, let uid = response.imp_uid {
+                sendCertificateResult(uid: uid)
+                authResult = response.success ?? false
+            }
         }
-        showResult = true
         clearButton()
+        return result
     }
     
     func clearButton() {
@@ -168,34 +186,10 @@ public class IamportStore: ObservableObject, Then {
         }
     }
     
-    
     func updateMerchantUid() {
         order.merchantUid.value = UUID().uuidString
         cert.merchantUid.value = UUID().uuidString
     }
-    
-    
-    //    func getItemList(type: ItemType) -> Array<(String, String)> {
-    //        switch type {
-    //        case .UserCode:
-    //            return userCodeList.map {
-    //                ($0.rawValue, $0.name)
-    //            }
-    //        case .PG:
-    //            return pgList.map {
-    //                ($0.rawValue, $0.name)
-    //            }
-    //        case .PayMethod:
-    //            return payMethodList.map {
-    //                ($0.rawValue, $0.name)
-    //            }
-    //
-    //        case .Carrier:
-    //            return carrierList.map {
-    //                ($0, "")
-    //            }
-    //        }
-    //    }
     
     func sendCertificateResult(uid: String) {
         var urlComponents = URLComponents()

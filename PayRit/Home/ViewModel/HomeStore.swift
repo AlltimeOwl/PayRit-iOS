@@ -60,7 +60,6 @@ final class HomeStore {
             if (200..<300).contains(httpResponse.statusCode) {
                 if let data = data {
                     let responseData = String(data: data, encoding: .utf8)
-                    print("Response data: \(responseData ?? "No data")")
                     do {
                         var certificates = try JSONDecoder().decode([Certificate].self, from: data)
                         

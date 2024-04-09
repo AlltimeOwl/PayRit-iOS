@@ -126,7 +126,7 @@ struct WritingView: View {
                 }
             }
             if iamportStore.isCert {
-                IMPCertificationView()
+                IMPCertificationView(certType: .constant(.account))
                     .onAppear {
                         iamportStore.updateMerchantUid()
                     }

@@ -97,9 +97,7 @@ struct HomeView: View {
                                             paperId = certificate.paperId
                                             if certificate.certificateStep == .waitingApproval {
                                                 if certificate.isWriter {
-                                                    // 본인인증 적용시 사용
-                                                    //                                                    isShowingWaitingApprovalAlert.toggle()
-                                                    navigationLinkDetailView.toggle()
+                                                    isShowingWaitingApprovalAlert.toggle()
                                                 } else {
                                                     navigationLinkAcceptView.toggle()
                                                 }
@@ -255,11 +253,11 @@ struct HomeView: View {
                     VStack {
                         Spacer().frame(height: 30)
                         if UserDefaultsManager().getUserInfo().signInCompany == "애플" {
-                            Text("\(UserDefaultsManager().getAppleUserInfo().name) 님의 기록")
+                            Text("\(UserDefaultsManager().getAppleUserInfo().name)님의 기록")
                                 .font(Font.title01)
                                 .foregroundStyle(.black)
                         } else {
-                            Text("\(UserDefaultsManager().getUserInfo().name) 님의 기록")
+                            Text("\(UserDefaultsManager().getUserInfo().name)님의 기록")
                                 .font(Font.title01)
                                 .foregroundStyle(.black)
                         }

@@ -11,7 +11,12 @@ struct CertificateAcceptView: View {
     let paperId: Int
     let certificateStep: CertificateStep
     @State private var checkBox: Bool = false
+    @State private var authResult: Bool = false
+    @State private var paymentResult: Bool = false
+    @State private var isShowingAuthAlert: Bool = false
+    @State private var isShowingPaymentAlert: Bool = false
     @Environment(HomeStore.self) var homeStore: HomeStore
+    @EnvironmentObject var iamportStore: IamportStore
     @Environment(\.dismiss) private var dismiss
     var body: some View {
         ZStack {
@@ -215,8 +220,7 @@ struct CertificateAcceptView: View {
                 VStack {
                     if certificateStep == .waitingApproval {
                         Button {
-                            homeStore.acceptCertificate(paperId: homeStore.certificateDetail.paperId)
-                            dismiss()
+                            isShowingAuthAlert.toggle()
                         } label: {
                             Text("수락 하기")
                                 .font(Font.title04)
@@ -229,8 +233,7 @@ struct CertificateAcceptView: View {
                         .disabled(!checkBox)
                     } else if certificateStep == .waitingPayment {
                         Button {
-                            homeStore.acceptCertificate(paperId: homeStore.certificateDetail.paperId)
-                            dismiss()
+                            isShowingPaymentAlert.toggle()
                         } label: {
                             Text("결제 하기")
                                 .font(Font.title04)
@@ -246,6 +249,24 @@ struct CertificateAcceptView: View {
                 .padding(.bottom, 16)
                 .padding(.horizontal, 16)
             }
+            if iamportStore.isCert {
+                IMPCertificationView(certType: .constant(.once))
+                    .onAppear {
+                        iamportStore.updateMerchantUid()
+                    }
+                    .onDisappear {
+                        iamportStore.clearButton()
+                    }
+            }
+            if iamportStore.isPayment {
+                PaymentView()
+                    .onAppear {
+                        iamportStore.updateMerchantUid()
+                    }
+                    .onDisappear {
+                        iamportStore.clearButton()
+                    }
+            }
         }
         .dismissOnDrag()
         .navigationTitle("페이릿 내용 확인")
@@ -255,7 +276,25 @@ struct CertificateAcceptView: View {
                 await homeStore.loadDetail(id: paperId)
             }
         }
-        .toolbar {
+        .primaryAlert(isPresented: $isShowingAuthAlert, title: "본인인증", content: "페이릿 수락을 위해 본인인증을 진행합니다.", primaryButtonTitle: "네", cancleButtonTitle: "아니오") {
+            iamportStore.isCert = true
+        } cancleAction: {
+        }
+        .primaryAlert(isPresented: $isShowingPaymentAlert, title: "결제", content: "결제 후 최종 작성됩니다.\n 결제하시겠습니까?", primaryButtonTitle: "네", cancleButtonTitle: "아니오") {
+            iamportStore.isPayment = true
+        } cancleAction: {
+        }
+        .onChange(of: iamportStore.paymentResult) {
+            if iamportStore.paymentResult {
+                homeStore.acceptCertificate(paperId: homeStore.certificateDetail.paperId)
+                dismiss()
+            }
+        }
+        .onChange(of: iamportStore.acceptAuthResult) {
+            if iamportStore.acceptAuthResult {
+                homeStore.acceptCertificate(paperId: homeStore.certificateDetail.paperId)
+                dismiss()
+            }
         }
     }
 }

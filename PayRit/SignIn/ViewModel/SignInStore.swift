@@ -34,6 +34,7 @@ enum ServerAuthError: Error {
 class SignInStore {
     var isSignIn: Bool = UserDefaultsManager().getIsSignInState()
     var singinRevoke: Bool = false
+    var serverIsClosed: Bool = false
     var whileSigIn: WhileSigIn = .waiting
     var appleAuthorizationCode = ""
     var appleIdentityToken = ""
@@ -428,8 +429,14 @@ class SignInStore {
                     self.whileSigIn = .waiting
                 } else {
                     print("Unexpected status code: \(httpResponse.statusCode)")
-                    completion(.failure(ServerAuthError.invalidResponse))
-                    self.whileSigIn = .waiting
+                    if httpResponse.statusCode == 502 {
+                        print("서버 점검중")
+                        self.serverIsClosed.toggle()
+                        self.whileSigIn = .waiting
+                    } else {
+                        completion(.failure(ServerAuthError.invalidResponse))
+                        self.whileSigIn = .waiting
+                    }
                 }
             }
             task.resume() // 작업 시작
