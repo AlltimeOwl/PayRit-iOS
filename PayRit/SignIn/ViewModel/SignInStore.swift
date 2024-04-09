@@ -38,6 +38,7 @@ class SignInStore {
     var appleAuthorizationCode = ""
     var appleIdentityToken = ""
     var firebasePushtoken = ""
+    var kakaoAuthCount = 0
     
     // MARK: - 애플
     func handleAppleSignInResult(_ result: Result<ASAuthorization, Error>) {
@@ -235,13 +236,24 @@ class SignInStore {
             UserApi.shared.accessTokenInfo { (_, error) in
                 if let error = error {
                     if let sdkError = error as? SdkError, sdkError.isInvalidTokenError() == true {
-                        // 로그인 필요
-                        self.isSignIn = false
+                        AuthApi.shared.refreshToken { _, _ in }
+                        
+                        if self.kakaoAuthCount > 1 {
+                            self.isSignIn = false
+                            self.kakaoAuthCount = 0
+                        } else {
+                            self.kakaoAuthCheck()
+                            self.kakaoAuthCount += 1
+                        }
+                        
                     } else {
                         // 기타 에러
+                        self.isSignIn = false
+                        self.kakaoAuthCount = 0
                     }
                 } else {
                     // 토큰 유효성 체크 성공(필요 시 토큰 갱신됨)
+                    self.kakaoAuthCount = 0
                     let token = userDefault.getKakaoToken()
                     self.serverAuth(aToken: token, rToken: "rToken", company: .kakao) { result in
                         switch result {

@@ -10,6 +10,8 @@ import SwiftUI
 struct HomeView: View {
     private let menuPadding = 8.0
     private let horizontalPadding = 16.0
+    @State private var test = false
+    @State private var testString = ""
     @State private var paperId = 0
     @State private var menuState = false
     @State private var isHiddenInfoBox = false
@@ -98,7 +100,7 @@ struct HomeView: View {
                                             if certificate.certificateStep == .waitingApproval {
                                                 if certificate.isWriter {
                                                     // 본인인증 적용시 사용
-//                                                    isShowingWaitingApprovalAlert.toggle()
+                                                    //                                                    isShowingWaitingApprovalAlert.toggle()
                                                     navigationLinkDetailView.toggle()
                                                 } else {
                                                     navigationLinkAcceptView.toggle()
@@ -290,15 +292,29 @@ struct HomeView: View {
                                     .onAppear {
                                         tabStore.tabBarHide = true
                                     }
-                                }label: {
-                                    Image(systemName: "bell")
-                                        .foregroundStyle(.black)
-                                }
-                                Spacer().frame(height: 10)
+                            }label: {
+                                Image(systemName: "bell")
+                                    .foregroundStyle(.black)
+                            }
+                            Spacer().frame(height: 10)
+                        }
+                        VStack {
+                            Spacer().frame(height: 30)
+                            Button {
+                                test.toggle()
+                            }label: {
+                                Image(systemName: "bell")
+                                    .foregroundStyle(.black)
+                            }
+                            Spacer().frame(height: 10)
                         }
                     }
                 }
             }
+        }
+        .sheet(isPresented: $test) {
+            ImportPassView(rsp: $testString, isPresented: $test)
+                .edgesIgnoringSafeArea(.all)
         }
         .navigationDestination(isPresented: $navigationLinkDetailView) {
             if !homeStore.certificates.isEmpty {
@@ -331,11 +347,11 @@ struct HomeView: View {
                 await homeStore.loadCertificates()
             }
         }
-//        .primaryAlert(isPresented: $isShowingSignatureView, title: "본인인증", content: "본인인증 띄우기", primaryButtonTitle: "예", cancleButtonTitle: "아니오") {
-//            //
-//        } cancleAction: {
-//            //
-//        }
+        //        .primaryAlert(isPresented: $isShowingSignatureView, title: "본인인증", content: "본인인증 띄우기", primaryButtonTitle: "예", cancleButtonTitle: "아니오") {
+        //            //
+        //        } cancleAction: {
+        //            //
+        //        }
         .primaryAlert(isPresented: $isShowingWaitingApprovalAlert, title: "승인 요청", content: "아직 상대방이 승인하지 않았습니다.", primaryButtonTitle: nil, cancleButtonTitle: "확인") {
             //
         } cancleAction: {

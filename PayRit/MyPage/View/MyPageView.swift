@@ -20,19 +20,14 @@ struct MyPageView: View {
         ZStack {
             Color.payritBackground.ignoresSafeArea()
             VStack(alignment: .leading, spacing: 0) {
-                HStack(spacing: 16) {
-                    Image(systemName: "person.crop.circle.fill")
-                        .font(.system(size: 70))
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text(mypageStore.currentUser.name)
-                            .font(Font.title01)
-                        Text(mypageStore.currentUser.email)
-                            .font(.system(size: 16))
-                            .foregroundStyle(Color.gray05)
-                    }
-                    .frame(height: 77)
-                    Spacer()
+                VStack(alignment: .leading, spacing: 10) {
+                    Text(mypageStore.currentUser.name)
+                        .font(Font.title01)
+                    Text(mypageStore.currentUser.email)
+                        .font(.system(size: 16))
+                        .foregroundStyle(Color.gray05)
                 }
+                .frame(height: 77)
                 .padding(.horizontal, 16)
                 List {
                     NavigationLink {
