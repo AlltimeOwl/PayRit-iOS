@@ -38,7 +38,6 @@
 		BC2193A62BB03D7F00EE7B68 /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2193A52BB03D7F00EE7B68 /* NotificationView.swift */; };
 		BC2193A82BB03D8C00EE7B68 /* PayritNoti.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2193A72BB03D8C00EE7B68 /* PayritNoti.swift */; };
 		BC2193AB2BB0416400EE7B68 /* NotificationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2193AA2BB0416400EE7B68 /* NotificationStore.swift */; };
-		BC2193B02BB06EB600EE7B68 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = BC2193AD2BB066E700EE7B68 /* Config.xcconfig */; };
 		BC2193B42BB12DCF00EE7B68 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = BC2193B32BB12DBF00EE7B68 /* PrivacyInfo.xcprivacy */; };
 		BC2193B72BB1472400EE7B68 /* CarouselView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2193B62BB1472400EE7B68 /* CarouselView.swift */; };
 		BC2193B92BB1BAF900EE7B68 /* SUIT-ExtraBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = BC2193B82BB1BAF900EE7B68 /* SUIT-ExtraBold.otf */; };
@@ -639,7 +638,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1520;
-				LastUpgradeCheck = 1520;
+				LastUpgradeCheck = 1530;
 				TargetAttributes = {
 					BC595DD12B8D8AC300CA555E = {
 						CreatedOnToolsVersion = 15.2;
@@ -683,7 +682,6 @@
 				BC595DDD2B8D8AC400CA555E /* Preview Assets.xcassets in Resources */,
 				BC6F65332B9CA37A00FB9FA7 /* SUIT-SemiBold.otf in Resources */,
 				BC595E252B8DC9AC00CA555E /* Launch Screen.storyboard in Resources */,
-				BC2193B02BB06EB600EE7B68 /* Config.xcconfig in Resources */,
 				BC68291B2B9CACC6009EF3F5 /* SUIT-Medium.otf in Resources */,
 				BC595DDA2B8D8AC400CA555E /* Assets.xcassets in Resources */,
 				BC6F65352B9CA3C100FB9FA7 /* SUIT-Bold.otf in Resources */,
@@ -812,6 +810,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -876,6 +875,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
