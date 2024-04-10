@@ -59,7 +59,7 @@ final class HomeStore {
             
             if (200..<300).contains(httpResponse.statusCode) {
                 if let data = data {
-                    let responseData = String(data: data, encoding: .utf8)
+    //                    let responseData = String(data: data, encoding: .utf8)
                     do {
                         var certificates = try JSONDecoder().decode([Certificate].self, from: data)
                         
@@ -119,8 +119,8 @@ final class HomeStore {
                     do {
                         let certificate = try JSONDecoder().decode(CertificateDetail.self, from: data)
                         self.certificateDetail = certificate
-                        if (self.certificateDetail.specialConditions?.isEmpty) != nil {
-                            self.certificateDetail.specialConditions = nil
+                        if (self.certificateDetail.paperFormInfo.specialConditions?.isEmpty) != nil {
+                            self.certificateDetail.paperFormInfo.specialConditions = nil
                         }
                     } catch {
                         print("Error decoding JSON: \(error)")

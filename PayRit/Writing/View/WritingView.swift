@@ -27,7 +27,7 @@ struct WritingView: View {
                                         Spacer()
                                         Rectangle()
                                             .frame(width: 100, height: 8)
-                                        .foregroundStyle(Color.payritLightMint)
+                                            .foregroundStyle(Color.payritLightMint)
                                     }
                                     Text("어떤 약속")
                                 }
@@ -111,7 +111,7 @@ struct WritingView: View {
                     }
                     .disabled(true)
                     .shadow(color: .gray.opacity(0.2), radius: 8)
-                    
+                    .opacity(0.5)
                     Spacer()
                 }
                 .padding(.top, 30)
@@ -141,7 +141,7 @@ struct WritingView: View {
                     }
             }
             if iamportStore.isPayment {
-                PaymentView()
+                IMPPaymentView()
                     .onAppear {
                         iamportStore.updateMerchantUid()
                     }
@@ -152,7 +152,7 @@ struct WritingView: View {
         }
         .primaryAlert(isPresented: $isShowingAuthAlert, title: "본인인증 미완료", content: "페이릿 작성을 위해 \n본인인증을 1회 진행합니다.", primaryButtonTitle: "네", cancleButtonTitle: "아니오") {
             iamportStore.isCert = true
-//            iamportStore.isPayment = true
+            //            iamportStore.isPayment = true
         } cancleAction: {
         }
         .primaryAlert(isPresented: $iamportStore.isShowingDuplicateAlert, title: "인증 에러", content: "이미 인증된 계정이 존재합니다.", primaryButtonTitle: nil, cancleButtonTitle: "확인") {
@@ -164,5 +164,6 @@ struct WritingView: View {
 #Preview {
     WritingView()
         .environment(TabBarStore())
+        .environment(MyPageStore())
         .environmentObject(IamportStore())
 }

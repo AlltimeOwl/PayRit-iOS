@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MyInfoWritingView: View {
-    let writingStore = WritingStore()
+    let writingStore: WritingStore
     var isFormValid: Bool {
         if !name.isEmpty && !phoneNumber.isEmpty {
             return true
@@ -50,9 +50,9 @@ struct MyInfoWritingView: View {
                             CustomTextField(foregroundStyle: .black, placeholder: "이름을 적어주세요", keyboardType: .default, text: $name)
                                 .onChange(of: name) {
                                     if newCertificate.memberRole == "CREDITOR" {
-                                        newCertificate.creditorName = mypageStore.userCertInfo?.certificationName ?? ""
+                                        newCertificate.creditorProfile.name = mypageStore.userCertInfo?.certificationName ?? ""
                                     } else if newCertificate.memberRole == "DEBTOR" {
-                                        newCertificate.debtorName = mypageStore.userCertInfo?.certificationName ?? ""
+                                        newCertificate.debtorProfile.name = mypageStore.userCertInfo?.certificationName ?? ""
                                     }
                                 }
                         }
@@ -64,9 +64,9 @@ struct MyInfoWritingView: View {
                                     if newValue.count <= 13 {
                                         phoneNumber = phoneNumber.phoneNumberMiddleCase()
                                         if newCertificate.memberRole == "CREDITOR" {
-                                            newCertificate.creditorPhoneNumber = mypageStore.userCertInfo?.certificationPhoneNumber ?? "".globalPhoneNumber()
+                                            newCertificate.creditorProfile.phoneNumber = phoneNumber
                                         } else if newCertificate.memberRole == "DEBTOR" {
-                                            newCertificate.debtorPhoneNumber = mypageStore.userCertInfo?.certificationPhoneNumber ?? "".globalPhoneNumber()
+                                            newCertificate.debtorProfile.phoneNumber = phoneNumber
                                         }
                                     } else {
                                         phoneNumber = oldValue
@@ -85,9 +85,9 @@ struct MyInfoWritingView: View {
                                 CustomTextField(foregroundStyle: .black, placeholder: "우편번호", keyboardType: .numberPad, text: $zipCode)
                                     .onChange(of: zipCode) {
                                         if newCertificate.memberRole == "CREDITOR" {
-                                            newCertificate.creditorAddress = address + "(\(zipCode))"
+                                            newCertificate.creditorProfile.address = address + "(\(zipCode))"
                                         } else if newCertificate.memberRole == "DEBTOR" {
-                                            newCertificate.debtorAddress = address + "(\(zipCode))"
+                                            newCertificate.debtorProfile.address = address + "(\(zipCode))"
                                         }
                                     }
                                 Button {
@@ -107,9 +107,9 @@ struct MyInfoWritingView: View {
                             CustomTextField(foregroundStyle: .black, placeholder: "상세주소를 적어주세요", keyboardType: .default, text: $detailAddress)
                                 .onChange(of: detailAddress) {
                                     if newCertificate.memberRole == "CREDITOR" {
-                                        newCertificate.creditorAddress = address + " \(detailAddress) " + "(\(zipCode))"
+                                        newCertificate.creditorProfile.address = address + " \(detailAddress) " + "(\(zipCode))"
                                     } else if newCertificate.memberRole == "DEBTOR" {
-                                        newCertificate.debtorAddress = address + " \(detailAddress) " + "(\(zipCode))"
+                                        newCertificate.debtorProfile.address = address + " \(detailAddress) " + "(\(zipCode))"
                                     }
                                 }
                         }
@@ -149,33 +149,16 @@ struct MyInfoWritingView: View {
             keyBoardFocused = false
         }
         .onAppear {
-            
-            if UserDefaultsManager().getUserInfo().signInCompany == "애플" {
-                let userDefault = UserDefaultsManager().getAppleUserInfo()
-                if newCertificate.memberRole == "CREDITOR" {
-                    newCertificate.creditorName = userDefault.name
-                    newCertificate.creditorPhoneNumber = userDefault.phoneNumber
-                    self.name = userDefault.name
-                    self.phoneNumber = userDefault.phoneNumber.onlyPhoneNumber()
-                } else if newCertificate.memberRole == "DEBTOR" {
-                    newCertificate.debtorName = userDefault.name
-                    newCertificate.debtorPhoneNumber = userDefault.phoneNumber
-                    self.name = userDefault.name
-                    self.phoneNumber = userDefault.phoneNumber.onlyPhoneNumber()
-                }
-            } else {
-                let userDefault = UserDefaultsManager().getUserInfo()
-                if newCertificate.memberRole == "CREDITOR" {
-                    newCertificate.creditorName = userDefault.name
-                    newCertificate.creditorPhoneNumber = userDefault.phoneNumber
-                    self.name = userDefault.name
-                    self.phoneNumber = userDefault.phoneNumber.onlyPhoneNumber()
-                } else if newCertificate.memberRole == "DEBTOR" {
-                    newCertificate.debtorName = userDefault.name
-                    newCertificate.debtorPhoneNumber = userDefault.phoneNumber
-                    self.name = userDefault.name
-                    self.phoneNumber = userDefault.phoneNumber.onlyPhoneNumber()
-                }
+            if newCertificate.memberRole == "CREDITOR" {
+//                newCertificate.creditorProfile.name = mypageStore.userCertInfo?.certificationName ?? ""
+//                newCertificate.creditorProfile.phoneNumber = mypageStore.userCertInfo?.certificationPhoneNumber ?? ""
+                self.name = mypageStore.userCertInfo?.certificationName ?? ""
+                self.phoneNumber = mypageStore.userCertInfo?.certificationPhoneNumber ?? ""
+            } else if newCertificate.memberRole == "DEBTOR" {
+//                newCertificate.debtorProfile.name = mypageStore.userCertInfo?.certificationName ?? ""
+//                newCertificate.debtorProfile.phoneNumber = mypageStore.userCertInfo?.certificationPhoneNumber ?? ""
+                self.name = mypageStore.userCertInfo?.certificationName ?? ""
+                self.phoneNumber = mypageStore.userCertInfo?.certificationPhoneNumber ?? ""
             }
         }
         .toolbar {
@@ -205,14 +188,14 @@ struct MyInfoWritingView: View {
                 .edgesIgnoringSafeArea(.all)
         }
         .navigationDestination(isPresented: $moveNextView) {
-            PartnerInfoWritingView(newCertificate: $newCertificate, path: $path)
+            PartnerInfoWritingView(writingStore: writingStore, newCertificate: $newCertificate, path: $path)
                 .customBackbutton()
         }
     }
 }
 
-#Preview {
-    NavigationStack {
-        MyInfoWritingView(newCertificate: .constant(CertificateDetail.EmptyCertificate), path: .constant(NavigationPath()))
-    }
-}
+//#Preview {
+//    NavigationStack {
+//        MyInfoWritingView(newCertificate: .constant(CertificateDetail.EmptyCertificate), path: .constant(NavigationPath()))
+//    }
+//}

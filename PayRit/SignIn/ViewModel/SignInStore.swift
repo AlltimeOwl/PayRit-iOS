@@ -14,7 +14,7 @@ import AuthenticationServices
 import Alamofire
 
 enum WhileSigIn {
-    case waiting
+    case not
     case doing
 }
 
@@ -35,7 +35,7 @@ class SignInStore {
     var isSignIn: Bool = UserDefaultsManager().getIsSignInState()
     var singinRevoke: Bool = false
     var serverIsClosed: Bool = false
-    var whileSigIn: WhileSigIn = .waiting
+    var whileSigIn: WhileSigIn = .not
     var appleAuthorizationCode = ""
     var appleIdentityToken = ""
     var firebasePushtoken = ""
@@ -426,16 +426,17 @@ class SignInStore {
                         print("Error parsing JSON response: \(error)")
                         completion(.failure(error))
                     }
-                    self.whileSigIn = .waiting
+                    self.whileSigIn = .not
+                    self.serverIsClosed = false
                 } else {
                     print("Unexpected status code: \(httpResponse.statusCode)")
                     if httpResponse.statusCode == 502 {
                         print("서버 점검중")
-                        self.serverIsClosed.toggle()
-                        self.whileSigIn = .waiting
+                        self.serverIsClosed = true
+                        self.whileSigIn = .not
                     } else {
                         completion(.failure(ServerAuthError.invalidResponse))
-                        self.whileSigIn = .waiting
+                        self.whileSigIn = .not
                     }
                 }
             }

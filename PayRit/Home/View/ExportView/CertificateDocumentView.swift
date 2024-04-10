@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CertificateDocumentView: View {
-//    let certificateDetail = CertificateDetail(paperId: 0, paperUrl: "",memberRole: "", primeAmount: 200000,interest: 20000, amount: 220000, remainingAmount: 10000000, interestRate: 10.0, interestPaymentDate: 15, repaymentRate: 0.0, repaymentStartDate: "2024.01.01", repaymentEndDate: "2024.04.01", creditorName: "임대진", creditorPhoneNumber: "010.5009.7937", creditorAddress: "경기도 용인시 수지구 신봉동 876", dueDate: 10, debtorName: "홍길동", debtorPhoneNumber: "010.1919.1919", debtorAddress: "경기도 용인시 수지구 신봉동 192930", specialConditions: "특약사항", memoListResponses: [Memo](), repaymentHistories: [Deducted]())
+//    let certificateDetail = CertificateDetail(paperId: 0, paperUrl: "",memberRole: "", primeAmount: 200000,interest: 20000, amount: 220000, remainingAmount: 10000000, interestRate: 10.0, interestPaymentDate: 15, repaymentRate: 0.0, repaymentStartDate: "2024.01.01", repaymentEndDate: "2024.04.01", name: "임대진", phoneNumber: "010.5009.7937", address: "경기도 용인시 수지구 신봉동 876", dueDate: 10, name: "홍길동", phoneNumber: "010.1919.1919", address: "경기도 용인시 수지구 신봉동 192930", specialConditions: "특약사항", memoListResponses: [Memo](), repaymentHistories: [Deducted]())
     let certificateDetail: CertificateDetail
     var body: some View {
         VStack {
@@ -36,15 +36,15 @@ struct CertificateDocumentView: View {
                 .frame(width: 50, height: 60)
                 VStack(spacing: 8) {
                     HStack {
-                        Text("\(certificateDetail.creditorName)")
+                        Text("\(certificateDetail.creditorProfile.name)")
                         Spacer()
                     }
                     HStack {
-                        Text("\(certificateDetail.creditorPhoneNumber.onlyPhoneNumber().replacingOccurrences(of: "-", with: "."))")
+                        Text("\(certificateDetail.creditorProfile.phoneNumber.onlyPhoneNumber().replacingOccurrences(of: "-", with: "."))")
                         Spacer()
                     }
                     HStack {
-                        Text("\(certificateDetail.creditorAddress)")
+                        Text("\(certificateDetail.creditorProfile.address)")
                         Spacer()
                     }
                 }
@@ -70,15 +70,15 @@ struct CertificateDocumentView: View {
                 .frame(width: 50, height: 60)
                 VStack(spacing: 8) {
                     HStack {
-                        Text("\(certificateDetail.debtorName)")
+                        Text("\(certificateDetail.debtorProfile.name)")
                         Spacer()
                     }
                     HStack {
-                        Text("\(certificateDetail.debtorPhoneNumber.onlyPhoneNumber().replacingOccurrences(of: "-", with: "."))")
+                        Text("\(certificateDetail.debtorProfile.phoneNumber.onlyPhoneNumber().replacingOccurrences(of: "-", with: "."))")
                         Spacer()
                     }
                     HStack {
-                        Text("\(certificateDetail.debtorAddress)")
+                        Text("\(certificateDetail.debtorProfile.address)")
                         Spacer()
                     }
                 }
@@ -112,30 +112,30 @@ struct CertificateDocumentView: View {
                         .foregroundStyle(.black)
                     VStack(alignment: .leading) {
                         HStack {
-                            Text("원금  \(certificateDetail.amount.numberToKorean())  원정")
+                            Text("원금  \(certificateDetail.paperFormInfo.amount.numberToKorean())  원정")
                             Spacer()
-                            Text("(  \(certificateDetail.amount)  원 )")
+                            Text("(  \(certificateDetail.paperFormInfo.amount)  원 )")
                         }
                         .padding(.horizontal, 10)
                         Divider()
                             .foregroundStyle(.black)
                         HStack {
-                            Text("연 ( \(String(format: "%.2f", certificateDetail.interestRate)) % )")
+                            Text("연 ( \(String(format: "%.2f", certificateDetail.paperFormInfo.interestRate)) % )")
                             Spacer()
                             Divider()
                                 .foregroundStyle(.black)
                             Spacer()
-                            Text("매월 ( \(certificateDetail.interestPaymentDate) 일 ) 에 지급")
+                            Text("매월 ( \(certificateDetail.paperFormInfo.interestPaymentDate) 일 ) 에 지급")
                         }
                         .padding(.horizontal, 10)
                         Divider()
                             .foregroundStyle(.black)
-                        Text("\(certificateDetail.repaymentEndDate)")
+                        Text("\(certificateDetail.paperFormInfo.repaymentEndDate)")
                             .padding(.horizontal, 10)
 
                         Divider()
                             .foregroundStyle(.black)
-                        if let etc = certificateDetail.specialConditions {
+                        if let etc = certificateDetail.paperFormInfo.specialConditions {
                             Text(etc)
                                 .padding(.horizontal, 10)
                         } else {
@@ -163,18 +163,18 @@ struct CertificateDocumentView: View {
             .frame(height: 50)
             .padding(.top, 50)
             
-            Text(certificateDetail.transactionDate.stringDateToKorea())
+            Text(certificateDetail.paperFormInfo.transactionDate.stringDateToKorea())
                 .padding(.vertical, 40)
             Spacer()
             HStack {
                 Spacer()
-                Text("채 권 자 :    \(certificateDetail.creditorName)    (인)")
+                Text("채 권 자 :    \(certificateDetail.creditorProfile.name)    (인)")
                     .padding(.trailing, 40)
             }
             .padding(.vertical, 10)
             HStack {
                 Spacer()
-                Text("채 무 자 :    \(certificateDetail.debtorName)    (인)")
+                Text("채 무 자 :    \(certificateDetail.debtorProfile.name)    (인)")
                     .padding(.trailing, 40)
             }
             Spacer()

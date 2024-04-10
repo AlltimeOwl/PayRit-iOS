@@ -59,12 +59,3 @@ class IMPCertificationViewController: UIViewController, WKNavigationDelegate {
     }
 
 }
-
-//struct IMPCertificationView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        Group {
-//            IMPCertificationView()
-//                .environmentObject(IamportStore())
-//        }
-//    }
-//}

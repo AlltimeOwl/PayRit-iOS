@@ -33,7 +33,7 @@ struct CertificateAcceptView: View {
                                         .font(Font.body04)
                                     Spacer()
                                     HStack {
-                                        Text("\(homeStore.certificateDetail.primeAmountFomatter)원")
+                                        Text("\(homeStore.certificateDetail.paperFormInfo.primeAmountFomatter)원")
                                             .font(Font.body01)
                                         Spacer()
                                     }
@@ -44,7 +44,7 @@ struct CertificateAcceptView: View {
                                         .font(Font.body04)
                                     Spacer()
                                     HStack {
-                                        Text("\(homeStore.certificateDetail.repaymentEndDate.replacingOccurrences(of: "-", with: "."))")
+                                        Text("\(homeStore.certificateDetail.paperFormInfo.repaymentEndDate.replacingOccurrences(of: "-", with: "."))")
                                             .font(Font.body01)
                                         Spacer()
                                     }
@@ -66,7 +66,7 @@ struct CertificateAcceptView: View {
                                         .font(Font.body04)
                                     Spacer()
                                     HStack {
-                                        Text("\(homeStore.certificateDetail.creditorName)")
+                                        Text("\(homeStore.certificateDetail.creditorProfile.name)")
                                             .font(Font.body01)
                                         Spacer()
                                     }
@@ -77,19 +77,19 @@ struct CertificateAcceptView: View {
                                         .font(Font.body04)
                                     Spacer()
                                     HStack {
-                                        Text("\(homeStore.certificateDetail.creditorPhoneNumber.onlyPhoneNumber().replacingOccurrences(of: "-", with: "."))")
+                                        Text("\(homeStore.certificateDetail.creditorProfile.phoneNumber.onlyPhoneNumber().replacingOccurrences(of: "-", with: "."))")
                                             .font(Font.body01)
                                         Spacer()
                                     }
                                     .frame(width: 220)
                                 }
-                                if !homeStore.certificateDetail.creditorAddress.isEmpty {
+                                if !homeStore.certificateDetail.creditorProfile.address.isEmpty {
                                     HStack(alignment: .top) {
                                         Text("주소")
                                             .font(Font.body04)
                                         Spacer()
                                         HStack {
-                                            Text("\(homeStore.certificateDetail.creditorAddress)")
+                                            Text("\(homeStore.certificateDetail.creditorProfile.address)")
                                                 .fixedSize(horizontal: false, vertical: true)
                                                 .font(Font.body01)
                                             Spacer()
@@ -113,7 +113,7 @@ struct CertificateAcceptView: View {
                                         .font(Font.body04)
                                     Spacer()
                                     HStack {
-                                        Text("\(homeStore.certificateDetail.debtorName)")
+                                        Text("\(homeStore.certificateDetail.debtorProfile.name)")
                                             .font(Font.body01)
                                         Spacer()
                                     }
@@ -124,19 +124,19 @@ struct CertificateAcceptView: View {
                                         .font(Font.body04)
                                     Spacer()
                                     HStack {
-                                        Text("\(homeStore.certificateDetail.debtorPhoneNumber.onlyPhoneNumber().replacingOccurrences(of: "-", with: "."))")
+                                        Text("\(homeStore.certificateDetail.debtorProfile.phoneNumber.onlyPhoneNumber().replacingOccurrences(of: "-", with: "."))")
                                             .font(Font.body01)
                                         Spacer()
                                     }
                                     .frame(width: 220)
                                 }
-                                if !homeStore.certificateDetail.debtorAddress.isEmpty {
+                                if !homeStore.certificateDetail.debtorProfile.address.isEmpty {
                                     HStack(alignment: .top) {
                                         Text("주소")
                                             .font(Font.body04)
                                         Spacer()
                                         HStack {
-                                            Text("\(homeStore.certificateDetail.debtorAddress)")
+                                            Text("\(homeStore.certificateDetail.debtorProfile.address)")
                                                 .fixedSize(horizontal: false, vertical: true)
                                                 .font(Font.body01)
                                             Spacer()
@@ -151,38 +151,38 @@ struct CertificateAcceptView: View {
                             .clipShape(.rect(cornerRadius: 12))
                             .shadow(color: .gray.opacity(0.2), radius: 5)
                         
-                        if homeStore.certificateDetail.interestRate != 0 || homeStore.certificateDetail.interestPaymentDate != 0 || homeStore.certificateDetail.specialConditions != nil {
+                        if homeStore.certificateDetail.paperFormInfo.interestRate != 0 || homeStore.certificateDetail.paperFormInfo.interestPaymentDate != 0 || homeStore.certificateDetail.paperFormInfo.specialConditions != nil {
                                 VStack(alignment: .leading, spacing: 12) {
                                     Text("추가사항")
                                         .font(Font.body03)
                                         .foregroundStyle(Color.gray04)
-                                    if homeStore.certificateDetail.interestRate != 0 {
+                                    if homeStore.certificateDetail.paperFormInfo.interestRate != 0 {
                                         HStack {
                                             Text("이자율")
                                                 .font(Font.body04)
                                             Spacer()
                                             HStack {
-                                                Text("\(String(format: "%.2f", homeStore.certificateDetail.interestRate))%")
+                                                Text("\(String(format: "%.2f", homeStore.certificateDetail.paperFormInfo.interestRate))%")
                                                     .font(Font.body01)
                                                 Spacer()
                                             }
                                             .frame(width: 220)
                                         }
                                     }
-                                    if homeStore.certificateDetail.interestPaymentDate != 0 {
+                                    if homeStore.certificateDetail.paperFormInfo.interestPaymentDate != 0 {
                                         HStack {
                                             Text("이자 지급일")
                                                 .font(Font.body04)
                                             Spacer()
                                             HStack {
-                                                Text("매월 \(homeStore.certificateDetail.interestPaymentDate)일")
+                                                Text("매월 \(homeStore.certificateDetail.paperFormInfo.interestPaymentDate)일")
                                                     .font(Font.body01)
                                                 Spacer()
                                             }
                                             .frame(width: 220)
                                         }
                                     }
-                                    if let specialConditions = homeStore.certificateDetail.specialConditions {
+                                    if let specialConditions = homeStore.certificateDetail.paperFormInfo.specialConditions {
                                         HStack {
                                             Text("특이사항")
                                                 .font(Font.body04)
@@ -259,7 +259,7 @@ struct CertificateAcceptView: View {
                     }
             }
             if iamportStore.isPayment {
-                PaymentView()
+                IMPPaymentView()
                     .onAppear {
                         iamportStore.updateMerchantUid()
                     }

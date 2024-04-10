@@ -23,7 +23,7 @@ struct SignInView: View {
                     .frame(height: UIScreen.screenHeight)
                 Image("payRitText")
                 
-                if signInStore.whileSigIn == .waiting {
+                if signInStore.whileSigIn == .not {
                     VStack(spacing: 8) {
                         Spacer()
                         Button {

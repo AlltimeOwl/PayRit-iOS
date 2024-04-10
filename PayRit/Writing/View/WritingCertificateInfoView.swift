@@ -9,6 +9,7 @@ import SwiftUI
 
 struct WritingCertificateInfoView: View {
     let certificateType: String
+    let writingStore: WritingStore = WritingStore()
     @State private var repaymentStartDate: Date = Date()
     @State private var repaymentEndDate: Date = Date()
     @State private var money: String = ""
@@ -30,6 +31,7 @@ struct WritingCertificateInfoView: View {
     @State private var keyBoardFocused: Bool = false
     @State private var newCertificate: CertificateDetail = CertificateDetail.EmptyCertificate
     @Binding var path: NavigationPath
+    @Environment(MyPageStore.self) var mypageStore
     @FocusState var interestTextFieldFocus: Bool
     @Namespace var bottomID
     var isFormValid: Bool {
@@ -54,10 +56,10 @@ struct WritingCertificateInfoView: View {
                                     .onChange(of: money) { _, _ in
                                         if let money = Int(money) {
                                             if money <= 30000000 {
-                                                newCertificate.primeAmount = money
+                                                newCertificate.paperFormInfo.primeAmount = money
                                             } else {
                                                 self.money = "30000000"
-                                                newCertificate.primeAmount = 30000000
+                                                newCertificate.paperFormInfo.primeAmount = 30000000
                                                 isShowingNotYetService = true
                                             }
                                         }
@@ -153,7 +155,7 @@ struct WritingCertificateInfoView: View {
                                     .foregroundStyle(Color.gray04)
                                 CustomTextField(foregroundStyle: .black, placeholder: "특별히 추가할 내용을 적어주세요", keyboardType: .default, text: $specialConditions)
                                     .onChange(of: specialConditions) {
-                                        newCertificate.specialConditions = specialConditions
+                                        newCertificate.paperFormInfo.specialConditions = specialConditions
                                     }
                             }
                             VStack(spacing: 0) {
@@ -192,7 +194,7 @@ struct WritingCertificateInfoView: View {
                                                 .onTapGesture {
                                                     interestRate = ""
                                                     interestDate = ""
-                                                    newCertificate.interestPaymentDate = 0
+                                                    newCertificate.paperFormInfo.interestPaymentDate = 0
                                                 }
                                                 .tint(Color.payritMint)
                                         }
@@ -231,7 +233,7 @@ struct WritingCertificateInfoView: View {
                                                     } else {
                                                         interestRate = oldValue
                                                     }
-                                                    newCertificate.interestRate = Float(interestRate) ?? 0.0
+                                                    newCertificate.paperFormInfo.interestRate = Float(interestRate) ?? 0.0
                                                 }
                                                 .onTapGesture {
                                                     withAnimation {
@@ -256,7 +258,7 @@ struct WritingCertificateInfoView: View {
                                             
                                             HStack(spacing: 0) {
                                                 Text("지급해야하는 이자는 약 ")
-                                                Text("\(newCertificate.interestRateAmount)")
+                                                Text("\(newCertificate.paperFormInfo.interestRateAmount)")
                                                     .foregroundStyle(Color.payritMint)
                                                 Text("원이에요")
                                             }
@@ -272,7 +274,7 @@ struct WritingCertificateInfoView: View {
                                                     if Int(newValue) ?? 31 > 31 {
                                                         interestDate = "31"
                                                     }
-                                                    newCertificate.interestPaymentDate = Int(interestDate) ?? 0
+                                                    newCertificate.paperFormInfo.interestPaymentDate = Int(interestDate) ?? 0
                                                 }
                                                 .onTapGesture {
                                                     withAnimation {
@@ -295,10 +297,10 @@ struct WritingCertificateInfoView: View {
                                 HStack(spacing: 0) {
                                     Text("총 ")
                                     if calToggle {
-                                        Text("\(newCertificate.totalAmountFormatter)")
+                                        Text("\(newCertificate.paperFormInfo.totalAmountFormatter)")
                                             .foregroundStyle(Color.payritMint)
                                     } else {
-                                        Text(newCertificate.primeAmountFomatter)
+                                        Text(newCertificate.paperFormInfo.primeAmountFomatter)
                                             .foregroundStyle(Color.payritMint)
                                     }
                                     Text("원을 상환해야해요!")
@@ -358,7 +360,7 @@ struct WritingCertificateInfoView: View {
                 .datePickerStyle(.graphical)
                 .presentationDetents([.height(400)])
                 .onDisappear {
-                    newCertificate.repaymentStartDate = repaymentStartDate.dateToString()
+                    newCertificate.paperFormInfo.repaymentStartDate = repaymentStartDate.dateToString()
                     repaymentEndDate = repaymentStartDate
                 }
         })
@@ -367,14 +369,14 @@ struct WritingCertificateInfoView: View {
                 .datePickerStyle(.graphical)
                 .presentationDetents([.height(400)])
                 .onDisappear {
-                    newCertificate.repaymentEndDate = repaymentEndDate.dateToString()
+                    newCertificate.paperFormInfo.repaymentEndDate = repaymentEndDate.dateToString()
                 }
         })
         .onChange(of: repaymentStartDate) {
-            newCertificate.repaymentStartDate = repaymentStartDate.dateToString()
+            newCertificate.paperFormInfo.repaymentStartDate = repaymentStartDate.dateToString()
         }
         .onChange(of: repaymentEndDate) {
-            newCertificate.repaymentEndDate = repaymentEndDate.dateToString()
+            newCertificate.paperFormInfo.repaymentEndDate = repaymentEndDate.dateToString()
         }
         .primaryAlert(isPresented: $isShowingStopAlert,
                       title: "작성 중단",
@@ -392,11 +394,12 @@ struct WritingCertificateInfoView: View {
         .toast(isShowing: $isShowingInterestToastMessage, title: "빌려준 날짜부터 갚는 날짜까지의 일수를 기준으로 계산됩니다.", message: "예) 원금이 50만원, 이자율이 2%, 일수가 300일 일때\n50만원 * 2% * 300/365 = 약 8,219원")
         .toast(isShowing: $isShowingFormToastMessage, title: nil, message: "필수 항목을 작성해주세요")
         .navigationDestination(isPresented: $moveNextView) {
-            MyInfoWritingView(newCertificate: $newCertificate, path: $path)
+            MyInfoWritingView(writingStore: writingStore, newCertificate: $newCertificate, path: $path)
                 .customBackbutton()
         }
         .onAppear {
             newCertificate.memberRole = certificateType
+            mypageStore.loadCertInfo()
         }
     }
 }

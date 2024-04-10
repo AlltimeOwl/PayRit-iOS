@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct WritingCheckView: View {
-    let writingStore = WritingStore()
+    let writingStore: WritingStore
     @State private var isShowingStopAlert: Bool = false
     @State private var isShowingKaKaoAlert: Bool = false
     @State private var isShowingDoneAlert: Bool = false
@@ -31,7 +31,7 @@ struct WritingCheckView: View {
                                         .font(Font.body04)
                                     Spacer()
                                     HStack {
-                                        Text("\(newCertificate.primeAmountFomatter)원")
+                                        Text("\(newCertificate.paperFormInfo.primeAmountFomatter)원")
                                             .font(Font.body01)
                                         Spacer()
                                     }
@@ -42,7 +42,7 @@ struct WritingCheckView: View {
                                         .font(Font.body04)
                                     Spacer()
                                     HStack {
-                                        Text("\(newCertificate.repaymentEndDate)")
+                                        Text("\(newCertificate.paperFormInfo.repaymentEndDate)")
                                             .font(Font.body01)
                                         Spacer()
                                     }
@@ -56,19 +56,19 @@ struct WritingCheckView: View {
                             .shadow(color: .gray.opacity(0.2), radius: 5)
                         }
                         
-                        if newCertificate.interestRate != 0 || (newCertificate.interestPaymentDate != 0) || (newCertificate.specialConditions != nil) {
+                        if newCertificate.paperFormInfo.interestRate != 0 || (newCertificate.paperFormInfo.interestPaymentDate != 0) || (newCertificate.paperFormInfo.specialConditions != nil) {
                             VStack(alignment: .leading) {
                                 Text("추가사항")
                                     .font(Font.body03)
                                     .foregroundStyle(Color.gray04)
                                 VStack(alignment: .leading, spacing: 12) {
-                                    if newCertificate.interestRate != 0 {
+                                    if newCertificate.paperFormInfo.interestRate != 0 {
                                         HStack {
                                             Text("이자율")
                                                 .font(Font.body04)
                                             Spacer()
                                             HStack {
-                                                Text("\(String(format: "%.2f", newCertificate.interestRate))%")
+                                                Text("\(String(format: "%.2f", newCertificate.paperFormInfo.interestRate))%")
                                                     .font(Font.body01)
                                                 Spacer()
                                             }
@@ -76,13 +76,13 @@ struct WritingCheckView: View {
                                         }
                                     }
                                     
-                                    if newCertificate.interestPaymentDate != 0 {
+                                    if newCertificate.paperFormInfo.interestPaymentDate != 0 {
                                         HStack {
                                             Text("이자 지급일")
                                                 .font(Font.body04)
                                             Spacer()
                                             HStack {
-                                                Text("매월 \(newCertificate.interestPaymentDate)일")
+                                                Text("매월 \(newCertificate.paperFormInfo.interestPaymentDate)일")
                                                     .font(Font.body01)
                                                 Spacer()
                                             }
@@ -90,7 +90,7 @@ struct WritingCheckView: View {
                                         }
                                     }
                                     
-                                    if let specialConditions = newCertificate.specialConditions {
+                                    if let specialConditions = newCertificate.paperFormInfo.specialConditions {
                                         HStack {
                                             Text("특이사항")
                                                 .font(Font.body04)
@@ -123,7 +123,7 @@ struct WritingCheckView: View {
                                         .font(Font.body04)
                                     Spacer()
                                     HStack {
-                                        Text("\(newCertificate.creditorName)")
+                                        Text("\(newCertificate.creditorProfile.name)")
                                             .font(Font.body01)
                                         Spacer()
                                     }
@@ -134,19 +134,19 @@ struct WritingCheckView: View {
                                         .font(Font.body04)
                                     Spacer()
                                     HStack {
-                                        Text("\(newCertificate.creditorPhoneNumber.onlyPhoneNumber())")
+                                        Text("\(newCertificate.creditorProfile.phoneNumber)")
                                             .font(Font.body01)
                                         Spacer()
                                     }
                                     .frame(width: 220)
                                 }
-                                if !newCertificate.creditorAddress.isEmpty {
+                                if !newCertificate.creditorProfile.address.isEmpty {
                                     HStack {
                                         Text("주소")
                                             .font(Font.body04)
                                         Spacer()
                                         HStack {
-                                            Text("\(newCertificate.creditorAddress)")
+                                            Text("\(newCertificate.creditorProfile.address)")
                                                 .fixedSize(horizontal: false, vertical: true)
                                                 .font(Font.body01)
                                             Spacer()
@@ -172,7 +172,7 @@ struct WritingCheckView: View {
                                         .font(Font.body04)
                                     Spacer()
                                     HStack {
-                                        Text("\(newCertificate.debtorName)")
+                                        Text("\(newCertificate.debtorProfile.name)")
                                             .font(Font.body01)
                                         Spacer()
                                     }
@@ -183,19 +183,19 @@ struct WritingCheckView: View {
                                         .font(Font.body04)
                                     Spacer()
                                     HStack {
-                                        Text("\(newCertificate.debtorPhoneNumber.onlyPhoneNumber())")
+                                        Text("\(newCertificate.debtorProfile.phoneNumber)")
                                             .font(Font.body01)
                                         Spacer()
                                     }
                                     .frame(width: 220)
                                 }
-                                if !newCertificate.debtorAddress.isEmpty {
+                                if !newCertificate.debtorProfile.address.isEmpty {
                                     HStack {
                                         Text("주소")
                                             .font(Font.body04)
                                         Spacer()
                                         HStack {
-                                            Text("\(newCertificate.debtorAddress)")
+                                            Text("\(newCertificate.debtorProfile.address)")
                                                 .fixedSize(horizontal: false, vertical: true)
                                                 .font(Font.body01)
                                             Spacer()
@@ -242,6 +242,9 @@ struct WritingCheckView: View {
                 }
             }
         }
+        .onAppear {
+            print(newCertificate.creditorProfile.phoneNumber)
+        }
         .primaryAlert(isPresented: $isShowingStopAlert,
                       title: "작성 중단",
                       content: """
@@ -280,9 +283,9 @@ struct WritingCheckView: View {
     }
 }
 
-#Preview {
-    NavigationStack {
-        WritingCheckView(path: .constant(NavigationPath()), newCertificate: .constant(CertificateDetail.EmptyCertificate))
-            .environment(HomeStore())
-    }
-}
+//#Preview {
+//    NavigationStack {
+//        WritingCheckView(path: .constant(NavigationPath()), newCertificate: .constant(CertificateDetail.EmptyCertificate))
+//            .environment(HomeStore())
+//    }
+//}

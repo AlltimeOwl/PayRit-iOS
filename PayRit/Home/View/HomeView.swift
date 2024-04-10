@@ -164,11 +164,11 @@ struct HomeView: View {
                                         }
                                         .listRowSeparator(.hidden)
                                         .listRowBackground(Color.payritBackground)
+                                        .padding(.bottom, certificate == homeStore.certificates.last ? 40 : 0)
                                     }
                                     .scrollIndicators(.hidden)
                                     .listStyle(.plain)
                                     .background(Color.payritBackground)
-                                    .padding(.bottom, 40)
                                 }
                                 Spacer()
                             }
@@ -269,11 +269,11 @@ struct HomeView: View {
                         VStack {
                             Spacer().frame(height: 30)
                             NavigationLink {
-                                CertificateSerchingView()
-                                    .navigationBarBackButtonHidden()
-                                    .onAppear {
-                                        tabStore.tabBarHide = true
-                                    }
+//                                CertificateSerchingView()
+//                                    .navigationBarBackButtonHidden()
+//                                    .onAppear {
+//                                        tabStore.tabBarHide = true
+//                                    }
                             }label: {
                                 Image(systemName: "magnifyingglass")
                                     .foregroundStyle(.black)

@@ -4,11 +4,11 @@ import UIKit
 import WebKit
 import iamport_ios
 
-struct PaymentView: UIViewControllerRepresentable {
+struct IMPPaymentView: UIViewControllerRepresentable {
     @EnvironmentObject var viewModel: IamportStore
     
     func makeUIViewController(context: Context) -> UIViewController {
-        let view = PaymentViewController()
+        let view = IMPPaymentViewController()
         view.viewModel = viewModel
         return view
     }
@@ -17,7 +17,7 @@ struct PaymentView: UIViewControllerRepresentable {
     }
 }
 
-class PaymentViewController: UIViewController, WKNavigationDelegate {
+class IMPPaymentViewController: UIViewController, WKNavigationDelegate {
     var viewModel: IamportStore?
     
     override func viewDidLoad() {
@@ -79,7 +79,7 @@ class PaymentViewController: UIViewController, WKNavigationDelegate {
 struct PaymentView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            PaymentView()
+            IMPPaymentView()
                 .environmentObject(IamportStore())
         }
     }

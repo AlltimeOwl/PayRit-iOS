@@ -28,8 +28,8 @@ struct CertificateDeductibleView: View {
                         .foregroundStyle(Color.gray04)
                     CustomTextField(placeholder: "금액을 입력해주세요", keyboardType: .numberPad, text: $money, isFocused: focused)
                         .onChange(of: money) { _, newValue in
-                            if Int(newValue) ?? homeStore.certificateDetail.remainingAmount > homeStore.certificateDetail.remainingAmount {
-                                money = String(homeStore.certificateDetail.remainingAmount)
+                            if Int(newValue) ?? homeStore.certificateDetail.paperFormInfo.remainingAmount > homeStore.certificateDetail.paperFormInfo.remainingAmount {
+                                money = String(homeStore.certificateDetail.paperFormInfo.remainingAmount)
                             }
                         }
                 }
@@ -95,12 +95,12 @@ struct CertificateDeductibleView: View {
                 }
                 .padding(.top, 20)
                 Button {
-                        if certificateDetail.remainingAmount >= Int(money) ?? 0 {
+                        if certificateDetail.paperFormInfo.remainingAmount >= Int(money) ?? 0 {
                             if !money.isEmpty && money != "0"{
                                 self.endTextEditing()
                                 homeStore.deductedSave(paperId: certificateDetail.paperId, repaymentDate: date.dateToString(), repaymentAmount: money)
                                 certificateDetail.repaymentHistories.append(Deducted(id: 0, repaymentDate: date.dateToString().replacingOccurrences(of: "-", with: "."), repaymentAmount: Int(money) ?? 0))
-                                homeStore.certificateDetail.remainingAmount -= Int(money) ?? 0
+                                homeStore.certificateDetail.paperFormInfo.remainingAmount -= Int(money) ?? 0
                                 money = ""
                             } else {
                                 money = ""

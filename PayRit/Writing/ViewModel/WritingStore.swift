@@ -19,19 +19,7 @@ final class WritingStore {
         }
         checkIMPAuth()
     }
-//    func calInterestAmount(start: String, end: String, rate: Float, primeAmount: Int) -> Int {
-//        let dateFormatter = DateFormatter()
-//        dateFormatter.dateFormat = "yyyy-MM-dd"
-//
-//        if let targetDate = dateFormatter.date(from: end), let startDate = dateFormatter.date(from: start) {
-//            let totalDate = calculateDday(startDate: startDate, targetDate: targetDate) + 1
-//            let dailyInterestRate = rate / 100.0 / 365.0
-//            let interestAmount = Double(primeAmount) * Double(dailyInterestRate) * Double(totalDate)
-//            return Int(interestAmount)
-//        } else {
-//            return 0
-//        }
-//    }
+    
     func checkIMPAuth() {
         let urlString = "https://payrit.info/api/v1/oauth/check"
         guard let url = URL(string: urlString) else {
@@ -55,18 +43,8 @@ final class WritingStore {
                 return
             }
             
-            if (200..<300).contains(httpResponse.statusCode) {
-                if let data = data {
-                    let responseData = String(data: data, encoding: .utf8)
-                    print("Response data: \(responseData ?? "No data")")
-                    do {
-                        let certificate = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-                        let impAuth = certificate?["success"] as? Bool ?? false
-                        self.impAuth = impAuth
-                    } catch {
-                        print("Error decoding JSON: \(error)")
-                    }
-                }
+            if httpResponse.statusCode == 204 {
+                self.impAuth = true
             } else {
                 print("HTTP status code: \(httpResponse.statusCode)")
                 if let data = data {
@@ -93,20 +71,20 @@ final class WritingStore {
             request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
             let body = [
                 "writerRole": certificate.memberRole,
-                "amount": certificate.primeAmount,
-                "interest": "\(certificate.interestRateAmount)",
+                "amount": certificate.paperFormInfo.primeAmount,
+                "interest": "\(certificate.paperFormInfo.interestRateAmount)",
                 "transactionDate": Date().dateToString(),
-                "repaymentStartDate": certificate.repaymentStartDate,
-                "repaymentEndDate": certificate.repaymentEndDate,
-                "specialConditions": certificate.specialConditions ?? "",
-                "interestRate": "\(certificate.interestRate)",
-                "interestPaymentDate": certificate.interestPaymentDate,
-                "creditorName": certificate.creditorName,
-                "creditorPhoneNumber": certificate.creditorPhoneNumber.globalPhoneNumber(),
-                "creditorAddress": certificate.creditorAddress,
-                "debtorName": certificate.debtorName,
-                "debtorPhoneNumber": certificate.debtorPhoneNumber.globalPhoneNumber(),
-                "debtorAddress": certificate.debtorAddress
+                "repaymentStartDate": certificate.paperFormInfo.repaymentStartDate,
+                "repaymentEndDate": certificate.paperFormInfo.repaymentEndDate,
+                "specialConditions": certificate.paperFormInfo.specialConditions ?? "",
+                "interestRate": "\(certificate.paperFormInfo.interestRate)",
+                "interestPaymentDate": certificate.paperFormInfo.interestPaymentDate,
+                "creditorName": certificate.creditorProfile.name,
+                "creditorPhoneNumber": certificate.creditorProfile.phoneNumber,
+                "creditorAddress": certificate.creditorProfile.address,
+                "debtorName": certificate.debtorProfile.name,
+                "debtorPhoneNumber": certificate.debtorProfile.phoneNumber,
+                "debtorAddress": certificate.debtorProfile.address
             ] as [String: Any]
             print("-----HTTP 전송 바디-----")
             print(body)
@@ -123,7 +101,6 @@ final class WritingStore {
                 } else if let data = data, let response = response as? HTTPURLResponse {
                     print("Response status code: \(response.statusCode)")
                     if (200..<300).contains(response.statusCode) {
-                        // Handle successful response
                         do {
                             if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
                                 print("JSON Response: \(json)")
@@ -132,15 +109,13 @@ final class WritingStore {
                             print("Error parsing JSON response")
                         }
                     } else {
-                        // Handle other status codes
                         print("Unexpected status code: \(response.statusCode)")
                     }
                 } else {
-                    // Handle unexpected cases
                     print("Unexpected error: No data or response")
                 }
             }
-            task.resume() // 작업 시작
+            task.resume()
         }
     }
 }
