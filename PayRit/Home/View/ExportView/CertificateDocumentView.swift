@@ -168,13 +168,13 @@ struct CertificateDocumentView: View {
             Spacer()
             HStack {
                 Spacer()
-                Text("채 권 자 :    \(certificateDetail.creditorProfile.name)    (인)")
+                Text("채 권 자 :    \(certificateDetail.creditorProfile.name)    전자서명 완료함")
                     .padding(.trailing, 40)
             }
             .padding(.vertical, 10)
             HStack {
                 Spacer()
-                Text("채 무 자 :    \(certificateDetail.debtorProfile.name)    (인)")
+                Text("채 무 자 :    \(certificateDetail.debtorProfile.name)    전자서명 완료함")
                     .padding(.trailing, 40)
             }
             Spacer()

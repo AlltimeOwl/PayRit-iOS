@@ -308,6 +308,8 @@ class SignInStore {
             }
             
             if (200..<300).contains(httpResponse.statusCode) {
+                print("HTTP status code: \(httpResponse.statusCode)")
+                print("카카오 탈퇴 성공")
                 UserApi.shared.unlink {(error) in
                     if let error = error {
                         print("unlink() error : \(error.localizedDescription)")

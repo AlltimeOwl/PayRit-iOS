@@ -47,6 +47,7 @@
 		BC2D51CC2B9ECD870041FD77 /* CertificateMemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2D51CB2B9ECD870041FD77 /* CertificateMemoView.swift */; };
 		BC2D51CE2B9F35260041FD77 /* CertificateDeductibleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2D51CD2B9F35260041FD77 /* CertificateDeductibleView.swift */; };
 		BC388DB52B904BAB005D1279 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC388DB42B904BAB005D1279 /* ContentView.swift */; };
+		BC45902D2BCAE0EE00A0E43B /* CertificateScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC45902C2BCAE0EE00A0E43B /* CertificateScrollView.swift */; };
 		BC4876C82B9721F3006B15C0 /* PartnerInfoWritingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC4876C72B9721F3006B15C0 /* PartnerInfoWritingView.swift */; };
 		BC595DD62B8D8AC300CA555E /* PayRitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC595DD52B8D8AC300CA555E /* PayRitApp.swift */; };
 		BC595DD82B8D8AC300CA555E /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC595DD72B8D8AC300CA555E /* SignInView.swift */; };
@@ -134,6 +135,7 @@
 		BC2D51CB2B9ECD870041FD77 /* CertificateMemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateMemoView.swift; sourceTree = "<group>"; };
 		BC2D51CD2B9F35260041FD77 /* CertificateDeductibleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateDeductibleView.swift; sourceTree = "<group>"; };
 		BC388DB42B904BAB005D1279 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		BC45902C2BCAE0EE00A0E43B /* CertificateScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateScrollView.swift; sourceTree = "<group>"; };
 		BC4876C72B9721F3006B15C0 /* PartnerInfoWritingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartnerInfoWritingView.swift; sourceTree = "<group>"; };
 		BC595DD22B8D8AC300CA555E /* PayRit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PayRit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC595DD52B8D8AC300CA555E /* PayRitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayRitApp.swift; sourceTree = "<group>"; };
@@ -596,6 +598,7 @@
 			children = (
 				BCE280DF2B9021EE0085D45E /* WritingView.swift */,
 				BCE280E32B903BE50085D45E /* SelectCertificateTypeView.swift */,
+				BC45902C2BCAE0EE00A0E43B /* CertificateScrollView.swift */,
 				BCE280E12B903B660085D45E /* WritingCertificateInfoView.swift */,
 				BC1CF8D62B961F5600A9BF12 /* MyInfoWritingView.swift */,
 				BC4876C72B9721F3006B15C0 /* PartnerInfoWritingView.swift */,
@@ -801,6 +804,7 @@
 				BC0210192BC4E06500116A6B /* IMPPaymentView.swift in Sources */,
 				BC595E0A2B8DAFD600CA555E /* Font +.swift in Sources */,
 				BC6F652F2B9B3D9000FB9FA7 /* MyPageStore.swift in Sources */,
+				BC45902D2BCAE0EE00A0E43B /* CertificateScrollView.swift in Sources */,
 				BC12196D2BA43D8200B575F8 /* UserDefaultsManager.swift in Sources */,
 				BC5C57092B975A2400A55CC7 /* KakaoAdressView.swift in Sources */,
 				BC12196F2BA5F21F00B575F8 /* CertificateDocumentView.swift in Sources */,
@@ -965,7 +969,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.alltimeowl.PayRit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1008,7 +1012,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.alltimeowl.PayRit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

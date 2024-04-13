@@ -8,10 +8,12 @@
 import SwiftUI
 
 struct CertificateDeductibleView: View {
+    @State private var historyId: Int?
     @State private var money: String = ""
     @State private var date: Date = Date()
     @State private var keyBoardFocused: Bool = false
     @State private var onTapDatePicker: Bool = false
+    @State private var isShowingDeleteAlert: Bool = false
     @State private var isShowingDatePicker: Bool = false
     @State private var isShowingExpirationAlert: Bool = false
     @State private var isShowingExceedAlert: Bool = false
@@ -76,13 +78,22 @@ struct CertificateDeductibleView: View {
                         .font(Font.body03)
                         .foregroundStyle(Color.gray04)
                         .padding(.horizontal, 16)
-                    List(certificateDetail.repaymentHistories, id: \.self) { repayment in
+                    List($certificateDetail.repaymentHistories, id: \.self) { $repayment in
                         HStack {
-                            Text(repayment.repaymentDate)
+                            Text(repayment.repaymentDate.replacingOccurrences(of: "-", with: "."))
                                 .font(Font.body01)
                             Spacer()
                             Text("\(repayment.repaymentAmount)원")
                                 .font(Font.body04)
+                            Spacer()
+                            Button {
+                                isShowingDeleteAlert.toggle()
+                                self.historyId = repayment.id
+                            } label: {
+                                Image("trashIcon")
+                            }
+                            .frame(width: 24, height: 24)
+                            .buttonStyle(BorderlessButtonStyle())
                         }
                         .padding(16)
                         .frame(maxWidth: .infinity)
@@ -98,8 +109,14 @@ struct CertificateDeductibleView: View {
                         if certificateDetail.paperFormInfo.remainingAmount >= Int(money) ?? 0 {
                             if !money.isEmpty && money != "0"{
                                 self.endTextEditing()
-                                homeStore.deductedSave(paperId: certificateDetail.paperId, repaymentDate: date.dateToString(), repaymentAmount: money)
-                                certificateDetail.repaymentHistories.append(Deducted(id: 0, repaymentDate: date.dateToString().replacingOccurrences(of: "-", with: "."), repaymentAmount: Int(money) ?? 0))
+                                homeStore.deductedSave(paperId: certificateDetail.paperId, repaymentDate: date.dateToString(), repaymentAmount: money) { (array, error) in
+                                    if let error = error {
+                                        print("Error occurred: \(error)")
+                                    } else if let deducted = array {
+                                        print("adsdasd \(deducted)")
+                                        self.certificateDetail.repaymentHistories = deducted
+                                    }
+                                }
                                 homeStore.certificateDetail.paperFormInfo.remainingAmount -= Int(money) ?? 0
                                 money = ""
                             } else {
@@ -138,6 +155,19 @@ struct CertificateDeductibleView: View {
                 .presentationDetents([.height(400)])
                 .tint(Color.payritMint)
         })
+        .primaryAlert(isPresented: $isShowingDeleteAlert, title: "삭제", content: "상환 내역을 삭제하시겠습니까?", primaryButtonTitle: "네", cancleButtonTitle: "아니오") {
+            if let historyId = historyId {
+                homeStore.deductedDelete(paperId: certificateDetail.paperId, historyId: historyId) { (array, error) in
+                    if let error = error {
+                        print("Error occurred: \(error)")
+                    } else if let newHistory = array {
+                        self.certificateDetail.repaymentHistories = newHistory
+                    }
+                }
+            }
+        } cancleAction: {
+            
+        }
     }
 }
 
