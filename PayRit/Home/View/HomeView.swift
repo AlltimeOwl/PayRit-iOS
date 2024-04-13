@@ -284,11 +284,11 @@ struct HomeView: View {
                         VStack {
                             Spacer().frame(height: 30)
                             NavigationLink {
-//                                CertificateSerchingView()
-//                                    .navigationBarBackButtonHidden()
-//                                    .onAppear {
-//                                        tabStore.tabBarHide = true
-//                                    }
+                                CertificateSerchingView()
+                                    .navigationBarBackButtonHidden()
+                                    .onAppear {
+                                        tabStore.tabBarHide = true
+                                    }
                             }label: {
                                 Image(systemName: "magnifyingglass")
                                     .foregroundStyle(.black)
@@ -339,11 +339,13 @@ struct HomeView: View {
             await homeStore.loadCertificates()
         }
         .onAppear {
-            isShowingPaymentSuccessAlert = homeStore.isShowingPaymentSuccessAlert
             tabStore.tabBarHide = false
             Task {
                 await homeStore.loadCertificates()
             }
+        }
+        .onChange(of: homeStore.isShowingPaymentSuccessAlert) {
+            isShowingPaymentSuccessAlert = homeStore.isShowingPaymentSuccessAlert
         }
         //        .primaryAlert(isPresented: $isShowingSignatureView, title: "본인인증", content: "본인인증 띄우기", primaryButtonTitle: "예", cancleButtonTitle: "아니오") {
         //            //

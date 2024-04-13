@@ -292,6 +292,7 @@ struct CertificateAcceptView: View {
         .onChange(of: iamportStore.paymentResult) {
             if iamportStore.paymentResult {
                 homeStore.savePaymentHistory(paperId: paperId)
+                homeStore.isShowingPaymentSuccessAlert.toggle()
                 dismiss()
             }
         }
