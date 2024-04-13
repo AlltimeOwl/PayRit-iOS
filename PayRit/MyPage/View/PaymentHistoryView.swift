@@ -8,10 +8,12 @@
 import SwiftUI
 
 struct PaymentHistoryView: View {
-    @State private var menuState = false
-    @Environment(TabBarStore.self) var tabStore
-    private let menuPadding = 8.0
     let mypageStore: MyPageStore
+    private let menuPadding = 8.0
+    @State var detail: PaymentHistoryDetail?
+    @State private var menuState = false
+    @State private var isShowingDetailView = false
+    @Environment(TabBarStore.self) var tabStore
     var body: some View {
         ZStack {
             Color.payritBackground.ignoresSafeArea()
@@ -22,7 +24,14 @@ struct PaymentHistoryView: View {
                             .font(Font.caption02)
                             .foregroundStyle(Color.gray05)
                         Spacer()
-                        Image(systemName: "ellipsis")
+                        Button {
+                            mypageStore.loadPaymentHistoryDetail(id: payment.historyId, completion: { detail, _ in
+                                self.detail = detail
+                                isShowingDetailView.toggle()
+                            })
+                        } label: {
+                            Image(systemName: "ellipsis")
+                        }
                     }
                     .padding(.bottom, 12)
                     
@@ -130,6 +139,12 @@ struct PaymentHistoryView: View {
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             mypageStore.loadPaymentHistory()
+        }
+        .navigationDestination(isPresented: $isShowingDetailView) {
+            if let detail = detail {
+                PaymentHistoryDetailView(detail: detail)
+                    .customBackbutton()
+            }
         }
     }
 }
