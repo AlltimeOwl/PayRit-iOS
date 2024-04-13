@@ -159,7 +159,6 @@ struct MembershipWithdrawalView: View {
             } else if mypageStore.currentUser.signInCompany == "애플" {
                 signInStore.appleUnLink()
                 signInStore.isSignIn = false
-                UserDefaultsManager().removeAll()
             }
             homeStore.certificates = [Certificate]()
         }

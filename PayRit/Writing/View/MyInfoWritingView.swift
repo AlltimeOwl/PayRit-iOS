@@ -194,8 +194,8 @@ struct MyInfoWritingView: View {
     }
 }
 
-//#Preview {
-//    NavigationStack {
-//        MyInfoWritingView(newCertificate: .constant(CertificateDetail.EmptyCertificate), path: .constant(NavigationPath()))
-//    }
-//}
+#Preview {
+    NavigationStack {
+        MyInfoWritingView(writingStore: WritingStore(), newCertificate: .constant(CertificateDetail.EmptyCertificate), path: .constant(NavigationPath()))
+    }
+}

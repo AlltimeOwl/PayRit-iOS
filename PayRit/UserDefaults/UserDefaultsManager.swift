@@ -42,7 +42,7 @@ final class UserDefaultsManager {
         UserDefaults.standard.setValue(signInCompany, forKey: Key.signInCompany.rawValue)
     }
     
-    /// apple jwt
+    /// 애플 jwt
     func setAppleIdTokenString(appleIdTokenString: String) {
         UserDefaults.standard.setValue(appleIdTokenString, forKey: Key.appleIdTokenString.rawValue)
     }

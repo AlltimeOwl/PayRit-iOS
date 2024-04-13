@@ -181,8 +181,8 @@ struct PartnerInfoWritingView: View {
     }
 }
 
-//#Preview {
-//    NavigationStack {
-//        PartnerInfoWritingView(newCertificate: .constant(CertificateDetail.EmptyCertificate), path: .constant(NavigationPath()))
-//    }
-//}
+#Preview {
+    NavigationStack {
+        PartnerInfoWritingView(writingStore: WritingStore(), newCertificate: .constant(CertificateDetail.EmptyCertificate), path: .constant(NavigationPath()))
+    }
+}

@@ -32,7 +32,13 @@ extension View {
         )
     }
     
-//    func onViewDidLoad(perform action: (() -> Void)? = nil) -> some View {
+    public func updateAlert(isPresented: Binding<Bool>, title: String, content: String, primaryButtonTitle: String?, cancleButtonTitle: String, primaryAction: ( () -> Void)?, cancleAction: @escaping () -> Void) -> some View {
+        return modifier(
+            UpdateAlertModifier(isPresented: isPresented, title: title, content: content, primaryButtonTitle: primaryButtonTitle, cancleButtonTitle: cancleButtonTitle, primaryAction: primaryAction, cancleAction: cancleAction)
+        )
+    }
+    
+//    func onViewDidLoad(perform action: (() -> Void)? = nil) -> some View {updateAlertModifier
 //        self.modifier(ViewDidLoadModifier(action: action))
 //    }
     

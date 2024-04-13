@@ -109,7 +109,8 @@ final class WritingStore {
                             print("Error parsing JSON response")
                         }
                     } else {
-                        print("Unexpected status code: \(response.statusCode)")
+                            let responseData = String(data: data, encoding: .utf8)
+                            print("\(response.statusCode) data: \(responseData ?? "No data")")
                     }
                 } else {
                     print("Unexpected error: No data or response")

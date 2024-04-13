@@ -13,6 +13,7 @@ struct HomeView: View {
     @State private var paperId = 0
     @State private var menuState = false
     @State private var isHiddenInfoBox = false
+    @State private var isShowingPaymentSuccessAlert = false
     @State private var isShowingSignatureView = false
     @State private var isShowingWaitingApprovalAlert = false
     @State private var isShowingWaitingPaymentAlert = false
@@ -29,6 +30,20 @@ struct HomeView: View {
                 if !isHiddenInfoBox {
                     CarouselView()
                         .padding(.horizontal, 16)
+                        .overlay(alignment: .topTrailing) {
+                            Button {
+                                withAnimation {
+                                    isHiddenInfoBox.toggle()
+                                }
+                            } label: {
+                                Image(systemName: "xmark")
+                                    .font(.system(size: 14))
+                                    .bold()
+                                    .foregroundStyle(.white)
+                            }
+                            .padding(.trailing, 32)
+                            .padding(.top, 16)
+                        }
                 }
                 if homeStore.isLoading {
                     VStack {
@@ -324,6 +339,7 @@ struct HomeView: View {
             await homeStore.loadCertificates()
         }
         .onAppear {
+            isShowingPaymentSuccessAlert = homeStore.isShowingPaymentSuccessAlert
             tabStore.tabBarHide = false
             Task {
                 await homeStore.loadCertificates()
@@ -340,6 +356,11 @@ struct HomeView: View {
             //
         }
         .primaryAlert(isPresented: $isShowingWaitingPaymentAlert, title: "결제 진행중", content: "작성자가 결제 진행중입니다.", primaryButtonTitle: nil, cancleButtonTitle: "확인") {
+            //
+        } cancleAction: {
+            //
+        }
+        .primaryAlert(isPresented: $isShowingPaymentSuccessAlert, title: "결제 완료", content: "페이릿 결제가 완료되었습니다.", primaryButtonTitle: nil, cancleButtonTitle: "확인") {
             //
         } cancleAction: {
             //

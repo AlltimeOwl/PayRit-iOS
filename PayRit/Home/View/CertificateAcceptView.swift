@@ -259,7 +259,7 @@ struct CertificateAcceptView: View {
                     }
             }
             if iamportStore.isPayment {
-                IMPPaymentView()
+                IMPPaymentView(paperId: paperId)
                     .onAppear {
                         iamportStore.updateMerchantUid()
                     }
@@ -284,15 +284,14 @@ struct CertificateAcceptView: View {
             iamportStore.isPayment = true
         } cancleAction: {
         }
-        .onChange(of: iamportStore.paymentResult) {
-            if iamportStore.paymentResult {
-                homeStore.acceptCertificate(paperId: homeStore.certificateDetail.paperId)
-                dismiss()
-            }
-        }
         .onChange(of: iamportStore.acceptAuthResult) {
             if iamportStore.acceptAuthResult {
-                homeStore.acceptCertificate(paperId: homeStore.certificateDetail.paperId)
+                homeStore.acceptCertificate(paperId: paperId)
+            }
+        }
+        .onChange(of: iamportStore.paymentResult) {
+            if iamportStore.paymentResult {
+                homeStore.savePaymentHistory(paperId: paperId)
                 dismiss()
             }
         }

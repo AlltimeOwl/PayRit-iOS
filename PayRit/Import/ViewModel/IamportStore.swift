@@ -32,16 +32,16 @@ enum AuthType {
 
 public class IamportStore: ObservableObject, Then {
     
-//    var pgList = PG.allCases // PG 리스트
-//    var payMethodList: Array<PayMethod> = [] // PayMethod 리스트
-//    
+    //    var pgList = PG.allCases // PG 리스트
+    //    var payMethodList: Array<PayMethod> = [] // PayMethod 리스트
+    //
     @Published var order: Order // 옵저빙할 결제 데이터 객체
     @Published var cert: Cert // 옵저빙할 본인인증 데이터 객체
     @Published var isShowingDuplicateAlert = false
-//
-//    //    @Published var iamportInfos: Array<(ItemType, PubData)> = []
-//    @Published var orderInfos: Array<(String, PubData)> = []
-//    @Published var certInfos: Array<(String, PubData)> = []
+    //
+    //    //    @Published var iamportInfos: Array<(ItemType, PubData)> = []
+    //    @Published var orderInfos: Array<(String, PubData)> = []
+    //    @Published var certInfos: Array<(String, PubData)> = []
     
     @Published var isPayment: Bool = false
     @Published var isCert: Bool = false
@@ -76,27 +76,27 @@ public class IamportStore: ObservableObject, Then {
         //            (.Carrier, cert.carrier)
         //        ]
         
-//        orderInfos = [
-//            ("주문명", order.orderName),
-//            ("가격", order.price),
-//            ("이름", order.name),
-//            ("주문번호", order.merchantUid),
-//        ]
-//        
-//        certInfos = [
-//            ("주문번호", cert.merchantUid),
-//            //            ("(선택)통신사", cert.carrier),
-//            ("(선택)이름", cert.name),
-//            ("(선택)휴대폰번호", cert.phone),
-//            ("(선택)최소나이", cert.minAge),
-//        ]
+        //        orderInfos = [
+        //            ("주문명", order.orderName),
+        //            ("가격", order.price),
+        //            ("이름", order.name),
+        //            ("주문번호", order.merchantUid),
+        //        ]
+        //
+        //        certInfos = [
+        //            ("주문번호", cert.merchantUid),
+        //            //            ("(선택)통신사", cert.carrier),
+        //            ("(선택)이름", cert.name),
+        //            ("(선택)휴대폰번호", cert.phone),
+        //            ("(선택)최소나이", cert.minAge),
+        //        ]
         
-//        updatePayMethodList(pg: order.pg.value)
+        //        updatePayMethodList(pg: order.pg.value)
         updateMerchantUid()
     }
     
-    func createPaymentData(completion: @escaping (IamportPayment?, Error?) -> Void) {
-        let urlString = "https://payrit.info/api/v1/transaction/paymentInfo"
+    func createPaymentData(id: String, completion: @escaping (IamportPayment?, Error?) -> Void) {
+        let urlString = "https://payrit.info/api/v1/transaction/paymentInfo/\(id)/PAPER_TRANSACTION"
         guard let url = URL(string: urlString) else {
             print("Invalid URL")
             return
@@ -104,10 +104,20 @@ public class IamportStore: ObservableObject, Then {
         
         let session = URLSession.shared
         var request = URLRequest(url: url)
-        request.httpMethod = "GET"
+        request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "accept")
         request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
         
+//        let body = [
+//            "paperId": id,
+//            "transactionType": "PAPER_TRANSACTION"
+//        ] as [String: Any]
+//        do {
+//            request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
+//            
+//        } catch {
+//            print("Error creating JSON data")
+//        }
         let task = session.dataTask(with: request) { (data, response, error) in
             if let error = error {
                 print("Error: \(error)")
@@ -125,7 +135,7 @@ public class IamportStore: ObservableObject, Then {
                         print(data)
                         let paymentData = try JSONDecoder().decode(PaymentData.self, from: data)
                         print(paymentData)
-                        let req = IamportPayment(pg: paymentData.PGCode ?? "kcp.IP05D", merchant_uid: paymentData.merchantUID, amount: String(paymentData.amount)).then {
+                        let req = IamportPayment(pg: /*paymentData.PGCode ??*/ "kcp.IP05D", merchant_uid: paymentData.merchantUID, amount: String(paymentData.amount)).then {
                             $0.name = paymentData.name
                             $0.buyer_name = paymentData.buyerName
                             $0.buyer_email = paymentData.buyerEmai
@@ -138,6 +148,10 @@ public class IamportStore: ObservableObject, Then {
                     }
                 }
             } else {
+                if let data = data {
+                    let responseData = String(data: data, encoding: .utf8)
+                    print("\(httpResponse.statusCode) data: \(responseData ?? "No data")")
+                }
                 print("HTTP status code: \(httpResponse.statusCode)")
                 completion(nil, nil)
             }
@@ -149,7 +163,7 @@ public class IamportStore: ObservableObject, Then {
     func iamportCallback(type: AuthType, _ response: IamportResponse?) -> Bool {
         var result = false
         print("------------------------------------------")
-        print("결과 왔습니다~~")
+        print("iamportCallback 결과")
         if let res = response {
             print("Iamport response: \(res)")
         }
@@ -157,14 +171,20 @@ public class IamportStore: ObservableObject, Then {
         
         iamportResponse = response
         if type == .once {
-            if let response, let uid = response.imp_uid {
-                authResult = response.success ?? false
-                result = authResult
+            if let response {
+                acceptAuthResult = response.success ?? false
+                result = response.success ?? false
             }
-        } else {
+        } else if type == .account {
             if let response, let uid = response.imp_uid {
                 sendCertificateResult(uid: uid)
                 authResult = response.success ?? false
+                result = response.success ?? false
+            }
+        } else if type == .payment {
+            if let response {
+                paymentResult = response.success ?? false
+                result = response.success ?? false
             }
         }
         clearButton()

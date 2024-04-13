@@ -53,7 +53,7 @@ class IMPCertificationViewController: UIViewController, WKNavigationDelegate {
 
         Iamport.shared.certification(viewController: self,
                 userCode: userCode, certification: certification) { iamportResponse in
-            viewModel.acceptAuthResult = viewModel.iamportCallback(type: self.certType, iamportResponse)
+            _ = viewModel.iamportCallback(type: self.certType, iamportResponse)
             self.presentationMode?.wrappedValue.dismiss()
         }
     }

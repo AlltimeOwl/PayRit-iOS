@@ -22,9 +22,9 @@ struct CertificateDetailView: View {
     var body: some View {
         ZStack {
             Color.payritBackground.ignoresSafeArea()
-            if isLoading {
-                ProgressView()
-            } else {
+//            if isLoading {
+//                ProgressView()
+//            } else {
                 ScrollView {
                     VStack(spacing: 0) {
                         HStack {
@@ -412,14 +412,19 @@ struct CertificateDetailView: View {
                 .scrollIndicators(.hidden)
                 .navigationTitle("페이릿 상세 페이지")
                 .navigationBarTitleDisplayMode(.inline)
-            }
+                .redacted(reason: isLoading ? .placeholder : [])
+//            }
         }
         .dismissOnDrag()
         .onAppear {
             isLoading = true
             Task {
                 await homeStore.loadDetail(id: paperId)
-                isLoading = false
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    withAnimation {
+                        self.isLoading = false
+                    }
+                }
             }
         }
         .sheet(isPresented: $isShowingMailView) {

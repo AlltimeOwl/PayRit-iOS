@@ -5,10 +5,11 @@ import WebKit
 import iamport_ios
 
 struct IMPPaymentView: UIViewControllerRepresentable {
+    let paperId: Int
     @EnvironmentObject var viewModel: IamportStore
     
     func makeUIViewController(context: Context) -> UIViewController {
-        let view = IMPPaymentViewController()
+        let view = IMPPaymentViewController(paperId: paperId)
         view.viewModel = viewModel
         return view
     }
@@ -19,6 +20,16 @@ struct IMPPaymentView: UIViewControllerRepresentable {
 
 class IMPPaymentViewController: UIViewController, WKNavigationDelegate {
     var viewModel: IamportStore?
+    let paperId: Int
+    
+    init(paperId: Int) {
+        self.paperId = paperId
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,7 +67,7 @@ class IMPPaymentViewController: UIViewController, WKNavigationDelegate {
         }
         viewModel.paymentResult = false
         
-        viewModel.createPaymentData() { payment, error in
+        viewModel.createPaymentData(id: String(paperId)) { payment, error in
             if let error = error {
                 print(error.localizedDescription)
             } else {
@@ -67,7 +78,7 @@ class IMPPaymentViewController: UIViewController, WKNavigationDelegate {
                 if let payment = payment {
                     Iamport.shared.payment(viewController: self,
                                            userCode: "imp28882037", payment: payment) { response in
-                        viewModel.paymentResult = viewModel.iamportCallback(type: .payment, response)
+                        _ = viewModel.iamportCallback(type: .payment, response)
                     }
                 }
             }
@@ -79,7 +90,7 @@ class IMPPaymentViewController: UIViewController, WKNavigationDelegate {
 struct PaymentView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            IMPPaymentView()
+            IMPPaymentView(paperId: 0)
                 .environmentObject(IamportStore())
         }
     }

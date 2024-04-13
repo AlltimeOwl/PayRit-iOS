@@ -11,14 +11,14 @@ struct PaymentHistoryView: View {
     @State private var menuState = false
     @Environment(TabBarStore.self) var tabStore
     private let menuPadding = 8.0
-    var myPageStore: MyPageStore = MyPageStore()
+    let mypageStore: MyPageStore
     var body: some View {
         ZStack {
             Color.payritBackground.ignoresSafeArea()
-            List(myPageStore.paymentHistory) { payment in
+            List(mypageStore.paymentHistory, id: \.self) { payment in
                 VStack(alignment: .leading, spacing: 0) {
                     HStack {
-                        Text(payment.day)
+                        Text(payment.transactionDate)
                             .font(Font.caption02)
                             .foregroundStyle(Color.gray05)
                         Spacer()
@@ -26,17 +26,17 @@ struct PaymentHistoryView: View {
                     }
                     .padding(.bottom, 12)
                     
-                    Text("\(payment.money)원")
+                    Text("\(payment.amount)원")
                         .font(Font.title01)
                         .padding(.bottom, 2)
                     
-                    Text("카드결제")
+                    Text(payment.transactionType)
                         .font(Font.title06)
                         .foregroundStyle(Color.gray05)
                     Spacer()
                     HStack {
                         Spacer()
-                        Text("결제 완료")
+                        Text(payment.isSuccess ? "결제 완료" : "결제 실패")
                             .font(.system(size: 14))
                             .fontWeight(.semibold)
                             .foregroundStyle(Color.payritMint)
@@ -73,7 +73,7 @@ struct PaymentHistoryView: View {
                                 .overlay {
                                     VStack(alignment: .leading) {
                                         HStack {
-                                            Text(myPageStore.sortingType.stringValue)
+                                            Text(mypageStore.sortingType.stringValue)
                                             Spacer()
                                             Image(systemName: "chevron.down")
                                         }
@@ -93,17 +93,17 @@ struct PaymentHistoryView: View {
                                             menuState.toggle()
                                         } label: {
                                             HStack {
-                                                Text(myPageStore.sortingType.stringValue)
+                                                Text(mypageStore.sortingType.stringValue)
                                                 Spacer()
                                                 Image(systemName: "chevron.up")
                                             }
                                         }
                                         ForEach(PaymentState.allCases, id: \.self) { state in
-                                            if state != myPageStore.sortingType {
+                                            if state != mypageStore.sortingType {
                                                 Button {
-                                                    myPageStore.sortingType = state
+                                                    mypageStore.sortingType = state
                                                     menuState.toggle()
-                                                    myPageStore.sortingPayment()
+                                                    mypageStore.sortingPayment()
                                                 } label: {
                                                     HStack {
                                                         Text(state.rawValue)
@@ -128,12 +128,15 @@ struct PaymentHistoryView: View {
         .dismissOnDrag()
         .navigationTitle("결제 내역")
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            mypageStore.loadPaymentHistory()
+        }
     }
 }
 
 #Preview {
     NavigationStack {
-        PaymentHistoryView()
+        PaymentHistoryView(mypageStore: MyPageStore())
             .environment(TabBarStore())
     }
 }

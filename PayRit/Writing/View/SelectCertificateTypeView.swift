@@ -35,7 +35,7 @@ struct SelectCertificateTypeView: View {
                                             VStack {
                                                 Spacer()
                                                 Rectangle()
-                                                    .frame(width: 100, height: 8)
+                                                    .frame(width: 110, height: 8)
                                                     .foregroundStyle(Color.payritLightMint)
                                             }
                                             Text("돈을 빌려줬")

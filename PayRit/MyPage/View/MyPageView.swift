@@ -64,13 +64,11 @@ struct MyPageView: View {
                     }
                     .frame(height: listItemHeight)
                     NavigationLink {
-                        Text("준비중 입니다.")
+                        PaymentHistoryView(mypageStore: mypageStore)
                             .customBackbutton()
                             .onAppear {
                                 tabStore.tabBarHide = true
                             }
-//                        PaymentHistoryView()
-//                            .customBackbutton()
                     } label: {
                         Text("결제 내역")
                     }

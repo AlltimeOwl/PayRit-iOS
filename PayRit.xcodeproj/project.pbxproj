@@ -19,6 +19,8 @@
 		BC0210362BC6EE0800116A6B /* PaperFormInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC0210352BC6EE0800116A6B /* PaperFormInfo.swift */; };
 		BC0210382BC6F50000116A6B /* Creditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC0210372BC6F50000116A6B /* Creditor.swift */; };
 		BC02103A2BC6F52200116A6B /* Debtor.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC0210392BC6F52200116A6B /* Debtor.swift */; };
+		BC02103C2BCAB49B00116A6B /* VersionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC02103B2BCAB49B00116A6B /* VersionService.swift */; };
+		BC02103E2BCAD39400116A6B /* PaymentHistoryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC02103D2BCAD39400116A6B /* PaymentHistoryDetailView.swift */; };
 		BC1219612BA1D6FC00B575F8 /* Deducted.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1219602BA1D6FC00B575F8 /* Deducted.swift */; };
 		BC1219652BA29FE700B575F8 /* CertificateAcceptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1219642BA29FE700B575F8 /* CertificateAcceptView.swift */; };
 		BC1219672BA32E4700B575F8 /* PDFKitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1219662BA32E4700B575F8 /* PDFKitView.swift */; };
@@ -104,6 +106,8 @@
 		BC0210352BC6EE0800116A6B /* PaperFormInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaperFormInfo.swift; sourceTree = "<group>"; };
 		BC0210372BC6F50000116A6B /* Creditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Creditor.swift; sourceTree = "<group>"; };
 		BC0210392BC6F52200116A6B /* Debtor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Debtor.swift; sourceTree = "<group>"; };
+		BC02103B2BCAB49B00116A6B /* VersionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionService.swift; sourceTree = "<group>"; };
+		BC02103D2BCAD39400116A6B /* PaymentHistoryDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentHistoryDetailView.swift; sourceTree = "<group>"; };
 		BC1219602BA1D6FC00B575F8 /* Deducted.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deducted.swift; sourceTree = "<group>"; };
 		BC1219622BA293EE00B575F8 /* CertificateDocumentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateDocumentView.swift; sourceTree = "<group>"; };
 		BC1219642BA29FE700B575F8 /* CertificateAcceptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateAcceptView.swift; sourceTree = "<group>"; };
@@ -341,12 +345,12 @@
 				BCD942502B8F0CCC00BF61CD /* .swiftlint.yml */,
 				BC595DEA2B8D8DF300CA555E /* Config */,
 				BC595E1D2B8DBDB300CA555E /* LaunchScreen */,
-				BCD9425C2B8F6FBA00BF61CD /* App */,
 				BC595DEC2B8D8E4600CA555E /* UserDefaults */,
 				BC595DED2B8D8E6200CA555E /* Service */,
 				BC595DE72B8D8DCF00CA555E /* Common */,
 				BC595DE92B8D8DE200CA555E /* Extensions */,
 				BC595DEB2B8D8E0800CA555E /* Model */,
+				BCD9425C2B8F6FBA00BF61CD /* App */,
 				BC388DB32B904B6F005D1279 /* Content */,
 				BC595DFE2B8DA1E200CA555E /* SignIn */,
 				BC595DE82B8D8DD600CA555E /* TabBar */,
@@ -444,6 +448,7 @@
 				BC95634F2B9F3B130014010C /* MFMailView.swift */,
 				BC1219662BA32E4700B575F8 /* PDFKitView.swift */,
 				BC2193992BAF34A000EE7B68 /* SafariView.swift */,
+				BC02103B2BCAB49B00116A6B /* VersionService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -554,6 +559,7 @@
 				BC02102D2BC5957B00116A6B /* MyCertInfoView.swift */,
 				BC947A5C2B984AEF00295C7B /* MyInfoView.swift */,
 				BC62BFEF2BA02011000A1BA5 /* PaymentHistoryView.swift */,
+				BC02103D2BCAD39400116A6B /* PaymentHistoryDetailView.swift */,
 				BC62BFF32BA02B61000A1BA5 /* AlarmSettingView.swift */,
 				BC6F652C2B9B394800FB9FA7 /* MembershipWithdrawalView.swift */,
 			);
@@ -757,6 +763,7 @@
 				BC2193962BA99BC000EE7B68 /* Certificate.swift in Sources */,
 				BC2D51CE2B9F35260041FD77 /* CertificateDeductibleView.swift in Sources */,
 				BC9E55CE2B956B7300B100C6 /* CertificateDetailView.swift in Sources */,
+				BC02103E2BCAD39400116A6B /* PaymentHistoryDetailView.swift in Sources */,
 				BC2193A82BB03D8C00EE7B68 /* PayritNoti.swift in Sources */,
 				BC1219742BA7204600B575F8 /* TabBarStore.swift in Sources */,
 				BC21939A2BAF34A000EE7B68 /* SafariView.swift in Sources */,
@@ -790,6 +797,7 @@
 				BC0210282BC4E08700116A6B /* Cert.swift in Sources */,
 				BC595E282B8DDFDD00CA555E /* HomeView.swift in Sources */,
 				BC388DB52B904BAB005D1279 /* ContentView.swift in Sources */,
+				BC02103C2BCAB49B00116A6B /* VersionService.swift in Sources */,
 				BC0210192BC4E06500116A6B /* IMPPaymentView.swift in Sources */,
 				BC595E0A2B8DAFD600CA555E /* Font +.swift in Sources */,
 				BC6F652F2B9B3D9000FB9FA7 /* MyPageStore.swift in Sources */,

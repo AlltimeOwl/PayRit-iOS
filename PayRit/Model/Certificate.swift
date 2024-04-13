@@ -73,6 +73,7 @@ struct Certificate: Hashable, Codable {
             return 0
         }
     }
+    
     static let sameple = [Certificate(paperId: 0, paperRole: WriterRole(rawValue: "CREDITOR") ?? .CREDITOR, transactionDate: "2024-01.01", repaymentStartDate: "2024-01-01", repaymentEndDate: "2024-04-04", amount: 100000, paperStatus: "COMPLETE_WRITING", peerName: "상대방", dueDate: 10, repaymentRate: 70.0, isWriter: true),
                           Certificate(paperId: 0, paperRole: WriterRole(rawValue: "CREDITOR") ?? .CREDITOR, transactionDate: "2024-01.01", repaymentStartDate: "2024-01-01", repaymentEndDate: "2024-04-04", amount: 100000, paperStatus: "COMPLETE_WRITING", peerName: "상대방", dueDate: 10, repaymentRate: 70.0, isWriter: true),
                           Certificate(paperId: 0, paperRole: WriterRole(rawValue: "CREDITOR") ?? .CREDITOR, transactionDate: "2024-01.01", repaymentStartDate: "2024-01-01", repaymentEndDate: "2024-04-04", amount: 100000, paperStatus: "COMPLETE_WRITING", peerName: "상대방", dueDate: 10, repaymentRate: 70.0, isWriter: true),
