@@ -95,7 +95,6 @@ struct CustomTabView: View {
                                 .fill(.white)
                                 .ignoresSafeArea()
                         )
-                        //                    .clipShape(.rect(topLeadingRadius: 45, bottomLeadingRadius: 0, bottomTrailingRadius: 0, topTrailingRadius: 45))
                         .shadow(color: .gray.opacity(0.2), radius: 8)
                 }
                 .ignoresSafeArea()
@@ -109,7 +108,6 @@ struct CustomTabView: View {
 }
 
 #Preview {
-//    TabBarView(tabBarVisivility: .constant(.visible))
     CustomTabView()
         .environment(HomeStore())
         .environment(SignInStore())

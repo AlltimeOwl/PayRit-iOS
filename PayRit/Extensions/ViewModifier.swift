@@ -108,6 +108,51 @@ struct PrimaryAlertModifier: ViewModifier {
     }
 }
 
+struct UpdateAlertModifier: ViewModifier {
+    
+    @Binding var isPresented: Bool
+    @Environment(TabBarStore.self) var tabStore
+    let title: String
+    let content: String
+    let primaryButtonTitle: String?
+    let cancleButtonTitle: String
+    let primaryAction: (() -> Void)?
+    let cancleAction: () -> Void
+    
+    func body(content: Content) -> some View {
+        ZStack {
+            content
+            ZStack {
+                if isPresented {
+                    Rectangle()
+                        .fill(.black.opacity(0.5))
+                        .ignoresSafeArea()
+                        .onAppear {
+                            tabStore.tabBarOpacity = true
+                        }
+                        .onDisappear {
+                            tabStore.tabBarOpacity = false
+                        }
+                    
+                    PrimaryAlert(isPresented: $isPresented,
+                                 title: self.title,
+                                 content: self.content,
+                                 primaryButtonTitle: self.primaryButtonTitle,
+                                 cancleButtonTitle: self.cancleButtonTitle,
+                                 primaryAction: self.primaryAction,
+                                 cancleAction: self.cancleAction)
+                }
+            }
+//            .animation(
+//                isPresented
+//                ? .spring(response: 0.3)
+//                : .none,
+//                value: isPresented
+//            )
+        }
+    }
+}
+
 struct ToastMessageModifier: ViewModifier {
     @Binding var isShowing: Bool
     var title: String?

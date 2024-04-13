@@ -75,85 +75,89 @@ struct CertificateSerchingView: View {
                         }
                         
                         // MARK: - 홈 카드 리스트
-                        List(homeStore.certificates, id: \.self) { certificate in
-                            if certificate.peerName.contains(searchWord) {
-                                Button {
-                                    certificateStep = certificate.certificateStep
-                                    paperId = certificate.paperId
-                                    if certificate.certificateStep == .waitingApproval {
-                                        if certificate.isWriter {
-                                            isShowingWaitingApprovalAlert.toggle()
-                                        } else {
-                                            navigationLinkAcceptView.toggle()
-                                        }
-                                    } else if certificate.certificateStep == .waitingPayment {
-                                        if certificate.isWriter {
-                                            navigationLinkAcceptView.toggle()
-                                        } else {
-                                            isShowingWaitingPaymentAlert.toggle()
-                                        }
-                                    } else if certificate.certificateStep == .progress {
-                                        navigationLinkDetailView.toggle()
-                                    } else if certificate.certificateStep == .complete {
-                                        navigationLinkDetailView.toggle()
-                                    }
-                                } label: {
-                                    VStack(alignment: .leading, spacing: 0) {
-                                        HStack {
-                                            Text("원금상환일 \(certificate.repaymentEndDate.stringDateToKorea())")
-                                                .font(Font.caption01)
-                                            Spacer()
-                                            Text(certificate.dueDate >= 0 ? "D - \(certificate.dueDate)" : "D + \(-certificate.dueDate)")
-                                                .font(Font.custom("SUIT-Bold", size: 14))
-                                        }
-                                        .foregroundStyle(.white)
-                                        .padding(.horizontal, 12)
-                                        .padding(.vertical, 10)
-                                        .background(certificate.paperRole == .CREDITOR ? Color.payritMint : Color.payritIntensivePink)
-                                        .clipShape(.rect(cornerRadius: 8))
-                                        .padding(.top, 14)
-                                        
-                                        Text("\(certificate.amountFormatter)원")
-                                            .font(Font.title01)
-                                            .padding(.top, 22)
-                                        
-                                        VStack(alignment: .trailing, spacing: 0) {
-                                            HStack {
-                                                Text(certificate.peerName)
-                                                    .font(Font.title06)
-                                                    .foregroundStyle(.black)
-                                                Spacer()
-                                                Text(certificate.paperRole == .CREDITOR ? "빌려준 돈" : "빌린 돈")
-                                                    .font(Font.body03)
-                                                    .foregroundStyle(certificate.paperRole == .CREDITOR ? Color.payritMint : Color.payritIntensivePink)
+                        ScrollViewReader { _ in
+                            List(homeStore.certificates, id: \.self) { certificate in
+                                if certificate.peerName.contains(searchWord) {
+                                    Button {
+                                        certificateStep = certificate.certificateStep
+                                        paperId = certificate.paperId
+                                        if certificate.certificateStep == .waitingApproval {
+                                            if certificate.isWriter {
+                                                isShowingWaitingApprovalAlert.toggle()
+                                            } else {
+                                                navigationLinkAcceptView.toggle()
                                             }
-                                            
-                                            ProgressView(value: certificate.repaymentRate, total: 100)
-                                                .progressViewStyle(CustomLinearProgressViewStyle(trackColor: Color.gray09, progressColor: certificate.paperRole == .CREDITOR ? Color.payritMint : Color.payritIntensivePink))
-                                                .frame(height: 6)
-                                                .padding(.top, 14)
-                                            
-                                            Text("\(certificate.certificateStep?.rawValue ?? "") (\(Int(certificate.repaymentRate))%)")
-                                                .font(Font.caption02)
-                                                .foregroundStyle(Color.gray04)
-                                                .padding(.top, 4)
-                                                .padding(.bottom, 14)
+                                        } else if certificate.certificateStep == .waitingPayment {
+                                            if certificate.isWriter {
+                                                navigationLinkAcceptView.toggle()
+                                            } else {
+                                                isShowingWaitingPaymentAlert.toggle()
+                                            }
+                                        } else if certificate.certificateStep == .progress {
+                                            navigationLinkDetailView.toggle()
+                                        } else if certificate.certificateStep == .complete {
+                                            navigationLinkDetailView.toggle()
                                         }
-                                        .padding(.top, 4)
+                                    } label: {
+                                        VStack(alignment: .leading, spacing: 0) {
+                                            HStack {
+                                                Text("원금상환일   \(certificate.repaymentEndDate.stringDateToKorea())")
+                                                    .font(Font.caption01)
+                                                Spacer()
+                                                Text(certificate.dueDate >= 0 ? "D - \(certificate.dueDate)" : "D + \(-certificate.dueDate)")
+                                                    .font(Font.custom("SUIT-Bold", size: 14))
+                                            }
+                                            .foregroundStyle(.white)
+                                            .padding(.horizontal, 12)
+                                            .padding(.vertical, 10)
+                                            .background(certificate.paperRole == .CREDITOR ? Color.payritMint : Color.payritIntensivePink)
+                                            .clipShape(.rect(cornerRadius: 8))
+                                            .padding(.top, 14)
+                                            
+                                            Text("\(certificate.amountFormatter)원")
+                                                .font(Font.title01)
+                                                .padding(.top, 22)
+                                            
+                                            VStack(alignment: .trailing, spacing: 0) {
+                                                HStack {
+                                                    Text(certificate.peerName)
+                                                        .font(Font.title06)
+                                                        .foregroundStyle(.black)
+                                                    Spacer()
+                                                    Text(certificate.paperRole == .CREDITOR ? "빌려준 돈" : "빌린 돈")
+                                                        .font(Font.body03)
+                                                        .foregroundStyle(certificate.paperRole == .CREDITOR ? Color.payritMint : Color.payritIntensivePink)
+                                                }
+                                                
+                                                ProgressView(value: certificate.repaymentRate, total: 100)
+                                                    .progressViewStyle(CustomLinearProgressViewStyle(trackColor: Color.gray09, progressColor: certificate.paperRole == .CREDITOR ? Color.payritMint : Color.payritIntensivePink))
+                                                    .frame(height: 6)
+                                                    .padding(.top, 14)
+                                                
+                                                Text("\(certificate.certificateStep?.rawValue ?? "") (\(Int(certificate.repaymentRate))%)")
+                                                    .font(Font.caption02)
+                                                    .foregroundStyle(Color.gray04)
+                                                    .padding(.top, 4)
+                                                    .padding(.bottom, 14)
+                                            }
+                                            .padding(.top, 4)
+                                        }
+                                        .padding(.horizontal, horizontalPadding)
+                                        .frame(maxWidth: .infinity)
+                                        .background()
+                                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                                        .shadow(color: .gray.opacity(0.2), radius: 5)
                                     }
-                                    .padding(.horizontal, horizontalPadding)
-                                    .frame(maxWidth: .infinity)
-                                    .background()
-                                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                                    .shadow(color: .gray.opacity(0.2), radius: 5)
+                                    .buttonStyle(PlainButtonStyle())
+                                    .listRowSeparator(.hidden)
+                                    .listRowBackground(Color.payritBackground)
+                                    .padding(.bottom, certificate == homeStore.certificates.last ? 40 : 0)
                                 }
-                                .listRowSeparator(.hidden)
-                                .listRowBackground(Color.payritBackground)
                             }
+                            .scrollIndicators(.hidden)
+                            .listStyle(.plain)
+                            .background(Color.payritBackground)
                         }
-                        .scrollIndicators(.hidden)
-                        .listStyle(.plain)
-                        .background(Color.payritBackground)
                         Spacer()
                     }
                     
@@ -233,6 +237,9 @@ struct CertificateSerchingView: View {
             }
         }
         .dismissOnDrag()
+        .onTapGesture {
+            self.endTextEditing()
+        }
         .navigationDestination(isPresented: $navigationLinkDetailView) {
             if !homeStore.certificates.isEmpty {
                 if let setp = certificateStep {
@@ -255,12 +262,7 @@ struct CertificateSerchingView: View {
         .onAppear {
             interestFocused = true
         }
-        .primaryAlert(isPresented: $isShowingSignatureView, title: "본인인증", content: "본인인증 띄우기", primaryButtonTitle: "예", cancleButtonTitle: "아니오") {
-            //
-        } cancleAction: {
-            //
-        }
-        .primaryAlert(isPresented: $isShowingWaitingApprovalAlert, title: "승인 요청", content: "아직 상대방이 요청을 받지 못했나봐요! 알림을 다시 보내볼까요?", primaryButtonTitle: "네", cancleButtonTitle: "아니오") {
+        .primaryAlert(isPresented: $isShowingWaitingApprovalAlert, title: "승인 요청", content: "아직 상대방이 승인하지 않았습니다.", primaryButtonTitle: nil, cancleButtonTitle: "확인") {
             //
         } cancleAction: {
             //

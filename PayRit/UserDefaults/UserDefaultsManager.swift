@@ -42,7 +42,7 @@ final class UserDefaultsManager {
         UserDefaults.standard.setValue(signInCompany, forKey: Key.signInCompany.rawValue)
     }
     
-    /// apple jwt
+    /// 애플 jwt
     func setAppleIdTokenString(appleIdTokenString: String) {
         UserDefaults.standard.setValue(appleIdTokenString, forKey: Key.appleIdTokenString.rawValue)
     }
@@ -135,7 +135,9 @@ final class UserDefaultsManager {
     /// 디바이스 userDefault 전체 삭제
     func removeAll() {
         Key.allCases.forEach {
-            UserDefaults.standard.removeObject(forKey: $0.rawValue)
+            if $0 != .userAppleName || $0 != .userAppleEmail {
+                UserDefaults.standard.removeObject(forKey: $0.rawValue)
+            }
         }
     }
     

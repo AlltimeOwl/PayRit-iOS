@@ -14,7 +14,7 @@ import AuthenticationServices
 import Alamofire
 
 enum WhileSigIn {
-    case waiting
+    case not
     case doing
 }
 
@@ -30,14 +30,22 @@ enum ServerAuthError: Error {
     case parsingError
 }
 
+enum LogOutMessage: String, CodingKey {
+    case none
+    case serverStop
+    case authRevoke
+}
+
 @Observable
 class SignInStore {
     var isSignIn: Bool = UserDefaultsManager().getIsSignInState()
     var singinRevoke: Bool = false
-    var whileSigIn: WhileSigIn = .waiting
+    var serverIsClosed: LogOutMessage = .none
+    var whileSigIn: WhileSigIn = .not
     var appleAuthorizationCode = ""
     var appleIdentityToken = ""
-    var firebasePushtoken = ""
+    var firebasePhtoken = ""
+    var kakaoAuthCount = 0
     
     // MARK: - 애플
     func handleAppleSignInResult(_ result: Result<ASAuthorization, Error>) {
@@ -51,15 +59,6 @@ class SignInStore {
                 let fullName = appleIDCredential.fullName
                 let name = (fullName?.familyName ?? "") + (fullName?.givenName ?? "")
                 let email = appleIDCredential.email ?? ""
-                
-//                let IdentityToken = String(data: appleIDCredential.identityToken ?? Data(), encoding: .utf8)
-//                print("---------1-----------")
-//                print("UserIdentifier : \(appleUserIdentifier)")
-//                print("fullName : \(String(describing: fullName)))")
-//                print("name : \(name)")
-//                print("email : \(String(describing: email))")
-//                print("IdentityToken : \(IdentityToken ?? "")")
-//                print("---------1-----------")
                 
                 // AuthorizationCode 서버에 전송하는 값 !! 1번만 사용될 수 있으며 5분간 유효 !! appleIDCredential.user
                 if  let authorizationCode = appleIDCredential.authorizationCode,
@@ -88,15 +87,15 @@ class SignInStore {
         }
     }
     
+    func test() {
+    }
+    
     func appleAuthCheck() {
         let appleIDProvider = ASAuthorizationAppleIDProvider()
         appleIDProvider.getCredentialState(forUserID: UserDefaultsManager().getAppleUserId()) { (credentialState, _) in
             switch credentialState {
             case .authorized:
                 print("애플 authorized")
-                // The Apple ID credential is valid.
-//                DispatchQueue.global().async {
-                    // authorized된 상태이므로 바로 로그인 완료 화면으로 이동
                 self.serverAuth(aToken: UserDefaultsManager().getAppleIdTokenString(), rToken: "rToken", company: .apple) { result in
                         switch result {
                         case .success(true):
@@ -113,7 +112,6 @@ class SignInStore {
                             UserDefaultsManager().setIsSignInState(value: false)
                         }
                     }
-//                }
             case .revoked:
                 // 인증이 취소됨
                 print("애플 revoked")
@@ -140,19 +138,11 @@ class SignInStore {
         if let url = urlComponents.url {
             
             var request = URLRequest(url: url)
-            request.httpMethod = "POST"
+            request.httpMethod = "DELETE"
             request.setValue("*/*", forHTTPHeaderField: "accept")
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
-            let body = [
-                "oauthCode": self.appleAuthorizationCode
-            ] as [String: Any]
             
-            do {
-                request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
-            } catch {
-                print("Error creating JSON data")
-            }
             let task = URLSession.shared.dataTask(with: request) { _, response, error in
                 if let error = error {
                     print("Error: \(error)")
@@ -160,6 +150,7 @@ class SignInStore {
                     print("Response status code: \(response.statusCode)")
                     if (200..<300).contains(response.statusCode) {
                         print("애플 탈퇴 완료")
+                        UserDefaultsManager().removeAll()
                     } else {
                         print("Unexpected status code: \(response.statusCode)")
                     }
@@ -210,7 +201,6 @@ class SignInStore {
                     userDefault.setKakaoUserData(userData: User(name: name, email: email, phoneNumber: phoneNumber, signInCompany: "카카오톡"))
                 }
                 if let aToken = oauthToken?.accessToken, let rToken = oauthToken?.refreshToken {
-                    UserDefaultsManager().setKakaoToken(kakaoToken: aToken)
                     self.serverAuth(aToken: aToken, rToken: rToken, company: .kakao) { result in
                         switch result {
                         case .success(true):
@@ -230,19 +220,34 @@ class SignInStore {
     
     func kakaoAuthCheck() {
         let userDefault = UserDefaultsManager()
-        // 토큰 존재 여부 확인하기
         if AuthApi.hasToken() {
             UserApi.shared.accessTokenInfo { (_, error) in
                 if let error = error {
                     if let sdkError = error as? SdkError, sdkError.isInvalidTokenError() == true {
-                        // 로그인 필요
-                        self.isSignIn = false
+                        var newToken = ""
+                        AuthApi.shared.refreshToken { token, _ in
+                            newToken = token?.accessToken ?? ""
+                            print("토큰 갱신 : newToken = \(newToken)")
+                        }
+                        
+                        if self.kakaoAuthCount > 1 {
+                            self.isSignIn = false
+                            userDefault.setIsSignInState(value: false)
+                            self.kakaoAuthCount = 0
+                        } else {
+                            self.kakaoAuthCheck()
+                            self.kakaoAuthCount += 1
+                        }
+                        
                     } else {
                         // 기타 에러
+                        self.isSignIn = false
+                        userDefault.setIsSignInState(value: false)
+                        self.kakaoAuthCount = 0
                     }
                 } else {
-                    // 토큰 유효성 체크 성공(필요 시 토큰 갱신됨)
-                    let token = userDefault.getKakaoToken()
+                    self.kakaoAuthCount = 0
+                    guard let token = AUTH.tokenManager.getToken()?.accessToken else { return }
                     self.serverAuth(aToken: token, rToken: "rToken", company: .kakao) { result in
                         switch result {
                         case .success(true):
@@ -252,11 +257,11 @@ class SignInStore {
                         case .success(false):
                             print("Sign in failed")
                             self.isSignIn = false
-                            UserDefaultsManager().setIsSignInState(value: false)
+                            userDefault.setIsSignInState(value: false)
                         case .failure(let error):
                             print("Error: \(error)")
                             self.isSignIn = false
-                            UserDefaultsManager().setIsSignInState(value: false)
+                            userDefault.setIsSignInState(value: false)
                         }
                     }
                 }
@@ -264,6 +269,7 @@ class SignInStore {
         } else {
             // 로그인 필요
             self.isSignIn = false
+            userDefault.setIsSignInState(value: false)
         }
     }
     
@@ -279,49 +285,54 @@ class SignInStore {
     }
     
     func kakaoUnLink() {
-        UserApi.shared.unlink {(error) in
+        let urlString = "https://payrit.info/api/v1/oauth/revoke"
+        guard let url = URL(string: urlString) else {
+            print("Invalid URL")
+            return
+        }
+        
+        let session = URLSession.shared
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "DELETE"
+        request.setValue("*/*", forHTTPHeaderField: "accept")
+        request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
+        let task = session.dataTask(with: request) { (data, response, error) in
             if let error = error {
-                print(error)
-            } else {
-                print("unlink() success.")
-                self.isSignIn = false
-                UserDefaultsManager().removeAll()
-                
-                // 요청할 URL 생성
-                let urlString = "https://payrit.info/api/v1/oauth/leave"
-                guard let url = URL(string: urlString) else {
-                    print("Invalid URL")
-                    return
-                }
-                
-                let session = URLSession.shared
-                
-                var request = URLRequest(url: url)
-                request.httpMethod = "GET"
-                request.setValue("application/json", forHTTPHeaderField: "accept")
-                request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
-                
-                let task = session.dataTask(with: request) { (_, response, error) in
+                print("Error: \(error)")
+                return
+            }
+            guard let httpResponse = response as? HTTPURLResponse else {
+                print("Invalid response")
+                return
+            }
+            
+            if (200..<300).contains(httpResponse.statusCode) {
+                print("HTTP status code: \(httpResponse.statusCode)")
+                print("카카오 탈퇴 성공")
+                UserApi.shared.unlink {(error) in
                     if let error = error {
-                        print("Error: \(error)")
-                        return
-                    }
-                    guard let httpResponse = response as? HTTPURLResponse else {
-                        print("Invalid response")
-                        return
-                    }
-                    
-                    if (200..<300).contains(httpResponse.statusCode) {
-                        print("탈퇴 완료")
+                        print("unlink() error : \(error.localizedDescription)")
                     } else {
-                        print("HTTP status code: \(httpResponse.statusCode)")
+                        print("unlink() success.")
+                        self.isSignIn = false
+                        UserDefaultsManager().removeAll()
                     }
                 }
-                task.resume()
+            } else {
+                print("HTTP status code: \(httpResponse.statusCode)")
+                print("카카오 탈퇴 실패")
+                if let data = data {
+                    let responseData = String(data: data, encoding: .utf8)
+                    print("\(httpResponse.statusCode) data: \(responseData ?? "No data")")
+                } else {
+                    print("no data")
+                }
             }
         }
+        task.resume()
     }
-//    func getToken() -> S
+    
     // MARK: - 공용
     /// 서버에 JWT 보내고 Bearer를 userDefault에 저장
     func serverAuth(aToken: String, rToken: String, company: SiginInType, completion: @escaping (Result<Bool, Error>) -> Void) {
@@ -351,7 +362,8 @@ class SignInStore {
             let body = [
                 "accessToken": aToken,
                 "refreshToken": rToken,
-                "firebaseToken": firebaseToken
+                "firebaseToken": firebaseToken,
+                "authorizationCode": company == .apple ? appleAuthorizationCode : "null"
             ] as [String: Any]
             print("--------bodybodybody---------")
             print(body)
@@ -413,11 +425,25 @@ class SignInStore {
                         print("Error parsing JSON response: \(error)")
                         completion(.failure(error))
                     }
-                    self.whileSigIn = .waiting
+                    self.whileSigIn = .not
+                    self.serverIsClosed = .none
                 } else {
                     print("Unexpected status code: \(httpResponse.statusCode)")
-                    completion(.failure(ServerAuthError.invalidResponse))
-                    self.whileSigIn = .waiting
+                    if httpResponse.statusCode == 502 {
+                        print("서버 점검중")
+                        self.whileSigIn = .not
+                        self.serverIsClosed = .serverStop
+                    } else {
+                        completion(.failure(ServerAuthError.invalidResponse))
+                        self.whileSigIn = .not
+                        self.serverIsClosed = .authRevoke
+                    }
+                    if let data = data {
+                        let responseData = String(data: data, encoding: .utf8)
+                        print("\(httpResponse.statusCode) data: \(responseData ?? "No data")")
+                    } else {
+                        print("no data")
+                    }
                 }
             }
             task.resume() // 작업 시작

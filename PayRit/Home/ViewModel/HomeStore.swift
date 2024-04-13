@@ -19,6 +19,7 @@ final class HomeStore {
     var sortingType: SortingType = .recent
     var certificates: [Certificate] = [Certificate]()
     var certificateDetail: CertificateDetail = CertificateDetail.EmptyCertificate
+    var isShowingPaymentSuccessAlert: Bool = false
     var isLoading: Bool = true
     
     func sortingCertificates() {
@@ -59,8 +60,7 @@ final class HomeStore {
             
             if (200..<300).contains(httpResponse.statusCode) {
                 if let data = data {
-                    let responseData = String(data: data, encoding: .utf8)
-                    print("Response data: \(responseData ?? "No data")")
+    //                    let responseData = String(data: data, encoding: .utf8)
                     do {
                         var certificates = try JSONDecoder().decode([Certificate].self, from: data)
                         
@@ -120,8 +120,8 @@ final class HomeStore {
                     do {
                         let certificate = try JSONDecoder().decode(CertificateDetail.self, from: data)
                         self.certificateDetail = certificate
-                        if (self.certificateDetail.specialConditions?.isEmpty) != nil {
-                            self.certificateDetail.specialConditions = nil
+                        if (self.certificateDetail.paperFormInfo.specialConditions?.isEmpty) != nil {
+                            self.certificateDetail.paperFormInfo.specialConditions = nil
                         }
                     } catch {
                         print("Error decoding JSON: \(error)")
@@ -173,6 +173,9 @@ final class HomeStore {
                 print("Response status code: \(response.statusCode)")
                 if (200..<300).contains(response.statusCode) {
                     print("PDF 파일 업로드 성공")
+                    Task {
+                        await self.loadCertificates()
+                    }
                 } else {
                     print("Unexpected status code: \(response.statusCode)")
                 }
@@ -181,6 +184,64 @@ final class HomeStore {
             }
         }
         task.resume()
+    }
+    
+    func savePaymentHistory(paperId: Int) {
+        var urlComponents = URLComponents()
+        urlComponents.scheme = "https"
+        urlComponents.host = "payrit.info"
+        urlComponents.path = "/api/v1/transaction/save"
+        
+        if let url = urlComponents.url {
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.setValue("*/*", forHTTPHeaderField: "accept")
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
+            let body = [
+                "paperId": paperId,
+                "transactionDate": "2024-04-13T20:18:30",
+                "amount": 1000,
+                "contents": "차용증 카드 결제",
+                "transactionType": "국민카드 (3003)",
+                "approvalNumber": "30312313",
+                "orderNumber": "imp12355578",
+                "isSuccess": true
+            ] as [String: Any]
+            print(body)
+            
+            do {
+                request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
+            } catch {
+                print("Error creating JSON data")
+            }
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    print("Error: \(error)")
+                } else if let data = data, let response = response as? HTTPURLResponse {
+                    print("Response status code: \(response.statusCode)")
+                    if (200..<300).contains(response.statusCode) {
+                        do {
+                            if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                                print("JSON Response: \(json)")
+                            }
+                        } catch {
+                            print("Error parsing JSON response")
+                        }
+                        Task {
+                            await self.loadCertificates()
+                        }
+                    } else {
+                        let responseData = String(data: data, encoding: .utf8)
+                        print("\(response.statusCode) data: \(responseData ?? "No data")")
+                    }
+                } else {
+                    print("Unexpected error: No data or response")
+                }
+            }
+            task.resume()
+        }
     }
     
     // MARK: - 메모
@@ -320,7 +381,7 @@ final class HomeStore {
     }
     
     // MARK: - 상환
-    func deductedSave(paperId: Int, repaymentDate: String, repaymentAmount: String) {
+    func deductedSave(paperId: Int, repaymentDate: String, repaymentAmount: String, completion: @escaping ([Deducted]?, Error?) -> Void) {
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"
         urlComponents.host = "payrit.info"
@@ -350,6 +411,14 @@ final class HomeStore {
                     print("Response status code: \(response.statusCode)")
                     if (200..<300).contains(response.statusCode) {
                         print("상환 내역 작성 성공")
+                        self.loadDeduceted(paperId: paperId) { (array, error) in
+                            if let error = error {
+                                print("Error occurred: \(error)")
+                                completion(nil, error)
+                            } else if let deducted = array {
+                                completion(deducted, nil)
+                            }
+                        }
                     } else {
                         print("Unexpected status code: \(response.statusCode)")
                     }
@@ -359,6 +428,101 @@ final class HomeStore {
             }
             task.resume()
         }
+    }
+    
+    func loadDeduceted(paperId: Int, completion: @escaping ([Deducted]?, Error?) -> Void) {
+        let urlString = "https://payrit.info/api/v1/paper/\(paperId)"
+        guard let url = URL(string: urlString) else {
+            print("Invalid URL")
+            return
+        }
+        
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("application/json", forHTTPHeaderField: "accept")
+        request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                print("Error: \(error)")
+                completion(nil, error)
+                return
+            }
+            guard let httpResponse = response as? HTTPURLResponse else {
+                print("Invalid response")
+                return
+            }
+            
+            if (200..<300).contains(httpResponse.statusCode) {
+                if let data = data {
+                    do {
+                        let detail = try JSONDecoder().decode(CertificateDetail.self, from: data)
+                        completion(detail.repaymentHistories, nil)
+                    } catch {
+                        print("Error decoding JSON: \(error)")
+                        completion(nil, error)
+                    }
+                }
+            } else {
+                print("HTTP status code: \(httpResponse.statusCode)")
+                completion(nil, nil)
+            }
+        }
+        task.resume()
+    }
+    
+    func deductedDelete(paperId: Int, historyId: Int, completion: @escaping ([Deducted]?, Error?) -> Void) {
+        let urlString = "https://payrit.info/api/v1/paper/repayment/cancel"
+        guard let url = URL(string: urlString) else { return }
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("*/*", forHTTPHeaderField: "accept")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
+        
+        let body = [
+            "paperId": paperId,
+            "historyId": historyId
+        ] as [String: Any]
+        
+        do {
+            request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
+        } catch {
+            print("Error creating JSON data")
+        }
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                print("Error: \(error)")
+                completion(nil, error)
+            }
+            guard let httpResponse = response as? HTTPURLResponse else {
+                print("Invalid response")
+                completion(nil, nil)
+                return
+            }
+            if (200..<300).contains(httpResponse.statusCode) {
+                print("상환 내역 삭제 성공")
+                self.loadDeduceted(paperId: paperId) { (array, error) in
+                    if let error = error {
+                        print("Error occurred: \(error)")
+                        completion(nil, error)
+                    } else if let deducted = array {
+                        completion(deducted, nil)
+                    }
+                }
+            } else {
+                print("HTTP status code: \(httpResponse.statusCode)")
+                if let data = data {
+                    let responseData = String(data: data, encoding: .utf8)
+                    print("\(httpResponse.statusCode) data: \(responseData ?? "No data")")
+                }
+                completion(nil, nil)
+            }
+        }
+        task.resume()
     }
     
     // MARK: - PDF변환

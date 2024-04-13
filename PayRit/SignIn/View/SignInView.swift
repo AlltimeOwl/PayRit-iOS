@@ -18,12 +18,12 @@ struct SignInView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Image("firstImage")
+                Image("firstImage2")
                     .resizable()
                     .frame(height: UIScreen.screenHeight)
                 Image("payRitText")
                 
-                if signInStore.whileSigIn == .waiting {
+                if signInStore.whileSigIn == .not {
                     VStack(spacing: 8) {
                         Spacer()
                         Button {
@@ -47,8 +47,7 @@ struct SignInView: View {
                         .padding(.horizontal, 30)
                         
                         SignInWithAppleButton(
-                            .continue
-                            ,
+                            .continue,
                             onRequest: { request in
                                 request.requestedScopes = [.fullName, .email]
                             },
@@ -65,6 +64,23 @@ struct SignInView: View {
                 if signInStore.whileSigIn == .doing {
                     ProgressView()
                 }
+                if signInStore.serverIsClosed == .serverStop {
+                    Text("서버가 점검 중입니다.\n잠시 후 다시 시도해주세요.")
+                        .font(Font.title06)
+                        .multilineTextAlignment(.center)
+                        .frame(width: 350, height: 150)
+                        .background(.white.opacity(0.7))
+                        .clipShape(.rect(cornerRadius: 20))
+                        .padding(.bottom, 300)
+                } else if signInStore.serverIsClosed == .authRevoke {
+                    Text("로그인 정보가 만료되었습니다..\n다시 로그인 해주세요.")
+                        .font(Font.title06)
+                        .multilineTextAlignment(.center)
+                        .frame(width: 350, height: 150)
+                        .background(.white.opacity(0.7))
+                        .clipShape(.rect(cornerRadius: 20))
+                        .padding(.bottom, 300)
+                }
             }
             .ignoresSafeArea(.all)
             .onAppear {
@@ -74,6 +90,7 @@ struct SignInView: View {
                 
             }
         }
+        
     }
 }
 

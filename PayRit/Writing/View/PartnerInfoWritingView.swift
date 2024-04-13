@@ -9,6 +9,14 @@ import SwiftUI
 import UIKit
 
 struct PartnerInfoWritingView: View {
+    let writingStore: WritingStore
+    var isFormValid: Bool {
+        if !name.isEmpty && !phoneNumber.isEmpty {
+            return true
+        } else {
+            return false
+        }
+    }
     @State private var name: String = ""
     @State private var phoneNumber: String = ""
     @State private var zipCode = ""
@@ -21,14 +29,6 @@ struct PartnerInfoWritingView: View {
     @State private var keyBoardFocused: Bool = false
     @Binding var newCertificate: CertificateDetail
     @Binding var path: NavigationPath
-    let writingStore = WritingStore()
-    var isFormValid: Bool {
-        if !name.isEmpty && !phoneNumber.isEmpty {
-            return true
-        } else {
-            return false
-        }
-    }
     var body: some View {
         ZStack {
             Color.payritBackground.ignoresSafeArea()
@@ -50,9 +50,9 @@ struct PartnerInfoWritingView: View {
                             CustomTextField(foregroundStyle: .black, placeholder: "이름을 적어주세요", keyboardType: .default, text: $name)
                                 .onChange(of: name) {
                                     if newCertificate.memberRole == "DEBTOR" {
-                                        newCertificate.creditorName = name
+                                        newCertificate.creditorProfile.name = name
                                     } else if newCertificate.memberRole == "CREDITOR" {
-                                        newCertificate.debtorName = name
+                                        newCertificate.debtorProfile.name = name
                                     }
                                 }
                         }
@@ -64,9 +64,9 @@ struct PartnerInfoWritingView: View {
                                     if newValue.count <= 13 {
                                         phoneNumber = phoneNumber.phoneNumberMiddleCase()
                                         if newCertificate.memberRole == "DEBTOR" {
-                                            newCertificate.creditorPhoneNumber = phoneNumber.globalPhoneNumber()
+                                            newCertificate.creditorProfile.phoneNumber = phoneNumber
                                         } else if newCertificate.memberRole == "CREDITOR" {
-                                            newCertificate.debtorPhoneNumber = phoneNumber.globalPhoneNumber()
+                                            newCertificate.debtorProfile.phoneNumber = phoneNumber
                                         }
                                     } else {
                                         phoneNumber = oldValue
@@ -86,9 +86,9 @@ struct PartnerInfoWritingView: View {
                                     .disabled(true)
                                     .onChange(of: zipCode) {
                                         if newCertificate.memberRole == "DEBTOR" {
-                                            newCertificate.creditorAddress = address + "(\(zipCode))"
+                                            newCertificate.creditorProfile.address = address + "(\(zipCode))"
                                         } else if newCertificate.memberRole == "CREDITOR" {
-                                            newCertificate.debtorAddress = address + "(\(zipCode))"
+                                            newCertificate.debtorProfile.address = address + "(\(zipCode))"
                                         }
                                     }
                                 Button {
@@ -108,9 +108,9 @@ struct PartnerInfoWritingView: View {
                             CustomTextField(foregroundStyle: .black, placeholder: "상세주소를 적어주세요", keyboardType: .default, text: $detailAddress)
                                 .onChange(of: detailAddress) {
                                     if newCertificate.memberRole == "DEBTOR" {
-                                        newCertificate.creditorAddress = address + " \(detailAddress) " + "(\(zipCode))"
+                                        newCertificate.creditorProfile.address = address + " \(detailAddress) " + "(\(zipCode))"
                                     } else if newCertificate.memberRole == "CREDITOR" {
-                                        newCertificate.debtorAddress = address + " \(detailAddress) " + "(\(zipCode))"
+                                        newCertificate.debtorProfile.address = address + " \(detailAddress) " + "(\(zipCode))"
                                     }
                                 }
                         }
@@ -162,7 +162,7 @@ struct PartnerInfoWritingView: View {
                     .edgesIgnoringSafeArea(.all)
             }
             .navigationDestination(isPresented: $moveNextView) {
-                WritingCheckView(path: $path, newCertificate: $newCertificate)
+                WritingCheckView(writingStore: writingStore, path: $path, newCertificate: $newCertificate)
                     .customBackbutton()
             }
             .primaryAlert(isPresented: $isShowingStopAlert,
@@ -183,6 +183,6 @@ struct PartnerInfoWritingView: View {
 
 #Preview {
     NavigationStack {
-        PartnerInfoWritingView(newCertificate: .constant(CertificateDetail.EmptyCertificate), path: .constant(NavigationPath()))
+        PartnerInfoWritingView(writingStore: WritingStore(), newCertificate: .constant(CertificateDetail.EmptyCertificate), path: .constant(NavigationPath()))
     }
 }

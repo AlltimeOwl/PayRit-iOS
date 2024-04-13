@@ -13,6 +13,7 @@ struct HomeView: View {
     @State private var paperId = 0
     @State private var menuState = false
     @State private var isHiddenInfoBox = false
+    @State private var isShowingPaymentSuccessAlert = false
     @State private var isShowingSignatureView = false
     @State private var isShowingWaitingApprovalAlert = false
     @State private var isShowingWaitingPaymentAlert = false
@@ -29,6 +30,20 @@ struct HomeView: View {
                 if !isHiddenInfoBox {
                     CarouselView()
                         .padding(.horizontal, 16)
+                        .overlay(alignment: .topTrailing) {
+                            Button {
+                                withAnimation {
+                                    isHiddenInfoBox.toggle()
+                                }
+                            } label: {
+                                Image(systemName: "xmark")
+                                    .font(.system(size: 14))
+                                    .bold()
+                                    .foregroundStyle(.white)
+                            }
+                            .padding(.trailing, 32)
+                            .padding(.top, 16)
+                        }
                 }
                 if homeStore.isLoading {
                     VStack {
@@ -164,11 +179,11 @@ struct HomeView: View {
                                         }
                                         .listRowSeparator(.hidden)
                                         .listRowBackground(Color.payritBackground)
+                                        .padding(.bottom, certificate == homeStore.certificates.last ? 40 : 0)
                                     }
                                     .scrollIndicators(.hidden)
                                     .listStyle(.plain)
                                     .background(Color.payritBackground)
-                                    .padding(.bottom, 40)
                                 }
                                 Spacer()
                             }
@@ -253,11 +268,11 @@ struct HomeView: View {
                     VStack {
                         Spacer().frame(height: 30)
                         if UserDefaultsManager().getUserInfo().signInCompany == "애플" {
-                            Text("\(UserDefaultsManager().getAppleUserInfo().name) 님의 기록")
+                            Text("\(UserDefaultsManager().getAppleUserInfo().name)님의 기록")
                                 .font(Font.title01)
                                 .foregroundStyle(.black)
                         } else {
-                            Text("\(UserDefaultsManager().getUserInfo().name) 님의 기록")
+                            Text("\(UserDefaultsManager().getUserInfo().name)님의 기록")
                                 .font(Font.title01)
                                 .foregroundStyle(.black)
                         }
@@ -288,11 +303,11 @@ struct HomeView: View {
                                     .onAppear {
                                         tabStore.tabBarHide = true
                                     }
-                                }label: {
-                                    Image(systemName: "bell")
-                                        .foregroundStyle(.black)
-                                }
-                                Spacer().frame(height: 10)
+                            }label: {
+                                Image(systemName: "bell")
+                                    .foregroundStyle(.black)
+                            }
+                            Spacer().frame(height: 10)
                         }
                     }
                 }
@@ -329,17 +344,25 @@ struct HomeView: View {
                 await homeStore.loadCertificates()
             }
         }
-//        .primaryAlert(isPresented: $isShowingSignatureView, title: "본인인증", content: "본인인증 띄우기", primaryButtonTitle: "예", cancleButtonTitle: "아니오") {
-//            //
-//        } cancleAction: {
-//            //
-//        }
+        .onChange(of: homeStore.isShowingPaymentSuccessAlert) {
+            isShowingPaymentSuccessAlert = homeStore.isShowingPaymentSuccessAlert
+        }
+        //        .primaryAlert(isPresented: $isShowingSignatureView, title: "본인인증", content: "본인인증 띄우기", primaryButtonTitle: "예", cancleButtonTitle: "아니오") {
+        //            //
+        //        } cancleAction: {
+        //            //
+        //        }
         .primaryAlert(isPresented: $isShowingWaitingApprovalAlert, title: "승인 요청", content: "아직 상대방이 승인하지 않았습니다.", primaryButtonTitle: nil, cancleButtonTitle: "확인") {
             //
         } cancleAction: {
             //
         }
         .primaryAlert(isPresented: $isShowingWaitingPaymentAlert, title: "결제 진행중", content: "작성자가 결제 진행중입니다.", primaryButtonTitle: nil, cancleButtonTitle: "확인") {
+            //
+        } cancleAction: {
+            //
+        }
+        .primaryAlert(isPresented: $isShowingPaymentSuccessAlert, title: "결제 완료", content: "페이릿 결제가 완료되었습니다.", primaryButtonTitle: nil, cancleButtonTitle: "확인") {
             //
         } cancleAction: {
             //

@@ -145,7 +145,7 @@ struct MembershipWithdrawalView: View {
         .padding(16)
         .navigationTitle("회원탈퇴")
         .navigationBarTitleDisplayMode(.inline)
-        .primaryAlert(isPresented: $isShowingWithdrawalButton, title: "회원탈퇴", content: "정말 탈퇴하시겠습니까?", primaryButtonTitle: "아니오", cancleButtonTitle: "네", primaryAction: nil) {
+        .primaryAlert(isPresented: $isShowingWithdrawalButton, title: "회원탈퇴", content: "정말 탈퇴하시겠습니까?\n탈퇴시 모든 데이터는 삭제됩니다.", primaryButtonTitle: "아니오", cancleButtonTitle: "네", primaryAction: nil) {
             isShowingWithdrawalCompleteButton.toggle()
         }
         .primaryAlert(isPresented: $isShowingWithdrawalCompleteButton, title: "회원탈퇴 완료",
@@ -159,7 +159,6 @@ struct MembershipWithdrawalView: View {
             } else if mypageStore.currentUser.signInCompany == "애플" {
                 signInStore.appleUnLink()
                 signInStore.isSignIn = false
-                UserDefaultsManager().removeAll()
             }
             homeStore.certificates = [Certificate]()
         }
