@@ -125,6 +125,12 @@ struct WritingView: View {
                     tabStore.tabBarHide = false
                 }
             }
+            .onChange(of: iamportStore.authResult) {
+                if  iamportStore.authResult {
+                    path.append("payritWrite")
+                    mypageStore.checkIMPAuth()
+                }
+            }
             if iamportStore.isCert {
                 IMPCertificationView(certType: .constant(.account))
                     .onAppear {
@@ -132,12 +138,6 @@ struct WritingView: View {
                     }
                     .onDisappear {
                         iamportStore.clearButton()
-                    }
-                    .onChange(of: iamportStore.isCert) {
-                        if  !iamportStore.isCert && iamportStore.authResult {
-                            mypageStore.checkIMPAuth()
-                            path.append("payritWrite")
-                        }
                     }
             }
         }
