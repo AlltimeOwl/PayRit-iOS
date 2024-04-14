@@ -52,6 +52,9 @@ public class IamportStore: ObservableObject, Then {
     @Published var acceptAuthResult: Bool = false
     /// 결제 시도후 결과
     @Published var paymentResult: Bool = false
+    @Published var amount: Int = 0
+    @Published var impUid: String = ""
+    @Published var merchantUid: String = ""
     var iamportResponse: IamportResponse?
     
     init() {
@@ -108,16 +111,6 @@ public class IamportStore: ObservableObject, Then {
         request.setValue("application/json", forHTTPHeaderField: "accept")
         request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
         
-//        let body = [
-//            "paperId": id,
-//            "transactionType": "PAPER_TRANSACTION"
-//        ] as [String: Any]
-//        do {
-//            request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
-//            
-//        } catch {
-//            print("Error creating JSON data")
-//        }
         let task = session.dataTask(with: request) { (data, response, error) in
             if let error = error {
                 print("Error: \(error)")
@@ -135,12 +128,13 @@ public class IamportStore: ObservableObject, Then {
                         print(data)
                         let paymentData = try JSONDecoder().decode(PaymentData.self, from: data)
                         print(paymentData)
-                        let req = IamportPayment(pg: /*paymentData.PGCode ??*/ "kcp.IP05D", merchant_uid: paymentData.merchantUID, amount: String(paymentData.amount)).then {
+                        let req = IamportPayment(pg: paymentData.PGCode ?? "kcp.IP05D", merchant_uid: paymentData.merchantUID, amount: String(paymentData.amount)).then {
                             $0.name = paymentData.name
                             $0.buyer_name = paymentData.buyerName
                             $0.buyer_email = paymentData.buyerEmai
                             $0.buyer_tel = paymentData.buyerTel
                         }
+                        self.amount = paymentData.amount
                         completion(req, nil)
                     } catch {
                         print("Error decoding JSON: \(error)")
@@ -166,9 +160,10 @@ public class IamportStore: ObservableObject, Then {
         print("iamportCallback 결과")
         if let res = response {
             print("Iamport response: \(res)")
+            self.impUid = res.imp_uid ?? ""
+            self.merchantUid = res.merchant_uid ?? ""
         }
         print("------------------------------------------")
-        
         iamportResponse = response
         if type == .once {
             if let response {
@@ -178,6 +173,7 @@ public class IamportStore: ObservableObject, Then {
         } else if type == .account {
             if let response, let uid = response.imp_uid {
                 sendCertificateResult(uid: uid)
+                reloadCertificates()
                 authResult = response.success ?? false
                 result = response.success ?? false
             }
@@ -208,6 +204,7 @@ public class IamportStore: ObservableObject, Then {
     
     func updateMerchantUid() {
         order.merchantUid.value = UUID().uuidString
+        merchantUid = order.merchantUid.value
         cert.merchantUid.value = UUID().uuidString
     }
     
@@ -262,4 +259,40 @@ public class IamportStore: ObservableObject, Then {
         }
     }
     
+    func reloadCertificates() {
+        let urlString = "https://payrit.info/api/v1/paper/reload"
+        guard let url = URL(string: urlString) else {
+            print("Invalid URL")
+            return
+        }
+        
+        let session = URLSession.shared
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("*/*", forHTTPHeaderField: "accept")
+        request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                print("Error: \(error)")
+                return
+            }
+            guard let httpResponse = response as? HTTPURLResponse else {
+                print("Invalid response")
+                return
+            }
+            
+            print("HTTP status code: \(httpResponse.statusCode)")
+            if (200..<300).contains(httpResponse.statusCode) {
+                print("차용증 리로드 완료")
+            } else {
+                if let data = data {
+                    let responseData = String(data: data, encoding: .utf8)
+                    print("\(httpResponse.statusCode) data: \(responseData ?? "No data")")
+                }
+            }
+        }
+        task.resume()
+    }
 }

@@ -20,6 +20,9 @@ final class HomeStore {
     var certificates: [Certificate] = [Certificate]()
     var certificateDetail: CertificateDetail = CertificateDetail.EmptyCertificate
     var isShowingPaymentSuccessAlert: Bool = false
+    var isShowingAcceptFailAlert: Bool = false
+    var isShowingAuthCompleteAlert: Bool = false
+    var isHiddenInfoBox: Bool = false
     var isLoading: Bool = true
     
     func sortingCertificates() {
@@ -176,6 +179,7 @@ final class HomeStore {
                     Task {
                         await self.loadCertificates()
                     }
+                    self.isShowingAuthCompleteAlert.toggle()
                 } else {
                     print("Unexpected status code: \(response.statusCode)")
                 }
@@ -186,7 +190,7 @@ final class HomeStore {
         task.resume()
     }
     
-    func savePaymentHistory(paperId: Int) {
+    func savePaymentHistory(paperId: Int, amount: Int, impUid: String, merchantUid: String) {
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"
         urlComponents.host = "payrit.info"
@@ -201,12 +205,11 @@ final class HomeStore {
             request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
             let body = [
                 "paperId": paperId,
-                "transactionDate": "2024-04-13T20:18:30",
-                "amount": 1000,
-                "contents": "차용증 카드 결제",
-                "transactionType": "국민카드 (3003)",
-                "approvalNumber": "30312313",
-                "orderNumber": "imp12355578",
+                "transactionDate": Date().dateToString2(),
+                "amount": amount,
+                "transactionType": "PAPER_TRANSACTION",
+                "impUid": impUid,
+                "merchantUid": merchantUid,
                 "isSuccess": true
             ] as [String: Any]
             print(body)
@@ -232,6 +235,64 @@ final class HomeStore {
                         Task {
                             await self.loadCertificates()
                         }
+                        self.isShowingPaymentSuccessAlert.toggle()
+                    } else {
+                        self.paymentCancle(impUid: impUid, merchantUid: merchantUid)
+                        self.isShowingAcceptFailAlert.toggle()
+                        let responseData = String(data: data, encoding: .utf8)
+                        print("\(response.statusCode) data: \(responseData ?? "No data")")
+                    }
+                } else {
+                    print("Unexpected error: No data or response")
+                }
+            }
+            task.resume()
+        }
+    }
+    
+    func paymentCancle(impUid: String, merchantUid: String) {
+        var urlComponents = URLComponents()
+        if let Key = Bundle.main.object(forInfoDictionaryKey: "PAYMENT_CANCEL_KEY") as? String {
+            urlComponents.scheme = "https"
+            urlComponents.host = "payrit.info"
+            urlComponents.path = "/api/v1/transaction/dev/cancel/\(Key)"
+        }
+        
+        if let url = urlComponents.url {
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.setValue("*/*", forHTTPHeaderField: "accept")
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
+            let body = [
+                "impUid": impUid,
+                "merchantUid": merchantUid,
+                "reason": "결제 내역 저장 실패"
+            ] as [String: Any]
+            print(body)
+            
+            do {
+                request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
+            } catch {
+                print("Error creating JSON data")
+            }
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    print("Error: \(error)")
+                } else if let data = data, let response = response as? HTTPURLResponse {
+                    print("Response status code: \(response.statusCode)")
+                    if (200..<300).contains(response.statusCode) {
+//                        do {
+//                            if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+//                                print("JSON Response: \(json)")
+//                            }
+//                        } catch {
+//                            print("Error parsing JSON response")
+//                        }
+//                        Task {
+//                            await self.loadCertificates()
+//                        }
                     } else {
                         let responseData = String(data: data, encoding: .utf8)
                         print("\(response.statusCode) data: \(responseData ?? "No data")")

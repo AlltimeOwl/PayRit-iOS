@@ -199,17 +199,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		BC020FF02BC42BE500116A6B /* Import */ = {
-			isa = PBXGroup;
-			children = (
-				BC0210222BC4E07500116A6B /* Model */,
-				BC02100B2BC4DFFD00116A6B /* Certificate */,
-				BC0210312BC5A16500116A6B /* Payment */,
-				BC0210332BC5A19000116A6B /* ViewModel */,
-			);
-			path = Import;
-			sourceTree = "<group>";
-		};
 		BC02100B2BC4DFFD00116A6B /* Certificate */ = {
 			isa = PBXGroup;
 			children = (
@@ -279,6 +268,17 @@
 				BC2193B82BB1BAF900EE7B68 /* SUIT-ExtraBold.otf */,
 			);
 			path = Font;
+			sourceTree = "<group>";
+		};
+		BC20D9C22BCAFEF30053B2F3 /* Iamport */ = {
+			isa = PBXGroup;
+			children = (
+				BC0210222BC4E07500116A6B /* Model */,
+				BC02100B2BC4DFFD00116A6B /* Certificate */,
+				BC0210312BC5A16500116A6B /* Payment */,
+				BC0210332BC5A19000116A6B /* ViewModel */,
+			);
+			path = Iamport;
 			sourceTree = "<group>";
 		};
 		BC2193A42BB03D6600EE7B68 /* Nofitication */ = {
@@ -361,7 +361,7 @@
 				BCD942542B8F1D3100BF61CD /* MyPage */,
 				BC2193A42BB03D6600EE7B68 /* Nofitication */,
 				BC5C572A2B977B6800A55CC7 /* KakaoAddress */,
-				BC020FF02BC42BE500116A6B /* Import */,
+				BC20D9C22BCAFEF30053B2F3 /* Iamport */,
 				BC595DDB2B8D8AC400CA555E /* Preview Content */,
 			);
 			path = PayRit;

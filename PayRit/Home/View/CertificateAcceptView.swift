@@ -291,8 +291,7 @@ struct CertificateAcceptView: View {
         }
         .onChange(of: iamportStore.paymentResult) {
             if iamportStore.paymentResult {
-                homeStore.savePaymentHistory(paperId: paperId)
-                homeStore.isShowingPaymentSuccessAlert.toggle()
+                homeStore.savePaymentHistory(paperId: paperId, amount: iamportStore.amount, impUid: iamportStore.impUid, merchantUid: iamportStore.merchantUid)
                 dismiss()
             }
         }

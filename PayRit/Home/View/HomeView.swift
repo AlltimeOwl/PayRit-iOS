@@ -12,13 +12,14 @@ struct HomeView: View {
     private let horizontalPadding = 16.0
     @State private var paperId = 0
     @State private var menuState = false
-    @State private var isHiddenInfoBox = false
-    @State private var isShowingPaymentSuccessAlert = false
-    @State private var isShowingSignatureView = false
-    @State private var isShowingWaitingApprovalAlert = false
-    @State private var isShowingWaitingPaymentAlert = false
     @State private var navigationLinkDetailView = false
     @State private var navigationLinkAcceptView = false
+    @State private var isShowingSignatureView = false
+    @State private var isShowingAcceptFailAlert = false
+    @State private var isShowingAuthCompleteAlert = false
+    @State private var isShowingPaymentSuccessAlert = false
+    @State private var isShowingWaitingPaymentAlert = false
+    @State private var isShowingWaitingApprovalAlert = false
     @State var certificateStep: CertificateStep?
     @Environment(HomeStore.self) var homeStore
     @Environment(SignInStore.self) var signInStore
@@ -27,17 +28,17 @@ struct HomeView: View {
         ZStack {
             Color.payritBackground.ignoresSafeArea()
             VStack {
-                if !isHiddenInfoBox {
+                if !homeStore.isHiddenInfoBox {
                     CarouselView()
                         .padding(.horizontal, 16)
                         .overlay(alignment: .topTrailing) {
                             Button {
                                 withAnimation {
-                                    isHiddenInfoBox.toggle()
+                                    homeStore.isHiddenInfoBox.toggle()
                                 }
                             } label: {
                                 Image(systemName: "xmark")
-                                    .font(.system(size: 14))
+                                    .font(.system(size: 18))
                                     .bold()
                                     .foregroundStyle(.white)
                             }
@@ -290,7 +291,9 @@ struct HomeView: View {
                                         tabStore.tabBarHide = true
                                     }
                             }label: {
-                                Image(systemName: "magnifyingglass")
+                                Image("searchIcon")
+                                    .resizable()
+                                    .frame(width: 24, height: 24)
                                     .foregroundStyle(.black)
                             }
                             Spacer().frame(height: 10)
@@ -304,7 +307,9 @@ struct HomeView: View {
                                         tabStore.tabBarHide = true
                                     }
                             }label: {
-                                Image(systemName: "bell")
+                                Image("alamIcon")
+                                    .resizable()
+                                    .frame(width: 24, height: 24)
                                     .foregroundStyle(.black)
                             }
                             Spacer().frame(height: 10)
@@ -347,25 +352,39 @@ struct HomeView: View {
         .onChange(of: homeStore.isShowingPaymentSuccessAlert) {
             isShowingPaymentSuccessAlert = homeStore.isShowingPaymentSuccessAlert
         }
+        .onChange(of: homeStore.isShowingAcceptFailAlert) {
+            isShowingAcceptFailAlert = homeStore.isShowingAcceptFailAlert
+        }
+        .onChange(of: homeStore.isShowingAuthCompleteAlert) {
+            isShowingAuthCompleteAlert = homeStore.isShowingAuthCompleteAlert
+        }
         //        .primaryAlert(isPresented: $isShowingSignatureView, title: "본인인증", content: "본인인증 띄우기", primaryButtonTitle: "예", cancleButtonTitle: "아니오") {
         //            //
         //        } cancleAction: {
         //            //
         //        }
-        .primaryAlert(isPresented: $isShowingWaitingApprovalAlert, title: "승인 요청", content: "아직 상대방이 승인하지 않았습니다.", primaryButtonTitle: nil, cancleButtonTitle: "확인") {
+        .primaryAlert(isPresented: $isShowingWaitingApprovalAlert, title: "승인 대기중", content: "아직 상대방이 승인하지 않았습니다.", primaryButtonTitle: nil, cancleButtonTitle: "확인") {
             //
         } cancleAction: {
-            //
+            Task {
+                await homeStore.loadCertificates()
+            }
         }
         .primaryAlert(isPresented: $isShowingWaitingPaymentAlert, title: "결제 진행중", content: "작성자가 결제 진행중입니다.", primaryButtonTitle: nil, cancleButtonTitle: "확인") {
             //
         } cancleAction: {
-            //
+            Task {
+                await homeStore.loadCertificates()
+            }
         }
         .primaryAlert(isPresented: $isShowingPaymentSuccessAlert, title: "결제 완료", content: "페이릿 결제가 완료되었습니다.", primaryButtonTitle: nil, cancleButtonTitle: "확인") {
-            //
         } cancleAction: {
-            //
+        }
+        .primaryAlert(isPresented: $isShowingAcceptFailAlert, title: "승인 에러", content: "승인에 실패하였습니다.\n결제 대금이 취소되었습니다.", primaryButtonTitle: nil, cancleButtonTitle: "확인") {
+        } cancleAction: {
+        }
+        .primaryAlert(isPresented: $isShowingAuthCompleteAlert, title: "본인인증 완료", content: "본인인증이 완료되었습니다.\n작성자의 결제 후 상세내역 조회가 가능합니다.", primaryButtonTitle: nil, cancleButtonTitle: "확인") {
+        } cancleAction: {
         }
     }
 }

@@ -463,7 +463,7 @@ struct CertificateDetailView: View {
         })
         .primaryAlert(isPresented: $isShowingAllRepaymentAlert, title: "전체 상환 기록", content: "남은 금액 \(homeStore.certificateDetail.paperFormInfo.remainingAmountFormatter)원을 전체 상환 하시겠습니까?", primaryButtonTitle: "네", cancleButtonTitle: "아니오") {
             if homeStore.certificateDetail.paperFormInfo.remainingAmount > 0 {
-                homeStore.deductedSave(paperId: paperId, repaymentDate: Date().dateToString(), repaymentAmount:  String(homeStore.certificateDetail.paperFormInfo.remainingAmount)) { (array, error) in
+                homeStore.deductedSave(paperId: paperId, repaymentDate: Date().dateToString(), repaymentAmount: String(homeStore.certificateDetail.paperFormInfo.remainingAmount)) { (array, error) in
                     if let error = error {
                         print("Error occurred: \(error)")
                     } else if let deducted = array {
