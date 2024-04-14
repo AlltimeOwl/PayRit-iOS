@@ -55,7 +55,9 @@ struct CertificateSerchingView: View {
                         Button {
                             interestFocused = true
                         } label: {
-                            Image(systemName: "magnifyingglass")
+                            Image("searchIcon")
+                                .resizable()
+                                .frame(width: 24, height: 24)
                                 .foregroundStyle(.black)
                         }
                     }

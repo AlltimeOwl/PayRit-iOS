@@ -39,7 +39,7 @@ struct PaymentHistoryView: View {
                         .font(Font.title01)
                         .padding(.bottom, 2)
                     
-                    Text(payment.transactionType)
+                    Text(payment.paymentMethod)
                         .font(Font.title06)
                         .foregroundStyle(Color.gray05)
                     Spacer()

@@ -12,20 +12,22 @@ struct CertificateScrollView: View {
     
     var body: some View {
         VStack {
-            ScrollView {
-                    Rectangle()
-                        .foregroundStyle(.red)
-                        .frame(height: UIScreen.screenHeight)
-                    Rectangle()
-                        .foregroundStyle(.blue)
-                        .frame(height: UIScreen.screenHeight)
-                    Rectangle()
-                        .foregroundStyle(.green)
-                        .frame(height: UIScreen.screenHeight)
-            }
-            
-            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-//            .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
+//            ScrollView {
+//                    Rectangle()
+//                        .foregroundStyle(.red)
+//                        .frame(height: UIScreen.screenHeight)
+//                    Rectangle()
+//                        .foregroundStyle(.blue)
+//                        .frame(height: UIScreen.screenHeight)
+//                    Rectangle()
+//                        .foregroundStyle(.green)
+//                        .frame(height: UIScreen.screenHeight)
+//            }
+//            
+//            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+////            .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
+            ///
+            Text("\(Date().dateToString2())")
             Button {
                 withAnimation {
                     currentPage += 1

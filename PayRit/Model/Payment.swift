@@ -22,7 +22,7 @@ struct PaymentHistory: Hashable, Codable {
     var historyId: Int
     var transactionDate: String
     var amount: Int
-    var transactionType: String
+    var paymentMethod: String
     var isSuccess: Bool
     
     var dateCal: Int {
@@ -62,7 +62,7 @@ struct PaymentHistory: Hashable, Codable {
 struct PaymentHistoryDetail: Hashable, Codable {
     var historyId: Int
     var transactionDate: String
-    var approvalNumber: String
-    var transactionType: String
+    var applyNum: String
+    var paymentMethod: String
     var amount: Int
 }

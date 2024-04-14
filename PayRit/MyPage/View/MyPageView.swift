@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct MyPageView: View {
+    @State var url: String = ""
     @State var listItemHeight: CGFloat = 40
     @State var isShowingSignOut: Bool = false
     @State var isShowingSafariView: Bool = false
@@ -86,28 +87,20 @@ struct MyPageView: View {
                         Text("알림 설정")
                     }
                     .frame(height: listItemHeight)
-                    NavigationLink {
-                        Text("준비중 입니다.")
-                            .customBackbutton()
-                            .onAppear {
-                                tabStore.tabBarHide = true
-                            }
+                    Button {
+                        url = "https://bit.ly/3PYvBSw"
                     } label: {
                         Text("공지사항")
                     }
                     .frame(height: listItemHeight)
-                    NavigationLink {
-                        Text("준비중 입니다.")
-                            .customBackbutton()
-                            .onAppear {
-                                tabStore.tabBarHide = true
-                            }
+                    Button {
+                        url = "https://bit.ly/3UrRkVP"
                     } label: {
                         Text("자주 묻는 질문")
                     }
                     .frame(height: listItemHeight)
                     Button {
-                        isShowingSafariView.toggle()
+                        url = "https://bit.ly/3xib1WC"
                     } label: {
                         Text("서비스 이용 약관")
                     }
@@ -139,8 +132,11 @@ struct MyPageView: View {
                     Text("")
                 }
             }
+            .onChange(of: url) {
+                isShowingSafariView.toggle()
+            }
             .fullScreenCover(isPresented: $isShowingSafariView) {
-                if let url = URL(string: "https://picayune-rhinoceros-77c.notion.site/57721e2e46bf46b7a15cc05afec24fc3") {
+                if let url = URL(string: url) {
                     SafariView(url: url)
                 }
             }

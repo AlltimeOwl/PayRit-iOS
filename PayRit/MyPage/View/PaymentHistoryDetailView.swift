@@ -43,14 +43,14 @@ struct PaymentHistoryDetailView: View {
                         Text("승인번호")
                             .foregroundStyle(Color.gray06)
                         Spacer()
-                        Text(detail.approvalNumber)
+                        Text(detail.applyNum)
                     }
                     .font(Font.title06)
                     HStack {
                         Text("결제수단")
                             .foregroundStyle(Color.gray06)
                         Spacer()
-                        Text(detail.transactionType)
+                        Text(detail.paymentMethod)
                     }
                     .font(Font.title06)
                     HStack {
@@ -88,6 +88,6 @@ struct PaymentHistoryDetailView: View {
 
 #Preview {
     NavigationStack {
-        PaymentHistoryDetailView(detail: PaymentHistoryDetail(historyId: 1, transactionDate: "2024-03-26", approvalNumber: "231231", transactionType: "신한 체크카드 (0313)", amount: 1000))
+        PaymentHistoryDetailView(detail: PaymentHistoryDetail(historyId: 1, transactionDate: "2024-03-26", applyNum: "231231", paymentMethod: "신한 체크카드 (0313)", amount: 1000))
     }
 }
