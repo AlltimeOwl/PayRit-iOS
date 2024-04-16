@@ -9,8 +9,8 @@ import SwiftUI
 
 struct MyInfoView: View {
     @Environment(SignInStore.self) var signInStore
-    @Environment(MyPageStore.self) var mypageStore
     @Environment(TabBarStore.self) var tabStore
+    @Environment(MyPageStore.self) var mypageStore
     
     var body: some View {
         ZStack {
@@ -86,7 +86,7 @@ struct MyInfoView: View {
                 }
                 Spacer()
                 NavigationLink {
-                    MembershipWithdrawalView()
+                    MembershipWithdrawalView(mypageStore: mypageStore)
                         .customBackbutton()
                 } label: {
                     Text("회원탈퇴")

@@ -94,7 +94,6 @@ struct MyCertInfoView: View {
         .onAppear {
             mypageStore.loadCertInfo()
         }
-        
     }
 }
 

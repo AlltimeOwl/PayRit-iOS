@@ -19,7 +19,6 @@ final class MyPageStore {
     var userCertInfo: CertificationInfo?
     var paymentHistory: [PaymentHistory] = [PaymentHistory]()
     var sortingType: PaymentState = .current
-    var impAuth: Bool = false
     
     init() {
         if userDefaultsManager.getUserInfo().signInCompany == "애플" {
@@ -27,7 +26,6 @@ final class MyPageStore {
         } else if userDefaultsManager.getUserInfo().signInCompany == "카카오톡" {
             currentUser = userDefaultsManager.getUserInfo()
         }
-        checkIMPAuth()
     }
     
     func sortingPayment() {
@@ -36,44 +34,6 @@ final class MyPageStore {
         } else {
             paymentHistory.sort { $0.dateCal < $1.dateCal }
         }
-    }
-    
-    func checkIMPAuth() {
-        let urlString = "https://payrit.info/api/v1/oauth/check"
-        guard let url = URL(string: urlString) else {
-            print("Invalid URL")
-            return
-        }
-        
-        let session = URLSession.shared
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.setValue("application/json", forHTTPHeaderField: "accept")
-        request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
-        
-        let task = session.dataTask(with: request) { (data, response, error) in
-            if let error = error {
-                print("Error: \(error)")
-                return
-            }
-            guard let httpResponse = response as? HTTPURLResponse else {
-                print("Invalid response")
-                return
-            }
-            
-            if httpResponse.statusCode == 204 {
-                print("본인인증 완료된 계정")
-                self.impAuth = true
-            } else {
-                print("HTTP status code: \(httpResponse.statusCode)")
-                if let data = data {
-                    let responseData = String(data: data, encoding: .utf8)
-                    print("\(httpResponse.statusCode) data: \(responseData ?? "No data")")
-                }
-                self.impAuth = false
-            }
-        }
-        task.resume()
     }
     
     func loadCertInfo() {

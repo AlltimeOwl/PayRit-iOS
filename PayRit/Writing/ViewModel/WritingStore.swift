@@ -11,49 +11,11 @@ import SwiftUI
 @Observable
 final class WritingStore {
     var currentUser = UserDefaultsManager().getUserInfo()
-    var impAuth = false
     
     init() {
         if UserDefaultsManager().getUserInfo().signInCompany == "애플" {
             currentUser = UserDefaultsManager().getAppleUserInfo()
         }
-        checkIMPAuth()
-    }
-    
-    func checkIMPAuth() {
-        let urlString = "https://payrit.info/api/v1/oauth/check"
-        guard let url = URL(string: urlString) else {
-            print("Invalid URL")
-            return
-        }
-        
-        let session = URLSession.shared
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.setValue("application/json", forHTTPHeaderField: "accept")
-        request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
-        
-        let task = session.dataTask(with: request) { (data, response, error) in
-            if let error = error {
-                print("Error: \(error)")
-                return
-            }
-            guard let httpResponse = response as? HTTPURLResponse else {
-                print("Invalid response")
-                return
-            }
-            
-            if httpResponse.statusCode == 204 {
-                self.impAuth = true
-            } else {
-                print("HTTP status code: \(httpResponse.statusCode)")
-                if let data = data {
-                    let responseData = String(data: data, encoding: .utf8)
-                    print("\(httpResponse.statusCode) data: \(responseData ?? "No data")")
-                }
-            }
-        }
-        task.resume()
     }
     
     func saveCertificae(certificate: CertificateDetail) {

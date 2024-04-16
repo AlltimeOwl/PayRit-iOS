@@ -14,7 +14,8 @@ struct MembershipWithdrawalView: View {
     @State var isShowingWithdrawalCompleteButton: Bool = false
     @Environment(HomeStore.self) var homeStore
     @Environment(SignInStore.self) var signInStore
-    let mypageStore: MyPageStore = MyPageStore()
+    @Environment(TabBarStore.self) var tabStore
+    let mypageStore: MyPageStore
     var body: some View {
         ZStack {
             Color.payritBackground.ignoresSafeArea()
@@ -154,20 +155,21 @@ struct MembershipWithdrawalView: View {
                                 완료되었습니다.
                                 """
                       , primaryButtonTitle: nil, cancleButtonTitle: "확인", primaryAction: nil) {
+            tabStore.selectedTab = .home
+            homeStore.certificates = [Certificate]()
             if mypageStore.currentUser.signInCompany == "카카오톡" {
                 signInStore.kakaoUnLink()
             } else if mypageStore.currentUser.signInCompany == "애플" {
                 signInStore.appleUnLink()
                 signInStore.isSignIn = false
             }
-            homeStore.certificates = [Certificate]()
         }
     }
 }
 
 #Preview {
     NavigationStack {
-        MembershipWithdrawalView()
+        MembershipWithdrawalView(mypageStore: MyPageStore())
             .environment(HomeStore())
             .environment(SignInStore())
     }

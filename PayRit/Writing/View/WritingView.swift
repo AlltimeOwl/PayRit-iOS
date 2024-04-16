@@ -41,7 +41,7 @@ struct WritingView: View {
                     .padding(.bottom, 30)
                     
                     Button {
-                        if mypageStore.impAuth {
+                        if iamportStore.impAuth {
                             path.append("payritWrite")
                         } else {
                             isShowingAuthAlert.toggle()
@@ -116,6 +116,12 @@ struct WritingView: View {
                 }
                 .padding(.top, 30)
                 .padding(.horizontal, 16)
+                if iamportStore.isCert {
+                    IMPCertificationView(certType: .constant(.account))
+                        .onDisappear {
+                            iamportStore.clearButton()
+                        }
+                }
             }
             .onAppear {
                 tabStore.tabBarHide = false
@@ -128,17 +134,7 @@ struct WritingView: View {
             .onChange(of: iamportStore.authResult) {
                 if  iamportStore.authResult {
                     path.append("payritWrite")
-                    mypageStore.checkIMPAuth()
                 }
-            }
-            if iamportStore.isCert {
-                IMPCertificationView(certType: .constant(.account))
-                    .onAppear {
-                        iamportStore.updateMerchantUid()
-                    }
-                    .onDisappear {
-                        iamportStore.clearButton()
-                    }
             }
         }
         .primaryAlert(isPresented: $isShowingAuthAlert, title: "본인인증 미완료", content: "페이릿 작성을 위해 \n본인인증을 1회 진행합니다.", primaryButtonTitle: "네", cancleButtonTitle: "아니오") {
