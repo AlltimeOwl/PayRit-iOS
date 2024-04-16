@@ -409,6 +409,7 @@ struct WritingCertificateInfoView: View {
         NavigationStack {
             WritingCertificateInfoView(certificateType: "DEBTOR", path: .constant(NavigationPath()))
                 .environment(TabBarStore())
+                .environment(MyPageStore())
         }
     }
 }

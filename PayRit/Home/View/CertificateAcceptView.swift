@@ -251,18 +251,12 @@ struct CertificateAcceptView: View {
             }
             if iamportStore.isCert {
                 IMPCertificationView(certType: .constant(.once))
-                    .onAppear {
-                        iamportStore.updateMerchantUid()
-                    }
                     .onDisappear {
                         iamportStore.clearButton()
                     }
             }
             if iamportStore.isPayment {
                 IMPPaymentView(paperId: paperId)
-                    .onAppear {
-                        iamportStore.updateMerchantUid()
-                    }
                     .onDisappear {
                         iamportStore.clearButton()
                     }

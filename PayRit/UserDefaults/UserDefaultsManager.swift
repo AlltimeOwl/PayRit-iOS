@@ -18,6 +18,7 @@ final class UserDefaultsManager {
         case userAppleId, userAppleName, userAppleEmail
         case accessToken, refreshToken, appleIdTokenString, kakaoToken
         case noti, FCMtoken
+        case auth
     }
     
     /// 카카오 정보저장
@@ -60,6 +61,10 @@ final class UserDefaultsManager {
     /// 자동로그인 값 저장
     func setIsSignInState(value: Bool) {
         UserDefaults.standard.setValue(value, forKey: Key.isSignIn.rawValue)
+    }
+    
+    func setAuthState(value: Bool) {
+        UserDefaults.standard.setValue(value, forKey: Key.auth.rawValue)
     }
     
     func getAppleIdTokenString() -> String {
@@ -122,14 +127,16 @@ final class UserDefaultsManager {
     
     /// 저장된 애플 유저 고유 아이디값 반환
     func getAppleUserId() -> String {
-        let appleId = UserDefaults.standard.string(forKey: Key.userAppleId.rawValue) ?? "notFound"
-        return appleId
+        return UserDefaults.standard.string(forKey: Key.userAppleId.rawValue) ?? "notFound"
     }
     
     /// 자동로그인 값 반환
     func getIsSignInState() -> Bool {
-        let check = UserDefaults.standard.bool(forKey: Key.isSignIn.rawValue)
-        return check
+        return UserDefaults.standard.bool(forKey: Key.isSignIn.rawValue)
+    }
+    
+    func getAuthState() -> Bool {
+        return UserDefaults.standard.bool(forKey: Key.auth.rawValue)
     }
     
     /// 디바이스 userDefault 전체 삭제

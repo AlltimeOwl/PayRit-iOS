@@ -197,5 +197,6 @@ struct MyInfoWritingView: View {
 #Preview {
     NavigationStack {
         MyInfoWritingView(writingStore: WritingStore(), newCertificate: .constant(CertificateDetail.EmptyCertificate), path: .constant(NavigationPath()))
+            .environment(MyPageStore())
     }
 }

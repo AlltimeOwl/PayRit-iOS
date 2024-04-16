@@ -15,6 +15,7 @@ struct ContentView: View {
     @State private var isShowingReloginAlert: Bool = false
     @Environment(SignInStore.self) var signInStore
     @Environment(MyPageStore.self) var mypageStore
+    @EnvironmentObject var iamportStore: IamportStore
     @State var test = false
     var body: some View {
         if signInStore.isSignIn {
@@ -63,7 +64,9 @@ struct ContentView: View {
                                 mypageStore.currentUser = userDefault.getUserInfo()
                             }
                         }
-                        mypageStore.checkIMPAuth()
+                        iamportStore.checkIMPAuth() {
+                            
+                        }
                     }
                     versionService.loadAppStoreVersion { [self] latestVersion in
                         guard let latestVersion else { return }

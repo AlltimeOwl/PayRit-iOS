@@ -78,7 +78,9 @@ class IMPPaymentViewController: UIViewController, WKNavigationDelegate {
                 if let payment = payment {
                     Iamport.shared.payment(viewController: self,
                                            userCode: "imp28882037", payment: payment) { response in
-                        _ = viewModel.iamportCallback(type: .payment, response)
+                        viewModel.iamportCallback(type: .payment, response) { _ in
+                            
+                        }
                     }
                 }
             }
