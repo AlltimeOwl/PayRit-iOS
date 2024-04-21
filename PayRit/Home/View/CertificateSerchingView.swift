@@ -192,7 +192,7 @@ struct CertificateSerchingView: View {
                                             .frame(width: 120, height: menuState ? 88 : 34)
                                             .background(Color.white)
                                             .clipShape(.rect(cornerRadius: 12))
-                                        .customShadow()
+                                            .shadow(color: .gray.opacity(0.2), radius: 1)
                                             .overlay {
                                                 VStack(alignment: .leading) {
                                                     HStack {
@@ -209,7 +209,7 @@ struct CertificateSerchingView: View {
                                             .frame(width: 120, height: menuState ? 90 : 34)
                                             .background(Color.white)
                                             .clipShape(.rect(cornerRadius: 12))
-                                        .customShadow()
+                                            .shadow(color: .gray.opacity(0.2), radius: 1)
                                             .overlay {
                                                 VStack(alignment: .leading, spacing: 10) {
                                                     Button {
