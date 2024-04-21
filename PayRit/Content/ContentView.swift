@@ -64,8 +64,9 @@ struct ContentView: View {
                                 mypageStore.currentUser = userDefault.getUserInfo()
                             }
                         }
-                        iamportStore.checkIMPAuth() {
-                            
+                        if !userDefault.getAuthState() {
+                            iamportStore.checkIMPAuth {
+                            }
                         }
                     }
                     versionService.loadAppStoreVersion { [self] latestVersion in
@@ -73,7 +74,6 @@ struct ContentView: View {
                         
                         let nowVersion = versionService.nowVersion()
                         let compareResult = nowVersion.compare(latestVersion, options: .numeric)
-                        
                         switch compareResult {
                         case .orderedAscending:
                             versionService.isOldVersion = true
@@ -84,7 +84,7 @@ struct ContentView: View {
                         }
                     }
                 }
-                .updateAlert(isPresented: $versionService.isOldVersion, title: "알림", content: "새 버전이 있습니다.\n업데이트 후 사용 가능합니다.", primaryButtonTitle: nil, cancleButtonTitle: "앱스토어 이동") {
+                .primaryAlertNoneTouch(isPresented: $versionService.isOldVersion, title: "알림", content: "새 버전이 있습니다.\n업데이트 후 사용 가능합니다.", primaryButtonTitle: nil, cancleButtonTitle: "앱스토어 이동") {
                 } cancleAction: {
                     if let url = URL(string: versionService.appStoreOpenUrlString), UIApplication.shared.canOpenURL(url) {
                         UIApplication.shared.open(url, options: [:], completionHandler: nil)
@@ -114,7 +114,7 @@ struct ContentView: View {
                     }
                 }
             }
-            .updateAlert(isPresented: $versionService.isOldVersion, title: "알림", content: "새 버전이 있습니다.\n업데이트 후 사용 가능합니다.", primaryButtonTitle: nil, cancleButtonTitle: "앱스토어 이동") {
+            .primaryAlertNoneTouch(isPresented: $versionService.isOldVersion, title: "알림", content: "새 버전이 있습니다.\n업데이트 후 사용 가능합니다.", primaryButtonTitle: nil, cancleButtonTitle: "앱스토어 이동") {
             } cancleAction: {
                 if let url = URL(string: versionService.appStoreOpenUrlString), UIApplication.shared.canOpenURL(url) {
                     UIApplication.shared.open(url, options: [:], completionHandler: nil)

@@ -123,9 +123,9 @@ final class HomeStore {
                     do {
                         let certificate = try JSONDecoder().decode(CertificateDetail.self, from: data)
                         self.certificateDetail = certificate
-                        if (self.certificateDetail.paperFormInfo.specialConditions?.isEmpty) != nil {
-                            self.certificateDetail.paperFormInfo.specialConditions = nil
-                        }
+//                        if (self.certificateDetail.paperFormInfo.specialConditions?.isEmpty) != nil {
+//                            self.certificateDetail.paperFormInfo.specialConditions = nil
+//                        }
                     } catch {
                         print("Error decoding JSON: \(error)")
                     }
@@ -250,6 +250,7 @@ final class HomeStore {
         }
     }
     
+    /// 차용증 결제 취소
     func paymentCancle(impUid: String, merchantUid: String) {
         var urlComponents = URLComponents()
         if let Key = Bundle.main.object(forInfoDictionaryKey: "PAYMENT_CANCEL_KEY") as? String {

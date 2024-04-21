@@ -51,6 +51,7 @@ struct WritingView: View {
                             .frame(height: 160)
                             .foregroundStyle(.white)
                             .clipShape(.rect(cornerRadius: 12))
+                            .customShadow()
                             .overlay {
                                 HStack {
                                     VStack(alignment: .leading) {
@@ -72,7 +73,6 @@ struct WritingView: View {
                                 .padding(22)
                             }
                     }
-                    .shadow(color: .gray.opacity(0.2), radius: 8)
                     .navigationDestination(for: String.self) { _ in
                         SelectCertificateTypeView(path: $path)
                             .customBackbutton()
@@ -88,6 +88,7 @@ struct WritingView: View {
                             .frame(height: 160)
                             .foregroundStyle(.white)
                             .clipShape(.rect(cornerRadius: 12))
+                            .customShadow()
                             .overlay {
                                 HStack {
                                     VStack(alignment: .leading) {
@@ -110,7 +111,6 @@ struct WritingView: View {
                             }
                     }
                     .disabled(true)
-                    .shadow(color: .gray.opacity(0.2), radius: 8)
                     .opacity(0.5)
                     Spacer()
                 }

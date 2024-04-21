@@ -17,9 +17,7 @@ struct CustomTabView: View {
             Color.brown.ignoresSafeArea()
             switch tabStore.selectedTab {
             case .home:
-                NavigationStack {
-                    HomeView()
-                }
+                HomeView()
             case .write:
                 WritingView()
                     .tint(Color.payritMint)

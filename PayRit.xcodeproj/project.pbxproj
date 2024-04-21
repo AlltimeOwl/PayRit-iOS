@@ -31,6 +31,10 @@
 		BC1CF8D72B961F5600A9BF12 /* MyInfoWritingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1CF8D62B961F5600A9BF12 /* MyInfoWritingView.swift */; };
 		BC1CF8D92B96C8D800A9BF12 /* CustomAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1CF8D82B96C8D800A9BF12 /* CustomAlert.swift */; };
 		BC1CF8DD2B96FCA200A9BF12 /* WritingCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1CF8DC2B96FCA200A9BF12 /* WritingCheckView.swift */; };
+		BC20D9C42BD012CB0053B2F3 /* KakaoShareService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC20D9C32BD012CB0053B2F3 /* KakaoShareService.swift */; };
+		BC20D9D12BD420420053B2F3 /* PaperPixView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC20D9D02BD420420053B2F3 /* PaperPixView.swift */; };
+		BC20D9D32BD420700053B2F3 /* MyInfoPixView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC20D9D22BD420700053B2F3 /* MyInfoPixView.swift */; };
+		BC20D9D52BD420810053B2F3 /* PartnerInfoPixView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC20D9D42BD420810053B2F3 /* PartnerInfoPixView.swift */; };
 		BC2193962BA99BC000EE7B68 /* Certificate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2193952BA99BC000EE7B68 /* Certificate.swift */; };
 		BC2193982BAC0DF000EE7B68 /* String +.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2193972BAC0DF000EE7B68 /* String +.swift */; };
 		BC21939A2BAF34A000EE7B68 /* SafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2193992BAF34A000EE7B68 /* SafariView.swift */; };
@@ -47,7 +51,6 @@
 		BC2D51CC2B9ECD870041FD77 /* CertificateMemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2D51CB2B9ECD870041FD77 /* CertificateMemoView.swift */; };
 		BC2D51CE2B9F35260041FD77 /* CertificateDeductibleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2D51CD2B9F35260041FD77 /* CertificateDeductibleView.swift */; };
 		BC388DB52B904BAB005D1279 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC388DB42B904BAB005D1279 /* ContentView.swift */; };
-		BC45902D2BCAE0EE00A0E43B /* CertificateScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC45902C2BCAE0EE00A0E43B /* CertificateScrollView.swift */; };
 		BC4876C82B9721F3006B15C0 /* PartnerInfoWritingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC4876C72B9721F3006B15C0 /* PartnerInfoWritingView.swift */; };
 		BC595DD62B8D8AC300CA555E /* PayRitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC595DD52B8D8AC300CA555E /* PayRitApp.swift */; };
 		BC595DD82B8D8AC300CA555E /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC595DD72B8D8AC300CA555E /* SignInView.swift */; };
@@ -120,6 +123,10 @@
 		BC1CF8D62B961F5600A9BF12 /* MyInfoWritingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyInfoWritingView.swift; sourceTree = "<group>"; };
 		BC1CF8D82B96C8D800A9BF12 /* CustomAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlert.swift; sourceTree = "<group>"; };
 		BC1CF8DC2B96FCA200A9BF12 /* WritingCheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WritingCheckView.swift; sourceTree = "<group>"; };
+		BC20D9C32BD012CB0053B2F3 /* KakaoShareService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KakaoShareService.swift; sourceTree = "<group>"; };
+		BC20D9D02BD420420053B2F3 /* PaperPixView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaperPixView.swift; sourceTree = "<group>"; };
+		BC20D9D22BD420700053B2F3 /* MyInfoPixView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyInfoPixView.swift; sourceTree = "<group>"; };
+		BC20D9D42BD420810053B2F3 /* PartnerInfoPixView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartnerInfoPixView.swift; sourceTree = "<group>"; };
 		BC2193952BA99BC000EE7B68 /* Certificate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Certificate.swift; sourceTree = "<group>"; };
 		BC2193972BAC0DF000EE7B68 /* String +.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String +.swift"; sourceTree = "<group>"; };
 		BC2193992BAF34A000EE7B68 /* SafariView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariView.swift; sourceTree = "<group>"; };
@@ -135,7 +142,6 @@
 		BC2D51CB2B9ECD870041FD77 /* CertificateMemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateMemoView.swift; sourceTree = "<group>"; };
 		BC2D51CD2B9F35260041FD77 /* CertificateDeductibleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateDeductibleView.swift; sourceTree = "<group>"; };
 		BC388DB42B904BAB005D1279 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		BC45902C2BCAE0EE00A0E43B /* CertificateScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateScrollView.swift; sourceTree = "<group>"; };
 		BC4876C72B9721F3006B15C0 /* PartnerInfoWritingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartnerInfoWritingView.swift; sourceTree = "<group>"; };
 		BC595DD22B8D8AC300CA555E /* PayRit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PayRit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC595DD52B8D8AC300CA555E /* PayRitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayRitApp.swift; sourceTree = "<group>"; };
@@ -279,6 +285,16 @@
 				BC0210332BC5A19000116A6B /* ViewModel */,
 			);
 			path = Iamport;
+			sourceTree = "<group>";
+		};
+		BC20D9CF2BD41FD00053B2F3 /* PixView */ = {
+			isa = PBXGroup;
+			children = (
+				BC20D9D02BD420420053B2F3 /* PaperPixView.swift */,
+				BC20D9D22BD420700053B2F3 /* MyInfoPixView.swift */,
+				BC20D9D42BD420810053B2F3 /* PartnerInfoPixView.swift */,
+			);
+			path = PixView;
 			sourceTree = "<group>";
 		};
 		BC2193A42BB03D6600EE7B68 /* Nofitication */ = {
@@ -451,6 +467,7 @@
 				BC1219662BA32E4700B575F8 /* PDFKitView.swift */,
 				BC2193992BAF34A000EE7B68 /* SafariView.swift */,
 				BC02103B2BCAB49B00116A6B /* VersionService.swift */,
+				BC20D9C32BD012CB0053B2F3 /* KakaoShareService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -515,6 +532,7 @@
 				BC2D51CB2B9ECD870041FD77 /* CertificateMemoView.swift */,
 				BC2D51CD2B9F35260041FD77 /* CertificateDeductibleView.swift */,
 				BC1219642BA29FE700B575F8 /* CertificateAcceptView.swift */,
+				BC20D9CF2BD41FD00053B2F3 /* PixView */,
 				BC2193B52BB146FD00EE7B68 /* CarouselView */,
 				BC12196E2BA5F1D700B575F8 /* ExportView */,
 			);
@@ -598,7 +616,6 @@
 			children = (
 				BCE280DF2B9021EE0085D45E /* WritingView.swift */,
 				BCE280E32B903BE50085D45E /* SelectCertificateTypeView.swift */,
-				BC45902C2BCAE0EE00A0E43B /* CertificateScrollView.swift */,
 				BCE280E12B903B660085D45E /* WritingCertificateInfoView.swift */,
 				BC1CF8D62B961F5600A9BF12 /* MyInfoWritingView.swift */,
 				BC4876C72B9721F3006B15C0 /* PartnerInfoWritingView.swift */,
@@ -784,15 +801,18 @@
 				BC62BFF22BA02481000A1BA5 /* Payment.swift in Sources */,
 				BC595DF02B8D8EAE00CA555E /* TabBarView.swift in Sources */,
 				BC0210382BC6F50000116A6B /* Creditor.swift in Sources */,
+				BC20D9D32BD420700053B2F3 /* MyInfoPixView.swift in Sources */,
 				BC0210362BC6EE0800116A6B /* PaperFormInfo.swift in Sources */,
 				BC68291F2B9CEE87009EF3F5 /* Memo.swift in Sources */,
 				BC0210302BC595D900116A6B /* CertificationInfo.swift in Sources */,
+				BC20D9D12BD420420053B2F3 /* PaperPixView.swift in Sources */,
 				BC02102E2BC5957B00116A6B /* MyCertInfoView.swift in Sources */,
 				BC2D51CC2B9ECD870041FD77 /* CertificateMemoView.swift in Sources */,
 				BC1CF8D72B961F5600A9BF12 /* MyInfoWritingView.swift in Sources */,
 				BC02101B2BC4E06500116A6B /* IMPCertificationView.swift in Sources */,
 				BC595DD62B8D8AC300CA555E /* PayRitApp.swift in Sources */,
 				BC2193B72BB1472400EE7B68 /* CarouselView.swift in Sources */,
+				BC20D9C42BD012CB0053B2F3 /* KakaoShareService.swift in Sources */,
 				BC6F652B2B9B355200FB9FA7 /* User.swift in Sources */,
 				BC62BFF82BA15695000A1BA5 /* WritingStore.swift in Sources */,
 				BC6F652D2B9B394800FB9FA7 /* MembershipWithdrawalView.swift in Sources */,
@@ -804,12 +824,12 @@
 				BC0210192BC4E06500116A6B /* IMPPaymentView.swift in Sources */,
 				BC595E0A2B8DAFD600CA555E /* Font +.swift in Sources */,
 				BC6F652F2B9B3D9000FB9FA7 /* MyPageStore.swift in Sources */,
-				BC45902D2BCAE0EE00A0E43B /* CertificateScrollView.swift in Sources */,
 				BC12196D2BA43D8200B575F8 /* UserDefaultsManager.swift in Sources */,
 				BC5C57092B975A2400A55CC7 /* KakaoAdressView.swift in Sources */,
 				BC12196F2BA5F21F00B575F8 /* CertificateDocumentView.swift in Sources */,
 				BC0210262BC4E08700116A6B /* Order.swift in Sources */,
 				BCE280DC2B8F75450085D45E /* ViewModifier.swift in Sources */,
+				BC20D9D52BD420810053B2F3 /* PartnerInfoPixView.swift in Sources */,
 				BC595E192B8DB75600CA555E /* Color +.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -969,7 +989,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.1;
+				MARKETING_VERSION = 1.2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.alltimeowl.PayRit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -979,7 +999,7 @@
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -1012,7 +1032,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.1;
+				MARKETING_VERSION = 1.2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.alltimeowl.PayRit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1022,7 +1042,7 @@
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

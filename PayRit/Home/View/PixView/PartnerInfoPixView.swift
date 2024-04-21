@@ -1,14 +1,13 @@
 //
-//  PartnerInfoWritingView.swift
+//  DebtorPixView.swift
 //  PayRit
 //
-//  Created by 임대진 on 3/5/24.
+//  Created by 임대진 on 4/21/24.
 //
 
 import SwiftUI
-import UIKit
 
-struct PartnerInfoWritingView: View {
+struct PartnerInfoPixView: View {
     let writingStore: WritingStore
     var isFormValid: Bool {
         if !name.isEmpty && !phoneNumber.isEmpty {
@@ -157,32 +156,35 @@ struct PartnerInfoWritingView: View {
             .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
                 keyBoardFocused = false
             }
+            .onAppear {
+                if newCertificate.memberRole == "DEBTOR" {
+                    self.name = newCertificate.creditorProfile.name
+                    self.phoneNumber = newCertificate.creditorProfile.phoneNumber
+                    self.address = newCertificate.creditorProfile.address
+                } else if newCertificate.memberRole == "CREDITOR" {
+                    self.name = newCertificate.debtorProfile.name
+                    self.phoneNumber = newCertificate.debtorProfile.phoneNumber
+                    self.address = newCertificate.debtorProfile.address
+                }
+            }
             .sheet(isPresented: $isPresentingZipCodeView) {
                 KakaoAdressView(address: $address, zonecode: $zipCode, isPresented: $isPresentingZipCodeView)
                     .edgesIgnoringSafeArea(.all)
             }
-            .navigationDestination(isPresented: $moveNextView) {
-                WritingCheckView(saveType: SaveInfo(type: .save, id: nil), writingStore: writingStore, path: $path, newCertificate: $newCertificate)
-                    .customBackbutton()
-            }
             .primaryAlert(isPresented: $isShowingStopAlert,
                           title: "작성 중단",
                           content: """
-                            지금 작성을 중단하시면
-                            처음부터 다시 작성해야해요.
-                            작성 전 페이지로 돌아갈까요?
+                            수정을 종료하시겠습니까?
                             """,
                           primaryButtonTitle: "아니오",
                           cancleButtonTitle: "네") {
             } cancleAction: {
                 path = .init()
             }
+            .navigationDestination(isPresented: $moveNextView) {
+                WritingCheckView(saveType: SaveInfo(type: .pix, id: newCertificate.paperId), writingStore: writingStore, path: $path, newCertificate: $newCertificate)
+                    .customBackbutton()
+            }
         }
-    }
-}
-
-#Preview {
-    NavigationStack {
-        PartnerInfoWritingView(writingStore: WritingStore(), newCertificate: .constant(CertificateDetail.EmptyCertificate), path: .constant(NavigationPath()))
     }
 }

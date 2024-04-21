@@ -53,7 +53,7 @@ struct CertificateMemoView: View {
                         .frame(maxWidth: .infinity)
                         .background(.white)
                         .clipShape(.rect(cornerRadius: 6))
-                        .shadow(color: Color.gray05.opacity(0.3), radius: 5)
+                        .customShadow()
                     }
                     .listRowSeparator(.hidden)
                 }

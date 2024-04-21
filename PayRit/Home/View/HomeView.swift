@@ -7,382 +7,414 @@
 
 import SwiftUI
 
+enum PathType {
+    case detail
+    case accept
+}
+struct PathItem {
+    let type: PathType
+}
+struct HomePath: Hashable {
+    let type: PathType
+    let paperId: Int
+    let step: CertificateStep
+    let isWriter: Bool
+}
+
 struct HomeView: View {
     private let menuPadding = 8.0
     private let horizontalPadding = 16.0
-    @State private var paperId = 0
+//    @State private var paperId = 0
+    @State private var isWriter: Bool?
     @State private var menuState = false
-    @State private var navigationLinkDetailView = false
-    @State private var navigationLinkAcceptView = false
     @State private var isShowingSignatureView = false
     @State private var isShowingAcceptFailAlert = false
     @State private var isShowingAuthCompleteAlert = false
     @State private var isShowingPaymentSuccessAlert = false
     @State private var isShowingWaitingPaymentAlert = false
     @State private var isShowingWaitingApprovalAlert = false
-    @State var certificateStep: CertificateStep?
+    @State private var isShoingModifyingAlert = false
+    @State private var rectangleOffset: CGSize = .zero
+    @State var path = NavigationPath()
+    @State var checkView: CertificateDetail?
+//    @State var certificateStep: CertificateStep?
     @Environment(HomeStore.self) var homeStore
     @Environment(SignInStore.self) var signInStore
     @Environment(TabBarStore.self) var tabStore
     @Environment(MyPageStore.self) var mypageStore
     @EnvironmentObject var iamportStore: IamportStore
+    @State private var isSafariViewPresented = false
+    @State private var urla: URL? = URL(string: "")
     var body: some View {
-        ZStack {
-            Color.payritBackground.ignoresSafeArea()
-            VStack {
-                if !homeStore.isHiddenInfoBox {
-                    CarouselView()
-                        .padding(.horizontal, 16)
-                        .overlay(alignment: .topTrailing) {
-                            Button {
-                                withAnimation {
-                                    homeStore.isHiddenInfoBox.toggle()
+        NavigationStack(path: $path) {
+            ZStack {
+                Color.payritBackground.ignoresSafeArea()
+                VStack {
+                    if !homeStore.isHiddenInfoBox {
+                        CarouselView(hasCompleted: homeStore.certificates.filter { $0.certificateStep == .complete }.isEmpty ? false : true)
+                            .padding(.horizontal, 16)
+                            .overlay(alignment: .topTrailing) {
+                                Button {
+                                    withAnimation {
+                                        homeStore.isHiddenInfoBox.toggle()
+                                    }
+                                } label: {
+                                    Image(systemName: "xmark")
+                                        .resizable()
+                                        .frame(width: 14, height: 14)
+                                        .foregroundStyle(.white)
+                                        .padding(2)
                                 }
-                            } label: {
-                                Image(systemName: "xmark")
-                                    .font(.system(size: 18))
-                                    .bold()
-                                    .foregroundStyle(.white)
+                                .padding(.trailing, 32)
+                                .padding(.top, 16)
                             }
-                            .padding(.trailing, 32)
-                            .padding(.top, 16)
-                        }
-                }
-                if homeStore.isLoading {
-                    VStack {
-                        Spacer()
-                        ProgressView()
-                        Spacer()
                     }
-                } else {
-                    if !iamportStore.impAuth {
-                        List {
-                            VStack {
-                                Spacer()
-                                HStack {
-                                    Spacer()
-                                    Button {
-                                        iamportStore.isCert = true
-                                    } label: {
-                                        Text("본인인증 후 조회하기")
-                                            .foregroundStyle(.black)
-                                            .font(Font.body02)
-                                            .opacity(0.85)
-                                    }
-                                    .buttonStyle(PlainButtonStyle())
-                                    .padding(.vertical, 8)
-                                    .padding(.horizontal, 8)
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 12)
-                                            .stroke(Color.gray08, lineWidth: 1)
-                                            .background(RoundedRectangle(cornerRadius: 16)
-                                            .foregroundStyle(.white)))
-                                    Spacer()
-                                }
-                                Spacer()
-                            }
-                            .frame(height: UIScreen.screenHeight * 0.5)
-                            .listRowSeparator(.hidden)
+                    if homeStore.isLoading {
+                        VStack {
+                            Spacer()
+                            ProgressView()
+                            Spacer()
                         }
-                        .listStyle(.plain)
-                        .listSectionSeparator(.hidden)
-                        .scrollIndicators(.hidden)
                     } else {
-                        if homeStore.certificates.isEmpty {
-                            ZStack {
-                                List {
-                                    VStack {
-                                        Spacer()
-                                        HStack {
-                                            Spacer()
-                                            Text("""
-                                    아직 거래내역이 없어요.
-                                    작성하러 가볼까요?
-                                    """)
-                                            .frame(maxHeight: .infinity)
-                                            .multilineTextAlignment(.center)
-                                            .lineSpacing(4)
-                                            .font(.system(size: 20))
-                                            .foregroundStyle(.gray).opacity(0.6)
-                                            Spacer()
-                                        }
-                                        Spacer()
-                                    }
-                                    .frame(height: UIScreen.screenHeight * 0.5)
-                                    .listRowSeparator(.hidden)
-                                }
-                                .listStyle(.plain)
-                                .listSectionSeparator(.hidden)
-                                .scrollIndicators(.hidden)
-                                VStack(spacing: -4) {
-                                    Spacer()
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .frame(width: 190, height: 44)
-                                        .overlay {
-                                            Text("차용증·약속 작성하러 가기")
-                                                .foregroundStyle(.white)
-                                                .font(.custom("SUIT-Bold", size: 14))
-                                        }
-                                    Image(systemName: "arrowtriangle.down.fill")
-                                }
-                                .foregroundStyle(Color.gray04)
-                                .padding(.bottom, 50)
-                            }
-                        } else {
-                            ZStack {
-                                VStack(spacing: 0) {
-                                    HStack {
-                                        Text("총 \(homeStore.certificates.count)건")
-                                            .font(.custom("SUIT-Medium", size: 16))
-                                            .foregroundStyle(Color.gray02)
-                                        Spacer()
-                                    }
-                                    .frame(height: 34)
-                                    .padding(.horizontal, horizontalPadding)
-                                    
-                                    // MARK: - 홈 카드 리스트
-                                    ScrollViewReader { _ in
-                                        List(homeStore.certificates, id: \.self) { certificate in
-                                            Button {
-                                                certificateStep = certificate.certificateStep
-                                                paperId = certificate.paperId
-                                                if certificate.certificateStep == .waitingApproval {
-                                                    if certificate.isWriter {
-                                                        isShowingWaitingApprovalAlert.toggle()
-                                                    } else {
-                                                        navigationLinkAcceptView.toggle()
-                                                    }
-                                                } else if certificate.certificateStep == .waitingPayment {
-                                                    if certificate.isWriter {
-                                                        navigationLinkAcceptView.toggle()
-                                                    } else {
-                                                        isShowingWaitingPaymentAlert.toggle()
-                                                    }
-                                                } else if certificate.certificateStep == .progress {
-                                                    navigationLinkDetailView.toggle()
-                                                } else if certificate.certificateStep == .complete {
-                                                    navigationLinkDetailView.toggle()
-                                                }
-                                            } label: {
-                                                VStack(alignment: .leading, spacing: 0) {
-                                                    HStack {
-                                                        Text("원금상환일   \(certificate.repaymentEndDate.stringDateToKorea())")
-                                                            .font(Font.caption01)
-                                                        Spacer()
-                                                        Text(certificate.dueDate >= 0 ? "D - \(certificate.dueDate)" : "D + \(-certificate.dueDate)")
-                                                            .font(Font.custom("SUIT-Bold", size: 14))
-                                                    }
-                                                    .foregroundStyle(.white)
-                                                    .padding(.horizontal, 12)
-                                                    .padding(.vertical, 10)
-                                                    .background(certificate.paperRole == .CREDITOR ? Color.payritMint : Color.payritIntensivePink)
-                                                    .clipShape(.rect(cornerRadius: 8))
-                                                    .padding(.top, 14)
-                                                    
-                                                    Text("\(certificate.amountFormatter)원")
-                                                        .font(Font.title01)
-                                                        .padding(.top, 22)
-                                                    
-                                                    VStack(alignment: .trailing, spacing: 0) {
-                                                        HStack {
-                                                            Text(certificate.peerName)
-                                                                .font(Font.title06)
-                                                                .foregroundStyle(.black)
-                                                            Spacer()
-                                                            Text(certificate.paperRole == .CREDITOR ? "빌려준 돈" : "빌린 돈")
-                                                                .font(Font.body03)
-                                                                .foregroundStyle(certificate.paperRole == .CREDITOR ? Color.payritMint : Color.payritIntensivePink)
-                                                        }
-                                                        
-                                                        ProgressView(value: certificate.repaymentRate, total: 100)
-                                                            .progressViewStyle(CustomLinearProgressViewStyle(trackColor: Color.gray09, progressColor: certificate.paperRole == .CREDITOR ? Color.payritMint : Color.payritIntensivePink))
-                                                            .frame(height: 6)
-                                                            .padding(.top, 14)
-                                                        
-                                                        Text("\(certificate.certificateStep?.rawValue ?? "") (\(Int(certificate.repaymentRate))%)")
-                                                            .font(Font.caption02)
-                                                            .foregroundStyle(Color.gray04)
-                                                            .padding(.top, 4)
-                                                            .padding(.bottom, 14)
-                                                    }
-                                                    .padding(.top, 4)
-                                                }
-                                                .padding(.horizontal, horizontalPadding)
-                                                .frame(maxWidth: .infinity)
-                                                .background()
-                                                .clipShape(RoundedRectangle(cornerRadius: 12))
-                                                .shadow(color: .gray.opacity(0.2), radius: 5)
-                                            }
-                                            .listRowSeparator(.hidden)
-                                            .listRowBackground(Color.payritBackground)
-                                            .padding(.bottom, certificate == homeStore.certificates.last ? 40 : 0)
-                                        }
-                                        .scrollIndicators(.hidden)
-                                        .listStyle(.plain)
-                                        .background(Color.payritBackground)
-                                    }
-                                    Spacer()
-                                }
-                                
-                                // MARK: - 메뉴
+                        if !iamportStore.impAuth {
+                            List {
                                 VStack {
+                                    Spacer()
                                     HStack {
                                         Spacer()
                                         Button {
-                                            withAnimation {
-                                                menuState.toggle()
-                                            }
+                                            iamportStore.isCert = true
                                         } label: {
-                                            if menuState == false {
-                                                RoundedRectangle(cornerRadius: 12)
-                                                    .stroke(Color(hex: "F2F2F2"), lineWidth: 2)
-                                                    .frame(width: 120, height: menuState ? 88 : 34)
-                                                    .background(Color.white)
-                                                    .clipShape(.rect(cornerRadius: 12))
-                                                    .shadow(color: .gray.opacity(0.2), radius: 5)
-                                                    .overlay {
-                                                        VStack(alignment: .leading) {
-                                                            HStack {
-                                                                Text(homeStore.sortingType.stringValue)
-                                                                Spacer()
-                                                                Image(systemName: "chevron.down")
+                                            Text("본인인증 후 조회하기")
+                                                .foregroundStyle(.black)
+                                                .font(Font.body02)
+                                                .opacity(0.85)
+                                        }
+                                        .buttonStyle(PlainButtonStyle())
+                                        .padding(.vertical, 8)
+                                        .padding(.horizontal, 8)
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 12)
+                                                .stroke(Color.gray08, lineWidth: 1)
+                                                .background(RoundedRectangle(cornerRadius: 16)
+                                                    .foregroundStyle(.white)))
+                                        Spacer()
+                                    }
+                                    Spacer()
+                                }
+                                .frame(height: UIScreen.screenHeight * 0.5)
+                                .listRowSeparator(.hidden)
+                            }
+                            .listStyle(.plain)
+                            .listSectionSeparator(.hidden)
+                            .scrollIndicators(.hidden)
+                        } else {
+                            if homeStore.certificates.isEmpty {
+                                ZStack {
+                                    List {
+                                        VStack {
+                                            Spacer()
+                                            HStack {
+                                                Spacer()
+                                                Text("""
+                                            아직 거래내역이 없어요.
+                                            작성하러 가볼까요?
+                                            """)
+                                                .frame(maxHeight: .infinity)
+                                                .multilineTextAlignment(.center)
+                                                .lineSpacing(4)
+                                                .font(.system(size: 20))
+                                                .foregroundStyle(.gray).opacity(0.6)
+                                                Spacer()
+                                            }
+                                            Spacer()
+                                        }
+                                        .frame(height: UIScreen.screenHeight * 0.5)
+                                        .listRowSeparator(.hidden)
+                                    }
+                                    .listStyle(.plain)
+                                    .listSectionSeparator(.hidden)
+                                    .scrollIndicators(.hidden)
+                                    VStack(spacing: -4) {
+                                        Spacer()
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .frame(width: 190, height: 44)
+                                            .overlay {
+                                                Text("차용증·약속 작성하러 가기")
+                                                    .foregroundStyle(.white)
+                                                    .font(.custom("SUIT-Bold", size: 14))
+                                            }
+                                        Image(systemName: "arrowtriangle.down.fill")
+                                    }
+                                    .foregroundStyle(Color.gray04)
+                                    .padding(.bottom, 50)
+                                }
+                            } else {
+                                ZStack {
+                                    VStack(spacing: 0) {
+                                        HStack {
+                                            Text("총 \(homeStore.certificates.count)건")
+                                                .font(.custom("SUIT-Medium", size: 16))
+                                                .foregroundStyle(Color.gray02)
+                                            Spacer()
+                                        }
+                                        .frame(height: 34)
+                                        .padding(.horizontal, horizontalPadding)
+                                        
+                                        // MARK: - 홈 카드 리스트
+                                        ScrollViewReader { _ in
+                                            List {
+                                                ForEach(homeStore.certificates, id: \.self) { certificate in
+                                                    Button {
+                                                        switch certificate.certificateStep {
+                                                        case .waitingApproval:
+                                                            path.append(HomePath(type: .accept, paperId: certificate.paperId, step: .waitingApproval, isWriter: certificate.isWriter))
+                                                        case .waitingPayment:
+                                                            if certificate.isWriter {
+                                                                path.append(HomePath(type: .accept, paperId: certificate.paperId, step: .waitingPayment, isWriter: certificate.isWriter))
+                                                            } else {
+                                                                isShowingWaitingPaymentAlert.toggle()
                                                             }
+                                                        case .progress:
+                                                            path.append(HomePath(type: .detail, paperId: certificate.paperId, step: .progress, isWriter: certificate.isWriter))
+                                                        case .complete:
+                                                            path.append(HomePath(type: .detail, paperId: certificate.paperId, step: .complete, isWriter: certificate.isWriter))
+                                                        case .modifying:
+                                                            if certificate.isWriter {
+                                                                path.append(HomePath(type: .accept, paperId: certificate.paperId, step: .modifying, isWriter: certificate.isWriter))
+                                                            } else {
+                                                                isShoingModifyingAlert.toggle()
+                                                            }
+                                                        case .none: break
+                                                            
+                                                        case .some(.refused): break
+                                                            
                                                         }
-                                                        .padding(.horizontal, menuPadding)
+                                                        print(path)
+                                                    } label: {
+                                                        VStack(alignment: .leading, spacing: 0) {
+                                                            HStack {
+                                                                Text("원금상환일   \(certificate.repaymentEndDate.stringDateToKorea())")
+                                                                    .font(Font.caption01)
+                                                                Spacer()
+                                                                Text(certificate.dueDate >= 0 ? "D - \(certificate.dueDate)" : "D + \(-certificate.dueDate)")
+                                                                    .font(Font.custom("SUIT-Bold", size: 14))
+                                                            }
+                                                            .foregroundStyle(.white)
+                                                            .padding(.horizontal, 12)
+                                                            .padding(.vertical, 10)
+                                                            .background(certificate.paperRole == .CREDITOR ? Color.payritMint : Color.payritIntensivePink)
+                                                            .clipShape(.rect(cornerRadius: 8))
+                                                            .padding(.top, 14)
+                                                            
+                                                            Text("\(certificate.amountFormatter)원")
+                                                                .font(Font.title01)
+                                                                .padding(.top, 22)
+                                                            
+                                                            VStack(alignment: .trailing, spacing: 0) {
+                                                                HStack {
+                                                                    Text(certificate.peerName)
+                                                                        .font(Font.title06)
+                                                                        .foregroundStyle(.black)
+                                                                    Spacer()
+                                                                    Text(certificate.paperRole == .CREDITOR ? "빌려준 돈" : "빌린 돈")
+                                                                        .font(Font.body03)
+                                                                        .foregroundStyle(certificate.paperRole == .CREDITOR ? Color.payritMint : Color.payritIntensivePink)
+                                                                }
+                                                                
+                                                                ProgressView(value: certificate.repaymentRate, total: 100)
+                                                                    .progressViewStyle(CustomLinearProgressViewStyle(trackColor: Color.gray09, progressColor: certificate.paperRole == .CREDITOR ? Color.payritMint : Color.payritIntensivePink))
+                                                                    .frame(height: 6)
+                                                                    .padding(.top, 14)
+                                                                HStack(spacing: 0) {
+                                                                    Text(certificate.certificateStep?.rawValue ?? "")
+                                                                    if certificate.certificateStep == .complete || certificate.certificateStep == .progress {
+                                                                        Text(" (\(Int(certificate.repaymentRate))%)")
+                                                                    }
+                                                                }
+                                                                .font(Font.caption02)
+                                                                .foregroundStyle(Color.gray04)
+                                                                .padding(.top, 4)
+                                                                .padding(.bottom, 14)
+                                                            }
+                                                            .padding(.top, 4)
+                                                        }
+                                                        .padding(.horizontal, horizontalPadding)
+                                                        .frame(maxWidth: .infinity)
+                                                        .background()
+                                                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                                                        .customShadow()
                                                     }
-                                            } else {
-                                                RoundedRectangle(cornerRadius: 12)
-                                                    .stroke(Color(hex: "F2F2F2"), lineWidth: 2)
-                                                    .frame(width: 120, height: menuState ? 90 : 34)
-                                                    .background(Color.white)
-                                                    .clipShape(.rect(cornerRadius: 12))
-                                                    .shadow(color: .gray.opacity(0.2), radius: 5)
-                                                    .overlay {
-                                                        VStack(alignment: .leading, spacing: 10) {
-                                                            Button {
-                                                                menuState.toggle()
-                                                            } label: {
+//                                                    .buttonStyle(PlainButtonStyle())
+                                                    .listRowSeparator(.hidden)
+                                                    .listRowBackground(Color.payritBackground)
+                                                    .padding(.bottom, certificate == homeStore.certificates.last ? 40 : 0)
+                                                }
+                                                //                                            .onDelete { indexSet in
+                                                //                                                homeStore.certificates.remove(atOffsets: indexSet)
+                                                //                                            }
+                                            }
+                                            .scrollIndicators(.hidden)
+                                            .listStyle(.plain)
+                                            .background(Color.payritBackground)
+                                            .navigationDestination(for: HomePath.self) { path in
+                                                if path.type == .accept {
+                                                    CertificateAcceptView(paperId: path.paperId, isWriter: path.isWriter, certificateStep: path.step, path: $path)
+                                                        .customBackbutton()
+                                                        .onAppear {
+                                                            tabStore.tabBarHide = true
+                                                        }
+                                                } else if path.type == .detail {
+                                                    CertificateDetailView(paperId: path.paperId, certificateStep: path.step)
+                                                        .customBackbutton()
+                                                        .onAppear {
+                                                            tabStore.tabBarHide = true
+                                                        }
+                                                }
+                                            }
+                                        }
+                                        Spacer()
+                                    }
+                                    
+                                    // MARK: - 메뉴
+                                    VStack {
+                                        HStack {
+                                            Spacer()
+                                            Button {
+                                                withAnimation {
+                                                    menuState.toggle()
+                                                }
+                                            } label: {
+                                                if menuState == false {
+                                                    RoundedRectangle(cornerRadius: 12)
+                                                        .stroke(Color(hex: "F2F2F2"), lineWidth: 2)
+                                                        .frame(width: 120, height: menuState ? 88 : 34)
+                                                        .background(Color.white)
+                                                        .clipShape(.rect(cornerRadius: 12))
+                                                        .customShadow()
+                                                        .overlay {
+                                                            VStack(alignment: .leading) {
                                                                 HStack {
                                                                     Text(homeStore.sortingType.stringValue)
                                                                     Spacer()
-                                                                    Image(systemName: "chevron.up")
+                                                                    Image(systemName: "chevron.down")
                                                                 }
                                                             }
-                                                            ForEach(SortingType.allCases, id: \.self) { state in
-                                                                if state != homeStore.sortingType {
-                                                                    Button {
-                                                                        homeStore.sortingType = state
-                                                                        menuState.toggle()
-                                                                        homeStore.sortingCertificates()
-                                                                    } label: {
-                                                                        HStack {
-                                                                            Text(state.rawValue)
-                                                                            Spacer()
+                                                            .padding(.horizontal, menuPadding)
+                                                        }
+                                                } else {
+                                                    RoundedRectangle(cornerRadius: 12)
+                                                        .stroke(Color(hex: "F2F2F2"), lineWidth: 2)
+                                                        .frame(width: 120, height: menuState ? 90 : 34)
+                                                        .background(Color.white)
+                                                        .clipShape(.rect(cornerRadius: 12))
+                                                        .customShadow()
+                                                        .overlay {
+                                                            VStack(alignment: .leading, spacing: 10) {
+                                                                Button {
+                                                                    menuState.toggle()
+                                                                } label: {
+                                                                    HStack {
+                                                                        Text(homeStore.sortingType.stringValue)
+                                                                        Spacer()
+                                                                        Image(systemName: "chevron.up")
+                                                                    }
+                                                                }
+                                                                ForEach(SortingType.allCases, id: \.self) { state in
+                                                                    if state != homeStore.sortingType {
+                                                                        Button {
+                                                                            homeStore.sortingType = state
+                                                                            menuState.toggle()
+                                                                            homeStore.sortingCertificates()
+                                                                        } label: {
+                                                                            HStack {
+                                                                                Text(state.rawValue)
+                                                                                Spacer()
+                                                                            }
                                                                         }
                                                                     }
                                                                 }
                                                             }
+                                                            .padding(.horizontal, menuPadding)
                                                         }
-                                                        .padding(.horizontal, menuPadding)
-                                                    }
+                                                }
                                             }
                                         }
+                                        Spacer()
                                     }
-                                    Spacer()
+                                    .font(Font.body03)
+                                    .foregroundStyle(Color.gray02)
+                                    .padding(.horizontal, horizontalPadding)
                                 }
-                                .font(Font.body03)
-                                .foregroundStyle(Color.gray02)
-                                .padding(.horizontal, horizontalPadding)
                             }
                         }
                     }
-                }
-                Spacer()
-                if iamportStore.isCert {
-                    IMPCertificationView(certType: .constant(.account))
-                        .onDisappear {
-                            iamportStore.clearButton()
-                        }
-                }
-            }
-            .padding(.top, 40)
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    VStack {
-                        Spacer().frame(height: 30)
-                        if UserDefaultsManager().getUserInfo().signInCompany == "애플" {
-                            Text("\(UserDefaultsManager().getAppleUserInfo().name)님의 기록")
-                                .font(Font.title01)
-                                .foregroundStyle(.black)
-                        } else {
-                            Text("\(UserDefaultsManager().getUserInfo().name)님의 기록")
-                                .font(Font.title01)
-                                .foregroundStyle(.black)
-                        }
-                        Spacer().frame(height: 10)
+                    Spacer()
+                    if iamportStore.isCert {
+                        IMPCertificationView(certType: .constant(.account))
+                            .onDisappear {
+                                iamportStore.clearButton()
+                            }
                     }
                 }
-                ToolbarItem(placement: .topBarTrailing) {
-                    HStack {
+                .padding(.top, 40)
+                .toolbar {
+                    ToolbarItem(placement: .topBarLeading) {
                         VStack {
                             Spacer().frame(height: 30)
-                            NavigationLink {
-                                CertificateSerchingView()
-                                    .navigationBarBackButtonHidden()
-                                    .onAppear {
-                                        tabStore.tabBarHide = true
-                                    }
-                            }label: {
-                                Image("searchIcon")
-                                    .resizable()
-                                    .frame(width: 24, height: 24)
+                            if UserDefaultsManager().getUserInfo().signInCompany == "애플" {
+                                Text("\(UserDefaultsManager().getAppleUserInfo().name)님의 기록")
+                                    .font(Font.title01)
                                     .foregroundStyle(.black)
-                            }
-                            Spacer().frame(height: 10)
-                        }
-                        VStack {
-                            Spacer().frame(height: 30)
-                            NavigationLink {
-                                NotificationView()
-                                    .customBackbutton()
-                                    .onAppear {
-                                        tabStore.tabBarHide = true
-                                    }
-                            }label: {
-                                Image("alamIcon")
-                                    .resizable()
-                                    .frame(width: 24, height: 24)
+                            } else {
+                                Text("\(UserDefaultsManager().getUserInfo().name)님의 기록")
+                                    .font(Font.title01)
                                     .foregroundStyle(.black)
                             }
                             Spacer().frame(height: 10)
                         }
                     }
-                }
-            }
-        }
-        .navigationDestination(isPresented: $navigationLinkDetailView) {
-            if !homeStore.certificates.isEmpty {
-                if let setp = certificateStep {
-                    CertificateDetailView(paperId: paperId, certificateStep: setp)
-                        .customBackbutton()
-                        .onAppear {
-                            tabStore.tabBarHide = true
+                    ToolbarItem(placement: .topBarTrailing) {
+                        HStack {
+                            VStack {
+                                Spacer().frame(height: 30)
+                                NavigationLink {
+                                    //                                CertificateSerchingView()
+                                    //                                    .navigationBarBackButtonHidden()
+                                    //                                    .onAppear {
+                                    //                                        tabStore.tabBarHide = true
+                                    //                                    }
+                                }label: {
+                                    Image("searchIcon")
+                                        .resizable()
+                                        .frame(width: 24, height: 24)
+                                        .foregroundStyle(.black)
+                                }
+                                Spacer().frame(height: 10)
+                            }
+                            VStack {
+                                Spacer().frame(height: 30)
+                                NavigationLink {
+                                    NotificationView()
+                                        .customBackbutton()
+                                        .onAppear {
+                                            tabStore.tabBarHide = true
+                                        }
+                                }label: {
+                                    Image("alamIcon")
+                                        .resizable()
+                                        .frame(width: 24, height: 24)
+                                        .foregroundStyle(.black)
+                                }
+                                Spacer().frame(height: 10)
+                            }
                         }
-                }
-            }
-        }
-        .navigationDestination(isPresented: $navigationLinkAcceptView) {
-            if !homeStore.certificates.isEmpty {
-                if let setp = certificateStep {
-                    CertificateAcceptView(paperId: paperId, certificateStep: setp)
-                        .customBackbutton()
-                        .onAppear {
-                            tabStore.tabBarHide = true
-                        }
+                    }
                 }
             }
         }
         .refreshable {
+            tabStore.tabBarHide = false
             await homeStore.loadCertificates()
         }
         .onAppear {
@@ -405,14 +437,19 @@ struct HomeView: View {
                 await homeStore.loadCertificates()
             }
         }
-        .primaryAlert(isPresented: $isShowingWaitingApprovalAlert, title: "승인 대기중", content: "아직 상대방이 승인하지 않았습니다.", primaryButtonTitle: nil, cancleButtonTitle: "확인") {
+        .onChange(of: path) {
+            if path.isEmpty {
+                tabStore.tabBarHide = false
+            }
+        }
+        .primaryAlert(isPresented: $isShowingWaitingPaymentAlert, title: "결제 진행중", content: "작성자가 결제 진행중입니다.", primaryButtonTitle: nil, cancleButtonTitle: "확인") {
             //
         } cancleAction: {
             Task {
                 await homeStore.loadCertificates()
             }
         }
-        .primaryAlert(isPresented: $isShowingWaitingPaymentAlert, title: "결제 진행중", content: "작성자가 결제 진행중입니다.", primaryButtonTitle: nil, cancleButtonTitle: "확인") {
+        .primaryAlert(isPresented: $isShoingModifyingAlert, title: "수정 진행중", content: "작성자가 수정중입니다.", primaryButtonTitle: nil, cancleButtonTitle: "확인") {
             //
         } cancleAction: {
             Task {

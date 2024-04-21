@@ -1,14 +1,13 @@
 //
-//  PartnerInfoWritingView.swift
+//  CreditorPixView.swift
 //  PayRit
 //
-//  Created by 임대진 on 3/5/24.
+//  Created by 임대진 on 4/21/24.
 //
 
 import SwiftUI
-import UIKit
 
-struct PartnerInfoWritingView: View {
+struct MyInfoPixView: View {
     let writingStore: WritingStore
     var isFormValid: Bool {
         if !name.isEmpty && !phoneNumber.isEmpty {
@@ -23,9 +22,9 @@ struct PartnerInfoWritingView: View {
     @State private var address = ""
     @State private var detailAddress = ""
     @State private var moveNextView: Bool = false
+    @State private var isPresentingZipCodeView = false
+    @State private var isShowingStopAlert = false
     @State private var notEnoughPhoneNumberLength: Bool = false
-    @State private var isPresentingZipCodeView: Bool = false
-    @State private var isShowingStopAlert: Bool = false
     @State private var keyBoardFocused: Bool = false
     @Binding var newCertificate: CertificateDetail
     @Binding var path: NavigationPath
@@ -37,7 +36,7 @@ struct PartnerInfoWritingView: View {
                     VStack(alignment: .leading, spacing: 40) {
                         VStack {
                             Text("""
-                                 상대방의
+                                 작성하는 분의
                                  정보를 입력해 주세요.
                                 """)
                             .font(Font.title03)
@@ -49,9 +48,9 @@ struct PartnerInfoWritingView: View {
                                 .font(Font.body03)
                             CustomTextField(foregroundStyle: .black, placeholder: "이름을 적어주세요", keyboardType: .default, text: $name)
                                 .onChange(of: name) {
-                                    if newCertificate.memberRole == "DEBTOR" {
+                                    if newCertificate.memberRole == "CREDITOR" {
                                         newCertificate.creditorProfile.name = name
-                                    } else if newCertificate.memberRole == "CREDITOR" {
+                                    } else if newCertificate.memberRole == "DEBTOR" {
                                         newCertificate.debtorProfile.name = name
                                     }
                                 }
@@ -63,9 +62,9 @@ struct PartnerInfoWritingView: View {
                                 .onChange(of: phoneNumber) { oldValue, newValue in
                                     if newValue.count <= 13 {
                                         phoneNumber = phoneNumber.phoneNumberMiddleCase()
-                                        if newCertificate.memberRole == "DEBTOR" {
+                                        if newCertificate.memberRole == "CREDITOR" {
                                             newCertificate.creditorProfile.phoneNumber = phoneNumber
-                                        } else if newCertificate.memberRole == "CREDITOR" {
+                                        } else if newCertificate.memberRole == "DEBTOR" {
                                             newCertificate.debtorProfile.phoneNumber = phoneNumber
                                         }
                                     } else {
@@ -83,11 +82,10 @@ struct PartnerInfoWritingView: View {
                                 .font(Font.body03)
                             HStack(alignment: .bottom) {
                                 CustomTextField(foregroundStyle: .black, placeholder: "우편번호", keyboardType: .numberPad, text: $zipCode)
-                                    .disabled(true)
                                     .onChange(of: zipCode) {
-                                        if newCertificate.memberRole == "DEBTOR" {
+                                        if newCertificate.memberRole == "CREDITOR" {
                                             newCertificate.creditorProfile.address = address + "(\(zipCode))"
-                                        } else if newCertificate.memberRole == "CREDITOR" {
+                                        } else if newCertificate.memberRole == "DEBTOR" {
                                             newCertificate.debtorProfile.address = address + "(\(zipCode))"
                                         }
                                     }
@@ -107,9 +105,9 @@ struct PartnerInfoWritingView: View {
                                 .disabled(true)
                             CustomTextField(foregroundStyle: .black, placeholder: "상세주소를 적어주세요", keyboardType: .default, text: $detailAddress)
                                 .onChange(of: detailAddress) {
-                                    if newCertificate.memberRole == "DEBTOR" {
+                                    if newCertificate.memberRole == "CREDITOR" {
                                         newCertificate.creditorProfile.address = address + " \(detailAddress) " + "(\(zipCode))"
-                                    } else if newCertificate.memberRole == "CREDITOR" {
+                                    } else if newCertificate.memberRole == "DEBTOR" {
                                         newCertificate.debtorProfile.address = address + " \(detailAddress) " + "(\(zipCode))"
                                     }
                                 }
@@ -136,53 +134,57 @@ struct PartnerInfoWritingView: View {
                 }
                 .padding(.bottom, keyBoardFocused ? 0 : 16)
                 .padding(.horizontal, keyBoardFocused ? 0 : 16)
-            }
-            .toolbar {
-                ToolbarItem {
-                    Button {
-                        isShowingStopAlert.toggle()
-                    } label: {
-                        Image(systemName: "xmark")
-                            .foregroundStyle(.black)
-                    }
-                }
-            }
-            .dismissOnDrag()
-            .navigationTitle("페이릿 작성하기")
-            .navigationBarTitleDisplayMode(.inline)
-            .onTapGesture { self.endTextEditing() }
-            .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillChangeFrameNotification)) { _ in
-                keyBoardFocused = true
-            }
-            .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
-                keyBoardFocused = false
-            }
-            .sheet(isPresented: $isPresentingZipCodeView) {
-                KakaoAdressView(address: $address, zonecode: $zipCode, isPresented: $isPresentingZipCodeView)
-                    .edgesIgnoringSafeArea(.all)
-            }
-            .navigationDestination(isPresented: $moveNextView) {
-                WritingCheckView(saveType: SaveInfo(type: .save, id: nil), writingStore: writingStore, path: $path, newCertificate: $newCertificate)
-                    .customBackbutton()
-            }
-            .primaryAlert(isPresented: $isShowingStopAlert,
-                          title: "작성 중단",
-                          content: """
-                            지금 작성을 중단하시면
-                            처음부터 다시 작성해야해요.
-                            작성 전 페이지로 돌아갈까요?
-                            """,
-                          primaryButtonTitle: "아니오",
-                          cancleButtonTitle: "네") {
-            } cancleAction: {
-                path = .init()
+                
             }
         }
-    }
-}
-
-#Preview {
-    NavigationStack {
-        PartnerInfoWritingView(writingStore: WritingStore(), newCertificate: .constant(CertificateDetail.EmptyCertificate), path: .constant(NavigationPath()))
+        .dismissOnDrag()
+        .navigationTitle("페이릿 작성하기")
+        .navigationBarTitleDisplayMode(.inline)
+        .onTapGesture { self.endTextEditing() }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillChangeFrameNotification)) { _ in
+            keyBoardFocused = true
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
+            keyBoardFocused = false
+        }
+        .onAppear {
+            if newCertificate.memberRole == "CREDITOR" {
+                self.name = newCertificate.creditorProfile.name
+                self.phoneNumber = newCertificate.creditorProfile.phoneNumber
+                self.address = newCertificate.creditorProfile.address
+            } else if newCertificate.memberRole == "DEBTOR" {
+                self.name = newCertificate.debtorProfile.name
+                self.phoneNumber = newCertificate.debtorProfile.phoneNumber
+                self.address = newCertificate.debtorProfile.address
+            }
+        }
+        .toolbar {
+            ToolbarItem {
+                Button {
+                    isShowingStopAlert.toggle()
+                } label: {
+                    Image(systemName: "xmark")
+                        .foregroundStyle(.black)
+                }
+            }
+        }
+        .sheet(isPresented: $isPresentingZipCodeView) {
+            KakaoAdressView(address: $address, zonecode: $zipCode, isPresented: $isPresentingZipCodeView)
+                .edgesIgnoringSafeArea(.all)
+        }
+        .primaryAlert(isPresented: $isShowingStopAlert,
+                      title: "작성 중단",
+                      content: """
+                        수정을 종료하시겠습니까?
+                        """,
+                      primaryButtonTitle: "아니오",
+                      cancleButtonTitle: "네") {
+        } cancleAction: {
+            path = .init()
+        }
+        .navigationDestination(isPresented: $moveNextView) {
+            PartnerInfoPixView(writingStore: writingStore, newCertificate: $newCertificate, path: $path)
+                .customBackbutton()
+        }
     }
 }

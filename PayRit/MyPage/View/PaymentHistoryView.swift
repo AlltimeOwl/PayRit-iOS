@@ -56,7 +56,7 @@ struct PaymentHistoryView: View {
                 .frame(maxWidth: .infinity)
                 .background()
                 .clipShape(RoundedRectangle(cornerRadius: 12))
-                .shadow(color: .gray.opacity(0.2), radius: 5)
+                .customShadow()
                 .listRowBackground(Color.white)
                 .listRowSeparator(.hidden)
             }
@@ -78,7 +78,7 @@ struct PaymentHistoryView: View {
                                 .frame(width: 120, height: menuState ? 88 : 34)
                                 .background(Color.white)
                                 .clipShape(.rect(cornerRadius: 12))
-                                .shadow(color: .gray.opacity(0.2), radius: 5)
+                                .customShadow()
                                 .overlay {
                                     VStack(alignment: .leading) {
                                         HStack {
@@ -95,7 +95,7 @@ struct PaymentHistoryView: View {
                                 .frame(width: 120, height: menuState ? 62 : 34)
                                 .background(Color.white)
                                 .clipShape(.rect(cornerRadius: 12))
-                                .shadow(color: .gray.opacity(0.2), radius: 5)
+                                .customShadow()
                                 .overlay {
                                     VStack(alignment: .leading, spacing: 10) {
                                         Button {

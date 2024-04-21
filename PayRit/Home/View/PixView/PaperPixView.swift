@@ -1,23 +1,21 @@
 //
-//  WritingCertificateInfoView.swift
+//  PaperPixView.swift
 //  PayRit
 //
-//  Created by 임대진 on 2/29/24.
+//  Created by 임대진 on 4/21/24.
 //
 
 import SwiftUI
 
-struct WritingCertificateInfoView: View {
+struct PaperPixView: View {
     let certificateType: String
-    let writingStore: WritingStore = WritingStore()
+    let writingStore = WritingStore()
     @State private var repaymentStartDate: Date = Date()
     @State private var repaymentEndDate: Date = Date()
     @State private var money: String = ""
     @State private var interestRate: String = ""
     @State private var interestDate: String = ""
     @State private var specialConditions: String = ""
-    @State private var onTapBorrowedDate: Bool = false
-    @State private var onTapRedemptionDate: Bool = false
     @State private var warningMessage: Bool = false
     @State private var calToggle: Bool = false
     @State private var isShowingStopAlert: Bool = false
@@ -29,16 +27,16 @@ struct WritingCertificateInfoView: View {
     @State private var isShowingNotYetService: Bool = false
     @State private var moveNextView: Bool = false
     @State private var keyBoardFocused: Bool = false
-    @State private var newCertificate: CertificateDetail = CertificateDetail.EmptyCertificate
+    @State var newCertificate: CertificateDetail
     @Binding var path: NavigationPath
     @Environment(MyPageStore.self) var mypageStore
     @FocusState var interestTextFieldFocus: Bool
     @Namespace var bottomID
     var isFormValid: Bool {
         if calToggle {
-            return !money.isEmpty && onTapBorrowedDate && !interestRate.isEmpty
+            return !money.isEmpty && !interestRate.isEmpty
         } else {
-            return !money.isEmpty && onTapBorrowedDate
+            return !money.isEmpty
         }
     }
     var body: some View {
@@ -87,19 +85,12 @@ struct WritingCertificateInfoView: View {
                                         VStack {
                                             Button {
                                                 endTextEditing()
-                                                onTapBorrowedDate = true
                                                 isShowingBorrowedDatePicker.toggle()
                                             } label: {
                                                 HStack {
-                                                    if onTapBorrowedDate {
-                                                        Text(repaymentStartDate.dateToString())
-                                                            .font(Font.body02)
-                                                            .foregroundStyle(.black)
-                                                    } else {
-                                                        Text("YY.MM.DD")
-                                                            .font(Font.body02)
-                                                            .foregroundStyle(Color.gray07)
-                                                    }
+                                                    Text(repaymentStartDate.dateToString())
+                                                        .font(Font.body02)
+                                                        .foregroundStyle(.black)
                                                     Spacer()
                                                     Image(systemName: "calendar")
                                                         .font(.system(size: 20))
@@ -126,19 +117,12 @@ struct WritingCertificateInfoView: View {
                                         VStack {
                                             Button {
                                                 endTextEditing()
-                                                onTapRedemptionDate = true
                                                 isShowingRedemptionDatePicker.toggle()
                                             } label: {
                                                 HStack {
-                                                    if onTapRedemptionDate {
-                                                        Text(repaymentEndDate.dateToString())
-                                                            .font(Font.body02)
-                                                            .foregroundStyle(.black)
-                                                    } else {
-                                                        Text("YY.MM.DD")
-                                                            .font(Font.body02)
-                                                            .foregroundStyle(Color.gray07)
-                                                    }
+                                                    Text(repaymentEndDate.dateToString())
+                                                        .font(Font.body02)
+                                                        .foregroundStyle(.black)
                                                     Spacer()
                                                     Image(systemName: "calendar")
                                                         .font(.system(size: 20))
@@ -339,8 +323,6 @@ struct WritingCertificateInfoView: View {
         .navigationTitle("페이릿 작성하기")
         .navigationBarTitleDisplayMode(.inline)
         .onTapGesture { self.endTextEditing() }
-        .onChange(of: keyBoardFocused) {
-        }
         .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillChangeFrameNotification)) { _ in
             keyBoardFocused = true
         }
@@ -356,6 +338,10 @@ struct WritingCertificateInfoView: View {
                         .foregroundStyle(.black)
                 }
             }
+        }
+        .navigationDestination(isPresented: $moveNextView) {
+            MyInfoPixView(writingStore: writingStore, newCertificate: $newCertificate, path: $path)
+                    .customBackbutton()
         }
         .sheet(isPresented: $isShowingBorrowedDatePicker, content: {
             DatePicker("", selection: $repaymentStartDate, in: Date()..., displayedComponents: [.date])
@@ -374,44 +360,37 @@ struct WritingCertificateInfoView: View {
                     newCertificate.paperFormInfo.repaymentEndDate = repaymentEndDate.dateToString()
                 }
         })
+        .onChange(of: keyBoardFocused) {
+        }
         .onChange(of: repaymentStartDate) {
             newCertificate.paperFormInfo.repaymentStartDate = repaymentStartDate.dateToString()
         }
         .onChange(of: repaymentEndDate) {
             newCertificate.paperFormInfo.repaymentEndDate = repaymentEndDate.dateToString()
         }
+        .onAppear {
+            self.money = String(newCertificate.paperFormInfo.primeAmount)
+            self.repaymentStartDate = newCertificate.paperFormInfo.repaymentStartDate.stringToDate() ?? Date()
+            self.repaymentEndDate = newCertificate.paperFormInfo.repaymentEndDate.stringToDate() ?? Date()
+            self.specialConditions = newCertificate.paperFormInfo.specialConditions
+            self.interestRate = String(newCertificate.paperFormInfo.interestRate)
+            self.interestDate = String(newCertificate.paperFormInfo.interestPaymentDate)
+            if newCertificate.paperFormInfo.interestRate > 0 || newCertificate.paperFormInfo.interestPaymentDate > 0 {
+                self.calToggle = true
+            }
+        }
+        .toast(isShowing: $isShowingInterestWarningToastMessage, title: nil, message: "이자제한법상 법정 최고 이자율은 20% 미만 입니다.")
+        .toast(isShowing: $isShowingInterestToastMessage, title: "빌려준 날짜부터 갚는 날짜까지의 일수를 기준으로 계산됩니다.", message: "예) 원금이 50만원, 이자율이 2%, 일수가 300일 일때\n50만원 * 2% * 300/365 = 약 8,219원")
+        .toast(isShowing: $isShowingFormToastMessage, title: nil, message: "필수 항목을 작성해주세요")
         .primaryAlert(isPresented: $isShowingStopAlert,
                       title: "작성 중단",
                       content: """
-                        지금 작성을 중단하시면
-                        처음부터 다시 작성해야해요.
-                        작성 전 페이지로 돌아갈까요?
+                        수정을 종료하시겠습니까?
                         """,
                       primaryButtonTitle: "아니오",
                       cancleButtonTitle: "네") {
         } cancleAction: {
             path = .init()
-        }
-        .toast(isShowing: $isShowingInterestWarningToastMessage, title: nil, message: "이자제한법상 법정 최고 이자율은 20% 미만 입니다.")
-        .toast(isShowing: $isShowingInterestToastMessage, title: "빌려준 날짜부터 갚는 날짜까지의 일수를 기준으로 계산됩니다.", message: "예) 원금이 50만원, 이자율이 2%, 일수가 300일 일때\n50만원 * 2% * 300/365 = 약 8,219원")
-        .toast(isShowing: $isShowingFormToastMessage, title: nil, message: "필수 항목을 작성해주세요")
-        .navigationDestination(isPresented: $moveNextView) {
-            MyInfoWritingView(writingStore: writingStore, newCertificate: $newCertificate, path: $path)
-                .customBackbutton()
-        }
-        .onAppear {
-            newCertificate.memberRole = certificateType
-            mypageStore.loadCertInfo()
-        }
-    }
-}
-
-#Preview {
-    TabView {
-        NavigationStack {
-            WritingCertificateInfoView(certificateType: "DEBTOR", path: .constant(NavigationPath()))
-                .environment(TabBarStore())
-                .environment(MyPageStore())
         }
     }
 }

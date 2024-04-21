@@ -54,7 +54,7 @@ struct AlarmSettingView: View {
                 .padding(.horizontal, 16)
                 .background(.white)
                 .clipShape(.rect(cornerRadius: 12))
-                .shadow(color: .gray.opacity(0.2), radius: 5)
+                .customShadow()
                 
                 HStack {
                     Text("마케팅 수신 동의")
@@ -66,7 +66,7 @@ struct AlarmSettingView: View {
                 .padding(.horizontal, 16)
                 .background(.white)
                 .clipShape(.rect(cornerRadius: 12))
-                .shadow(color: .gray.opacity(0.2), radius: 5)
+                .customShadow()
                 
                 Spacer()
             }

@@ -7,14 +7,26 @@
 
 import SwiftUI
 
+enum SaveType {
+    case save
+    case pix
+}
+struct SaveInfo {
+    let type: SaveType
+    let id: Int?
+}
+
 struct WritingCheckView: View {
+    let saveType: SaveInfo
     let writingStore: WritingStore
     @State private var isShowingStopAlert: Bool = false
     @State private var isShowingKaKaoAlert: Bool = false
-    @State private var isShowingDoneAlert: Bool = false
+    @State private var isShowingErrorAlert: Bool = false
     @Binding var path: NavigationPath
     @Binding var newCertificate: CertificateDetail
     @Environment(HomeStore.self) var homeStore
+    @Environment(TabBarStore.self) var tabStore
+    @Environment(MyPageStore.self) var mypageStore
     var body: some View {
         ZStack {
             Color.payritBackground.ignoresSafeArea()
@@ -26,91 +38,14 @@ struct WritingCheckView: View {
                                 .font(Font.body03)
                                 .foregroundStyle(Color.gray04)
                             VStack(alignment: .leading, spacing: 12) {
-                                HStack {
-                                    Text("금액")
-                                        .font(Font.body04)
-                                    Spacer()
-                                    HStack {
-                                        Text("\(newCertificate.paperFormInfo.primeAmountFomatter)원")
-                                            .font(Font.body01)
-                                        Spacer()
-                                    }
-                                    .frame(width: 220)
-                                }
-                                HStack {
-                                    Text("원금 상환일")
-                                        .font(Font.body04)
-                                    Spacer()
-                                    HStack {
-                                        Text("\(newCertificate.paperFormInfo.repaymentEndDate)")
-                                            .font(Font.body01)
-                                        Spacer()
-                                    }
-                                    .frame(width: 220)
-                                }
+                                InfoBox(title: "금액", text: "\(newCertificate.paperFormInfo.primeAmountFomatter)원", type: .long)
+                                InfoBox(title: "원금 상환일", text: "\(newCertificate.paperFormInfo.repaymentEndDate)", type: .long)
                             }
                             .padding(.vertical, 16)
                             .padding(.horizontal, 20)
                             .background(Color.white)
                             .clipShape(.rect(cornerRadius: 12))
-                            .shadow(color: .gray.opacity(0.2), radius: 5)
-                        }
-                        
-                        if newCertificate.paperFormInfo.interestRate != 0 || (newCertificate.paperFormInfo.interestPaymentDate != 0) || (newCertificate.paperFormInfo.specialConditions != nil) {
-                            VStack(alignment: .leading) {
-                                Text("추가사항")
-                                    .font(Font.body03)
-                                    .foregroundStyle(Color.gray04)
-                                VStack(alignment: .leading, spacing: 12) {
-                                    if newCertificate.paperFormInfo.interestRate != 0 {
-                                        HStack {
-                                            Text("이자율")
-                                                .font(Font.body04)
-                                            Spacer()
-                                            HStack {
-                                                Text("\(String(format: "%.2f", newCertificate.paperFormInfo.interestRate))%")
-                                                    .font(Font.body01)
-                                                Spacer()
-                                            }
-                                            .frame(width: 220)
-                                        }
-                                    }
-                                    
-                                    if newCertificate.paperFormInfo.interestPaymentDate != 0 {
-                                        HStack {
-                                            Text("이자 지급일")
-                                                .font(Font.body04)
-                                            Spacer()
-                                            HStack {
-                                                Text("매월 \(newCertificate.paperFormInfo.interestPaymentDate)일")
-                                                    .font(Font.body01)
-                                                Spacer()
-                                            }
-                                            .frame(width: 220)
-                                        }
-                                    }
-                                    
-                                    if let specialConditions = newCertificate.paperFormInfo.specialConditions {
-                                        HStack {
-                                            Text("특이사항")
-                                                .font(Font.body04)
-                                            Spacer()
-                                            HStack {
-                                                Text("\(specialConditions)")
-                                                    .font(Font.body01)
-                                                    .multilineTextAlignment(.leading)
-                                                Spacer()
-                                            }
-                                            .frame(width: 220)
-                                        }
-                                    }
-                                }
-                                .padding(.vertical, 16)
-                                .padding(.horizontal, 20)
-                                .background(Color(hex: "E5FDFC"))
-                                .clipShape(.rect(cornerRadius: 12))
-                                .shadow(color: .gray.opacity(0.2), radius: 5)
-                            }
+                            .customShadow()
                         }
                         
                         VStack(alignment: .leading) {
@@ -118,48 +53,17 @@ struct WritingCheckView: View {
                                 .font(Font.body03)
                                 .foregroundStyle(Color.gray04)
                             VStack(alignment: .leading, spacing: 12) {
-                                HStack {
-                                    Text("이름")
-                                        .font(Font.body04)
-                                    Spacer()
-                                    HStack {
-                                        Text("\(newCertificate.creditorProfile.name)")
-                                            .font(Font.body01)
-                                        Spacer()
-                                    }
-                                    .frame(width: 220)
-                                }
-                                HStack {
-                                    Text("연락처")
-                                        .font(Font.body04)
-                                    Spacer()
-                                    HStack {
-                                        Text("\(newCertificate.creditorProfile.phoneNumber)")
-                                            .font(Font.body01)
-                                        Spacer()
-                                    }
-                                    .frame(width: 220)
-                                }
+                                InfoBox(title: "이름", text: "\(newCertificate.creditorProfile.name)")
+                                InfoBox(title: "연락처", text: "\(newCertificate.creditorProfile.phoneNumber)")
                                 if !newCertificate.creditorProfile.address.isEmpty {
-                                    HStack {
-                                        Text("주소")
-                                            .font(Font.body04)
-                                        Spacer()
-                                        HStack {
-                                            Text("\(newCertificate.creditorProfile.address)")
-                                                .fixedSize(horizontal: false, vertical: true)
-                                                .font(Font.body01)
-                                            Spacer()
-                                        }
-                                        .frame(width: 220)
-                                    }
+                                    InfoBox(title: "주소", text: "\(newCertificate.creditorProfile.address)")
                                 }
                             }
                             .padding(.vertical, 16)
                             .padding(.horizontal, 20)
                             .background(.white)
                             .clipShape(.rect(cornerRadius: 12))
-                            .shadow(color: .gray.opacity(0.2), radius: 5)
+                            .customShadow()
                         }
                         
                         VStack(alignment: .leading) {
@@ -167,55 +71,68 @@ struct WritingCheckView: View {
                                 .font(Font.body03)
                                 .foregroundStyle(Color.gray04)
                             VStack(alignment: .leading, spacing: 12) {
-                                HStack {
-                                    Text("이름")
-                                        .font(Font.body04)
-                                    Spacer()
-                                    HStack {
-                                        Text("\(newCertificate.debtorProfile.name)")
-                                            .font(Font.body01)
-                                        Spacer()
-                                    }
-                                    .frame(width: 220)
-                                }
-                                HStack {
-                                    Text("연락처")
-                                        .font(Font.body04)
-                                    Spacer()
-                                    HStack {
-                                        Text("\(newCertificate.debtorProfile.phoneNumber)")
-                                            .font(Font.body01)
-                                        Spacer()
-                                    }
-                                    .frame(width: 220)
-                                }
+                                InfoBox(title: "이름", text: "\(newCertificate.debtorProfile.name)")
+                                InfoBox(title: "연락처", text: "\(newCertificate.debtorProfile.phoneNumber)")
                                 if !newCertificate.debtorProfile.address.isEmpty {
-                                    HStack {
-                                        Text("주소")
-                                            .font(Font.body04)
-                                        Spacer()
-                                        HStack {
-                                            Text("\(newCertificate.debtorProfile.address)")
-                                                .fixedSize(horizontal: false, vertical: true)
-                                                .font(Font.body01)
-                                            Spacer()
-                                        }
-                                        .frame(width: 220)
-                                    }
+                                    InfoBox(title: "주소", text: "\(newCertificate.debtorProfile.address)")
                                 }
                             }
                             .padding(.vertical, 16)
                             .padding(.horizontal, 20)
                             .background(.white)
                             .clipShape(.rect(cornerRadius: 12))
-                            .shadow(color: .gray.opacity(0.2), radius: 5)
+                            .customShadow()
+                            
+                            if newCertificate.paperFormInfo.interestRate != 0 || (newCertificate.paperFormInfo.interestPaymentDate != 0) || !newCertificate.paperFormInfo.specialConditions.isEmpty {
+                                VStack(alignment: .leading) {
+                                    Text("추가사항")
+                                        .font(Font.body03)
+                                        .foregroundStyle(Color.payritMint)
+                                    VStack(alignment: .leading, spacing: 12) {
+                                        if newCertificate.paperFormInfo.interestRate != 0 {
+                                            InfoBox(title: "이자율", text: "\(String(format: "%.2f", newCertificate.paperFormInfo.interestRate))%", type: .long)
+                                        }
+                                        
+                                        if newCertificate.paperFormInfo.interestPaymentDate != 0 {
+                                            InfoBox(title: "이자 지급일", text: "매월 \(newCertificate.paperFormInfo.interestPaymentDate)일", type: .long)
+                                        }
+                                        
+                                        if !newCertificate.paperFormInfo.specialConditions.isEmpty {
+                                            InfoBox(title: "특약사항", text: "\(newCertificate.paperFormInfo.specialConditions)", type: .long)
+                                        }
+                                    }
+                                }
+                                .padding(.vertical, 16)
+                                .padding(.horizontal, 20)
+                                .background(Color.white)
+                                .clipShape(.rect(cornerRadius: 12))
+                                .customShadow()
+                            }
                         }
                     }
                     .padding(.vertical, 30)
                     .padding(.horizontal, 16)
                 }
                 Button {
-                    isShowingKaKaoAlert.toggle()
+                    switch saveType.type {
+                    case .save:
+                        writingStore.saveCertificae(certificate: newCertificate) { result in
+                            if result {
+                                isShowingKaKaoAlert.toggle()
+                            } else {
+                                isShowingErrorAlert.toggle()
+                            }
+                        }
+                    case .pix:
+                        guard let id = saveType.id else { break }
+                        writingStore.pixCertificae(certificate: newCertificate, id: id) { result in
+                            if result {
+                                isShowingKaKaoAlert.toggle()
+                            } else {
+                                isShowingErrorAlert.toggle()
+                            }
+                        }
+                    }
                 } label: {
                     Text("요청 전송")
                         .font(Font.title04)
@@ -247,45 +164,47 @@ struct WritingCheckView: View {
         }
         .primaryAlert(isPresented: $isShowingStopAlert,
                       title: "작성 중단",
-                      content: """
-                        지금 작성을 중단하시면
-                        처음부터 다시 작성해야해요.
-                        작성 전 페이지로 돌아갈까요?
-                        """,
+                      content: saveType.type == .save ? "지금 작성을 중단하시면\n처음부터 다시 작성해야해요.\n 작성 전 페이지로 돌아갈까요?" : "수정을 종료하시겠습니까?",
                       primaryButtonTitle: "아니오",
                       cancleButtonTitle: "네") {
         } cancleAction: {
             path = .init()
         }
-        .primaryAlert(isPresented: $isShowingKaKaoAlert,
-                      title: "카카오톡 요청 전송",
+        .primaryAlertNoneTouch(isPresented: $isShowingKaKaoAlert,
+                      title: "카카오톡 공유",
                       content: """
-                        요청 메시지를
-                        전송하시겠습니까?
+                        작성 완료 된 페이릿을
+                        카카오톡으로 공유할까요?
                         """,
                       primaryButtonTitle: "네",
                       cancleButtonTitle: "아니오") {
-            isShowingDoneAlert.toggle()
+            KakaoShareService().kakaoShare(sender: mypageStore.userCertInfo?.certificationName ?? "") { kakaoLinkType in
+                KakaoShareService().openKakaoLink(kakaoLinkType: kakaoLinkType) {
+                }
+            }
+            path = .init()
+            tabStore.selectedTab = .home
         } cancleAction: {
+            path = .init()
+            tabStore.selectedTab = .home
         }
-        .primaryAlert(isPresented: $isShowingDoneAlert,
-                      title: "카카오톡 요청 완료",
+        .primaryAlert(isPresented: $isShowingErrorAlert,
+                      title: "에러",
                       content: """
-                        상대방에게 카카오톡으로 요청이
-                        완료되었습니다.
+                        페이릿 작성에 실패하였습니다
+                        다시 시도하여 주세요
                         """,
                       primaryButtonTitle: nil,
                       cancleButtonTitle: "확인",
                       primaryAction: nil) {
-            writingStore.saveCertificae(certificate: newCertificate)
-            path = .init()
         }
     }
 }
 
 #Preview {
     NavigationStack {
-        WritingCheckView(writingStore: WritingStore(), path: .constant(NavigationPath()), newCertificate: .constant(CertificateDetail.EmptyCertificate))
+        WritingCheckView(saveType: SaveInfo(type: .save, id: 0), writingStore: WritingStore(), path: .constant(NavigationPath()), newCertificate: .constant(CertificateDetail.EmptyCertificate))
             .environment(HomeStore())
+            .environment(TabBarStore())
     }
 }

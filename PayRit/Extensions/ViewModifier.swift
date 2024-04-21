@@ -108,7 +108,7 @@ struct PrimaryAlertModifier: ViewModifier {
     }
 }
 
-struct UpdateAlertModifier: ViewModifier {
+struct PrimaryAlertNoneTouchModifier: ViewModifier {
     
     @Binding var isPresented: Bool
     @Environment(TabBarStore.self) var tabStore
@@ -137,6 +137,51 @@ struct UpdateAlertModifier: ViewModifier {
                     PrimaryAlert(isPresented: $isPresented,
                                  title: self.title,
                                  content: self.content,
+                                 primaryButtonTitle: self.primaryButtonTitle,
+                                 cancleButtonTitle: self.cancleButtonTitle,
+                                 primaryAction: self.primaryAction,
+                                 cancleAction: self.cancleAction)
+                }
+            }
+//            .animation(
+//                isPresented
+//                ? .spring(response: 0.3)
+//                : .none,
+//                value: isPresented
+//            )
+        }
+    }
+}
+
+struct PixAlertModifier: ViewModifier {
+    
+    @Binding var isPresented: Bool
+    @Binding var content: String
+    @Environment(TabBarStore.self) var tabStore
+    let title: String
+    let primaryButtonTitle: String
+    let cancleButtonTitle: String
+    let primaryAction: (() -> Void)
+    let cancleAction: () -> Void
+    
+    func body(content: Content) -> some View {
+        ZStack {
+            content
+            ZStack {
+                if isPresented {
+                    Rectangle()
+                        .fill(.black.opacity(0.5))
+                        .ignoresSafeArea()
+                        .onAppear {
+                            tabStore.tabBarOpacity = true
+                        }
+                        .onDisappear {
+                            tabStore.tabBarOpacity = false
+                        }
+                    
+                    PixAlert(isPresented: $isPresented,
+                             content: $content,
+                                 title: self.title,
                                  primaryButtonTitle: self.primaryButtonTitle,
                                  cancleButtonTitle: self.cancleButtonTitle,
                                  primaryAction: self.primaryAction,
@@ -247,5 +292,39 @@ struct DismissOnEdgeDrag: ViewModifier {
                         self.startLocation = nil
                     }
             )
+    }
+}
+
+struct CustomShadow: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .shadow(color: .gray.opacity(0.4), radius: 3, y: 2)
+    }
+}
+
+enum BoxType {
+    case short
+    case long
+}
+
+/// 타이틀 body04, 텍스트 body01
+struct InfoBox: View {
+    let title: String
+    let text: String
+    var type: BoxType = .short
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 20) {
+            HStack {
+                Text(title)
+                    .font(Font.body04)
+                Spacer()
+            }
+            .frame(width: type == .long ? 75 : 45)
+            Text(text)
+                .font(Font.body01)
+            Spacer()
+        }
+        .padding(.leading, 8)
     }
 }
