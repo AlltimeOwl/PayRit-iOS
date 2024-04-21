@@ -12,6 +12,11 @@ enum PaymentState: String, CodingKey, CaseIterable {
     case expiration = "오래된 결제 순"
 }
 
+enum AlamRequestType {
+    case load
+    case send
+}
+
 @Observable
 final class MyPageStore {
     let userDefaultsManager = UserDefaultsManager()
@@ -163,6 +168,60 @@ final class MyPageStore {
                     print("\(httpResponse.statusCode) data: \(responseData ?? "No data")")
                 }
                 completion(nil, nil)
+            }
+        }
+        task.resume()
+    }
+    
+    func alamRequest(type: AlamRequestType, completion: @escaping (Bool) -> Void) {
+        let urlString = "https://payrit.info/api/v1/profile/\(type == .load ? "status" : "notification")"
+        guard let url = URL(string: urlString) else {
+            print("Invalid URL")
+            return
+        }
+        print(urlString)
+        
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("application/json", forHTTPHeaderField: "accept")
+        request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                print("Error: \(error)")
+                return
+            }
+            guard let httpResponse = response as? HTTPURLResponse else {
+                print("Invalid response")
+                return
+            }
+            
+            print(httpResponse.statusCode)
+            if (200..<300).contains(httpResponse.statusCode) {
+                if let data = data {
+                    if type == .load {
+                        do {
+                            guard let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
+                                print("Error: Unable to convert JSON data to dictionary")
+                                return
+                            }
+                            if let isAgreeNotification = json["isAgreeNotification"] as? Bool {
+                                print("isAgreeNotification: \(isAgreeNotification)")
+                                completion(isAgreeNotification)
+                            } else {
+                                print("Error: 'isAgreeNotification' key not found or value is not a boolean")
+                            }
+                        } catch {
+                            print("Error decoding JSON: \(error)")
+                        }
+                    }
+                }
+            } else {
+                if let data = data {
+                    let responseData = String(data: data, encoding: .utf8)
+                    print("\(httpResponse.statusCode) data: \(responseData ?? "No data")")
+                }
             }
         }
         task.resume()

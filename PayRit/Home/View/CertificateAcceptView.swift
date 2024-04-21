@@ -21,6 +21,8 @@ struct CertificateAcceptView: View {
     @State private var isShowingAuthAlert: Bool = false
     @State private var isShowingPaymentAlert: Bool = false
     @State private var isShowingPixAlert: Bool = false
+    @State private var isShowingRefuseAlert: Bool = false
+    @State private var isShowingRefuseDoneAlert: Bool = false
     @State private var isShowingWritingView: Bool = false
     @Binding var path: NavigationPath
     @Environment(HomeStore.self) var homeStore
@@ -58,8 +60,8 @@ struct CertificateAcceptView: View {
                             Text("거래내역")
                                 .font(Font.body03)
                                 .foregroundStyle(Color.gray04)
-                            InfoBox(title: "금액", text: "\(homeStore.certificateDetail.paperFormInfo.primeAmountFomatter)원", type: .long)
-                            InfoBox(title: "원금 상환일", text: "\(homeStore.certificateDetail.paperFormInfo.repaymentEndDate.replacingOccurrences(of: "-", with: "."))", type: .long)
+                            InfoBox(title: "금액(원금)", text: .constant("\(homeStore.certificateDetail.paperFormInfo.primeAmountFomatter)원"), type: .long)
+                            InfoBox(title: "원금 상환일", text: .constant("\(homeStore.certificateDetail.paperFormInfo.repaymentEndDate.replacingOccurrences(of: "-", with: "."))"), type: .long)
                         }
                         .padding(.vertical, 16)
                         .padding(.horizontal, 20)
@@ -72,11 +74,11 @@ struct CertificateAcceptView: View {
                                 .font(Font.body03)
                                 .foregroundStyle(Color.gray04)
                             
-                            InfoBox(title: "이름", text: "\(homeStore.certificateDetail.creditorProfile.name)")
-                            InfoBox(title: "연락처", text: "\(homeStore.certificateDetail.creditorProfile.phoneNumber.phoneNumberMiddleCase())")
+                            InfoBox(title: "이름", text: .constant("\(homeStore.certificateDetail.creditorProfile.name)"))
+                            InfoBox(title: "연락처", text: .constant("\(homeStore.certificateDetail.creditorProfile.phoneNumber.phoneNumberMiddleCase())"))
                             
                             if !homeStore.certificateDetail.creditorProfile.address.isEmpty {
-                                InfoBox(title: "주소", text: "\(homeStore.certificateDetail.creditorProfile.address)")
+                                InfoBox(title: "주소", text: .constant("\(homeStore.certificateDetail.creditorProfile.address)"))
                             }
                         }
                         .padding(.vertical, 16)
@@ -89,11 +91,11 @@ struct CertificateAcceptView: View {
                             Text("빌린 사람")
                                 .font(Font.body03)
                                 .foregroundStyle(Color.gray04)
-                            InfoBox(title: "이름", text: "\(homeStore.certificateDetail.debtorProfile.name)")
-                            InfoBox(title: "연락처", text: "\(homeStore.certificateDetail.debtorProfile.phoneNumber.phoneNumberMiddleCase())")
+                            InfoBox(title: "이름", text: .constant("\(homeStore.certificateDetail.debtorProfile.name)"))
+                            InfoBox(title: "연락처", text: .constant("\(homeStore.certificateDetail.debtorProfile.phoneNumber.phoneNumberMiddleCase())"))
                             
                             if !homeStore.certificateDetail.debtorProfile.address.isEmpty {
-                                InfoBox(title: "주소", text: "\(homeStore.certificateDetail.debtorProfile.address)")
+                                InfoBox(title: "주소", text: .constant("\(homeStore.certificateDetail.debtorProfile.address)"))
                             }
                         }
                         .padding(.vertical, 16)
@@ -108,13 +110,13 @@ struct CertificateAcceptView: View {
                                     .font(Font.body03)
                                     .foregroundStyle(Color.payritMint)
                                 if homeStore.certificateDetail.paperFormInfo.interestRate != 0 {
-                                    InfoBox(title: "이자율", text: "\(String(format: "%.2f", homeStore.certificateDetail.paperFormInfo.interestRate))%", type: .long)
+                                    InfoBox(title: "이자율", text: .constant("\(String(format: "%.2f", homeStore.certificateDetail.paperFormInfo.interestRate))%"), type: .long)
                                 }
                                 if homeStore.certificateDetail.paperFormInfo.interestPaymentDate != 0 {
-                                    InfoBox(title: "이자 지급일", text: "매월 \(homeStore.certificateDetail.paperFormInfo.interestPaymentDate)일", type: .long)
+                                    InfoBox(title: "이자 지급일", text: .constant("매월 \(homeStore.certificateDetail.paperFormInfo.interestPaymentDate)일"), type: .long)
                                 }
                                 if !homeStore.certificateDetail.paperFormInfo.specialConditions.isEmpty {
-                                    InfoBox(title: "특약사항", text: "\(homeStore.certificateDetail.paperFormInfo.specialConditions)", type: .long)
+                                    InfoBox(title: "특약사항", text: .constant("\(homeStore.certificateDetail.paperFormInfo.specialConditions)"), type: .long)
                                 }
                             }
                             .padding(.vertical, 16)
@@ -124,24 +126,25 @@ struct CertificateAcceptView: View {
                             .customShadow()
                         }
                         if certificateStep != .modifying {
-                            if isWriter != true {
-                                Button {
-                                    checkBox.toggle()
-                                } label: {
-                                    HStack {
-                                        Image(systemName: checkBox ? "checkmark.square.fill" : "checkmark.square" )
-                                            .foregroundStyle(Color(hex: "37D9BC"))
-                                        Text("위 정보가 정확한지 확인 했어요 (필수)")
-                                            .font(Font.caption02)
-                                            .foregroundStyle(Color(hex: "5C5C5C"))
-                                    }
+                            Button {
+                                checkBox.toggle()
+                            } label: {
+                                HStack {
+                                    Image(systemName: checkBox ? "checkmark.square.fill" : "checkmark.square" )
+                                        .foregroundStyle(Color(hex: "37D9BC"))
+                                    Text("위 정보가 정확한지 확인 했어요 (필수)")
+                                        .font(Font.caption02)
+                                        .foregroundStyle(Color(hex: "5C5C5C"))
                                 }
-                                .padding(.bottom, 40)
                             }
+                            .padding(.bottom, 40)
                         }
                     }
                     .padding(.vertical, 30)
                     .padding(.horizontal, 16)
+                }
+                .onAppear {
+                    UITableView.appearance().refreshControl = nil
                 }
                 VStack {
                     if certificateStep == .waitingApproval {
@@ -162,30 +165,46 @@ struct CertificateAcceptView: View {
                                         .clipShape(.rect(cornerRadius: 12))
                                 }
                             } else {
-                                Button {
-                                    isShowingPixAlert.toggle()
-                                } label: {
-                                    Text("수정 요청하기")
-                                        .font(Font.title04)
-                                        .foregroundStyle(.white)
-                                        .frame(height: 50)
-                                        .frame(maxWidth: .infinity)
-                                        .background(Color.payritMint)
-                                        .clipShape(.rect(cornerRadius: 12))
+                                if !checkBox {
+                                    Button {
+                                        isShowingPixAlert.toggle()
+                                    } label: {
+                                        Text("수정 요청하기")
+                                            .font(Font.title04)
+                                            .foregroundStyle(.white)
+                                            .frame(height: 50)
+                                            .frame(maxWidth: .infinity)
+                                            .background(Color.payritMint)
+                                            .clipShape(.rect(cornerRadius: 12))
+                                    }
+                                } else {
+                                    HStack {
+                                        Button {
+                                            isShowingRefuseAlert.toggle()
+                                        } label: {
+                                            Text("거절")
+                                                .font(Font.title04)
+                                                .foregroundStyle(.white)
+                                                .frame(height: 50)
+                                                .frame(maxWidth: .infinity)
+                                                .background(Color.gray07)
+                                                .clipShape(.rect(cornerRadius: 12))
+                                        }
+                                        .frame(width: 90)
+                                        
+                                        Button {
+                                            isShowingAuthAlert.toggle()
+                                        } label: {
+                                            Text("수락하기")
+                                                .font(Font.title04)
+                                                .foregroundStyle(.white)
+                                                .frame(height: 50)
+                                                .frame(maxWidth: .infinity)
+                                                .background(Color.payritMint)
+                                                .clipShape(.rect(cornerRadius: 12))
+                                        }
+                                    }
                                 }
-                                
-                                Button {
-                                    isShowingAuthAlert.toggle()
-                                } label: {
-                                    Text("수락 하기")
-                                        .font(Font.title04)
-                                        .foregroundStyle(.white)
-                                        .frame(height: 50)
-                                        .frame(maxWidth: .infinity)
-                                        .background(checkBox ? Color.payritMint : Color.gray07)
-                                        .clipShape(.rect(cornerRadius: 12))
-                                }
-                                .disabled(!checkBox)
                             }
                         }
                     } else if certificateStep == .waitingPayment {
@@ -250,6 +269,21 @@ struct CertificateAcceptView: View {
         .primaryAlert(isPresented: $isShowingPixfailAlert, title: "수정 요청 실패", content: "수정 요청에 실패하였습니다.\n다시 시도해 주세요.", primaryButtonTitle: nil, cancleButtonTitle: "확인") {
         } cancleAction: {
         }
+        .primaryAlert(isPresented: $isShowingRefuseAlert, title: "거절", content: "페이릿을 거절하시겠습니까?", primaryButtonTitle: "네", cancleButtonTitle: "아니오") {
+            homeStore.certificateRefuse(id: paperId) { result in
+                if result {
+                    isShowingRefuseDoneAlert.toggle()
+                }
+            }
+        } cancleAction: {
+        }
+        .primaryAlert(isPresented: $isShowingRefuseDoneAlert, title: "거절", content: "거절이 완료되었습니다.", primaryButtonTitle: nil, cancleButtonTitle: "확인") {
+        } cancleAction: {
+            Task {
+                await homeStore.loadCertificates()
+            }
+            self.presentationMode.wrappedValue.dismiss()
+        }
         .pixAlert(isPresented: $isShowingPixAlert, content: $pixAlertContent, title: "수정사항 요청", primaryButtonTitle: "보내기", cancleButtonTitle: "취소", primaryAction: {
             homeStore.certificatePixRequest(paperId: paperId, contents: pixAlertContent) { result in
                 if result {
@@ -276,7 +310,6 @@ struct CertificateAcceptView: View {
             self.isLoading = true
             Task {
                 await homeStore.loadDetail(id: paperId)
-                print(homeStore.certificateDetail.paperFormInfo.specialConditions)
                 withAnimation {
                     self.isLoading = false
                 }

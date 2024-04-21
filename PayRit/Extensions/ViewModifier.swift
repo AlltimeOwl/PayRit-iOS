@@ -309,8 +309,8 @@ enum BoxType {
 
 /// 타이틀 body04, 텍스트 body01
 struct InfoBox: View {
-    let title: String
-    let text: String
+    @State var title: String
+    @Binding var text: String
     var type: BoxType = .short
 
     var body: some View {

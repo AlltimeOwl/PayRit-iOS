@@ -10,10 +10,9 @@ import SwiftUI
 enum PathType {
     case detail
     case accept
+    case searching
 }
-struct PathItem {
-    let type: PathType
-}
+
 struct HomePath: Hashable {
     let type: PathType
     let paperId: Int
@@ -24,7 +23,7 @@ struct HomePath: Hashable {
 struct HomeView: View {
     private let menuPadding = 8.0
     private let horizontalPadding = 16.0
-//    @State private var paperId = 0
+    @State private var paperId = 0
     @State private var isWriter: Bool?
     @State private var menuState = false
     @State private var isShowingSignatureView = false
@@ -33,11 +32,12 @@ struct HomeView: View {
     @State private var isShowingPaymentSuccessAlert = false
     @State private var isShowingWaitingPaymentAlert = false
     @State private var isShowingWaitingApprovalAlert = false
+    @State private var isShowingRefuseAlert = false
+    @State private var isShowingDeleteAlert = false
     @State private var isShoingModifyingAlert = false
     @State private var rectangleOffset: CGSize = .zero
     @State var path = NavigationPath()
     @State var checkView: CertificateDetail?
-//    @State var certificateStep: CertificateStep?
     @Environment(HomeStore.self) var homeStore
     @Environment(SignInStore.self) var signInStore
     @Environment(TabBarStore.self) var tabStore
@@ -163,9 +163,10 @@ struct HomeView: View {
                                         
                                         // MARK: - 홈 카드 리스트
                                         ScrollViewReader { _ in
-                                            List {
-                                                ForEach(homeStore.certificates, id: \.self) { certificate in
-                                                    Button {
+                                            List(homeStore.certificates, id: \.self) { certificate in
+                                                Button {
+                                                    Task {
+                                                        await homeStore.loadCertificates()
                                                         switch certificate.certificateStep {
                                                         case .waitingApproval:
                                                             path.append(HomePath(type: .accept, paperId: certificate.paperId, step: .waitingApproval, isWriter: certificate.isWriter))
@@ -185,74 +186,83 @@ struct HomeView: View {
                                                             } else {
                                                                 isShoingModifyingAlert.toggle()
                                                             }
+                                                        case .refused:
+                                                            isShowingRefuseAlert.toggle()
                                                         case .none: break
-                                                            
-                                                        case .some(.refused): break
-                                                            
                                                         }
-                                                        print(path)
-                                                    } label: {
-                                                        VStack(alignment: .leading, spacing: 0) {
-                                                            HStack {
-                                                                Text("원금상환일   \(certificate.repaymentEndDate.stringDateToKorea())")
-                                                                    .font(Font.caption01)
-                                                                Spacer()
-                                                                Text(certificate.dueDate >= 0 ? "D - \(certificate.dueDate)" : "D + \(-certificate.dueDate)")
-                                                                    .font(Font.custom("SUIT-Bold", size: 14))
-                                                            }
-                                                            .foregroundStyle(.white)
-                                                            .padding(.horizontal, 12)
-                                                            .padding(.vertical, 10)
-                                                            .background(certificate.paperRole == .CREDITOR ? Color.payritMint : Color.payritIntensivePink)
-                                                            .clipShape(.rect(cornerRadius: 8))
-                                                            .padding(.top, 14)
-                                                            
-                                                            Text("\(certificate.amountFormatter)원")
-                                                                .font(Font.title01)
-                                                                .padding(.top, 22)
-                                                            
-                                                            VStack(alignment: .trailing, spacing: 0) {
-                                                                HStack {
-                                                                    Text(certificate.peerName)
-                                                                        .font(Font.title06)
-                                                                        .foregroundStyle(.black)
-                                                                    Spacer()
-                                                                    Text(certificate.paperRole == .CREDITOR ? "빌려준 돈" : "빌린 돈")
-                                                                        .font(Font.body03)
-                                                                        .foregroundStyle(certificate.paperRole == .CREDITOR ? Color.payritMint : Color.payritIntensivePink)
-                                                                }
-                                                                
-                                                                ProgressView(value: certificate.repaymentRate, total: 100)
-                                                                    .progressViewStyle(CustomLinearProgressViewStyle(trackColor: Color.gray09, progressColor: certificate.paperRole == .CREDITOR ? Color.payritMint : Color.payritIntensivePink))
-                                                                    .frame(height: 6)
-                                                                    .padding(.top, 14)
-                                                                HStack(spacing: 0) {
-                                                                    Text(certificate.certificateStep?.rawValue ?? "")
-                                                                    if certificate.certificateStep == .complete || certificate.certificateStep == .progress {
-                                                                        Text(" (\(Int(certificate.repaymentRate))%)")
-                                                                    }
-                                                                }
-                                                                .font(Font.caption02)
-                                                                .foregroundStyle(Color.gray04)
-                                                                .padding(.top, 4)
-                                                                .padding(.bottom, 14)
-                                                            }
-                                                            .padding(.top, 4)
-                                                        }
-                                                        .padding(.horizontal, horizontalPadding)
-                                                        .frame(maxWidth: .infinity)
-                                                        .background()
-                                                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                                                        .customShadow()
                                                     }
-//                                                    .buttonStyle(PlainButtonStyle())
-                                                    .listRowSeparator(.hidden)
-                                                    .listRowBackground(Color.payritBackground)
-                                                    .padding(.bottom, certificate == homeStore.certificates.last ? 40 : 0)
+                                                } label: {
+                                                    VStack(alignment: .leading, spacing: 0) {
+                                                        HStack {
+                                                            Text("원금상환일   \(certificate.repaymentEndDate.stringDateToKorea())")
+                                                                .font(Font.caption01)
+                                                            Spacer()
+                                                            Text(certificate.dueDate >= 0 ? "D - \(certificate.dueDate)" : "D + \(-certificate.dueDate)")
+                                                                .font(Font.custom("SUIT-Bold", size: 14))
+                                                        }
+                                                        .foregroundStyle(.white)
+                                                        .padding(.horizontal, 12)
+                                                        .padding(.vertical, 10)
+                                                        .background(certificate.paperRole == .CREDITOR ? Color.payritMint : Color.payritIntensivePink)
+                                                        .clipShape(.rect(cornerRadius: 8))
+                                                        .padding(.top, 14)
+                                                        
+                                                        Text("\(certificate.amountFormatter)원")
+                                                            .font(Font.title01)
+                                                            .padding(.top, 22)
+                                                        
+                                                        VStack(alignment: .trailing, spacing: 0) {
+                                                            HStack {
+                                                                Text(certificate.peerName)
+                                                                    .font(Font.title06)
+                                                                    .foregroundStyle(.black)
+                                                                Spacer()
+                                                                Text(certificate.paperRole == .CREDITOR ? "빌려준 돈" : "빌린 돈")
+                                                                    .font(Font.body03)
+                                                                    .foregroundStyle(certificate.paperRole == .CREDITOR ? Color.payritMint : Color.payritIntensivePink)
+                                                            }
+                                                            
+                                                            ProgressView(value: certificate.repaymentRate, total: 100)
+                                                                .progressViewStyle(CustomLinearProgressViewStyle(trackColor: Color.gray09, progressColor: certificate.paperRole == .CREDITOR ? Color.payritMint : Color.payritIntensivePink))
+                                                                .frame(height: 6)
+                                                                .padding(.top, 14)
+                                                            HStack(spacing: 0) {
+                                                                Text(certificate.certificateStep?.rawValue ?? "")
+                                                                if certificate.certificateStep == .complete || certificate.certificateStep == .progress {
+                                                                    Text(" (\(Int(certificate.repaymentRate))%)")
+                                                                }
+                                                            }
+                                                            .font(Font.caption02)
+                                                            .foregroundStyle(Color.gray04)
+                                                            .padding(.top, 4)
+                                                            .padding(.bottom, 14)
+                                                        }
+                                                        .padding(.top, 4)
+                                                    }
+                                                    .padding(.horizontal, horizontalPadding)
+                                                    .frame(maxWidth: .infinity)
+                                                    .background()
+                                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                                                    .customShadow()
+                                                    
                                                 }
-                                                //                                            .onDelete { indexSet in
-                                                //                                                homeStore.certificates.remove(atOffsets: indexSet)
-                                                //                                            }
+                                                .buttonStyle(PlainButtonStyle())
+                                                .listRowSeparator(.hidden)
+                                                .listRowBackground(Color.payritBackground)
+                                                .swipeActions {
+                                                    Button {
+                                                        paperId = certificate.paperId
+                                                        isShowingDeleteAlert.toggle()
+                                                    } label: {
+                                                        Image("trashIcon")
+                                                            .foregroundStyle(Color.white)
+                                                    }
+                                                    .tint(Color.gray06)
+                                                }
+                                                if certificate == homeStore.certificates.last {
+                                                    Spacer().frame(height: 40)
+                                                        .listRowSeparator(.hidden)
+                                                }
                                             }
                                             .scrollIndicators(.hidden)
                                             .listStyle(.plain)
@@ -267,6 +277,12 @@ struct HomeView: View {
                                                 } else if path.type == .detail {
                                                     CertificateDetailView(paperId: path.paperId, certificateStep: path.step)
                                                         .customBackbutton()
+                                                        .onAppear {
+                                                            tabStore.tabBarHide = true
+                                                        }
+                                                } else if path.type == .searching {
+                                                    CertificateSerchingView(path: $path)
+                                                        .navigationBarBackButtonHidden()
                                                         .onAppear {
                                                             tabStore.tabBarHide = true
                                                         }
@@ -378,13 +394,9 @@ struct HomeView: View {
                         HStack {
                             VStack {
                                 Spacer().frame(height: 30)
-                                NavigationLink {
-                                    //                                CertificateSerchingView()
-                                    //                                    .navigationBarBackButtonHidden()
-                                    //                                    .onAppear {
-                                    //                                        tabStore.tabBarHide = true
-                                    //                                    }
-                                }label: {
+                                Button {
+                                    path.append(HomePath(type: .searching, paperId: 0, step: .refused, isWriter: false))
+                                } label: {
                                     Image("searchIcon")
                                         .resizable()
                                         .frame(width: 24, height: 24)
@@ -414,7 +426,9 @@ struct HomeView: View {
             }
         }
         .refreshable {
-            tabStore.tabBarHide = false
+            if path.isEmpty {
+                tabStore.tabBarHide = false
+            }
             await homeStore.loadCertificates()
         }
         .onAppear {
@@ -463,6 +477,17 @@ struct HomeView: View {
         } cancleAction: {
         }
         .primaryAlert(isPresented: $isShowingAuthCompleteAlert, title: "본인인증 완료", content: "본인인증이 완료되었습니다.\n작성자의 결제 후 상세내역 조회가 가능합니다.", primaryButtonTitle: nil, cancleButtonTitle: "확인") {
+        } cancleAction: {
+        }
+        .primaryAlert(isPresented: $isShowingRefuseAlert, title: "거절된 페이릿", content: "수신자가 거부한 페이릿입니다.", primaryButtonTitle: nil, cancleButtonTitle: "확인") {
+        } cancleAction: {
+        }
+        .primaryAlert(isPresented: $isShowingDeleteAlert, title: "페이릿 삭제", content: "정말 삭제하시겠습니까?\n복구할 수 없습니다.", primaryButtonTitle: "네", cancleButtonTitle: "취소") {
+            homeStore.certificateHide(id: self.paperId) { result in
+                if result {
+                    homeStore.certificates.removeAll { $0.paperId == self.paperId }
+                }
+            }
         } cancleAction: {
         }
     }

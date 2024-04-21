@@ -33,81 +33,74 @@ struct WritingCheckView: View {
             VStack {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 24) {
-                        VStack(alignment: .leading) {
+                        
+                        VStack(alignment: .leading, spacing: 12) {
                             Text("거래내역")
                                 .font(Font.body03)
                                 .foregroundStyle(Color.gray04)
+                            InfoBox(title: "금액", text: .constant("\(newCertificate.paperFormInfo.primeAmountFomatter)원"), type: .long)
+                            InfoBox(title: "원금 상환일", text: .constant("\(newCertificate.paperFormInfo.repaymentEndDate)"), type: .long)
+                        }
+                        .padding(.vertical, 16)
+                        .padding(.horizontal, 20)
+                        .background(Color.white)
+                        .clipShape(.rect(cornerRadius: 12))
+                        .customShadow()
+                        
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("빌려준 사람")
+                                .font(Font.body03)
+                                .foregroundStyle(Color.gray04)
+                            InfoBox(title: "이름", text: .constant("\(newCertificate.creditorProfile.name)"))
+                            InfoBox(title: "연락처", text: .constant("\(newCertificate.creditorProfile.phoneNumber)"))
+                            if !newCertificate.creditorProfile.address.isEmpty {
+                                InfoBox(title: "주소", text: .constant("\(newCertificate.creditorProfile.address)"))
+                            }
+                        }
+                        .padding(.vertical, 16)
+                        .padding(.horizontal, 20)
+                        .background(.white)
+                        .clipShape(.rect(cornerRadius: 12))
+                        .customShadow()
+                        
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("빌린 사람")
+                                .font(Font.body03)
+                                .foregroundStyle(Color.gray04)
+                            InfoBox(title: "이름", text: .constant("\(newCertificate.debtorProfile.name)"))
+                            InfoBox(title: "연락처", text: .constant("\(newCertificate.debtorProfile.phoneNumber)"))
+                            if !newCertificate.debtorProfile.address.isEmpty {
+                                InfoBox(title: "주소", text: .constant("\(newCertificate.debtorProfile.address)"))
+                            }
+                        }
+                        .padding(.vertical, 16)
+                        .padding(.horizontal, 20)
+                        .background(.white)
+                        .clipShape(.rect(cornerRadius: 12))
+                        .customShadow()
+                        
+                        if newCertificate.paperFormInfo.interestRate != 0 || (newCertificate.paperFormInfo.interestPaymentDate != 0) || !newCertificate.paperFormInfo.specialConditions.isEmpty {
                             VStack(alignment: .leading, spacing: 12) {
-                                InfoBox(title: "금액", text: "\(newCertificate.paperFormInfo.primeAmountFomatter)원", type: .long)
-                                InfoBox(title: "원금 상환일", text: "\(newCertificate.paperFormInfo.repaymentEndDate)", type: .long)
+                                Text("추가사항")
+                                    .font(Font.body03)
+                                    .foregroundStyle(Color.payritMint)
+                                if newCertificate.paperFormInfo.interestRate != 0 {
+                                    InfoBox(title: "이자율", text: .constant("\(String(format: "%.2f", newCertificate.paperFormInfo.interestRate))%"), type: .long)
+                                }
+                                
+                                if newCertificate.paperFormInfo.interestPaymentDate != 0 {
+                                    InfoBox(title: "이자 지급일", text: .constant("매월 \(newCertificate.paperFormInfo.interestPaymentDate)일"), type: .long)
+                                }
+                                
+                                if !newCertificate.paperFormInfo.specialConditions.isEmpty {
+                                    InfoBox(title: "특약사항", text: .constant("\(newCertificate.paperFormInfo.specialConditions)"), type: .long)
+                                }
                             }
                             .padding(.vertical, 16)
                             .padding(.horizontal, 20)
                             .background(Color.white)
                             .clipShape(.rect(cornerRadius: 12))
                             .customShadow()
-                        }
-                        
-                        VStack(alignment: .leading) {
-                            Text("빌려준 사람")
-                                .font(Font.body03)
-                                .foregroundStyle(Color.gray04)
-                            VStack(alignment: .leading, spacing: 12) {
-                                InfoBox(title: "이름", text: "\(newCertificate.creditorProfile.name)")
-                                InfoBox(title: "연락처", text: "\(newCertificate.creditorProfile.phoneNumber)")
-                                if !newCertificate.creditorProfile.address.isEmpty {
-                                    InfoBox(title: "주소", text: "\(newCertificate.creditorProfile.address)")
-                                }
-                            }
-                            .padding(.vertical, 16)
-                            .padding(.horizontal, 20)
-                            .background(.white)
-                            .clipShape(.rect(cornerRadius: 12))
-                            .customShadow()
-                        }
-                        
-                        VStack(alignment: .leading) {
-                            Text("빌린 사람")
-                                .font(Font.body03)
-                                .foregroundStyle(Color.gray04)
-                            VStack(alignment: .leading, spacing: 12) {
-                                InfoBox(title: "이름", text: "\(newCertificate.debtorProfile.name)")
-                                InfoBox(title: "연락처", text: "\(newCertificate.debtorProfile.phoneNumber)")
-                                if !newCertificate.debtorProfile.address.isEmpty {
-                                    InfoBox(title: "주소", text: "\(newCertificate.debtorProfile.address)")
-                                }
-                            }
-                            .padding(.vertical, 16)
-                            .padding(.horizontal, 20)
-                            .background(.white)
-                            .clipShape(.rect(cornerRadius: 12))
-                            .customShadow()
-                            
-                            if newCertificate.paperFormInfo.interestRate != 0 || (newCertificate.paperFormInfo.interestPaymentDate != 0) || !newCertificate.paperFormInfo.specialConditions.isEmpty {
-                                VStack(alignment: .leading) {
-                                    Text("추가사항")
-                                        .font(Font.body03)
-                                        .foregroundStyle(Color.payritMint)
-                                    VStack(alignment: .leading, spacing: 12) {
-                                        if newCertificate.paperFormInfo.interestRate != 0 {
-                                            InfoBox(title: "이자율", text: "\(String(format: "%.2f", newCertificate.paperFormInfo.interestRate))%", type: .long)
-                                        }
-                                        
-                                        if newCertificate.paperFormInfo.interestPaymentDate != 0 {
-                                            InfoBox(title: "이자 지급일", text: "매월 \(newCertificate.paperFormInfo.interestPaymentDate)일", type: .long)
-                                        }
-                                        
-                                        if !newCertificate.paperFormInfo.specialConditions.isEmpty {
-                                            InfoBox(title: "특약사항", text: "\(newCertificate.paperFormInfo.specialConditions)", type: .long)
-                                        }
-                                    }
-                                }
-                                .padding(.vertical, 16)
-                                .padding(.horizontal, 20)
-                                .background(Color.white)
-                                .clipShape(.rect(cornerRadius: 12))
-                                .customShadow()
-                            }
                         }
                     }
                     .padding(.vertical, 30)

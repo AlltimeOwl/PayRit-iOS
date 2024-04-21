@@ -123,9 +123,6 @@ final class HomeStore {
                     do {
                         let certificate = try JSONDecoder().decode(CertificateDetail.self, from: data)
                         self.certificateDetail = certificate
-//                        if (self.certificateDetail.paperFormInfo.specialConditions?.isEmpty) != nil {
-//                            self.certificateDetail.paperFormInfo.specialConditions = nil
-//                        }
                     } catch {
                         print("Error decoding JSON: \(error)")
                     }
@@ -250,6 +247,52 @@ final class HomeStore {
         }
     }
     
+    /// 차용증 수정 요청청
+    func certificatePixRequest(paperId: Int, contents: String, completion: @escaping (Bool) -> Void) {
+        let urlString = "https://payrit.info/api/v1/paper/modify/request"
+        guard let url = URL(string: urlString) else { return }
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("*/*", forHTTPHeaderField: "accept")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
+        
+        let body = [
+            "paperId": paperId,
+            "contents": contents
+        ] as [String: Any]
+        
+        do {
+            request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
+        } catch {
+            print("Error creating JSON data")
+            completion(false)
+        }
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                print("Error: \(error)")
+            }
+            guard let httpResponse = response as? HTTPURLResponse else {
+                print("Invalid response")                
+                return
+            }
+            if (200..<300).contains(httpResponse.statusCode) {
+                print("차용증 수정 요청 성공")
+                completion(true)
+            } else {
+                print("HTTP status code: \(httpResponse.statusCode)")
+                if let data = data {
+                    let responseData = String(data: data, encoding: .utf8)
+                    print("\(httpResponse.statusCode) data: \(responseData ?? "No data")")
+                }
+                completion(false)
+            }
+        }
+        task.resume()
+    }
+    
     /// 차용증 결제 취소
     func paymentCancle(impUid: String, merchantUid: String) {
         var urlComponents = URLComponents()
@@ -300,6 +343,79 @@ final class HomeStore {
                     }
                 } else {
                     print("Unexpected error: No data or response")
+                }
+            }
+            task.resume()
+        }
+    }
+    
+    /// 차용증 숨김
+    func certificateHide(id: Int, completion: @escaping (Bool) -> Void) {
+        var urlComponents = URLComponents()
+        urlComponents.scheme = "https"
+        urlComponents.host = "payrit.info"
+        urlComponents.path = "/api/v1/paper/hide/\(id)"
+        
+        if let url = urlComponents.url {
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "PUT"
+            request.setValue("*/*", forHTTPHeaderField: "accept")
+            request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
+            
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    print("Error: \(error)")
+                    completion(false)
+                } else if let data = data, let response = response as? HTTPURLResponse {
+                    print("Response status code: \(response.statusCode)")
+                    if (200..<300).contains(response.statusCode) {
+                        print("숨김 완료")
+                        completion(true)
+                    } else {
+                        let responseData = String(data: data, encoding: .utf8)
+                        print("\(response.statusCode) data: \(responseData ?? "No data")")
+                        completion(false)
+                    }
+                } else {
+                    print("Unexpected error: No data or response")
+                    completion(false)
+                }
+            }
+            task.resume()
+        }
+    }
+    
+    func certificateRefuse(id: Int, completion: @escaping (Bool) -> Void) {
+        var urlComponents = URLComponents()
+        urlComponents.scheme = "https"
+        urlComponents.host = "payrit.info"
+        urlComponents.path = "/api/v1/paper/refuse/\(id)"
+        
+        if let url = urlComponents.url {
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "PUT"
+            request.setValue("*/*", forHTTPHeaderField: "accept")
+            request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
+            
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    print("Error: \(error)")
+                    completion(false)
+                } else if let data = data, let response = response as? HTTPURLResponse {
+                    print("Response status code: \(response.statusCode)")
+                    if (200..<300).contains(response.statusCode) {
+                        print("거절 완료")
+                        completion(true)
+                    } else {
+                        let responseData = String(data: data, encoding: .utf8)
+                        print("\(response.statusCode) data: \(responseData ?? "No data")")
+                        completion(false)
+                    }
+                } else {
+                    print("Unexpected error: No data or response")
+                    completion(false)
                 }
             }
             task.resume()

@@ -135,8 +135,12 @@ struct CertificateDocumentView: View {
 
                         Divider()
                             .foregroundStyle(.black)
-                        Text(certificateDetail.paperFormInfo.specialConditions)
-                            .padding(.horizontal, 10)
+                        if certificateDetail.paperFormInfo.specialConditions.isEmpty {
+                            Text("empty").foregroundStyle(.clear)
+                        } else {
+                            Text(certificateDetail.paperFormInfo.specialConditions)
+                                .padding(.horizontal, 10)
+                        }
 
                     }
                     .padding(.vertical, 10)

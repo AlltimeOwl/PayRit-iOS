@@ -7,6 +7,11 @@
 
 import SwiftUI
 
+enum WritingType {
+    case payrit
+    case promise
+}
+
 struct WritingView: View {
     @State var path = NavigationPath()
     @State private var isShowingAuthAlert: Bool = false
@@ -38,11 +43,12 @@ struct WritingView: View {
                         .font(Font.title01)
                         Spacer()
                     }
+                    .padding(.top, 45)
                     .padding(.bottom, 30)
                     
                     Button {
                         if iamportStore.impAuth {
-                            path.append("payritWrite")
+                            path.append(WritingType.payrit)
                         } else {
                             isShowingAuthAlert.toggle()
                         }
@@ -62,7 +68,7 @@ struct WritingView: View {
                                             Spacer()
                                         }
                                         Spacer()
-                                        Text("차용증과 동일한 효력을 가지고 있어요")
+                                        Text("차용증과 동일한 효력으로\n문서로 출력할 수 있어요")
                                             .font(Font.body04)
                                             .foregroundStyle(Color.gray05)
                                             .multilineTextAlignment(.leading)
@@ -73,16 +79,9 @@ struct WritingView: View {
                                 .padding(22)
                             }
                     }
-                    .navigationDestination(for: String.self) { _ in
-                        SelectCertificateTypeView(path: $path)
-                            .customBackbutton()
-                            .onAppear {
-                                tabStore.tabBarHide = true
-                            }
-                    }
                     
-                    NavigationLink {
-                        
+                    Button {
+                        path.append(WritingType.promise)
                     } label: {
                         Rectangle()
                             .frame(height: 160)
@@ -93,13 +92,14 @@ struct WritingView: View {
                                 HStack {
                                     VStack(alignment: .leading) {
                                         HStack {
-                                            Text("약속 작성하기")
+                                            Text("약속 카드 만들기")
                                                 .font(Font.title02)
                                                 .foregroundStyle(.black)
                                             Spacer()
                                         }
                                         Spacer()
-                                        Text("곧 출시돼요!")
+//                                        Text("간단한 돈 약속 카드를\n제작해서 간직할 수 있어요")
+                                        Text("준비중 입니다.")
                                             .font(Font.body04)
                                             .foregroundStyle(Color.gray05)
                                             .multilineTextAlignment(.leading)
@@ -111,11 +111,26 @@ struct WritingView: View {
                             }
                     }
                     .disabled(true)
-                    .opacity(0.5)
                     Spacer()
                 }
                 .padding(.top, 30)
                 .padding(.horizontal, 16)
+                .navigationDestination(for: WritingType.self) { type in
+                    switch type {
+                    case .payrit:
+                        SelectCertificateTypeView(path: $path)
+                            .customBackbutton()
+                            .onAppear {
+                                tabStore.tabBarHide = true
+                            }
+                    case .promise:
+                        SelectPromiseTypeView(path: $path)
+                            .customBackbutton()
+                            .onAppear {
+                                tabStore.tabBarHide = true
+                            }
+                    }
+                }
                 if iamportStore.isCert {
                     IMPCertificationView(certType: .constant(.account))
                         .onDisappear {

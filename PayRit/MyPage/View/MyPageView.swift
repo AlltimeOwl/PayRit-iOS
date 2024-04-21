@@ -104,7 +104,7 @@ struct MyPageView: View {
                             .foregroundStyle(Color.gray08)
                         
                         NavigationLink {
-                            AlarmSettingView()
+                            AlarmSettingView(mypageStore: mypageStore)
                                 .customBackbutton()
                                 .onAppear {
                                     tabStore.tabBarHide = true
