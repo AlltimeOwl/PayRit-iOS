@@ -48,6 +48,8 @@ struct WritingCertificateInfoView: View {
                 ScrollViewReader { proxy in
                     ScrollView {
                         VStack(alignment: .leading, spacing: 24) {
+                            Text(certificateType == "CREDITOR" ? "빌려주기로 한 돈의\n정보를 입력해 주세요." : "빌리기로 한 돈의\n정보를 입력해 주세요")
+                                .font(Font.title03)
                             VStack(alignment: .leading) {
                                 Text("얼마를 빌려주기로 했나요?")
                                     .font(Font.body03)
@@ -217,7 +219,7 @@ struct WritingCertificateInfoView: View {
                                             .foregroundStyle(Color.gray04)
                                             .padding(.top, 4)
                                             
-                                            CustomTextField(placeholder: "숫자를 입력해주세요", keyboardType: .decimalPad, text: $interestRate, isFocused: interestTextFieldFocus)
+                                            CustomTextField(placeholder: "이자율을 입력해주세요", keyboardType: .decimalPad, text: $interestRate, isFocused: interestTextFieldFocus)
                                                 .onChange(of: interestRate) { oldValue, newValue in
                                                     if newValue.count < 6 {
                                                         if newValue.filter({ $0 == "." }).count >= 2 {
@@ -269,7 +271,7 @@ struct WritingCertificateInfoView: View {
                                                 .font(Font.body03)
                                                 .foregroundStyle(Color.gray04)
                                             
-                                            CustomTextField(placeholder: "숫자를 입력해주세요", keyboardType: .numberPad, text: $interestDate)
+                                            CustomTextField(placeholder: "예) 매달 3일이면 3을 입력해주세요", keyboardType: .numberPad, text: $interestDate)
                                                 .onChange(of: interestDate) { _, newValue in
                                                     if Int(newValue) ?? 31 > 31 {
                                                         interestDate = "31"

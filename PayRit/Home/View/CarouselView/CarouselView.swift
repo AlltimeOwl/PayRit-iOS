@@ -8,14 +8,16 @@
 import SwiftUI
 
 struct CarouselView: View {
+    let hasCompleted: Bool
     @State private var pageIndex = 0
     @State private var isShowingSheet: Bool = false
-    let imageNames: [String] = ["speaker", "hand", "flag"]
-    let label: [String] = ["어서와!\n처음인 너를 위해\n알려줄게", "차용증에 대해\n쉽게 알려드려요", "상환완료\n축하드려요!"]
-    let color: [Color] = [Color.payritMint, Color.payritIntensivePink, Color.payritMint]
+    let imageNames: [String] = ["flag", "speaker", "hand"]
+    let label: [String] = ["상환완료\n축하드려요!", "어서와!\n처음인 너를 위해\n알려줄게", "차용증에 대해\n쉽게 알려드려요"]
+    let color1: [Color] = [Color.payritMint, Color.payritMint, Color.payritIntensivePink]
+    let color2: [Color] = [Color.payritMint, Color.payritIntensivePink, Color.payritMint]
     var body: some View {
         TabView(selection: $pageIndex) {
-            ForEach(imageNames.indices, id: \.self) { index in
+            ForEach(hasCompleted ? imageNames.indices : imageNames.indices.dropFirst(), id: \.self) { index in
                 HStack {
                     VStack(alignment: .leading, spacing: 16) {
                         Text(label[index])
@@ -36,7 +38,7 @@ struct CarouselView: View {
                 .padding(20)
                 .frame(maxWidth: .infinity)
                 .frame(height: 190)
-                .background(color[index])
+                .background(hasCompleted ? color2[index] : color1[index])
                 .clipShape(.rect(cornerRadius: 12))
             }
         }
@@ -52,5 +54,5 @@ struct CarouselView: View {
 }
 
 #Preview {
-    CarouselView()
+    CarouselView(hasCompleted: false)
 }

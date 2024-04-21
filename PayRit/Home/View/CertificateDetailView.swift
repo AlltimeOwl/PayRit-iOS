@@ -199,7 +199,7 @@ struct CertificateDetailView: View {
                                 .padding(.horizontal, 20)
                                 .background()
                                 .clipShape(.rect(cornerRadius: 12))
-                                .shadow(color: .gray.opacity(0.2), radius: 5)
+                                .customShadow()
                                 
                             } else {
                                 Button {
@@ -218,7 +218,7 @@ struct CertificateDetailView: View {
                                     .padding(.horizontal, 12)
                                     .background()
                                     .clipShape(.rect(cornerRadius: 12))
-                                    .shadow(color: .gray.opacity(0.2), radius: 5)
+                                    .customShadow()
                                 }
                             }
                         }
@@ -240,7 +240,7 @@ struct CertificateDetailView: View {
                             .padding(.horizontal, 12)
                             .background()
                             .clipShape(.rect(cornerRadius: 12))
-                            .shadow(color: .gray.opacity(0.2), radius: 5)
+                            .customShadow()
                         }
                         
                         VStack(alignment: .leading, spacing: 24) {
@@ -293,7 +293,7 @@ struct CertificateDetailView: View {
                             .padding(.horizontal, 20)
                             .background(Color.white)
                             .clipShape(.rect(cornerRadius: 12))
-                            .shadow(color: .gray.opacity(0.2), radius: 5)
+                            .customShadow()
                             
                             VStack(alignment: .leading, spacing: 12) {
                                 Text("빌린 사람")
@@ -344,9 +344,9 @@ struct CertificateDetailView: View {
                             .padding(.horizontal, 20)
                             .background(Color.white)
                             .clipShape(.rect(cornerRadius: 12))
-                            .shadow(color: .gray.opacity(0.2), radius: 5)
+                            .customShadow()
                             
-                            if homeStore.certificateDetail.paperFormInfo.interestRate > 0 || homeStore.certificateDetail.paperFormInfo.interestPaymentDate != 0 || homeStore.certificateDetail.paperFormInfo.specialConditions != nil {
+                            if homeStore.certificateDetail.paperFormInfo.interestRate > 0 || homeStore.certificateDetail.paperFormInfo.interestPaymentDate != 0 || !homeStore.certificateDetail.paperFormInfo.specialConditions.isEmpty {
                                 VStack(alignment: .leading, spacing: 12) {
                                     Text("추가사항")
                                         .font(Font.body03)
@@ -381,15 +381,15 @@ struct CertificateDetailView: View {
                                         }
                                         .padding(.leading, 8)
                                     }
-                                    if let specialConditions = homeStore.certificateDetail.paperFormInfo.specialConditions {
+                                    if !homeStore.certificateDetail.paperFormInfo.specialConditions.isEmpty {
                                         HStack(alignment: .top) {
                                             HStack {
-                                                Text("특이사항")
+                                                Text("특약사항")
                                                     .font(Font.body04)
                                                 Spacer()
                                             }
                                             .frame(width: 80)
-                                            Text("\(specialConditions)")
+                                            Text("\(homeStore.certificateDetail.paperFormInfo.specialConditions)")
                                                 .font(Font.body01)
                                             Spacer()
                                         }
@@ -400,7 +400,7 @@ struct CertificateDetailView: View {
                                 .padding(.horizontal, 20)
                                 .background(Color.white)
                                 .clipShape(.rect(cornerRadius: 12))
-                                .shadow(color: .gray.opacity(0.2), radius: 5)
+                                .customShadow()
                             }
                         }
                         .padding(.top, 24)
@@ -420,7 +420,7 @@ struct CertificateDetailView: View {
             isLoading = true
             Task {
                 await homeStore.loadDetail(id: paperId)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                     withAnimation {
                         self.isLoading = false
                     }

@@ -25,7 +25,7 @@ struct PaperFormInfo: Hashable, Codable {
     var repaymentStartDate: String
     var repaymentEndDate: String
     var transactionDate: String
-    var specialConditions: String?
+    var specialConditions: String
     
     var interestRateAmount: Int {
         let dateFormatter = DateFormatter()

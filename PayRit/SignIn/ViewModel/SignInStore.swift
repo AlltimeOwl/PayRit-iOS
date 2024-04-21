@@ -28,6 +28,7 @@ enum ServerAuthError: Error {
     case invalidResponse
     case invalidData
     case parsingError
+    case serverClosed
 }
 
 enum LogOutMessage: String, CodingKey {
@@ -238,7 +239,6 @@ class SignInStore {
                             self.kakaoAuthCheck()
                             self.kakaoAuthCount += 1
                         }
-                        
                     } else {
                         // 기타 에러
                         self.isSignIn = false
@@ -429,15 +429,18 @@ class SignInStore {
                     self.serverIsClosed = .none
                 } else {
                     print("Unexpected status code: \(httpResponse.statusCode)")
+                    
                     if httpResponse.statusCode == 502 {
                         print("서버 점검중")
                         self.whileSigIn = .not
                         self.serverIsClosed = .serverStop
+                        completion(.failure(ServerAuthError.serverClosed))
                     } else {
-                        completion(.failure(ServerAuthError.invalidResponse))
                         self.whileSigIn = .not
                         self.serverIsClosed = .authRevoke
+                        completion(.failure(ServerAuthError.invalidResponse))
                     }
+                    
                     if let data = data {
                         let responseData = String(data: data, encoding: .utf8)
                         print("\(httpResponse.statusCode) data: \(responseData ?? "No data")")

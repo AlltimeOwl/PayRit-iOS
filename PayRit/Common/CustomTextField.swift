@@ -46,6 +46,10 @@ public struct CustomTextField: View {
                 .keyboardType(keyboardType)
                 .textInputAutocapitalization(.never)
                 .disableAutocorrection(true)
+                .autocapitalization(.none)
+                
+//            autocorrectionType = .no
+//            spellCheckingType = .no
             
             if isFocused {
                 HStack {

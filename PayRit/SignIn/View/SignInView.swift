@@ -18,10 +18,9 @@ struct SignInView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Image("firstImage2")
+                Image("SignInImage")
                     .resizable()
                     .frame(height: UIScreen.screenHeight)
-                Image("payRitText")
                 
                 if signInStore.whileSigIn == .not {
                     VStack(spacing: 8) {

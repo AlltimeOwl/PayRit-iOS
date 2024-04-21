@@ -28,7 +28,8 @@ public extension Color {
     /// 카카오 로그인 버튼 색상
     static let kakaoLoginButton = Color(hex: "#F9E001")
     ///  앱 백그라운드 색상 FDFDFD
-    static let payritBackground = Color(hex: "FDFDFD")
+//    static let payritBackground = Color(hex: "FDFDFD")
+    static let payritBackground = Color.white
     /// 민트 28D7D2
     static let payritMint = Color(hex: "28D7D2")
     /// 라이트 민트 CBF0EF

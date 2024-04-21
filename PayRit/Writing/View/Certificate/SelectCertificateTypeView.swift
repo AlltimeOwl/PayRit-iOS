@@ -28,6 +28,7 @@ struct SelectCertificateTypeView: View {
                             .frame(height: 160)
                             .foregroundStyle(.white)
                             .clipShape(.rect(cornerRadius: 12))
+                            .customShadow()
                             .overlay(alignment: .leading) {
                                 VStack(alignment: .leading, spacing: 32) {
                                     HStack(spacing: 0) {
@@ -54,7 +55,6 @@ struct SelectCertificateTypeView: View {
                                 .padding(22)
                             }
                     }
-                    .shadow(color: .gray.opacity(0.2), radius: 8)
                     
                     NavigationLink {
                         WritingCertificateInfoView(certificateType: "DEBTOR", path: $path)
@@ -64,6 +64,7 @@ struct SelectCertificateTypeView: View {
                             .frame(height: 160)
                             .foregroundStyle(.white)
                             .clipShape(.rect(cornerRadius: 12))
+                            .customShadow()
                             .overlay(alignment: .leading) {
                                 VStack(alignment: .leading, spacing: 32) {
                                     HStack(spacing: 0) {
@@ -91,7 +92,6 @@ struct SelectCertificateTypeView: View {
                                 
                             }
                     }
-                    .shadow(color: .gray.opacity(0.2), radius: 8)
                 }
                 .padding(.top, 16)
                 Spacer()

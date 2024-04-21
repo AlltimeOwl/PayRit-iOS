@@ -135,13 +135,11 @@ struct CertificateDocumentView: View {
 
                         Divider()
                             .foregroundStyle(.black)
-                        if let etc = certificateDetail.paperFormInfo.specialConditions {
-                            Text(etc)
-                                .padding(.horizontal, 10)
+                        if certificateDetail.paperFormInfo.specialConditions.isEmpty {
+                            Text("empty").foregroundStyle(.clear)
                         } else {
-                            Text("etc")
+                            Text(certificateDetail.paperFormInfo.specialConditions)
                                 .padding(.horizontal, 10)
-                                .foregroundStyle(.clear)
                         }
 
                     }
@@ -168,13 +166,13 @@ struct CertificateDocumentView: View {
             Spacer()
             HStack {
                 Spacer()
-                Text("채 권 자 :    \(certificateDetail.creditorProfile.name)    전자서명 완료함")
+                Text("채 권 자 :    \(certificateDetail.creditorProfile.name)    본인인증 완료함")
                     .padding(.trailing, 40)
             }
             .padding(.vertical, 10)
             HStack {
                 Spacer()
-                Text("채 무 자 :    \(certificateDetail.debtorProfile.name)    전자서명 완료함")
+                Text("채 무 자 :    \(certificateDetail.debtorProfile.name)    본인인증 완료함")
                     .padding(.trailing, 40)
             }
             Spacer()

@@ -57,4 +57,21 @@ extension String {
             return self
         }
     }
+    
+    func extractStringAfterMODIFY() -> String? {
+        let text = self.components(separatedBy: "[MODIFY]")
+        return text.last
+    }
+    
+    func extractStringAfterSpecial() -> String? {
+        let text = self.components(separatedBy: "[MODIFY]")
+        return text.first
+    }
+    
+    /// "2024-01-01 을 Date 타입으로 변환
+    func stringToDate() -> Date? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        return dateFormatter.date(from: self)
+    }
 }

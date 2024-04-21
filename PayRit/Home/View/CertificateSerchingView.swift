@@ -10,19 +10,18 @@ import SwiftUI
 struct CertificateSerchingView: View {
     private let menuPadding = 8.0
     private let horizontalPadding = 16.0
-    @State private var paperId = 0
     @State private var searchWord: String = ""
     @State private var filterCount: Int = 0
     @State private var menuState = false
-    @State private var isHiddenInfoBox = false
     @State private var isShowingSignatureView = false
     @State private var isShowingWaitingApprovalAlert = false
     @State private var isShowingWaitingPaymentAlert = false
-    @State private var navigationLinkDetailView = false
-    @State private var navigationLinkAcceptView = false
+    @State private var isShowingRefuseAlert = false
+    @State private var isShoingModifyingAlert = false
     @State var certificateStep: CertificateStep?
+    @Binding var path: NavigationPath
     @Environment(HomeStore.self) var homeStore
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @FocusState private var interestFocused: Bool
     
     var body: some View {
@@ -32,7 +31,7 @@ struct CertificateSerchingView: View {
                 HStack {
                     VStack {
                         Button {
-                            dismiss()
+                            self.presentationMode.wrappedValue.dismiss()
                         }label: {
                             Image(systemName: "chevron.left")
                                 .foregroundStyle(.black)
@@ -62,6 +61,7 @@ struct CertificateSerchingView: View {
                         }
                     }
                 }
+                .padding(.top, 20)
                 .padding(.bottom, 10)
                 ZStack {
                     VStack(spacing: 0) {
@@ -79,26 +79,30 @@ struct CertificateSerchingView: View {
                         // MARK: - 홈 카드 리스트
                         ScrollViewReader { _ in
                             List(homeStore.certificates, id: \.self) { certificate in
-                                if certificate.peerName.contains(searchWord) {
+                                if certificate.peerName.contains(searchWord) || String(certificate.amount).contains(searchWord) {
                                     Button {
-                                        certificateStep = certificate.certificateStep
-                                        paperId = certificate.paperId
-                                        if certificate.certificateStep == .waitingApproval {
+                                        switch certificate.certificateStep {
+                                        case .waitingApproval:
+                                            path.append(HomePath(type: .accept, paperId: certificate.paperId, step: .waitingApproval, isWriter: certificate.isWriter))
+                                        case .waitingPayment:
                                             if certificate.isWriter {
-                                                isShowingWaitingApprovalAlert.toggle()
-                                            } else {
-                                                navigationLinkAcceptView.toggle()
-                                            }
-                                        } else if certificate.certificateStep == .waitingPayment {
-                                            if certificate.isWriter {
-                                                navigationLinkAcceptView.toggle()
+                                                path.append(HomePath(type: .accept, paperId: certificate.paperId, step: .waitingPayment, isWriter: certificate.isWriter))
                                             } else {
                                                 isShowingWaitingPaymentAlert.toggle()
                                             }
-                                        } else if certificate.certificateStep == .progress {
-                                            navigationLinkDetailView.toggle()
-                                        } else if certificate.certificateStep == .complete {
-                                            navigationLinkDetailView.toggle()
+                                        case .progress:
+                                            path.append(HomePath(type: .detail, paperId: certificate.paperId, step: .progress, isWriter: certificate.isWriter))
+                                        case .complete:
+                                            path.append(HomePath(type: .detail, paperId: certificate.paperId, step: .complete, isWriter: certificate.isWriter))
+                                        case .modifying:
+                                            if certificate.isWriter {
+                                                path.append(HomePath(type: .accept, paperId: certificate.paperId, step: .modifying, isWriter: certificate.isWriter))
+                                            } else {
+                                                isShoingModifyingAlert.toggle()
+                                            }
+                                        case .refused:
+                                            isShowingRefuseAlert.toggle()
+                                        case .none: break
                                         }
                                     } label: {
                                         VStack(alignment: .leading, spacing: 0) {
@@ -148,7 +152,7 @@ struct CertificateSerchingView: View {
                                         .frame(maxWidth: .infinity)
                                         .background()
                                         .clipShape(RoundedRectangle(cornerRadius: 12))
-                                        .shadow(color: .gray.opacity(0.2), radius: 5)
+                                        .customShadow()
                                     }
                                     .buttonStyle(PlainButtonStyle())
                                     .listRowSeparator(.hidden)
@@ -159,6 +163,15 @@ struct CertificateSerchingView: View {
                             .scrollIndicators(.hidden)
                             .listStyle(.plain)
                             .background(Color.payritBackground)
+                            .navigationDestination(for: HomePath.self) { path in
+                                if path.type == .accept {
+                                    CertificateAcceptView(paperId: path.paperId, isWriter: path.isWriter, certificateStep: path.step, path: $path)
+                                        .customBackbutton()
+                                } else if path.type == .detail {
+                                    CertificateDetailView(paperId: path.paperId, certificateStep: path.step)
+                                        .customBackbutton()
+                                }
+                            }
                         }
                         Spacer()
                     }
@@ -179,7 +192,7 @@ struct CertificateSerchingView: View {
                                             .frame(width: 120, height: menuState ? 88 : 34)
                                             .background(Color.white)
                                             .clipShape(.rect(cornerRadius: 12))
-                                            .shadow(color: .gray.opacity(0.2), radius: 5)
+                                            .shadow(color: .gray.opacity(0.2), radius: 1)
                                             .overlay {
                                                 VStack(alignment: .leading) {
                                                     HStack {
@@ -196,7 +209,7 @@ struct CertificateSerchingView: View {
                                             .frame(width: 120, height: menuState ? 90 : 34)
                                             .background(Color.white)
                                             .clipShape(.rect(cornerRadius: 12))
-                                            .shadow(color: .gray.opacity(0.2), radius: 5)
+                                            .shadow(color: .gray.opacity(0.2), radius: 1)
                                             .overlay {
                                                 VStack(alignment: .leading, spacing: 10) {
                                                     Button {
@@ -242,24 +255,12 @@ struct CertificateSerchingView: View {
         .onTapGesture {
             self.endTextEditing()
         }
-        .navigationDestination(isPresented: $navigationLinkDetailView) {
-            if !homeStore.certificates.isEmpty {
-                if let setp = certificateStep {
-                    CertificateDetailView(paperId: paperId, certificateStep: setp)
-                        .customBackbutton()
-                }
-            }
-        }
-        .navigationDestination(isPresented: $navigationLinkAcceptView) {
-            if !homeStore.certificates.isEmpty {
-                if let setp = certificateStep {
-                    CertificateAcceptView(paperId: paperId, certificateStep: setp)
-                        .customBackbutton()
-                }
-            }
-        }
         .onChange(of: searchWord) {
-            filterCount = homeStore.certificates.filter { $0.peerName.contains(searchWord) }.count
+            if Int(searchWord) ?? 0 > 0 {
+                filterCount = homeStore.certificates.filter { String($0.amount).contains(searchWord) }.count
+            } else {
+                filterCount = homeStore.certificates.filter { $0.peerName.contains(searchWord) }.count
+            }
         }
         .onAppear {
             interestFocused = true
@@ -274,12 +275,23 @@ struct CertificateSerchingView: View {
         } cancleAction: {
             //
         }
+        .primaryAlert(isPresented: $isShowingRefuseAlert, title: "거절된 페이릿", content: "수신자가 거부한 페이릿입니다.", primaryButtonTitle: nil, cancleButtonTitle: "확인") {
+        } cancleAction: {
+        }
+        .primaryAlert(isPresented: $isShoingModifyingAlert, title: "수정 진행중", content: "작성자가 수정중입니다.", primaryButtonTitle: nil, cancleButtonTitle: "확인") {
+            //
+        } cancleAction: {
+            Task {
+                await homeStore.loadCertificates()
+            }
+        }
     }
 }
 
 #Preview {
     NavigationStack {
-        CertificateSerchingView()
+        CertificateSerchingView(path: .constant(NavigationPath()))
             .environment(HomeStore())
     }
 }
+

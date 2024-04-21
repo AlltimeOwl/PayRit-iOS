@@ -29,6 +29,10 @@ struct Certificate: Hashable, Codable {
             return .progress
         } else if paperStatus == "EXPIRED" {
             return .complete
+        } else if paperStatus == "MODIFYING"{
+            return .modifying
+        } else if paperStatus == "REFUSED"{
+            return .refused
         } else {
             return nil
         }

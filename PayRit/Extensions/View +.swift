@@ -32,9 +32,21 @@ extension View {
         )
     }
     
-    public func updateAlert(isPresented: Binding<Bool>, title: String, content: String, primaryButtonTitle: String?, cancleButtonTitle: String, primaryAction: ( () -> Void)?, cancleAction: @escaping () -> Void) -> some View {
+    public func primaryAlertNoneTouch(isPresented: Binding<Bool>, title: String, content: String, primaryButtonTitle: String?, cancleButtonTitle: String, primaryAction: ( () -> Void)?, cancleAction: @escaping () -> Void) -> some View {
         return modifier(
-            UpdateAlertModifier(isPresented: isPresented, title: title, content: content, primaryButtonTitle: primaryButtonTitle, cancleButtonTitle: cancleButtonTitle, primaryAction: primaryAction, cancleAction: cancleAction)
+            PrimaryAlertNoneTouchModifier(isPresented: isPresented, title: title, content: content, primaryButtonTitle: primaryButtonTitle, cancleButtonTitle: cancleButtonTitle, primaryAction: primaryAction, cancleAction: cancleAction)
+        )
+    }
+    
+//    public func updateAlert(isPresented: Binding<Bool>, title: String, content: String, primaryButtonTitle: String?, cancleButtonTitle: String, primaryAction: ( () -> Void)?, cancleAction: @escaping () -> Void) -> some View {
+//        return modifier(
+//            UpdateAlertModifier(isPresented: isPresented, title: title, content: content, primaryButtonTitle: primaryButtonTitle, cancleButtonTitle: cancleButtonTitle, primaryAction: primaryAction, cancleAction: cancleAction)
+//        )
+//    }
+    
+    public func pixAlert(isPresented: Binding<Bool>, content: Binding<String>, title: String, primaryButtonTitle: String, cancleButtonTitle: String, primaryAction: @escaping () -> Void, cancleAction: @escaping () -> Void) -> some View {
+        return modifier(
+            PixAlertModifier(isPresented: isPresented, content: content, title: title, primaryButtonTitle: primaryButtonTitle, cancleButtonTitle: cancleButtonTitle, primaryAction: primaryAction, cancleAction: cancleAction)
         )
     }
     
@@ -48,6 +60,10 @@ extension View {
     
     func dismissOnEdgeDrag(minimumDragDistance: CGFloat = 60, edgeWidth: CGFloat = 20) -> some View {
         self.modifier(DismissOnEdgeDrag(minimumDragDistance: minimumDragDistance, edgeWidth: edgeWidth))
+    }
+    
+    func customShadow() -> some View {
+        self.modifier(CustomShadow())
     }
 }
 
