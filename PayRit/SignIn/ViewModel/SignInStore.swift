@@ -12,6 +12,7 @@ import KakaoSDKAuth
 import CryptoKit
 import AuthenticationServices
 import Alamofire
+import FirebaseAnalytics
 
 enum WhileSigIn {
     case not
@@ -50,6 +51,7 @@ class SignInStore {
     
     // MARK: - 애플
     func handleAppleSignInResult(_ result: Result<ASAuthorization, Error>) {
+        Analytics.logEvent("apple_signIn_iOS", parameters: [:])
         switch result {
         case .success(let authResults):
             print("Apple Login Successful")
@@ -166,6 +168,7 @@ class SignInStore {
     // MARK: - 카카오
     /// 카카오 로그인 시도
     func kakaoSignIn() {
+        Analytics.logEvent("kakao_signIn_iOS", parameters: [:])
         if UserApi.isKakaoTalkLoginAvailable() {
             UserApi.shared.loginWithKakaoTalk(launchMethod: .CustomScheme) {(oauthToken, error) in
                 if let error = error {

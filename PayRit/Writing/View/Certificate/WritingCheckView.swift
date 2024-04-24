@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import FirebaseAnalytics
 
 enum SaveType {
     case save
@@ -107,6 +108,10 @@ struct WritingCheckView: View {
                     .padding(.horizontal, 16)
                 }
                 Button {
+                    Analytics.logEvent("write_PayRit_iOS", parameters: [
+                        "name": mypageStore.currentUser.name,
+                        "amount": newCertificate.paperFormInfo.primeAmount
+                    ])
                     switch saveType.type {
                     case .save:
                         writingStore.saveCertificae(certificate: newCertificate) { result in
