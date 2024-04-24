@@ -91,6 +91,11 @@
 		BC9F48F92BD51E9E007A0757 /* ContactAddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC9F48F82BD51E9E007A0757 /* ContactAddView.swift */; };
 		BC9F48FB2BD53FE4007A0757 /* CardInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC9F48FA2BD53FE4007A0757 /* CardInfoView.swift */; };
 		BC9F48FD2BD54BB1007A0757 /* PromiseCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC9F48FC2BD54BB1007A0757 /* PromiseCheckView.swift */; };
+		BC9F49002BD668DA007A0757 /* PeopleCountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC9F48FF2BD668DA007A0757 /* PeopleCountView.swift */; };
+		BC9F49022BD66B80007A0757 /* CardSelectionViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC9F49012BD66B80007A0757 /* CardSelectionViewTests.swift */; };
+		BC9F49042BD7CBAC007A0757 /* CardSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC9F49032BD7CBAC007A0757 /* CardSelectView.swift */; };
+		BC9F49082BD7E0E3007A0757 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = BC9F49072BD7E0E3007A0757 /* FirebaseCrashlytics */; };
+		BC9F490A2BD7E17E007A0757 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = BC9F49092BD7E17E007A0757 /* FirebaseAnalyticsWithoutAdIdSupport */; };
 		BCC9EC042B8F09A6001E18F0 /* CertificateDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCC9EC032B8F09A6001E18F0 /* CertificateDetail.swift */; };
 		BCD942512B8F0CCC00BF61CD /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = BCD942502B8F0CCC00BF61CD /* .swiftlint.yml */; };
 		BCD942572B8F1D5400BF61CD /* MyPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD942562B8F1D5400BF61CD /* MyPageView.swift */; };
@@ -183,6 +188,9 @@
 		BC9F48F82BD51E9E007A0757 /* ContactAddView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactAddView.swift; sourceTree = "<group>"; };
 		BC9F48FA2BD53FE4007A0757 /* CardInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardInfoView.swift; sourceTree = "<group>"; };
 		BC9F48FC2BD54BB1007A0757 /* PromiseCheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromiseCheckView.swift; sourceTree = "<group>"; };
+		BC9F48FF2BD668DA007A0757 /* PeopleCountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleCountView.swift; sourceTree = "<group>"; };
+		BC9F49012BD66B80007A0757 /* CardSelectionViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardSelectionViewTests.swift; sourceTree = "<group>"; };
+		BC9F49032BD7CBAC007A0757 /* CardSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardSelectView.swift; sourceTree = "<group>"; };
 		BCC9EC032B8F09A6001E18F0 /* CertificateDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateDetail.swift; sourceTree = "<group>"; };
 		BCD942502B8F0CCC00BF61CD /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		BCD942562B8F1D5400BF61CD /* MyPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageView.swift; sourceTree = "<group>"; };
@@ -200,11 +208,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				BC595DFB2B8D941900CA555E /* KakaoSDKCertCore in Frameworks */,
+				BC9F490A2BD7E17E007A0757 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
 				BC595DF92B8D941900CA555E /* KakaoSDKCert in Frameworks */,
 				BC2193A12BB038B200EE7B68 /* FirebaseMessaging in Frameworks */,
 				BC21939F2BB038B200EE7B68 /* FirebaseAnalytics in Frameworks */,
 				BC595DF52B8D941900CA555E /* KakaoSDK in Frameworks */,
 				BC595DFD2B8D941900CA555E /* KakaoSDKCommon in Frameworks */,
+				BC9F49082BD7E0E3007A0757 /* FirebaseCrashlytics in Frameworks */,
 				BC595DF72B8D941900CA555E /* KakaoSDKAuth in Frameworks */,
 				BC020FEF2BBEC2FE00116A6B /* iamport-ios in Frameworks */,
 			);
@@ -594,6 +604,16 @@
 			path = Promise;
 			sourceTree = "<group>";
 		};
+		BC9F48FE2BD6687D007A0757 /* CardDraw */ = {
+			isa = PBXGroup;
+			children = (
+				BC9F48FF2BD668DA007A0757 /* PeopleCountView.swift */,
+				BC9F49032BD7CBAC007A0757 /* CardSelectView.swift */,
+				BC9F49012BD66B80007A0757 /* CardSelectionViewTests.swift */,
+			);
+			path = CardDraw;
+			sourceTree = "<group>";
+		};
 		BCD942542B8F1D3100BF61CD /* MyPage */ = {
 			isa = PBXGroup;
 			children = (
@@ -648,6 +668,7 @@
 				BCE280DF2B9021EE0085D45E /* WritingView.swift */,
 				BC9F48F42BD51B22007A0757 /* Certificate */,
 				BC9F48F52BD51B30007A0757 /* Promise */,
+				BC9F48FE2BD6687D007A0757 /* CardDraw */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -663,7 +684,8 @@
 				BC595DCF2B8D8AC300CA555E /* Frameworks */,
 				BC595DD02B8D8AC300CA555E /* Resources */,
 				BC595DE32B8D8AD100CA555E /* SwiftLint Script */,
-				BCD942592B8F1FAA00BF61CD /* ShellScript */,
+				BC9F490B2BD7F5F7007A0757 /* ShellScript */,
+				BC9F49062BD7DD33007A0757 /* Run Script */,
 			);
 			buildRules = (
 			);
@@ -679,6 +701,8 @@
 				BC21939E2BB038B200EE7B68 /* FirebaseAnalytics */,
 				BC2193A02BB038B200EE7B68 /* FirebaseMessaging */,
 				BC020FEE2BBEC2FE00116A6B /* iamport-ios */,
+				BC9F49072BD7E0E3007A0757 /* FirebaseCrashlytics */,
+				BC9F49092BD7E17E007A0757 /* FirebaseAnalyticsWithoutAdIdSupport */,
 			);
 			productName = PayRit;
 			productReference = BC595DD22B8D8AC300CA555E /* PayRit.app */;
@@ -764,9 +788,31 @@
 			shellPath = /bin/sh;
 			shellScript = "if [[ \"$(uname -m)\" == arm64 ]]; then\n    export PATH=\"/opt/homebrew/bin:$PATH\"\nfi\n\nif which swiftlint > /dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
-		BCD942592B8F1FAA00BF61CD /* ShellScript */ = {
+		BC9F49062BD7DD33007A0757 /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${PRODUCT_NAME}",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/GoogleService-Info.plist",
+				"$(TARGET_BUILD_DIR)/$(EXECUTABLE_PATH)",
+			);
+			name = "Run Script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\n";
+		};
+		BC9F490B2BD7F5F7007A0757 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -831,6 +877,7 @@
 				BC595DF02B8D8EAE00CA555E /* TabBarView.swift in Sources */,
 				BC0210382BC6F50000116A6B /* Creditor.swift in Sources */,
 				BC20D9D32BD420700053B2F3 /* MyInfoPixView.swift in Sources */,
+				BC9F49002BD668DA007A0757 /* PeopleCountView.swift in Sources */,
 				BC0210362BC6EE0800116A6B /* PaperFormInfo.swift in Sources */,
 				BC9F48F72BD51B5F007A0757 /* SelectPromiseTypeView.swift in Sources */,
 				BC68291F2B9CEE87009EF3F5 /* Memo.swift in Sources */,
@@ -848,6 +895,7 @@
 				BC9F48F92BD51E9E007A0757 /* ContactAddView.swift in Sources */,
 				BC6F652D2B9B394800FB9FA7 /* MembershipWithdrawalView.swift in Sources */,
 				BC2193AB2BB0416400EE7B68 /* NotificationStore.swift in Sources */,
+				BC9F49042BD7CBAC007A0757 /* CardSelectView.swift in Sources */,
 				BC9F48FD2BD54BB1007A0757 /* PromiseCheckView.swift in Sources */,
 				BC0210282BC4E08700116A6B /* Cert.swift in Sources */,
 				BC595E282B8DDFDD00CA555E /* HomeView.swift in Sources */,
@@ -861,6 +909,7 @@
 				BC12196F2BA5F21F00B575F8 /* CertificateDocumentView.swift in Sources */,
 				BC0210262BC4E08700116A6B /* Order.swift in Sources */,
 				BCE280DC2B8F75450085D45E /* ViewModifier.swift in Sources */,
+				BC9F49022BD66B80007A0757 /* CardSelectionViewTests.swift in Sources */,
 				BC20D9D52BD420810053B2F3 /* PartnerInfoPixView.swift in Sources */,
 				BC595E192B8DB75600CA555E /* Color +.swift in Sources */,
 			);
@@ -905,7 +954,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -1003,6 +1052,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "\"PayRit/Preview Content\"";
 				DEVELOPMENT_TEAM = ND7D3QSWBP;
 				ENABLE_PREVIEWS = YES;
@@ -1021,7 +1071,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.3.1;
+				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.alltimeowl.PayRit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1046,6 +1097,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "\"PayRit/Preview Content\"";
 				DEVELOPMENT_TEAM = ND7D3QSWBP;
 				ENABLE_PREVIEWS = YES;
@@ -1064,7 +1116,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.3.1;
+				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.alltimeowl.PayRit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1168,6 +1221,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = BC595DF32B8D941900CA555E /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
 			productName = KakaoSDKCommon;
+		};
+		BC9F49072BD7E0E3007A0757 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BC21939D2BB038B200EE7B68 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+		BC9F49092BD7E17E007A0757 /* FirebaseAnalyticsWithoutAdIdSupport */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BC21939D2BB038B200EE7B68 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsWithoutAdIdSupport;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

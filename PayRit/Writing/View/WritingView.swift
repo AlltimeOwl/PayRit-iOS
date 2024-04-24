@@ -98,8 +98,7 @@ struct WritingView: View {
                                             Spacer()
                                         }
                                         Spacer()
-//                                        Text("간단한 돈 약속 카드를\n제작해서 간직할 수 있어요")
-                                        Text("준비중 입니다.")
+                                        Text("간단한 돈 약속 카드를\n제작해서 간직할 수 있어요")
                                             .font(Font.body04)
                                             .foregroundStyle(Color.gray05)
                                             .multilineTextAlignment(.leading)
@@ -110,7 +109,6 @@ struct WritingView: View {
                                 .padding(22)
                             }
                     }
-                    .disabled(true)
                     Spacer()
                 }
                 .padding(.top, 30)
