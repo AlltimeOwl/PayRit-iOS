@@ -412,6 +412,9 @@ struct HomeView: View {
                                         .onAppear {
                                             tabStore.tabBarHide = true
                                         }
+                                        .onDisappear {
+                                            tabStore.tabBarHide = false
+                                        }
                                 }label: {
                                     Image("alamIcon")
                                         .resizable()

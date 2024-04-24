@@ -8,6 +8,7 @@
 import SwiftUI
 import KakaoSDKCommon
 import KakaoSDKAuth
+import FirebaseAnalytics
 
 struct ContentView: View {
     let userDefault = UserDefaultsManager()
@@ -53,6 +54,7 @@ struct ContentView: View {
                             versionService.isOldVersion = false
                         }
                     }
+                    Analytics.logEvent("visit_PayRit_iOS", parameters: [:])
                 }
                 .onAppear {
                     Task {

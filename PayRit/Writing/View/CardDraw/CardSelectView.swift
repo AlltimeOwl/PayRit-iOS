@@ -82,12 +82,12 @@ struct CardSelectView: View {
                                     }
                                 } label: {
                                     if item.used {
-                                        Image(item.backCard == .pickCardReverse ? "pickCard" : "grayCard")
+                                        Image(item.backCard == .pickCardReverse ? "pickCardReverse" : "grayCard")
                                             .resizable()
                                             .aspectRatio(contentMode: .fit)
                                             .frame(height: 250)
-                                            .shadow(color: Color.gray.opacity(0.4), radius: 3, y: 2)
-                                            .shadow(color: Color.payritMint.opacity(0.4), radius: 3, y: 2)
+                                            .scaleEffect(x: item.backCard == .pickCardReverse ? -1 : 1)
+                                            .shadow(color: Color(hex: "329794").opacity(0.5), radius: 3, x: 1, y: 4.8)
                                     } else {
                                         Image(!item.isFlipped ? item.cardName.rawValue : item.backCard.rawValue)
                                             .resizable()

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MyPageView: View {
     @State var url: String = ""
+    @State var storeVersion: String = ""
     @State var listItemHeight: CGFloat = 60
     @State var isShowingSignOut: Bool = false
     @State var isShowingSafariView: Bool = false
@@ -225,14 +226,19 @@ struct MyPageView: View {
                         Text("서울특별시 종로구 종로3길 17 D타워, 16-17층")
                         Text("고객지원 cs@payrit.info")
                         Text("Copyright ⓒ Payrit All Rights Reserved.")
+                        HStack {
+                            Text("최신 버전 : \(storeVersion)")
+                            Link(destination: URL(string: "itms-apps://itunes.apple.com/app/apple-store/6480038044")!, label: {
+                                Image(systemName: "square.and.arrow.up.circle.fill")
+                            })
+                        }
+                        Text("현재 버전 : \(VersionService().nowVersion())")
                         Spacer()
                     }
                     .padding(.top, 10)
+                    .padding(.bottom, 50)
                     .font(Font.caption02)
                     .foregroundStyle(Color.gray04)
-                    .frame(height: 140)
-
-                    Spacer()
                 }
                 .navigationTitle("")
                 .scrollIndicators(.hidden)
@@ -240,6 +246,9 @@ struct MyPageView: View {
                 .padding(.horizontal, 16)
                 .onAppear {
                     tabStore.tabBarHide = false
+                    VersionService().loadAppStoreVersion { version in
+                        storeVersion = version ?? ""
+                    }
                 }
                 .onChange(of: url) {
                     if !url.isEmpty {
