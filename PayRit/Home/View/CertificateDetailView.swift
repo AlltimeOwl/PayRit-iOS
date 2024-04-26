@@ -268,7 +268,7 @@ struct CertificateDetailView: View {
                                         Spacer()
                                     }
                                     .frame(width: 60)
-                                    Text("\(homeStore.certificateDetail.creditorProfile.phoneNumber.onlyPhoneNumber())")
+                                    Text("\(homeStore.certificateDetail.creditorProfile.phoneNumber.globalNumberToHyphen())")
                                         .font(Font.body01)
                                     Spacer()
                                 }
@@ -319,7 +319,7 @@ struct CertificateDetailView: View {
                                         Spacer()
                                     }
                                     .frame(width: 60)
-                                    Text("\(homeStore.certificateDetail.debtorProfile.phoneNumber.onlyPhoneNumber())")
+                                    Text("\(homeStore.certificateDetail.debtorProfile.phoneNumber.globalNumberToHyphen())")
                                         .font(Font.body01)
                                     Spacer()
                                 }

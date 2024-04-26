@@ -19,6 +19,7 @@ final class HomeStore {
     var sortingType: SortingType = .recent
     var certificates: [Certificate] = [Certificate]()
     var certificateDetail: CertificateDetail = CertificateDetail.EmptyCertificate
+    var promises: [Promise] = [Promise]()
     var isShowingPaymentSuccessAlert: Bool = false
     var isShowingAcceptFailAlert: Bool = false
     var isShowingAuthCompleteAlert: Bool = false
@@ -698,6 +699,48 @@ final class HomeStore {
                     print("\(httpResponse.statusCode) data: \(responseData ?? "No data")")
                 }
                 completion(nil, nil)
+            }
+        }
+        task.resume()
+    }
+    // MARK: - 약속
+    func loadPromise() async {
+        let urlString = "https://payrit.info/api/v1/promise/list"
+        guard let url = URL(string: urlString) else {
+            print("Invalid URL")
+            return
+        }
+        
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("application/json", forHTTPHeaderField: "accept")
+        request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                print("Error: \(error)")
+                return
+            }
+            guard let httpResponse = response as? HTTPURLResponse else {
+                print("Invalid response")
+                return
+            }
+            
+            if (200..<300).contains(httpResponse.statusCode) {
+                if let data = data {
+                    do {
+                        let responseData = String(data: data, encoding: .utf8)
+                        print("promises : \(responseData)")
+                        
+                        let promises = try JSONDecoder().decode([Promise].self, from: data)
+                        self.promises = promises
+                    } catch {
+                        print("Error decoding JSON: \(error)")
+                    }
+                }
+            } else {
+                print("HTTP status code: \(httpResponse.statusCode)")
             }
         }
         task.resume()

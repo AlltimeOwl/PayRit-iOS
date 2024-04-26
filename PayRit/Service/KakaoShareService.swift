@@ -26,7 +26,7 @@ final class KakaoShareService {
         
         let appButton = Button(title: "앱으로 보기", link: appLink)
         
-        guard let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/payrit-33410.appspot.com/o/appLogo%2FappLogo.png?alt=media&token=08df46ec-7c21-4e7c-9a38-c1f450c868b9") else { return }
+        guard let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/payrit-33410.appspot.com/o/kakaoShareImage%2FkakaoShareImage.png?alt=media&token=8ca33cc1-1abb-4acc-9186-331664d8e60c") else { return }
         let content = Content(title: sender.isEmpty ? "페이릿 차용증이 작성되었습니다.\n앱에서 확인해주세요." : "\(sender)님이 작성하신\n페이릿 차용증이 작성되었습니다.\n앱에서 확인해주세요.",
                               imageUrl: imageUrl,
                               imageHeight: 200,

@@ -53,8 +53,7 @@ struct SelectPromiseTypeView: View {
                                         Spacer()
                                     }
                                     Spacer()
-//                                    Text("간단한 돈 약속 카드를\n제작해서 간직할 수 있어요")
-                                    Text("준비중입니다.")
+                                    Text("간단한 돈 약속 카드를\n제작해서 간직할 수 있어요")
                                         .font(Font.body04)
                                         .foregroundStyle(Color.gray05)
                                         .multilineTextAlignment(.leading)
@@ -65,7 +64,6 @@ struct SelectPromiseTypeView: View {
                             .padding(22)
                         }
                 }
-                .disabled(true)
                 
                 NavigationLink {
                     PeopleCountView()
@@ -106,8 +104,8 @@ struct SelectPromiseTypeView: View {
         .navigationTitle("약속 작성하기")
         .navigationBarTitleDisplayMode(.inline)
         .navigationDestination(isPresented: $isShowingNextView) {
-            
                 ContactAddView(path: $path)
+                .customBackbutton()
         }
     }
 }

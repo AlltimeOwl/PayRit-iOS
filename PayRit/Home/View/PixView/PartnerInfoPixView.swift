@@ -61,7 +61,7 @@ struct PartnerInfoPixView: View {
                             CustomTextField(foregroundStyle: .black, placeholder: "숫자만 입력해주세요", keyboardType: .numberPad, text: $phoneNumber)
                                 .onChange(of: phoneNumber) { oldValue, newValue in
                                     if newValue.count <= 13 {
-                                        phoneNumber = phoneNumber.phoneNumberMiddleCase()
+                                        phoneNumber = phoneNumber.hyphen()
                                         if newCertificate.memberRole == "DEBTOR" {
                                             newCertificate.creditorProfile.phoneNumber = phoneNumber
                                         } else if newCertificate.memberRole == "CREDITOR" {

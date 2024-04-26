@@ -96,6 +96,8 @@
 		BC9F49042BD7CBAC007A0757 /* CardSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC9F49032BD7CBAC007A0757 /* CardSelectView.swift */; };
 		BC9F49082BD7E0E3007A0757 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = BC9F49072BD7E0E3007A0757 /* FirebaseCrashlytics */; };
 		BC9F490A2BD7E17E007A0757 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = BC9F49092BD7E17E007A0757 /* FirebaseAnalyticsWithoutAdIdSupport */; };
+		BC9F490E2BD97138007A0757 /* HapticService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC9F490D2BD97138007A0757 /* HapticService.swift */; };
+		BC9F49102BDA5EF9007A0757 /* Promise.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC9F490F2BDA5EF8007A0757 /* Promise.swift */; };
 		BCC9EC042B8F09A6001E18F0 /* CertificateDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCC9EC032B8F09A6001E18F0 /* CertificateDetail.swift */; };
 		BCD942512B8F0CCC00BF61CD /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = BCD942502B8F0CCC00BF61CD /* .swiftlint.yml */; };
 		BCD942572B8F1D5400BF61CD /* MyPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD942562B8F1D5400BF61CD /* MyPageView.swift */; };
@@ -191,6 +193,8 @@
 		BC9F48FF2BD668DA007A0757 /* PeopleCountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleCountView.swift; sourceTree = "<group>"; };
 		BC9F49012BD66B80007A0757 /* CardSelectionViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardSelectionViewTests.swift; sourceTree = "<group>"; };
 		BC9F49032BD7CBAC007A0757 /* CardSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardSelectView.swift; sourceTree = "<group>"; };
+		BC9F490D2BD97138007A0757 /* HapticService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticService.swift; sourceTree = "<group>"; };
+		BC9F490F2BDA5EF8007A0757 /* Promise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Promise.swift; sourceTree = "<group>"; };
 		BCC9EC032B8F09A6001E18F0 /* CertificateDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateDetail.swift; sourceTree = "<group>"; };
 		BCD942502B8F0CCC00BF61CD /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		BCD942562B8F1D5400BF61CD /* MyPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageView.swift; sourceTree = "<group>"; };
@@ -422,6 +426,7 @@
 			isa = PBXGroup;
 			children = (
 				BC595DEE2B8D8E9800CA555E /* View */,
+				BC9F490C2BD96EBB007A0757 /* ViewModel */,
 			);
 			path = TabBar;
 			sourceTree = "<group>";
@@ -466,6 +471,7 @@
 				BC62BFF12BA02481000A1BA5 /* Payment.swift */,
 				BC2193A72BB03D8C00EE7B68 /* PayritNoti.swift */,
 				BC02102F2BC595D900116A6B /* CertificationInfo.swift */,
+				BC9F490F2BDA5EF8007A0757 /* Promise.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -486,6 +492,7 @@
 				BC2193992BAF34A000EE7B68 /* SafariView.swift */,
 				BC02103B2BCAB49B00116A6B /* VersionService.swift */,
 				BC20D9C32BD012CB0053B2F3 /* KakaoShareService.swift */,
+				BC9F490D2BD97138007A0757 /* HapticService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -494,7 +501,6 @@
 			isa = PBXGroup;
 			children = (
 				BC595DEF2B8D8EAE00CA555E /* TabBarView.swift */,
-				BC1219732BA7204600B575F8 /* TabBarStore.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -612,6 +618,14 @@
 				BC9F49012BD66B80007A0757 /* CardSelectionViewTests.swift */,
 			);
 			path = CardDraw;
+			sourceTree = "<group>";
+		};
+		BC9F490C2BD96EBB007A0757 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				BC1219732BA7204600B575F8 /* TabBarStore.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		BCD942542B8F1D3100BF61CD /* MyPage */ = {
@@ -856,6 +870,7 @@
 				BC595E022B8DA21300CA555E /* SignInStore.swift in Sources */,
 				BC2193962BA99BC000EE7B68 /* Certificate.swift in Sources */,
 				BC2D51CE2B9F35260041FD77 /* CertificateDeductibleView.swift in Sources */,
+				BC9F49102BDA5EF9007A0757 /* Promise.swift in Sources */,
 				BC9E55CE2B956B7300B100C6 /* CertificateDetailView.swift in Sources */,
 				BC02103E2BCAD39400116A6B /* PaymentHistoryDetailView.swift in Sources */,
 				BC2193A82BB03D8C00EE7B68 /* PayritNoti.swift in Sources */,
@@ -879,6 +894,7 @@
 				BC20D9D32BD420700053B2F3 /* MyInfoPixView.swift in Sources */,
 				BC9F49002BD668DA007A0757 /* PeopleCountView.swift in Sources */,
 				BC0210362BC6EE0800116A6B /* PaperFormInfo.swift in Sources */,
+				BC9F490E2BD97138007A0757 /* HapticService.swift in Sources */,
 				BC9F48F72BD51B5F007A0757 /* SelectPromiseTypeView.swift in Sources */,
 				BC68291F2B9CEE87009EF3F5 /* Memo.swift in Sources */,
 				BC0210302BC595D900116A6B /* CertificationInfo.swift in Sources */,

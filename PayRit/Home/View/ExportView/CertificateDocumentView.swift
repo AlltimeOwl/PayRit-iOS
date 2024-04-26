@@ -40,7 +40,7 @@ struct CertificateDocumentView: View {
                         Spacer()
                     }
                     HStack {
-                        Text("\(certificateDetail.creditorProfile.phoneNumber.onlyPhoneNumber().replacingOccurrences(of: "-", with: "."))")
+                        Text("\(certificateDetail.creditorProfile.phoneNumber.globalNumberToHyphen().replacingOccurrences(of: "-", with: "."))")
                         Spacer()
                     }
                     HStack {
@@ -74,7 +74,7 @@ struct CertificateDocumentView: View {
                         Spacer()
                     }
                     HStack {
-                        Text("\(certificateDetail.debtorProfile.phoneNumber.onlyPhoneNumber().replacingOccurrences(of: "-", with: "."))")
+                        Text("\(certificateDetail.debtorProfile.phoneNumber.globalNumberToHyphen().replacingOccurrences(of: "-", with: "."))")
                         Spacer()
                     }
                     HStack {
