@@ -9,7 +9,6 @@ import SwiftUI
 
 struct CardInfoView: View {
     let contacts: [Contacts]
-    @State private var promise: Promise = Promise(amount: 0, promiseStartDate: Date(), promiseEndDate: Date(), contents: "", participantsName: "", participantsPhone: "", promiseImageType: .PRESENT)
     @State private var money: String = ""
     @State private var onTapBorrowedDate: Bool = false
     @State private var onTapRedemptionDate: Bool = false
@@ -17,7 +16,9 @@ struct CardInfoView: View {
     @State private var isShowingBorrowedDatePicker: Bool = false
     @State private var isShowingRedemptionDatePicker: Bool = false
     @State private var keyBoardFocused: Bool = false
+    @Binding var promise: Promise
     @Binding var path: NavigationPath
+    
     var isFormValid: Bool {
         return !String(promise.amount).isEmpty && onTapBorrowedDate && onTapRedemptionDate && !promise.contents.isEmpty
     }
@@ -59,7 +60,7 @@ struct CardInfoView: View {
                                     } label: {
                                         HStack {
                                             if onTapBorrowedDate {
-                                                Text(promise.promiseStartDate.dateToString())
+                                                Text(promise.promiseStartDate.hyphenFomatter())
                                                     .font(Font.body02)
                                                     .foregroundStyle(.black)
                                             } else {
@@ -98,7 +99,7 @@ struct CardInfoView: View {
                                     } label: {
                                         HStack {
                                             if onTapRedemptionDate {
-                                                Text(promise.promiseEndDate.dateToString())
+                                                Text(promise.promiseEndDate.hyphenFomatter())
                                                     .font(Font.body02)
                                                     .foregroundStyle(.black)
                                             } else {
@@ -161,7 +162,7 @@ struct CardInfoView: View {
             }
             .padding(.bottom, keyBoardFocused ? 0 : 16)
             .padding(.horizontal, keyBoardFocused ? 0 : 16)
-//            .disabled(!isFormValid)
+            .disabled(!isFormValid)
         }
         .onTapGesture {
             self.endTextEditing()
@@ -214,5 +215,5 @@ struct CardInfoView: View {
 }
 
 #Preview {
-    CardInfoView(contacts: [Contacts(name: "", phoneNumber: "")], path: .constant(NavigationPath()))
+    CardInfoView(contacts: [Contacts(name: "", phoneNumber: "")], promise: .constant(Promise(promiseId: 0, amount: 0, promiseStartDate: Date(), promiseEndDate: Date(), writerName: "", contents: "", participants: [Participants](), promiseImageType: .PRESENT)), path: .constant(NavigationPath()))
 }

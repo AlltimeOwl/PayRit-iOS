@@ -36,7 +36,7 @@ final class WritingStore {
                 "writerRole": certificate.memberRole,
                 "amount": certificate.paperFormInfo.primeAmount,
                 "interest": "\(certificate.paperFormInfo.interestRateAmount)",
-                "transactionDate": Date().dateToString(),
+                "transactionDate": Date().hyphenFomatter(),
                 "repaymentStartDate": certificate.paperFormInfo.repaymentStartDate,
                 "repaymentEndDate": certificate.paperFormInfo.repaymentEndDate,
                 "specialConditions": certificate.paperFormInfo.specialConditions,
@@ -105,7 +105,7 @@ final class WritingStore {
                 "writerRole": certificate.memberRole,
                 "amount": certificate.paperFormInfo.primeAmount,
                 "interest": "\(certificate.paperFormInfo.interestRateAmount)",
-                "transactionDate": Date().dateToString(),
+                "transactionDate": Date().hyphenFomatter(),
                 "repaymentStartDate": certificate.paperFormInfo.repaymentStartDate,
                 "repaymentEndDate": certificate.paperFormInfo.repaymentEndDate,
                 "specialConditions": certificate.paperFormInfo.specialConditions,
@@ -170,9 +170,10 @@ final class WritingStore {
             request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
             let body = [
                 "amount": promise.amount,
-                "promiseStartDate": promise.promiseStartDate.dateToString(),
-                "promiseEndDate": promise.promiseEndDate.dateToString(),
+                "promiseStartDate": promise.promiseStartDate.hyphenFomatter(),
+                "promiseEndDate": promise.promiseEndDate.hyphenFomatter(),
                 "contents": promise.contents,
+                "writerName": promise.writerName,
                 "participantsName": contacts.map { $0.name }.joined(separator: ","),
                 "participantsPhone": contacts.map { $0.phoneNumber }.joined(separator: ","),
                 "promiseImageType": promise.promiseImageType.rawValue

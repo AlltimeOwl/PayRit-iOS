@@ -98,6 +98,8 @@
 		BC9F490A2BD7E17E007A0757 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = BC9F49092BD7E17E007A0757 /* FirebaseAnalyticsWithoutAdIdSupport */; };
 		BC9F490E2BD97138007A0757 /* HapticService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC9F490D2BD97138007A0757 /* HapticService.swift */; };
 		BC9F49102BDA5EF9007A0757 /* Promise.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC9F490F2BDA5EF8007A0757 /* Promise.swift */; };
+		BC9F49122BDCD7EB007A0757 /* Data +.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC9F49112BDCD7EB007A0757 /* Data +.swift */; };
+		BC9F49142BDD58C5007A0757 /* PromiseDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC9F49132BDD58C5007A0757 /* PromiseDetailView.swift */; };
 		BCC9EC042B8F09A6001E18F0 /* CertificateDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCC9EC032B8F09A6001E18F0 /* CertificateDetail.swift */; };
 		BCD942512B8F0CCC00BF61CD /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = BCD942502B8F0CCC00BF61CD /* .swiftlint.yml */; };
 		BCD942572B8F1D5400BF61CD /* MyPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD942562B8F1D5400BF61CD /* MyPageView.swift */; };
@@ -195,6 +197,8 @@
 		BC9F49032BD7CBAC007A0757 /* CardSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardSelectView.swift; sourceTree = "<group>"; };
 		BC9F490D2BD97138007A0757 /* HapticService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticService.swift; sourceTree = "<group>"; };
 		BC9F490F2BDA5EF8007A0757 /* Promise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Promise.swift; sourceTree = "<group>"; };
+		BC9F49112BDCD7EB007A0757 /* Data +.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data +.swift"; sourceTree = "<group>"; };
+		BC9F49132BDD58C5007A0757 /* PromiseDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromiseDetailView.swift; sourceTree = "<group>"; };
 		BCC9EC032B8F09A6001E18F0 /* CertificateDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateDetail.swift; sourceTree = "<group>"; };
 		BCD942502B8F0CCC00BF61CD /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		BCD942562B8F1D5400BF61CD /* MyPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageView.swift; sourceTree = "<group>"; };
@@ -441,6 +445,7 @@
 				BC21939B2BB015D700EE7B68 /* Int +.swift */,
 				BCE280D92B8F75120085D45E /* View +.swift */,
 				BC62BFF52BA1551F000A1BA5 /* Date +.swift */,
+				BC9F49112BDCD7EB007A0757 /* Data +.swift */,
 				BCE280DB2B8F75440085D45E /* ViewModifier.swift */,
 			);
 			path = Extensions;
@@ -556,6 +561,7 @@
 				BC2D51CB2B9ECD870041FD77 /* CertificateMemoView.swift */,
 				BC2D51CD2B9F35260041FD77 /* CertificateDeductibleView.swift */,
 				BC1219642BA29FE700B575F8 /* CertificateAcceptView.swift */,
+				BC9F49132BDD58C5007A0757 /* PromiseDetailView.swift */,
 				BC20D9CF2BD41FD00053B2F3 /* PixView */,
 				BC2193B52BB146FD00EE7B68 /* CarouselView */,
 				BC12196E2BA5F1D700B575F8 /* ExportView */,
@@ -880,6 +886,7 @@
 				BC2193A62BB03D7F00EE7B68 /* NotificationView.swift in Sources */,
 				BC29AA3B2BA1BEB9002CB968 /* CertificateSerchingView.swift in Sources */,
 				BCD942572B8F1D5400BF61CD /* MyPageView.swift in Sources */,
+				BC9F49122BDCD7EB007A0757 /* Data +.swift in Sources */,
 				BCC9EC042B8F09A6001E18F0 /* CertificateDetail.swift in Sources */,
 				BCE280E02B9021EE0085D45E /* WritingView.swift in Sources */,
 				BC62BFF62BA1551F000A1BA5 /* Date +.swift in Sources */,
@@ -918,6 +925,7 @@
 				BC388DB52B904BAB005D1279 /* ContentView.swift in Sources */,
 				BC02103C2BCAB49B00116A6B /* VersionService.swift in Sources */,
 				BC0210192BC4E06500116A6B /* IMPPaymentView.swift in Sources */,
+				BC9F49142BDD58C5007A0757 /* PromiseDetailView.swift in Sources */,
 				BC595E0A2B8DAFD600CA555E /* Font +.swift in Sources */,
 				BC6F652F2B9B3D9000FB9FA7 /* MyPageStore.swift in Sources */,
 				BC12196D2BA43D8200B575F8 /* UserDefaultsManager.swift in Sources */,
@@ -1184,7 +1192,7 @@
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 10.23.0;
+				minimumVersion = 10.24.0;
 			};
 		};
 		BC595DF32B8D941900CA555E /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */ = {

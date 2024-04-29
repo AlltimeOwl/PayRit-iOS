@@ -92,7 +92,7 @@ struct WritingCertificateInfoView: View {
                                             } label: {
                                                 HStack {
                                                     if onTapBorrowedDate {
-                                                        Text(repaymentStartDate.dateToString())
+                                                        Text(repaymentStartDate.hyphenFomatter())
                                                             .font(Font.body02)
                                                             .foregroundStyle(.black)
                                                     } else {
@@ -131,7 +131,7 @@ struct WritingCertificateInfoView: View {
                                             } label: {
                                                 HStack {
                                                     if onTapRedemptionDate {
-                                                        Text(repaymentEndDate.dateToString())
+                                                        Text(repaymentEndDate.hyphenFomatter())
                                                             .font(Font.body02)
                                                             .foregroundStyle(.black)
                                                     } else {
@@ -362,7 +362,7 @@ struct WritingCertificateInfoView: View {
                 .datePickerStyle(.graphical)
                 .presentationDetents([.height(400)])
                 .onDisappear {
-                    newCertificate.paperFormInfo.repaymentStartDate = repaymentStartDate.dateToString()
+                    newCertificate.paperFormInfo.repaymentStartDate = repaymentStartDate.hyphenFomatter()
                     repaymentEndDate = repaymentStartDate
                 }
         })
@@ -371,14 +371,14 @@ struct WritingCertificateInfoView: View {
                 .datePickerStyle(.graphical)
                 .presentationDetents([.height(400)])
                 .onDisappear {
-                    newCertificate.paperFormInfo.repaymentEndDate = repaymentEndDate.dateToString()
+                    newCertificate.paperFormInfo.repaymentEndDate = repaymentEndDate.hyphenFomatter()
                 }
         })
         .onChange(of: repaymentStartDate) {
-            newCertificate.paperFormInfo.repaymentStartDate = repaymentStartDate.dateToString()
+            newCertificate.paperFormInfo.repaymentStartDate = repaymentStartDate.hyphenFomatter()
         }
         .onChange(of: repaymentEndDate) {
-            newCertificate.paperFormInfo.repaymentEndDate = repaymentEndDate.dateToString()
+            newCertificate.paperFormInfo.repaymentEndDate = repaymentEndDate.hyphenFomatter()
         }
         .primaryAlert(isPresented: $isShowingStopAlert,
                       title: "작성 중단",

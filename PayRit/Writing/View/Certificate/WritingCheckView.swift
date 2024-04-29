@@ -176,7 +176,7 @@ struct WritingCheckView: View {
                         """,
                       primaryButtonTitle: "네",
                       cancleButtonTitle: "아니오") {
-            KakaoShareService().kakaoShare(sender: mypageStore.userCertInfo?.certificationName ?? "") { kakaoLinkType in
+            KakaoShareService().payritKakaoShare(sender: mypageStore.userCertInfo?.certificationName ?? "") { kakaoLinkType in
                 KakaoShareService().openKakaoLink(kakaoLinkType: kakaoLinkType) {
                 }
             }

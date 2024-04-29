@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import FirebaseAnalytics
 
 struct MembershipWithdrawalView: View {
     @State var seletedReason: String = ""
+    @State var seletedReasonEtc: String = ""
     @State var isShowingMenu: Bool = false
     @State var isShowingWithdrawalButton: Bool = false
     @State var isShowingWithdrawalCompleteButton: Bool = false
@@ -108,6 +110,10 @@ struct MembershipWithdrawalView: View {
                     .foregroundStyle(Color.gray05)
                 }
                 
+                if seletedReason == "기타" {
+                    CustomTextField(placeholder: "이유 작성하기", text: $seletedReasonEtc)
+                }
+                
                 VStack(alignment: .leading, spacing: 6) {
                     HStack(spacing: 4) {
                         Text("잠깐!")
@@ -146,8 +152,25 @@ struct MembershipWithdrawalView: View {
         .padding(16)
         .navigationTitle("회원탈퇴")
         .navigationBarTitleDisplayMode(.inline)
-        .primaryAlert(isPresented: $isShowingWithdrawalButton, title: "회원탈퇴", content: "정말 탈퇴하시겠습니까?\n탈퇴시 모든 데이터는 삭제됩니다.", primaryButtonTitle: "아니오", cancleButtonTitle: "네", primaryAction: nil) {
-            isShowingWithdrawalCompleteButton.toggle()
+        .primaryAlert(isPresented: $isShowingWithdrawalButton, title: "회원탈퇴", content: "정말 탈퇴하시겠습니까?", primaryButtonTitle: "아니오", cancleButtonTitle: "네", primaryAction: nil) {
+            if seletedReason == "기타" {
+                Analytics.logEvent("withdrawal_iOS_etc_\(seletedReasonEtc)", parameters: [:])
+            } else {
+                Analytics.logEvent("withdrawal_iOS_\(seletedReason)", parameters: [:])
+            }
+            if mypageStore.currentUser.signInCompany == "카카오톡" {
+                signInStore.kakaoUnLink { result in
+                    if result {
+                        isShowingWithdrawalCompleteButton.toggle()
+                    }
+                }
+            } else if mypageStore.currentUser.signInCompany == "애플" {
+                signInStore.appleUnLink { result in
+                    if result {
+                        isShowingWithdrawalCompleteButton.toggle()
+                    }
+                }
+            }
         }
         .primaryAlert(isPresented: $isShowingWithdrawalCompleteButton, title: "회원탈퇴 완료",
                       content: """
@@ -155,14 +178,9 @@ struct MembershipWithdrawalView: View {
                                 완료되었습니다.
                                 """
                       , primaryButtonTitle: nil, cancleButtonTitle: "확인", primaryAction: nil) {
+            signInStore.isSignIn = false
             tabStore.selectedTab = .home
             homeStore.certificates = [Certificate]()
-            if mypageStore.currentUser.signInCompany == "카카오톡" {
-                signInStore.kakaoUnLink()
-            } else if mypageStore.currentUser.signInCompany == "애플" {
-                signInStore.appleUnLink()
-                signInStore.isSignIn = false
-            }
         }
     }
 }

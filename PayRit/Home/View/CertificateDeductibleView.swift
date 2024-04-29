@@ -55,7 +55,7 @@ struct CertificateDeductibleView: View {
                                 } label: {
                                     HStack {
                                         if onTapDatePicker {
-                                            Text(date.dateToString())
+                                            Text(date.hyphenFomatter())
                                                 .font(Font.body02)
                                                 .foregroundStyle(.black)
                                         } else {
@@ -109,7 +109,7 @@ struct CertificateDeductibleView: View {
                         if certificateDetail.paperFormInfo.remainingAmount >= Int(money) ?? 0 {
                             if !money.isEmpty && money != "0"{
                                 self.endTextEditing()
-                                homeStore.deductedSave(paperId: certificateDetail.paperId, repaymentDate: date.dateToString(), repaymentAmount: money) { (array, error) in
+                                homeStore.deductedSave(paperId: certificateDetail.paperId, repaymentDate: date.hyphenFomatter(), repaymentAmount: money) { (array, error) in
                                     if let error = error {
                                         print("Error occurred: \(error)")
                                     } else if let deducted = array {

@@ -10,12 +10,12 @@ import FirebaseAnalytics
 
 struct PromiseCheckView: View {
     let contacts: [Contacts]
-    let promise: Promise
     let writingStore: WritingStore = WritingStore()
+    @State var promise: Promise
+    @State private var isShowingDoneAlert: Bool = false
     @State private var isShowingStopAlert: Bool = false
     @State private var isShowingKaKaoAlert: Bool = false
     @State private var isShowingErrorAlert: Bool = false
-    @State private var seletedImage: PromiseImage = .PRESENT
     @Binding var path: NavigationPath
     @Environment(MyPageStore.self) var mypageStore
     var body: some View {
@@ -24,7 +24,7 @@ struct PromiseCheckView: View {
                 HStack {
                     ForEach(PromiseImage.allCases, id: \.self) { item in
                         Button {
-                            seletedImage = item
+                            promise.promiseImageType = item
                         } label: {
                             Image(item.rawValue)
                                 .resizable()
@@ -38,7 +38,7 @@ struct PromiseCheckView: View {
             .scrollIndicators(.hidden)
             
             ScrollView {
-                Image(seletedImage.rawValue)
+                Image(promise.promiseImageType.rawValue)
                     .padding(.top, 36)
                 
                 VStack(alignment: .leading, spacing: 24) {
@@ -47,7 +47,7 @@ struct PromiseCheckView: View {
                             .font(Font.body03)
                             .foregroundStyle(Color.gray04)
                         InfoBox(title: "금액", text: .constant(String(promise.amount)))
-                        InfoBox(title: "기간", text: .constant("\(promise.promiseStartDate.dateToString().replacingOccurrences(of: "-", with: "."))~\(promise.promiseEndDate.dateToString().replacingOccurrences(of: "-", with: "."))"))
+                        InfoBox(title: "기간", text: .constant("\(promise.promiseStartDate.hyphenFomatter().replacingOccurrences(of: "-", with: "."))~\(promise.promiseEndDate.hyphenFomatter().replacingOccurrences(of: "-", with: "."))"))
                     }
                     .padding(.vertical, 16)
                     .padding(.horizontal, 20)
@@ -55,19 +55,17 @@ struct PromiseCheckView: View {
                     .clipShape(.rect(cornerRadius: 12))
                     .customShadow()
                     
-                    if let info = mypageStore.userCertInfo {
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("보낸 사람")
-                                .font(Font.body03)
-                                .foregroundStyle(Color.gray04)
-                                InfoBox(title: "이름|연락처", text: .constant("\(info.certificationName) | \(info.certificationPhoneNumber)"), type: .long)
-                        }
-                        .padding(.vertical, 16)
-                        .padding(.horizontal, 20)
-                        .background(.white)
-                        .clipShape(.rect(cornerRadius: 12))
-                        .customShadow()
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("보낸 사람")
+                            .font(Font.body03)
+                            .foregroundStyle(Color.gray04)
+                        InfoBox(title: "이름", text: .constant(promise.writerName), type: .long)
                     }
+                    .padding(.vertical, 16)
+                    .padding(.horizontal, 20)
+                    .background(.white)
+                    .clipShape(.rect(cornerRadius: 12))
+                    .customShadow()
                     
                     VStack(alignment: .leading, spacing: 12) {
                         Text("받는 사람")
@@ -110,7 +108,7 @@ struct PromiseCheckView: View {
                 ])
                 writingStore.savePromise(promise: promise, contacts: contacts) { result in
                     if result {
-                        isShowingKaKaoAlert.toggle()
+                        isShowingDoneAlert.toggle()
                     } else {
                         isShowingErrorAlert.toggle()
                     }
@@ -122,7 +120,9 @@ struct PromiseCheckView: View {
                     .frame(height: 50)
                     .frame(maxWidth: .infinity)
                     .background(Color.payritMint)
+                    .clipShape(.rect(cornerRadius: 12))
             }
+            .padding(.horizontal, 16)
             .padding(.bottom, 16)
         }
         .navigationTitle("약속 카드 만들기")
@@ -149,6 +149,16 @@ struct PromiseCheckView: View {
         } cancleAction: {
             path = .init()
         }
+        .primaryAlert(isPresented: $isShowingDoneAlert,
+                      title: "작성 완료",
+                      content: """
+                        작성이 완료되었습니다.
+                        """,
+                      primaryButtonTitle: nil,
+                      cancleButtonTitle: "확인") {
+        } cancleAction: {
+            path = .init()
+        }
         .primaryAlertNoneTouch(isPresented: $isShowingKaKaoAlert,
                       title: "카카오톡 공유",
                       content: """
@@ -157,7 +167,7 @@ struct PromiseCheckView: View {
                         """,
                       primaryButtonTitle: "네",
                       cancleButtonTitle: "아니오") {
-            KakaoShareService().kakaoShare(sender: mypageStore.userCertInfo?.certificationName ?? "") { kakaoLinkType in
+            KakaoShareService().payritKakaoShare(sender: promise.writerName) { kakaoLinkType in
                 KakaoShareService().openKakaoLink(kakaoLinkType: kakaoLinkType) {
                 }
             }
@@ -178,9 +188,8 @@ struct PromiseCheckView: View {
     }
 }
 
-#Preview {
-    NavigationStack{
-        PromiseCheckView(contacts: [Contacts](), promise: Promise(amount: 0, promiseStartDate: Date(), promiseEndDate: Date(), contents: "", participantsName: "", participantsPhone: "", promiseImageType: .HEART), path: .constant(NavigationPath()))
-    }
-}
-
+//#Preview {
+//    NavigationStack {
+//        PromiseCheckView(contacts: [Contacts](), promise: Promise(amount: 0, promiseStartDate: Date(), promiseEndDate: Date(), contents: "", participants: [Participants](), promiseImageType: .HEART), path: .constant(NavigationPath()))
+//    }
+//}

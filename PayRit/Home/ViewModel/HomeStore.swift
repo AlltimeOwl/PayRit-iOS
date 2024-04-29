@@ -19,11 +19,11 @@ final class HomeStore {
     var sortingType: SortingType = .recent
     var certificates: [Certificate] = [Certificate]()
     var certificateDetail: CertificateDetail = CertificateDetail.EmptyCertificate
-    var promises: [Promise] = [Promise]()
     var isShowingPaymentSuccessAlert: Bool = false
     var isShowingAcceptFailAlert: Bool = false
     var isShowingAuthCompleteAlert: Bool = false
     var isHiddenInfoBox: Bool = false
+    var isAddedPromise: Bool = false
     var isLoading: Bool = true
     
     func sortingCertificates() {
@@ -203,7 +203,7 @@ final class HomeStore {
             request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
             let body = [
                 "paperId": paperId,
-                "transactionDate": Date().dateToString2(),
+                "transactionDate": Date().dateToFullString(),
                 "amount": amount,
                 "transactionType": "PAPER_TRANSACTION",
                 "impUid": impUid,
@@ -704,7 +704,7 @@ final class HomeStore {
         task.resume()
     }
     // MARK: - 약속
-    func loadPromise() async {
+    func loadPromise(completion: @escaping ([Promise]?) -> Void) async {
         let urlString = "https://payrit.info/api/v1/promise/list"
         guard let url = URL(string: urlString) else {
             print("Invalid URL")
@@ -729,18 +729,193 @@ final class HomeStore {
             
             if (200..<300).contains(httpResponse.statusCode) {
                 if let data = data {
+                    var data = data
                     do {
-                        let responseData = String(data: data, encoding: .utf8)
-                        print("promises : \(responseData)")
-                        
-                        let promises = try JSONDecoder().decode([Promise].self, from: data)
-                        self.promises = promises
+                        print("promises : \(data.dataToString())\n")
+                        let decoder = JSONDecoder()
+                        decoder.dateDecodingStrategy = .formatted(DateFormatter.iso8601Full)
+                        if var jsonArray = try JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]] {
+                            for index in 0..<jsonArray.count {
+                                let check: String? = jsonArray[index]["promiseImageType"] as? String
+                                if check == nil {
+                                    jsonArray[index]["promiseImageType"] = "PRESENT"
+                                }
+                                jsonArray[index]["isClicked"] = false
+                            }
+                            data = try JSONSerialization.data(withJSONObject: jsonArray, options: [])
+                        }
+                        print("promises++ : \(data.dataToString())")
+                        let promises = try decoder.decode([Promise].self, from: data)
+                        completion(promises)
+//                        
+//                        let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
+//                        var promises: [Promise] = []
+//                        if let jsonArray = jsonObject as? [[String: Any]] {
+//                            for item in jsonArray {
+//                                let jsonData: [String: Any] = item
+//                                let amount = jsonData["amount"] as? Int ?? 0
+//                                let promiseStartDate = jsonData["promiseStartDate"] as? Date ?? Date()
+//                                let promiseEndDate = jsonData["promiseEndDate"] as? Date ?? Date()
+//                                let writerName = jsonData["writerName"] as? String ?? ""
+//                                let contents = jsonData["contents"] as? String ?? ""
+//                                let participants = jsonData["participants"]
+//                                print("participants : \(participants)\n")
+//                                
+//                                let promiseImageType = jsonData["promiseImageType"] as? PromiseImage ?? PromiseImage.PRESENT
+//                                
+//                                let result = Promise(amount: amount, promiseStartDate: promiseStartDate, promiseEndDate: promiseEndDate, writerName: writerName, contents: contents, participants: [Participants](), promiseImageType: promiseImageType, isClicked: false)
+//                                promises.append(result)
+//                            }
+//                        }
+//                        completion(promises)
                     } catch {
                         print("Error decoding JSON: \(error)")
                     }
                 }
             } else {
-                print("HTTP status code: \(httpResponse.statusCode)")
+                print("loadPromise HTTP status code: \(httpResponse.statusCode)")
+                if let data = data {
+                    print("loadPromise : \(data.dataToString())")
+                }
+            }
+        }
+        task.resume()
+    }
+    
+    func loadPromiseDetail(id: Int, completion: @escaping (Promise) -> Void) async {
+        let urlString = "https://payrit.info/api/v1/promise/detail/\(id)"
+        guard let url = URL(string: urlString) else {
+            print("Invalid URL")
+            return
+        }
+        
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("application/json", forHTTPHeaderField: "accept")
+        request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                print("Error: \(error)")
+                return
+            }
+            guard let httpResponse = response as? HTTPURLResponse else {
+                print("Invalid response")
+                return
+            }
+            
+            if (200..<300).contains(httpResponse.statusCode) {
+                if let data = data {
+                    var data = data
+                    do {
+                        print("promises : \(data.dataToString())\n")
+                        let decoder = JSONDecoder()
+                        let promises = try decoder.decode(Promise.self, from: data)
+                        completion(promises)
+//
+//                        let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
+//                        var promises: [Promise] = []
+//                        if let jsonArray = jsonObject as? [[String: Any]] {
+//                            for item in jsonArray {
+//                                let jsonData: [String: Any] = item
+//                                let amount = jsonData["amount"] as? Int ?? 0
+//                                let promiseStartDate = jsonData["promiseStartDate"] as? Date ?? Date()
+//                                let promiseEndDate = jsonData["promiseEndDate"] as? Date ?? Date()
+//                                let writerName = jsonData["writerName"] as? String ?? ""
+//                                let contents = jsonData["contents"] as? String ?? ""
+//                                let participants = jsonData["participants"]
+//                                print("participants : \(participants)\n")
+//
+//                                let promiseImageType = jsonData["promiseImageType"] as? PromiseImage ?? PromiseImage.PRESENT
+//
+//                                let result = Promise(amount: amount, promiseStartDate: promiseStartDate, promiseEndDate: promiseEndDate, writerName: writerName, contents: contents, participants: [Participants](), promiseImageType: promiseImageType, isClicked: false)
+//                                promises.append(result)
+//                            }
+//                        }
+//                        completion(promises)
+                    } catch {
+                        print("Error decoding JSON: \(error)")
+                    }
+                }
+            } else {
+                print("loadPromise HTTP status code: \(httpResponse.statusCode)")
+                if let data = data {
+                    print("loadPromise : \(data.dataToString())")
+                }
+            }
+        }
+        task.resume()
+    }
+    
+    func promiseDelete(id: Int, completion: @escaping (Bool) -> Void) {
+        let urlString = "https://payrit.info/api/v1/promise/remove/\(id)"
+        guard let url = URL(string: urlString) else {
+            print("Invalid URL")
+            return
+        }
+        
+        let session = URLSession.shared
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "DELETE"
+        request.setValue("*/*", forHTTPHeaderField: "accept")
+        request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                print("Error: \(error)")
+                return
+            }
+            guard let httpResponse = response as? HTTPURLResponse else {
+                print("Invalid response")
+                return
+            }
+            
+                print("promiseDelete status code: \(httpResponse.statusCode)")
+            if (200..<300).contains(httpResponse.statusCode) {
+                print("약속 삭제 성공")
+                completion(true)
+            } else {
+                print("약속 삭제 실패")
+                if let data = data {
+                    print(data.dataToString())
+                }
+            }
+        }
+        task.resume()
+    }
+    
+    func addPromise(id: String) {
+        let urlString = "https://payrit.info/api/v1/promise/share/\(id)"
+        guard let url = URL(string: urlString) else {
+            print("Invalid URL")
+            return
+        }
+        
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("*/*", forHTTPHeaderField: "accept")
+        request.setValue("Bearer \(UserDefaultsManager().getBearerToken().aToken)", forHTTPHeaderField: "Authorization")
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                print("Error: \(error)")
+                return
+            }
+            guard let httpResponse = response as? HTTPURLResponse else {
+                print("Invalid response")
+                return
+            }
+            
+            if (200..<300).contains(httpResponse.statusCode) {
+                print("약속 추가 성공")
+                self.isAddedPromise = true
+            } else {
+                print("addPromise status code: \(httpResponse.statusCode)")
+                if let data = data {
+                    print("addPromise : \(data.dataToString())")
+                }
             }
         }
         task.resume()
@@ -751,7 +926,7 @@ final class HomeStore {
     func generatePDF() -> URL {
         let renderer = ImageRenderer(content: CertificateDocumentView(certificateDetail: self.certificateDetail))
         
-        let url = URL.documentsDirectory.appending(path: "\(Date().dateToString()) 페이릿 차용증.pdf")
+        let url = URL.documentsDirectory.appending(path: "\(Date().hyphenFomatter()) 페이릿 차용증.pdf")
         
         renderer.render { size, context in
             var pdfDimension = CGRect(x: 0, y: 0, width: size.width, height: size.height)
@@ -766,4 +941,12 @@ final class HomeStore {
         }
         return url
     }
+}
+
+extension DateFormatter {
+    static let iso8601Full: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter
+    }()
 }

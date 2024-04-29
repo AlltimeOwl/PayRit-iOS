@@ -167,7 +167,7 @@ struct CertificateAcceptView: View {
                     if certificateStep == .waitingApproval {
                         if isWriter {
                             Button {
-                                KakaoShareService().kakaoShare(sender: mypageStore.userCertInfo?.certificationName ?? "") { kakaoLinkType in
+                                KakaoShareService().payritKakaoShare(sender: mypageStore.userCertInfo?.certificationName ?? "") { kakaoLinkType in
                                     KakaoShareService().openKakaoLink(kakaoLinkType: kakaoLinkType) {
                                     }
                                 }

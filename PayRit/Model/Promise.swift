@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum PromiseImage: String, Codable, CaseIterable {
+public enum PromiseImage: String, Codable, CodingKey, CaseIterable {
     case COIN
     case HEART
     case FOOD
@@ -18,26 +18,19 @@ public enum PromiseImage: String, Codable, CaseIterable {
     case MONEY
 }
 
+struct Participants: Hashable, Codable {
+    var participantsName: String
+    var participantsPhone: String
+}
+
 struct Promise: Hashable, Codable {
+    let promiseId: Int
     var amount: Int
     var promiseStartDate: Date
     var promiseEndDate: Date
+    var writerName: String
     var contents: String
-    var participantsName: String
-    var participantsPhone: String
+    var participants: [Participants]
     var promiseImageType: PromiseImage
+    var isClicked: Bool = false
 }
-
-//struct participants: Hashable, Codable {
-//    var participantsName: String
-//    var participantsPhone: String
-//}
-//
-//struct Promise: Hashable, Codable {
-//    var amount: Int
-//    var promiseStartDate: Date
-//    var promiseEndDate: Date
-//    var contents: String
-//    var participants: [participants]
-//    var promiseImageType: PromiseImage
-//}

@@ -15,6 +15,7 @@ struct Contacts: Hashable, Identifiable {
 }
 
 struct ContactAddView: View {
+    @State var promise: Promise = Promise(promiseId: 0, amount: 0, promiseStartDate: Date(), promiseEndDate: Date(), writerName: "", contents: "", participants: [Participants](), promiseImageType: .PRESENT)
     @State private var contacts: [Contacts] = [Contacts]()
     @State private var selectedContact: CNContact?
     @State private var name: String = ""
@@ -37,7 +38,23 @@ struct ContactAddView: View {
                 .padding(.top, 40)
                 
                 Form {
-                    Section(header: Text("받는사람").font(Font.body03).foregroundStyle(Color.gray04)) {
+                    Section(header: Text("보낸 사람").font(Font.body03).foregroundStyle(Color.gray04)) {
+                        RoundedRectangle(cornerRadius: 6)
+                            .foregroundStyle(Color.gray09)
+                            .frame(height: 45)
+                            .overlay(alignment: .leading) {
+                                HStack(spacing: 8) {
+                                    TextField(text: $promise.writerName) {
+                                        Text("이름")
+                                            .foregroundStyle(Color.gray07)
+                                    }
+                                }
+                                .font(Font.body02)
+                                .padding(.horizontal, 14)
+                            }
+                    }
+                    
+                    Section(header: Text("받는 사람").font(Font.body03).foregroundStyle(Color.gray04).padding(.top, 24)) {
                         ForEach(contacts) { item in
                             
                             RoundedRectangle(cornerRadius: 6)
@@ -125,7 +142,7 @@ struct ContactAddView: View {
             .padding(.horizontal, 16)
             
             NavigationLink {
-                CardInfoView(contacts: contacts, path: $path)
+                CardInfoView(contacts: contacts, promise: $promise, path: $path)
                     .customBackbutton()
             } label: {
                 Text("다음")
@@ -133,12 +150,12 @@ struct ContactAddView: View {
                     .foregroundStyle(.white)
                     .frame(height: 50)
                     .frame(maxWidth: .infinity)
-                    .background(contacts.isEmpty ? Color.gray07 : Color.payritMint)
+                    .background(contacts.isEmpty && promise.writerName.isEmpty ? Color.gray07 : Color.payritMint)
                     .clipShape(.rect(cornerRadius: keyBoardFocused ? 0 : 12))
             }
             .padding(.bottom, keyBoardFocused ? 0 : 16)
             .padding(.horizontal, keyBoardFocused ? 0 : 16)
-//            .disabled(contacts.isEmpty)
+            .disabled(contacts.isEmpty && promise.writerName.isEmpty)
         }
         .onTapGesture {
             self.endTextEditing()
