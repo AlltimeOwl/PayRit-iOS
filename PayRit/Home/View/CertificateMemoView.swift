@@ -20,7 +20,7 @@ struct CertificateMemoView: View {
             Color.payritBackground.ignoresSafeArea()
             VStack(alignment: .leading) {
                 Group {
-                    Text(Date().dateToString().replacingOccurrences(of: "-", with: "."))
+                    Text(Date().hyphenFomatter().replacingOccurrences(of: "-", with: "."))
                         .font(Font.body01)
                     RoundedRectangle(cornerRadius: 6)
                         .stroke(Color.gray07, lineWidth: 1.0)

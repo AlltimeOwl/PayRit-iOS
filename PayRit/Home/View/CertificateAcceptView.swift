@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CertificateAcceptView: View {
     let paperId: Int
-    let isWriter: Bool?
+    let isWriter: Bool
     let certificateStep: CertificateStep
     @State var pixAlertContent: String = ""
     @State private var isLoading: Bool = true
@@ -75,7 +75,7 @@ struct CertificateAcceptView: View {
                                 .foregroundStyle(Color.gray04)
                             
                             InfoBox(title: "이름", text: .constant("\(homeStore.certificateDetail.creditorProfile.name)"))
-                            InfoBox(title: "연락처", text: .constant("\(homeStore.certificateDetail.creditorProfile.phoneNumber.phoneNumberMiddleCase())"))
+                            InfoBox(title: "연락처", text: .constant("\(homeStore.certificateDetail.creditorProfile.phoneNumber.hyphen())"))
                             
                             if !homeStore.certificateDetail.creditorProfile.address.isEmpty {
                                 InfoBox(title: "주소", text: .constant("\(homeStore.certificateDetail.creditorProfile.address)"))
@@ -92,7 +92,7 @@ struct CertificateAcceptView: View {
                                 .font(Font.body03)
                                 .foregroundStyle(Color.gray04)
                             InfoBox(title: "이름", text: .constant("\(homeStore.certificateDetail.debtorProfile.name)"))
-                            InfoBox(title: "연락처", text: .constant("\(homeStore.certificateDetail.debtorProfile.phoneNumber.phoneNumberMiddleCase())"))
+                            InfoBox(title: "연락처", text: .constant("\(homeStore.certificateDetail.debtorProfile.phoneNumber.hyphen())"))
                             
                             if !homeStore.certificateDetail.debtorProfile.address.isEmpty {
                                 InfoBox(title: "주소", text: .constant("\(homeStore.certificateDetail.debtorProfile.address)"))
@@ -126,18 +126,35 @@ struct CertificateAcceptView: View {
                             .customShadow()
                         }
                         if certificateStep != .modifying {
-                            Button {
-                                checkBox.toggle()
-                            } label: {
-                                HStack {
-                                    Image(systemName: checkBox ? "checkmark.square.fill" : "checkmark.square" )
-                                        .foregroundStyle(Color(hex: "37D9BC"))
-                                    Text("위 정보가 정확한지 확인 했어요 (필수)")
-                                        .font(Font.caption02)
-                                        .foregroundStyle(Color(hex: "5C5C5C"))
+                            if isWriter {
+                                if certificateStep == .waitingPayment {
+                                    Button {
+                                        checkBox.toggle()
+                                    } label: {
+                                        HStack {
+                                            Image(systemName: checkBox ? "checkmark.square.fill" : "checkmark.square" )
+                                                .foregroundStyle(Color(hex: "37D9BC"))
+                                            Text("위 정보가 정확한지 확인 했어요 (필수)")
+                                                .font(Font.caption02)
+                                                .foregroundStyle(Color(hex: "5C5C5C"))
+                                        }
+                                    }
+                                    .padding(.bottom, 40)
                                 }
+                            } else {
+                                Button {
+                                    checkBox.toggle()
+                                } label: {
+                                    HStack {
+                                        Image(systemName: checkBox ? "checkmark.square.fill" : "checkmark.square" )
+                                            .foregroundStyle(Color(hex: "37D9BC"))
+                                        Text("위 정보가 정확한지 확인 했어요 (필수)")
+                                            .font(Font.caption02)
+                                            .foregroundStyle(Color(hex: "5C5C5C"))
+                                    }
+                                }
+                                .padding(.bottom, 40)
                             }
-                            .padding(.bottom, 40)
                         }
                     }
                     .padding(.vertical, 30)
@@ -148,15 +165,27 @@ struct CertificateAcceptView: View {
                 }
                 VStack {
                     if certificateStep == .waitingApproval {
-                        if let isWriter = isWriter {
-                            if isWriter {
-                                Button {
-                                    KakaoShareService().kakaoShare(sender: mypageStore.userCertInfo?.certificationName ?? "") { kakaoLinkType in
-                                        KakaoShareService().openKakaoLink(kakaoLinkType: kakaoLinkType) {
-                                        }
+                        if isWriter {
+                            Button {
+                                KakaoShareService().payritKakaoShare(sender: mypageStore.userCertInfo?.certificationName ?? "") { kakaoLinkType in
+                                    KakaoShareService().openKakaoLink(kakaoLinkType: kakaoLinkType) {
                                     }
+                                }
+                            } label: {
+                                Text("공유 하기")
+                                    .font(Font.title04)
+                                    .foregroundStyle(.white)
+                                    .frame(height: 50)
+                                    .frame(maxWidth: .infinity)
+                                    .background(Color.payritMint)
+                                    .clipShape(.rect(cornerRadius: 12))
+                            }
+                        } else {
+                            if !checkBox {
+                                Button {
+                                    isShowingPixAlert.toggle()
                                 } label: {
-                                    Text("공유 하기")
+                                    Text("수정 요청하기")
                                         .font(Font.title04)
                                         .foregroundStyle(.white)
                                         .frame(height: 50)
@@ -165,44 +194,30 @@ struct CertificateAcceptView: View {
                                         .clipShape(.rect(cornerRadius: 12))
                                 }
                             } else {
-                                if !checkBox {
+                                HStack {
                                     Button {
-                                        isShowingPixAlert.toggle()
+                                        isShowingRefuseAlert.toggle()
                                     } label: {
-                                        Text("수정 요청하기")
+                                        Text("거절")
+                                            .font(Font.title04)
+                                            .foregroundStyle(.white)
+                                            .frame(height: 50)
+                                            .frame(maxWidth: .infinity)
+                                            .background(Color.gray07)
+                                            .clipShape(.rect(cornerRadius: 12))
+                                    }
+                                    .frame(width: 90)
+                                    
+                                    Button {
+                                        isShowingAuthAlert.toggle()
+                                    } label: {
+                                        Text("수락하기")
                                             .font(Font.title04)
                                             .foregroundStyle(.white)
                                             .frame(height: 50)
                                             .frame(maxWidth: .infinity)
                                             .background(Color.payritMint)
                                             .clipShape(.rect(cornerRadius: 12))
-                                    }
-                                } else {
-                                    HStack {
-                                        Button {
-                                            isShowingRefuseAlert.toggle()
-                                        } label: {
-                                            Text("거절")
-                                                .font(Font.title04)
-                                                .foregroundStyle(.white)
-                                                .frame(height: 50)
-                                                .frame(maxWidth: .infinity)
-                                                .background(Color.gray07)
-                                                .clipShape(.rect(cornerRadius: 12))
-                                        }
-                                        .frame(width: 90)
-                                        
-                                        Button {
-                                            isShowingAuthAlert.toggle()
-                                        } label: {
-                                            Text("수락하기")
-                                                .font(Font.title04)
-                                                .foregroundStyle(.white)
-                                                .frame(height: 50)
-                                                .frame(maxWidth: .infinity)
-                                                .background(Color.payritMint)
-                                                .clipShape(.rect(cornerRadius: 12))
-                                        }
                                     }
                                 }
                             }

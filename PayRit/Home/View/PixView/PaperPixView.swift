@@ -88,7 +88,7 @@ struct PaperPixView: View {
                                                 isShowingBorrowedDatePicker.toggle()
                                             } label: {
                                                 HStack {
-                                                    Text(repaymentStartDate.dateToString())
+                                                    Text(repaymentStartDate.hyphenFomatter())
                                                         .font(Font.body02)
                                                         .foregroundStyle(.black)
                                                     Spacer()
@@ -120,7 +120,7 @@ struct PaperPixView: View {
                                                 isShowingRedemptionDatePicker.toggle()
                                             } label: {
                                                 HStack {
-                                                    Text(repaymentEndDate.dateToString())
+                                                    Text(repaymentEndDate.hyphenFomatter())
                                                         .font(Font.body02)
                                                         .foregroundStyle(.black)
                                                     Spacer()
@@ -348,7 +348,7 @@ struct PaperPixView: View {
                 .datePickerStyle(.graphical)
                 .presentationDetents([.height(400)])
                 .onDisappear {
-                    newCertificate.paperFormInfo.repaymentStartDate = repaymentStartDate.dateToString()
+                    newCertificate.paperFormInfo.repaymentStartDate = repaymentStartDate.hyphenFomatter()
                     repaymentEndDate = repaymentStartDate
                 }
         })
@@ -357,16 +357,16 @@ struct PaperPixView: View {
                 .datePickerStyle(.graphical)
                 .presentationDetents([.height(400)])
                 .onDisappear {
-                    newCertificate.paperFormInfo.repaymentEndDate = repaymentEndDate.dateToString()
+                    newCertificate.paperFormInfo.repaymentEndDate = repaymentEndDate.hyphenFomatter()
                 }
         })
         .onChange(of: keyBoardFocused) {
         }
         .onChange(of: repaymentStartDate) {
-            newCertificate.paperFormInfo.repaymentStartDate = repaymentStartDate.dateToString()
+            newCertificate.paperFormInfo.repaymentStartDate = repaymentStartDate.hyphenFomatter()
         }
         .onChange(of: repaymentEndDate) {
-            newCertificate.paperFormInfo.repaymentEndDate = repaymentEndDate.dateToString()
+            newCertificate.paperFormInfo.repaymentEndDate = repaymentEndDate.hyphenFomatter()
         }
         .onAppear {
             self.money = String(newCertificate.paperFormInfo.primeAmount)

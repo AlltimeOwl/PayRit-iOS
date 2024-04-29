@@ -66,6 +66,8 @@ struct SelectPromiseTypeView: View {
                 }
                 
                 NavigationLink {
+                    PeopleCountView()
+                        .customBackbutton()
                 } label: {
                     RoundedRectangle(cornerRadius: 12)
                         .frame(height: 160)
@@ -102,8 +104,8 @@ struct SelectPromiseTypeView: View {
         .navigationTitle("약속 작성하기")
         .navigationBarTitleDisplayMode(.inline)
         .navigationDestination(isPresented: $isShowingNextView) {
-            
                 ContactAddView(path: $path)
+                .customBackbutton()
         }
     }
 }

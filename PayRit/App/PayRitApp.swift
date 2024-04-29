@@ -13,6 +13,7 @@ import FirebaseMessaging
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     let gcmMessageIDKey = "gcm.message_id"
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         Thread.sleep(forTimeInterval: 1.0)
         FirebaseApp.configure()
@@ -77,6 +78,22 @@ struct PayRitApp: App {
                         print("카카오 auth check")
                     }
                 }
+                .onOpenURL { url in       // 딥링크
+                    print("URL: \(url)")
+                    if let components = URLComponents(url: url, resolvingAgainstBaseURL: false) {
+                        let queryItems = components.queryItems ?? []
+                        print("queryItems : \(queryItems)")
+                        for queryItem in queryItems {
+                            if queryItem.name == "promiseId", let value = queryItem.value {
+                                print("promiseId : \(value)")
+                                homeStore.addPromise(id: value)
+                            }
+                        }
+                    }
+                }
+//                .onContinueUserActivity("") { <#NSUserActivity#> in
+//                    <#code#>
+//                }
         }
     }
 }
@@ -86,8 +103,8 @@ extension AppDelegate: MessagingDelegate {
     // fcm 등록 토큰을 받았을 때
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         guard let fcmToken = fcmToken else {
-                    return
-                }
+            return
+        }
         print("토큰을 받았다")
         print(fcmToken)
         UserDefaultsManager().saveFCMtoken(token: fcmToken)

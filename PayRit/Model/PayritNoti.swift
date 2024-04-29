@@ -9,7 +9,7 @@ import Foundation
 
 struct PayritNoti: Identifiable, Hashable, Codable {
     var id: String = UUID().uuidString
-    var date: String = Date().dateToString()
+    var date: String = Date().hyphenFomatter()
     let title: String
     let body: String
     var clicked: Bool = false

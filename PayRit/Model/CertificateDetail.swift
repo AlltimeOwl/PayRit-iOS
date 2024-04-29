@@ -17,11 +17,6 @@ enum CertificateStep: String, CodingKey, Codable {
     case refused = "거절됨"
 }
 
-enum WriterRole: String, CodingKey, Codable {
-    case CREDITOR
-    case DEBTOR
-}
-
 struct CertificateDetail: Hashable, Codable {
     let paperId: Int
     let paperUrl: String?

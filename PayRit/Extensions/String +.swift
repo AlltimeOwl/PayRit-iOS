@@ -9,7 +9,7 @@ import Foundation
 
 extension String {
     /// +82 10-0000-0000 -> 010-0000-0000
-    func onlyPhoneNumber() -> String {
+    func globalNumberToHyphen() -> String {
         if self.count == 16 {
             if self.prefix(3) == "+82" {
                 let number = self.suffix(12)
@@ -31,7 +31,7 @@ extension String {
         }
     }
     
-    func phoneNumberMiddleCase() -> String {
+    func hyphen() -> String {
         let cleanNumber = components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
         let mask = "XXX-XXXX-XXXX"
         var result = ""
@@ -47,6 +47,10 @@ extension String {
             }
         }
         return result
+    }
+    
+    func notHyphen() -> String {
+        return self.replacingOccurrences(of: "-", with: "")
     }
     
     func stringDateToKorea() -> String {

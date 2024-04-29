@@ -12,6 +12,7 @@ import KakaoSDKAuth
 import CryptoKit
 import AuthenticationServices
 import Alamofire
+import FirebaseAnalytics
 
 enum WhileSigIn {
     case not
@@ -50,6 +51,7 @@ class SignInStore {
     
     // MARK: - 애플
     func handleAppleSignInResult(_ result: Result<ASAuthorization, Error>) {
+        Analytics.logEvent("apple_signIn_iOS", parameters: [:])
         switch result {
         case .success(let authResults):
             print("Apple Login Successful")
@@ -130,7 +132,7 @@ class SignInStore {
         }
     }
     
-    func appleUnLink() {
+    func appleUnLink(completion: @escaping (Bool) -> Void) {
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"
         urlComponents.host = "payrit.info"
@@ -152,6 +154,7 @@ class SignInStore {
                     if (200..<300).contains(response.statusCode) {
                         print("애플 탈퇴 완료")
                         UserDefaultsManager().removeAll()
+                        completion(true)
                     } else {
                         print("Unexpected status code: \(response.statusCode)")
                     }
@@ -166,6 +169,7 @@ class SignInStore {
     // MARK: - 카카오
     /// 카카오 로그인 시도
     func kakaoSignIn() {
+        Analytics.logEvent("kakao_signIn_iOS", parameters: [:])
         if UserApi.isKakaoTalkLoginAvailable() {
             UserApi.shared.loginWithKakaoTalk(launchMethod: .CustomScheme) {(oauthToken, error) in
                 if let error = error {
@@ -284,7 +288,7 @@ class SignInStore {
         }
     }
     
-    func kakaoUnLink() {
+    func kakaoUnLink(completion: @escaping (Bool) -> Void) {
         let urlString = "https://payrit.info/api/v1/oauth/revoke"
         guard let url = URL(string: urlString) else {
             print("Invalid URL")
@@ -308,19 +312,17 @@ class SignInStore {
             }
             
             if (200..<300).contains(httpResponse.statusCode) {
-                print("HTTP status code: \(httpResponse.statusCode)")
                 print("카카오 탈퇴 성공")
                 UserApi.shared.unlink {(error) in
                     if let error = error {
                         print("unlink() error : \(error.localizedDescription)")
                     } else {
                         print("unlink() success.")
-                        self.isSignIn = false
                         UserDefaultsManager().removeAll()
+                        completion(true)
                     }
                 }
             } else {
-                print("HTTP status code: \(httpResponse.statusCode)")
                 print("카카오 탈퇴 실패")
                 if let data = data {
                     let responseData = String(data: data, encoding: .utf8)

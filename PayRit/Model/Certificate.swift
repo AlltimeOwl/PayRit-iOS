@@ -7,6 +7,11 @@
 
 import Foundation
 
+enum WriterRole: String, CodingKey, Codable {
+    case CREDITOR
+    case DEBTOR
+}
+
 struct Certificate: Hashable, Codable {
     let paperId: Int
     let paperRole: WriterRole

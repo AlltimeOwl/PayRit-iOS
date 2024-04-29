@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CustomTabView: View {
     let iconSize: CGFloat = 24.0
+    let hapticService = HapticService()
     @Environment(TabBarStore.self) var tabStore
     
     var body: some View {
@@ -34,6 +35,7 @@ struct CustomTabView: View {
                                 Spacer()
                                 Button {
                                     tabStore.selectedTab = .home
+                                    hapticService.impact(style: .light)
                                 } label: {
                                     VStack {
                                         Image("homeIcon")
@@ -48,6 +50,7 @@ struct CustomTabView: View {
                                 Spacer()
                                 Button {
                                     tabStore.selectedTab = .write
+                                    hapticService.impact(style: .light)
                                 } label: {
                                     VStack {
                                         Image("writeIcon")
@@ -62,6 +65,7 @@ struct CustomTabView: View {
                                 Spacer()
                                 Button {
                                     tabStore.selectedTab = .mypage
+                                    hapticService.impact(style: .light)
                                 } label: {
                                     VStack {
                                         Image("mypageIcon")

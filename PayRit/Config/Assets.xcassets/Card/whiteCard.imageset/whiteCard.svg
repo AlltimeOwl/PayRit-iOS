@@ -1,0 +1,22 @@
+<svg width="207" height="268" viewBox="0 0 207 268" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_d_2658_25100)">
+<rect x="5" width="196.8" height="258" rx="14.4" fill="white"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M89.9648 118.616C89.9648 112.753 94.7179 108 100.581 108H107.234C112.056 108 115.965 111.909 115.965 116.731C115.965 120.746 112.71 124 108.696 124H103.965C99.5466 124 95.9648 127.582 95.9648 132C95.9648 136.418 99.5466 140 103.965 140H108.696C121.547 140 131.965 129.582 131.965 116.731C131.965 103.072 120.892 92 107.234 92H100.581C85.8813 92 73.9648 103.916 73.9648 118.616V157.5C73.9648 161.918 77.5466 165.5 81.9648 165.5C86.3831 165.5 89.9648 161.918 89.9648 157.5V118.616ZM118.122 146.055C115.115 143.206 110.368 143.335 107.519 146.343C104.671 149.35 104.8 154.097 107.808 156.945C111.279 160.233 116.923 163.627 122.482 165.577C126.391 166.948 130.671 164.891 132.042 160.982C133.413 157.074 131.356 152.794 127.447 151.423C123.615 150.079 119.868 147.708 118.122 146.055Z" fill="url(#paint0_linear_2658_25100)"/>
+</g>
+<defs>
+<filter id="filter0_d_2658_25100" x="0.2" y="0" width="206.401" height="267.6" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="4.8"/>
+<feGaussianBlur stdDeviation="2.4"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.194757 0 0 0 0 0.591667 0 0 0 0 0.580326 0 0 0 1 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_2658_25100"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_2658_25100" result="shape"/>
+</filter>
+<linearGradient id="paint0_linear_2658_25100" x1="73.9648" y1="92.5" x2="148.306" y2="151.608" gradientUnits="userSpaceOnUse">
+<stop stop-color="#22D6D1"/>
+<stop offset="1" stop-color="#87FAF7"/>
+</linearGradient>
+</defs>
+</svg>
