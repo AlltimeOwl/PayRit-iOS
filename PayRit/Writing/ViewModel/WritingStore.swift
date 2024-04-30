@@ -156,7 +156,7 @@ final class WritingStore {
     }
     
     // MARK: - 약속
-    func savePromise(promise: Promise, contacts: [Contacts], completion: @escaping (Bool) -> Void) {
+    func savePromise(promise: Promise, contacts: [Contacts], completion: @escaping (String?) -> Void) {
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"
         urlComponents.host = "payrit.info"
@@ -178,39 +178,29 @@ final class WritingStore {
                 "participantsPhone": contacts.map { $0.phoneNumber }.joined(separator: ","),
                 "promiseImageType": promise.promiseImageType.rawValue
             ] as [String: Any]
-            print("-----HTTP 전송 바디-----")
+            print("-----savePromise-----")
             print(body)
-            print("-----HTTP 전송 바디-----")
+            print("-----savePromise-----")
             
             do {
                 request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
             } catch {
                 print("Error creating JSON data")
-                completion(false)
             }
             let task = URLSession.shared.dataTask(with: request) { data, response, error in
                 if let error = error {
                     print("Error: \(error)")
-                    completion(false)
                 } else if let data = data, let response = response as? HTTPURLResponse {
                     print("Response status code: \(response.statusCode)")
                     if (200..<300).contains(response.statusCode) {
-                        do {
-                            if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                                print("JSON Response: \(json)")
-                            }
-                        } catch {
-                            print("Error parsing JSON response")
-                        }
-                        completion(true)
+                        print("약속 작성 완료")
+                        completion(data.dataToString())
                     } else {
                         let responseData = String(data: data, encoding: .utf8)
                         print("\(response.statusCode) data: \(responseData ?? "No data")")
-                        completion(false)
                     }
                 } else {
                     print("Unexpected error: No data or response")
-                    completion(false)
                 }
             }
             task.resume()

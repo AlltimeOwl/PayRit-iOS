@@ -8,6 +8,11 @@
 import SwiftUI
 import PDFKit
 
+public enum HomeSegment {
+    case payrit
+    case promise
+}
+
 enum SortingType: String, CodingKey, CaseIterable {
     case recent = "최근 거래 순"
     case old = "오래된 순"
@@ -16,6 +21,7 @@ enum SortingType: String, CodingKey, CaseIterable {
 
 @Observable
 final class HomeStore {
+    var segment: HomeSegment = .payrit
     var sortingType: SortingType = .recent
     var certificates: [Certificate] = [Certificate]()
     var certificateDetail: CertificateDetail = CertificateDetail.EmptyCertificate

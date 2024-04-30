@@ -7,30 +7,11 @@
 
 import SwiftUI
 
-enum PathType {
-    case detail
-    case accept
-    case searching
-}
-
-public enum HomeSegment {
-    case payrit
-    case promise
-}
-
-struct HomePath: Hashable {
-    let type: PathType
-    let paperId: Int
-    let step: CertificateStep
-    let isWriter: Bool
-}
-
 struct HomeView: View {
     private let menuPadding = 8.0
     private let horizontalPadding = 16.0
     @State var promises: [Promise] = [Promise]()
     @State var isPromiseDeleted: Int = 0
-    @State private var segment: HomeSegment = .payrit
     @State private var paperId = 0
     @State private var isWriter: Bool?
     @State private var menuState = false
@@ -80,22 +61,22 @@ struct HomeView: View {
                     HStack(spacing: 26) {
                         Button {
                             withAnimation(.smooth) {
-                                segment = .payrit
+                                homeStore.segment = .payrit
                             }
                         } label: {
                             VStack(spacing: 4) {
-                                Text("페이릿")
-                                Rectangle().frame(width: 48, height: 3).foregroundStyle(segment == .payrit ? Color.payritMint : Color.clear)
+                                Text("페이릿").foregroundStyle(homeStore.segment == .payrit ? Color.payritMint : Color.gray06)
+                                Rectangle().frame(width: 48, height: 3).foregroundStyle(homeStore.segment == .payrit ? Color.payritMint : Color.clear)
                             }
                         }
                         Button {
                             withAnimation(.smooth) {
-                                segment = .promise
+                                homeStore.segment = .promise
                             }
                         } label: {
                             VStack(spacing: 4) {
-                                Text("약속")
-                                Rectangle().frame(width: 32, height: 3).foregroundStyle(segment == .promise ? Color.payritMint : Color.clear)                            }
+                                Text("약속").foregroundStyle(homeStore.segment == .promise ? Color.payritMint : Color.gray06)
+                                Rectangle().frame(width: 32, height: 3).foregroundStyle(homeStore.segment == .promise ? Color.payritMint : Color.clear)                            }
                         }
                         Spacer()
                     }
@@ -111,7 +92,7 @@ struct HomeView: View {
                             Spacer()
                         }
                     } else {
-                        switch segment {
+                        switch homeStore.segment {
                             // MARK: - 차용증
                         case .payrit:
                             if !iamportStore.impAuth {
@@ -144,11 +125,11 @@ struct HomeView: View {
                                             HStack {
                                                 Spacer()
                                                 Text("아직 거래내역이 없어요.\n작성하러 가볼까요?")
-                                                .frame(maxHeight: .infinity)
-                                                .multilineTextAlignment(.center)
-                                                .lineSpacing(4)
-                                                .font(.system(size: 20))
-                                                .foregroundStyle(.gray).opacity(0.6)
+                                                    .frame(maxHeight: .infinity)
+                                                    .multilineTextAlignment(.center)
+                                                    .lineSpacing(4)
+                                                    .font(.system(size: 20))
+                                                    .foregroundStyle(.gray).opacity(0.6)
                                                 Spacer()
                                             }
                                             .frame(height: UIScreen.screenHeight / 3)
@@ -188,20 +169,20 @@ struct HomeView: View {
                                                             await homeStore.loadCertificates()
                                                             switch certificate.certificateStep {
                                                             case .waitingApproval:
-                                                                path.append(HomePath(type: .accept, paperId: certificate.paperId, step: .waitingApproval, isWriter: certificate.isWriter))
+                                                                path.append(PayritPath(type: .accept, paperId: certificate.paperId, step: .waitingApproval, isWriter: certificate.isWriter))
                                                             case .waitingPayment:
                                                                 if certificate.isWriter {
-                                                                    path.append(HomePath(type: .accept, paperId: certificate.paperId, step: .waitingPayment, isWriter: certificate.isWriter))
+                                                                    path.append(PayritPath(type: .accept, paperId: certificate.paperId, step: .waitingPayment, isWriter: certificate.isWriter))
                                                                 } else {
                                                                     isShowingWaitingPaymentAlert.toggle()
                                                                 }
                                                             case .progress:
-                                                                path.append(HomePath(type: .detail, paperId: certificate.paperId, step: .progress, isWriter: certificate.isWriter))
+                                                                path.append(PayritPath(type: .payritDetail, paperId: certificate.paperId, step: .progress, isWriter: certificate.isWriter))
                                                             case .complete:
-                                                                path.append(HomePath(type: .detail, paperId: certificate.paperId, step: .complete, isWriter: certificate.isWriter))
+                                                                path.append(PayritPath(type: .payritDetail, paperId: certificate.paperId, step: .complete, isWriter: certificate.isWriter))
                                                             case .modifying:
                                                                 if certificate.isWriter {
-                                                                    path.append(HomePath(type: .accept, paperId: certificate.paperId, step: .modifying, isWriter: certificate.isWriter))
+                                                                    path.append(PayritPath(type: .accept, paperId: certificate.paperId, step: .modifying, isWriter: certificate.isWriter))
                                                                 } else {
                                                                     isShoingModifyingAlert.toggle()
                                                                 }
@@ -286,27 +267,6 @@ struct HomeView: View {
                                                 .scrollIndicators(.hidden)
                                                 .listStyle(.plain)
                                                 .background(Color.payritBackground)
-                                                .navigationDestination(for: HomePath.self) { path in
-                                                    if path.type == .accept {
-                                                        CertificateAcceptView(paperId: path.paperId, isWriter: path.isWriter, certificateStep: path.step, path: $path)
-                                                            .customBackbutton()
-                                                            .onAppear {
-                                                                tabStore.tabBarHide = true
-                                                            }
-                                                    } else if path.type == .detail {
-                                                        CertificateDetailView(paperId: path.paperId, certificateStep: path.step)
-                                                            .customBackbutton()
-                                                            .onAppear {
-                                                                tabStore.tabBarHide = true
-                                                            }
-                                                    } else if path.type == .searching {
-                                                        CertificateSerchingView(promises: $promises, path: $path)
-                                                            .navigationBarBackButtonHidden()
-                                                            .onAppear {
-                                                                tabStore.tabBarHide = true
-                                                            }
-                                                    }
-                                                }
                                             }
                                             Spacer()
                                         }
@@ -452,19 +412,8 @@ struct HomeView: View {
                                                             .padding(.horizontal, 14)
                                                             
                                                             Spacer()
-                                                            NavigationLink {
-                                                                PromiseDetailView(detail: promise, isDelete: $isPromiseDeleted)
-                                                                    .customBackbutton()
-                                                                    .onAppear {
-                                                                        tabStore.tabBarHide = true
-                                                                    }
-                                                                    .onDisappear {
-                                                                        tabStore.tabBarHide = false
-                                                                        if isPromiseDeleted != 0 {
-                                                                            promises.removeAll { $0.promiseId == isPromiseDeleted }
-                                                                            isPromiseDeleted = 0
-                                                                        }
-                                                                    }
+                                                            Button {
+                                                                path.append(PromisePath(detail: promise))
                                                             } label: {
                                                                 RoundedRectangle(cornerRadius: 30)
                                                                     .stroke(Color.gray07, lineWidth: 1)
@@ -498,6 +447,53 @@ struct HomeView: View {
                             }
                     }
                 }
+                .navigationDestination(for: PayritPath.self) { path in
+                    if path.type == .accept {
+                        CertificateAcceptView(paperId: path.paperId, isWriter: path.isWriter, certificateStep: path.step, path: $path)
+                            .customBackbutton()
+                            .onAppear {
+                                tabStore.tabBarHide = true
+                            }
+                    } else if path.type == .payritDetail {
+                        CertificateDetailView(paperId: path.paperId, certificateStep: path.step)
+                            .customBackbutton()
+                            .onAppear {
+                                tabStore.tabBarHide = true
+                            }
+                    }
+                }
+                .navigationDestination(for: PromisePath.self) { path in
+                    PromiseDetailView(detail: path.detail, isDelete: $isPromiseDeleted)
+                        .customBackbutton()
+                        .onAppear {
+                            tabStore.tabBarHide = true
+                        }
+                        .onDisappear {
+                            tabStore.tabBarHide = false
+                            if isPromiseDeleted != 0 {
+                                promises.removeAll { $0.promiseId == isPromiseDeleted }
+                                isPromiseDeleted = 0
+                            }
+                        }
+                }
+                .navigationDestination(for: PathType.self) { path in
+                    if path == .searching {
+                        CertificateSerchingView(promises: $promises, path: $path)
+                            .navigationBarBackButtonHidden()
+                            .onAppear {
+                                tabStore.tabBarHide = true
+                            }
+                    } else if path == .noti {
+                        NotificationView()
+                            .customBackbutton()
+                            .onAppear {
+                                tabStore.tabBarHide = true
+                            }
+                            .onDisappear {
+                                tabStore.tabBarHide = false
+                            }
+                    }
+                }
                 .padding(.top, 40)
                 .toolbar {
                     ToolbarItem(placement: .topBarLeading) {
@@ -520,7 +516,7 @@ struct HomeView: View {
                             VStack {
                                 Spacer().frame(height: 30)
                                 Button {
-                                    path.append(HomePath(type: .searching, paperId: 0, step: .refused, isWriter: false))
+                                    path.append(PathType.searching)
                                 } label: {
                                     Image("searchIcon")
                                         .resizable()
@@ -531,15 +527,8 @@ struct HomeView: View {
                             }
                             VStack {
                                 Spacer().frame(height: 30)
-                                NavigationLink {
-                                    NotificationView()
-                                        .customBackbutton()
-                                        .onAppear {
-                                            tabStore.tabBarHide = true
-                                        }
-                                        .onDisappear {
-                                            tabStore.tabBarHide = false
-                                        }
+                                Button {
+                                    path.append(PathType.noti)
                                 }label: {
                                     Image("alamIcon")
                                         .resizable()

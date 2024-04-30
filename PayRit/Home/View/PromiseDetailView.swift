@@ -106,9 +106,8 @@ struct PromiseDetailView: View {
                 Button {
                     isShowingDeleteAlert.toggle()
                 } label: {
-                    Image(systemName: "trash")
-                        .foregroundStyle(Color.black)
-                        .font(.system(size: 14))
+                    Image("trashIcon")
+                        .foregroundStyle(Color.gray06)
                 }
             }
         }

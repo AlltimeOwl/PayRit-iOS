@@ -9,10 +9,8 @@
 			<string>NSPrivacyAccessedAPICategorySystemBootTime</string>
 			<key>NSPrivacyAccessedAPITypeReasons</key>
 			<array>
-				<string></string>
+				<string>35F9.1</string>
 			</array>
-			<key>Item 0</key>
-			<string>System Boot Time - 35F9.1: Measure time on-device, per documentation</string>
 		</dict>
 		<dict>
 			<key>NSPrivacyAccessedAPIType</key>

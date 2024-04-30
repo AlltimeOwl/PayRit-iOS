@@ -75,7 +75,7 @@ struct CertificateSerchingView: View {
                         }
                     } label: {
                         VStack(spacing: 4) {
-                            Text("페이릿")
+                            Text("페이릿").foregroundStyle(segment == .payrit ? Color.payritMint : Color.gray06)
                             Rectangle().frame(width: 48, height: 3).foregroundStyle(segment == .payrit ? Color.payritMint : Color.clear)
                         }
                     }
@@ -85,7 +85,7 @@ struct CertificateSerchingView: View {
                         }
                     } label: {
                         VStack(spacing: 4) {
-                            Text("약속")
+                            Text("약속").foregroundStyle(segment == .promise ? Color.payritMint : Color.gray06)
                             Rectangle().frame(width: 32, height: 3).foregroundStyle(segment == .promise ? Color.payritMint : Color.clear)                            }
                     }
                     Spacer()
@@ -99,16 +99,14 @@ struct CertificateSerchingView: View {
                 case .payrit:
                     ZStack {
                         VStack(spacing: 0) {
-                            if filterPayritCount > 0 {
-                                HStack {
-                                    Text("총 \(filterPayritCount)건")
-                                        .font(.custom("SUIT-Medium", size: 16))
-                                        .foregroundStyle(Color.gray02)
-                                    Spacer()
-                                }
-                                .frame(height: 34)
-                                .padding(.horizontal, horizontalPadding)
+                            HStack {
+                                Text("검색결과 총 \(filterPayritCount)건")
+                                    .font(.custom("SUIT-Medium", size: 16))
+                                    .foregroundStyle(Color.gray02)
+                                Spacer()
                             }
+                            .frame(height: 34)
+                            .padding(.horizontal, horizontalPadding + 2)
                             
                             // MARK: - 홈 카드 리스트
                             ScrollViewReader { _ in
@@ -117,20 +115,20 @@ struct CertificateSerchingView: View {
                                         Button {
                                             switch certificate.certificateStep {
                                             case .waitingApproval:
-                                                path.append(HomePath(type: .accept, paperId: certificate.paperId, step: .waitingApproval, isWriter: certificate.isWriter))
+                                                path.append(PayritPath(type: .accept, paperId: certificate.paperId, step: .waitingApproval, isWriter: certificate.isWriter))
                                             case .waitingPayment:
                                                 if certificate.isWriter {
-                                                    path.append(HomePath(type: .accept, paperId: certificate.paperId, step: .waitingPayment, isWriter: certificate.isWriter))
+                                                    path.append(PayritPath(type: .accept, paperId: certificate.paperId, step: .waitingPayment, isWriter: certificate.isWriter))
                                                 } else {
                                                     isShowingWaitingPaymentAlert.toggle()
                                                 }
                                             case .progress:
-                                                path.append(HomePath(type: .detail, paperId: certificate.paperId, step: .progress, isWriter: certificate.isWriter))
+                                                path.append(PayritPath(type: .payritDetail, paperId: certificate.paperId, step: .progress, isWriter: certificate.isWriter))
                                             case .complete:
-                                                path.append(HomePath(type: .detail, paperId: certificate.paperId, step: .complete, isWriter: certificate.isWriter))
+                                                path.append(PayritPath(type: .payritDetail, paperId: certificate.paperId, step: .complete, isWriter: certificate.isWriter))
                                             case .modifying:
                                                 if certificate.isWriter {
-                                                    path.append(HomePath(type: .accept, paperId: certificate.paperId, step: .modifying, isWriter: certificate.isWriter))
+                                                    path.append(PayritPath(type: .accept, paperId: certificate.paperId, step: .modifying, isWriter: certificate.isWriter))
                                                 } else {
                                                     isShoingModifyingAlert.toggle()
                                                 }
@@ -276,7 +274,7 @@ struct CertificateSerchingView: View {
                 case .promise:
                     VStack(spacing: 0) {
                         HStack {
-                            Text("총 \(filterPromiseCount)건")
+                            Text("검색결과 총 \(filterPromiseCount)건")
                                 .font(.custom("SUIT-Medium", size: 16))
                                 .foregroundStyle(Color.gray02)
                             Spacer()
