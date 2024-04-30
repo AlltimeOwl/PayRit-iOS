@@ -100,6 +100,7 @@
 		BC9F49102BDA5EF9007A0757 /* Promise.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC9F490F2BDA5EF8007A0757 /* Promise.swift */; };
 		BC9F49122BDCD7EB007A0757 /* Data +.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC9F49112BDCD7EB007A0757 /* Data +.swift */; };
 		BC9F49142BDD58C5007A0757 /* PromiseDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC9F49132BDD58C5007A0757 /* PromiseDetailView.swift */; };
+		BC9F49162BE108C8007A0757 /* Path.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC9F49152BE108C8007A0757 /* Path.swift */; };
 		BCC9EC042B8F09A6001E18F0 /* CertificateDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCC9EC032B8F09A6001E18F0 /* CertificateDetail.swift */; };
 		BCD942512B8F0CCC00BF61CD /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = BCD942502B8F0CCC00BF61CD /* .swiftlint.yml */; };
 		BCD942572B8F1D5400BF61CD /* MyPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD942562B8F1D5400BF61CD /* MyPageView.swift */; };
@@ -199,6 +200,7 @@
 		BC9F490F2BDA5EF8007A0757 /* Promise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Promise.swift; sourceTree = "<group>"; };
 		BC9F49112BDCD7EB007A0757 /* Data +.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data +.swift"; sourceTree = "<group>"; };
 		BC9F49132BDD58C5007A0757 /* PromiseDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromiseDetailView.swift; sourceTree = "<group>"; };
+		BC9F49152BE108C8007A0757 /* Path.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Path.swift; sourceTree = "<group>"; };
 		BCC9EC032B8F09A6001E18F0 /* CertificateDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateDetail.swift; sourceTree = "<group>"; };
 		BCD942502B8F0CCC00BF61CD /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		BCD942562B8F1D5400BF61CD /* MyPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageView.swift; sourceTree = "<group>"; };
@@ -477,6 +479,7 @@
 				BC2193A72BB03D8C00EE7B68 /* PayritNoti.swift */,
 				BC02102F2BC595D900116A6B /* CertificationInfo.swift */,
 				BC9F490F2BDA5EF8007A0757 /* Promise.swift */,
+				BC9F49152BE108C8007A0757 /* Path.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -873,6 +876,7 @@
 				BC595DD82B8D8AC300CA555E /* SignInView.swift in Sources */,
 				BCE280DA2B8F75120085D45E /* View +.swift in Sources */,
 				BC4876C82B9721F3006B15C0 /* PartnerInfoWritingView.swift in Sources */,
+				BC9F49162BE108C8007A0757 /* Path.swift in Sources */,
 				BC595E022B8DA21300CA555E /* SignInStore.swift in Sources */,
 				BC2193962BA99BC000EE7B68 /* Certificate.swift in Sources */,
 				BC2D51CE2B9F35260041FD77 /* CertificateDeductibleView.swift in Sources */,
@@ -1095,7 +1099,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 1.4.1;
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.alltimeowl.PayRit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1140,7 +1144,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 1.4.1;
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.alltimeowl.PayRit;
 				PRODUCT_NAME = "$(TARGET_NAME)";

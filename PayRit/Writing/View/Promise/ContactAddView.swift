@@ -150,12 +150,12 @@ struct ContactAddView: View {
                     .foregroundStyle(.white)
                     .frame(height: 50)
                     .frame(maxWidth: .infinity)
-                    .background(contacts.isEmpty && promise.writerName.isEmpty ? Color.gray07 : Color.payritMint)
+                    .background(contacts.isEmpty || promise.writerName.isEmpty ? Color.gray07 : Color.payritMint)
                     .clipShape(.rect(cornerRadius: keyBoardFocused ? 0 : 12))
             }
             .padding(.bottom, keyBoardFocused ? 0 : 16)
             .padding(.horizontal, keyBoardFocused ? 0 : 16)
-            .disabled(contacts.isEmpty && promise.writerName.isEmpty)
+            .disabled(contacts.isEmpty || promise.writerName.isEmpty)
         }
         .onTapGesture {
             self.endTextEditing()

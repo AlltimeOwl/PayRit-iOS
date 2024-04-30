@@ -87,13 +87,14 @@ struct PayRitApp: App {
                             if queryItem.name == "promiseId", let value = queryItem.value {
                                 print("promiseId : \(value)")
                                 homeStore.addPromise(id: value)
+                                homeStore.segment = .promise
                             }
                         }
                     }
+                    tabStore.selectedTab = .home
                 }
-//                .onContinueUserActivity("") { <#NSUserActivity#> in
-//                    <#code#>
-//                }
+                .onContinueUserActivity("") { _ in
+                }
         }
     }
 }

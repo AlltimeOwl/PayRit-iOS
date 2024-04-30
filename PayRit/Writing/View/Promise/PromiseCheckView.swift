@@ -12,6 +12,7 @@ struct PromiseCheckView: View {
     let contacts: [Contacts]
     let writingStore: WritingStore = WritingStore()
     @State var promise: Promise
+    @State private var promiseId: String = ""
     @State private var isShowingDoneAlert: Bool = false
     @State private var isShowingStopAlert: Bool = false
     @State private var isShowingKaKaoAlert: Bool = false
@@ -107,8 +108,9 @@ struct PromiseCheckView: View {
                     "amount": String(promise.amount)
                 ])
                 writingStore.savePromise(promise: promise, contacts: contacts) { result in
-                    if result {
-                        isShowingDoneAlert.toggle()
+                    if let result = result {
+                        promiseId = result
+                        isShowingKaKaoAlert.toggle()
                     } else {
                         isShowingErrorAlert.toggle()
                     }
@@ -167,10 +169,14 @@ struct PromiseCheckView: View {
                         """,
                       primaryButtonTitle: "네",
                       cancleButtonTitle: "아니오") {
-            KakaoShareService().payritKakaoShare(sender: promise.writerName) { kakaoLinkType in
-                KakaoShareService().openKakaoLink(kakaoLinkType: kakaoLinkType) {
+            
+            if let promiseId = Int(promiseId) {
+                KakaoShareService().promiseKakaoShare(id: promiseId, sender: promise.writerName) { kakaoLinkType in
+                    KakaoShareService().openKakaoLink(kakaoLinkType: kakaoLinkType) {
+                    }
                 }
             }
+            
             path = .init()
         } cancleAction: {
             path = .init()

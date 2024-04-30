@@ -15,7 +15,7 @@ final class VersionService {
     let appStoreOpenUrlString = "itms-apps://itunes.apple.com/app/apple-store/6480038044"
     
     func loadAppStoreVersion(completion: @escaping (String?) -> Void) {
-        let appStoreUrl = "https://itunes.apple.com/kr/lookup?bundleId=\(bundleID)"
+        let appStoreUrl = "http://itunes.apple.com/kr/lookup?bundleId=\(bundleID)"
         
         let task = URLSession.shared.dataTask(with: URL(string: appStoreUrl)!) { data, _, error in
             guard let data = data, error == nil else {

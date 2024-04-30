@@ -51,7 +51,7 @@ struct WritingCertificateInfoView: View {
                             Text(certificateType == "CREDITOR" ? "빌려주기로 한 돈의\n정보를 입력해 주세요." : "빌리기로 한 돈의\n정보를 입력해 주세요")
                                 .font(Font.title03)
                             VStack(alignment: .leading) {
-                                Text("얼마를 빌려주기로 했나요?")
+                                Text(certificateType == "CREDITOR" ? "얼마를 빌려주기로 했나요?" : "얼마를 빌리기로 했나요?")
                                     .font(Font.body03)
                                     .foregroundStyle(Color.gray04)
                                 CustomTextField(placeholder: "금액을 입력해주세요", keyboardType: .numberPad, text: $money)
@@ -74,7 +74,7 @@ struct WritingCertificateInfoView: View {
                             }
                             
                             VStack(alignment: .leading) {
-                                Text("언제 빌려주기로 했나요?")
+                                Text(certificateType == "CREDITOR" ? "언제 빌려주기로 했나요?" : "언제 빌리기로 했나요?")
                                     .font(Font.body03)
                                     .foregroundStyle(Color.gray04)
                                 RoundedRectangle(cornerRadius: 6)
