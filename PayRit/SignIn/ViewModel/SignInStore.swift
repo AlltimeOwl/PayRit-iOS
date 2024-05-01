@@ -14,12 +14,12 @@ import AuthenticationServices
 import Alamofire
 import FirebaseAnalytics
 
-enum WhileSigIn {
+enum WhileSignIn {
     case not
     case doing
 }
 
-enum SiginInType: String, CodingKey, CaseIterable {
+enum SignInInType: String, CodingKey, CaseIterable {
     case apple = "APPLE"
     case kakao = "KAKAO"
 }
@@ -41,9 +41,10 @@ enum LogOutMessage: String, CodingKey {
 @Observable
 class SignInStore {
     var isSignIn: Bool = UserDefaultsManager().getIsSignInState()
+    let signInCompany = UserDefaultsManager().getUserInfo().signInCompany
     var singinRevoke: Bool = false
     var serverIsClosed: LogOutMessage = .none
-    var whileSigIn: WhileSigIn = .not
+    var whileSignIn: WhileSignIn = .not
     var appleAuthorizationCode = ""
     var appleIdentityToken = ""
     var firebasePhtoken = ""
@@ -94,6 +95,7 @@ class SignInStore {
     }
     
     func appleAuthCheck() {
+        print("asdasd")
         let appleIDProvider = ASAuthorizationAppleIDProvider()
         appleIDProvider.getCredentialState(forUserID: UserDefaultsManager().getAppleUserId()) { (credentialState, _) in
             switch credentialState {
@@ -153,7 +155,7 @@ class SignInStore {
                     print("Response status code: \(response.statusCode)")
                     if (200..<300).contains(response.statusCode) {
                         print("애플 탈퇴 완료")
-                        UserDefaultsManager().removeAll()
+                        UserDefaultsManager().removeAll(signInType: .apple)
                         completion(true)
                     } else {
                         print("Unexpected status code: \(response.statusCode)")
@@ -318,7 +320,7 @@ class SignInStore {
                         print("unlink() error : \(error.localizedDescription)")
                     } else {
                         print("unlink() success.")
-                        UserDefaultsManager().removeAll()
+                        UserDefaultsManager().removeAll(signInType: .kakao)
                         completion(true)
                     }
                 }
@@ -337,8 +339,8 @@ class SignInStore {
     
     // MARK: - 공용
     /// 서버에 JWT 보내고 Bearer를 userDefault에 저장
-    func serverAuth(aToken: String, rToken: String, company: SiginInType, completion: @escaping (Result<Bool, Error>) -> Void) {
-        self.whileSigIn = .doing
+    func serverAuth(aToken: String, rToken: String, company: SignInInType, completion: @escaping (Result<Bool, Error>) -> Void) {
+        self.whileSignIn = .doing
         let userDefault = UserDefaultsManager()
         Task {
             await userDefault.loadFCMtoken()
@@ -427,18 +429,18 @@ class SignInStore {
                         print("Error parsing JSON response: \(error)")
                         completion(.failure(error))
                     }
-                    self.whileSigIn = .not
+                    self.whileSignIn = .not
                     self.serverIsClosed = .none
                 } else {
                     print("Unexpected status code: \(httpResponse.statusCode)")
                     
                     if httpResponse.statusCode == 502 {
                         print("서버 점검중")
-                        self.whileSigIn = .not
+                        self.whileSignIn = .not
                         self.serverIsClosed = .serverStop
                         completion(.failure(ServerAuthError.serverClosed))
                     } else {
-                        self.whileSigIn = .not
+                        self.whileSignIn = .not
                         self.serverIsClosed = .authRevoke
                         completion(.failure(ServerAuthError.invalidResponse))
                     }

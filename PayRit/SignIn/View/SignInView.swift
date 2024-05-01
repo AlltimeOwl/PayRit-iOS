@@ -22,7 +22,7 @@ struct SignInView: View {
                     .resizable()
                     .frame(height: UIScreen.screenHeight)
                 
-                if signInStore.whileSigIn == .not {
+                if signInStore.whileSignIn == .not {
                     VStack(spacing: 8) {
                         Spacer()
                         Button {
@@ -60,7 +60,7 @@ struct SignInView: View {
                     }
                 }
                 
-                if signInStore.whileSigIn == .doing {
+                if signInStore.whileSignIn == .doing {
                     ProgressView()
                 }
                 if signInStore.serverIsClosed == .serverStop {
