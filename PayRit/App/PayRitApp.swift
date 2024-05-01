@@ -48,7 +48,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
 @main
 struct PayRitApp: App {
-    let signInCompany = UserDefaultsManager().getUserInfo().signInCompany
     @State var signInStore: SignInStore = SignInStore()
     @State var homeStore: HomeStore = HomeStore()
     @State var mypageStore: MyPageStore = MyPageStore()
@@ -70,15 +69,15 @@ struct PayRitApp: App {
                 .environment(tabStore)
                 .environmentObject(IamportStore())
                 .onAppear {
-                    if signInCompany == "애플" {
+                    if signInStore.signInCompany == "애플" {
                         signInStore.appleAuthCheck()
                         print("애플 auth check")
-                    } else if signInCompany == "카카오톡" {
+                    } else if signInStore.signInCompany == "카카오톡" {
                         signInStore.kakaoAuthCheck()
                         print("카카오 auth check")
                     }
                 }
-                .onOpenURL { url in       // 딥링크
+                .onOpenURL { url in
                     print("URL: \(url)")
                     if let components = URLComponents(url: url, resolvingAgainstBaseURL: false) {
                         let queryItems = components.queryItems ?? []

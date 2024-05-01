@@ -7,6 +7,10 @@
 
 import Foundation
 
+enum SignInType {
+    case apple, kakao
+}
+
 @Observable
 final class UserDefaultsManager {
     var user: User?
@@ -140,10 +144,17 @@ final class UserDefaultsManager {
     }
     
     /// 디바이스 userDefault 전체 삭제
-    func removeAll() {
-        Key.allCases.forEach {
-            if $0 != .userAppleName || $0 != .userAppleEmail {
+    func removeAll(signInType: SignInType) {
+        switch signInType {
+        case .apple:
+            Key.allCases.forEach {
                 UserDefaults.standard.removeObject(forKey: $0.rawValue)
+            }
+        case .kakao:
+            Key.allCases.forEach {
+                if $0 != .userAppleName && $0 != .userAppleEmail {
+                    UserDefaults.standard.removeObject(forKey: $0.rawValue)
+                }
             }
         }
     }

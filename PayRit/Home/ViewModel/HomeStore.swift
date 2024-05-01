@@ -737,9 +737,9 @@ final class HomeStore {
                 if let data = data {
                     var data = data
                     do {
-                        print("promises : \(data.dataToString())\n")
                         let decoder = JSONDecoder()
                         decoder.dateDecodingStrategy = .formatted(DateFormatter.iso8601Full)
+                        
                         if var jsonArray = try JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]] {
                             for index in 0..<jsonArray.count {
                                 let check: String? = jsonArray[index]["promiseImageType"] as? String
@@ -750,30 +750,10 @@ final class HomeStore {
                             }
                             data = try JSONSerialization.data(withJSONObject: jsonArray, options: [])
                         }
-                        print("promises++ : \(data.dataToString())")
+                        
                         let promises = try decoder.decode([Promise].self, from: data)
+                        
                         completion(promises)
-//                        
-//                        let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
-//                        var promises: [Promise] = []
-//                        if let jsonArray = jsonObject as? [[String: Any]] {
-//                            for item in jsonArray {
-//                                let jsonData: [String: Any] = item
-//                                let amount = jsonData["amount"] as? Int ?? 0
-//                                let promiseStartDate = jsonData["promiseStartDate"] as? Date ?? Date()
-//                                let promiseEndDate = jsonData["promiseEndDate"] as? Date ?? Date()
-//                                let writerName = jsonData["writerName"] as? String ?? ""
-//                                let contents = jsonData["contents"] as? String ?? ""
-//                                let participants = jsonData["participants"]
-//                                print("participants : \(participants)\n")
-//                                
-//                                let promiseImageType = jsonData["promiseImageType"] as? PromiseImage ?? PromiseImage.PRESENT
-//                                
-//                                let result = Promise(amount: amount, promiseStartDate: promiseStartDate, promiseEndDate: promiseEndDate, writerName: writerName, contents: contents, participants: [Participants](), promiseImageType: promiseImageType, isClicked: false)
-//                                promises.append(result)
-//                            }
-//                        }
-//                        completion(promises)
                     } catch {
                         print("Error decoding JSON: \(error)")
                     }
@@ -815,31 +795,9 @@ final class HomeStore {
                 if let data = data {
                     var data = data
                     do {
-                        print("promises : \(data.dataToString())\n")
                         let decoder = JSONDecoder()
                         let promises = try decoder.decode(Promise.self, from: data)
                         completion(promises)
-//
-//                        let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
-//                        var promises: [Promise] = []
-//                        if let jsonArray = jsonObject as? [[String: Any]] {
-//                            for item in jsonArray {
-//                                let jsonData: [String: Any] = item
-//                                let amount = jsonData["amount"] as? Int ?? 0
-//                                let promiseStartDate = jsonData["promiseStartDate"] as? Date ?? Date()
-//                                let promiseEndDate = jsonData["promiseEndDate"] as? Date ?? Date()
-//                                let writerName = jsonData["writerName"] as? String ?? ""
-//                                let contents = jsonData["contents"] as? String ?? ""
-//                                let participants = jsonData["participants"]
-//                                print("participants : \(participants)\n")
-//
-//                                let promiseImageType = jsonData["promiseImageType"] as? PromiseImage ?? PromiseImage.PRESENT
-//
-//                                let result = Promise(amount: amount, promiseStartDate: promiseStartDate, promiseEndDate: promiseEndDate, writerName: writerName, contents: contents, participants: [Participants](), promiseImageType: promiseImageType, isClicked: false)
-//                                promises.append(result)
-//                            }
-//                        }
-//                        completion(promises)
                     } catch {
                         print("Error decoding JSON: \(error)")
                     }

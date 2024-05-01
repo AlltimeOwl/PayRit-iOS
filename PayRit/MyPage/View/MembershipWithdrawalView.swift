@@ -154,7 +154,9 @@ struct MembershipWithdrawalView: View {
         .navigationBarTitleDisplayMode(.inline)
         .primaryAlert(isPresented: $isShowingWithdrawalButton, title: "회원탈퇴", content: "정말 탈퇴하시겠습니까?", primaryButtonTitle: "아니오", cancleButtonTitle: "네", primaryAction: nil) {
             if seletedReason == "기타" {
-                Analytics.logEvent("withdrawal_iOS_etc_\(seletedReasonEtc)", parameters: [:])
+                if seletedReasonEtc != "테스트" {
+                    Analytics.logEvent("withdrawal_iOS_etc_\(seletedReasonEtc)", parameters: [:])
+                }
             } else {
                 Analytics.logEvent("withdrawal_iOS_\(seletedReason)", parameters: [:])
             }
