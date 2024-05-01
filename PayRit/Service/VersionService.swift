@@ -13,7 +13,6 @@ enum UpdateType {
 
 @Observable
 final class VersionService {
-    var isOldVersion: Bool = false
     var uadateType: UpdateType = .latest
     var isShowingForceAlert: Bool = false
     var isShowingSelectAlert: Bool = false
@@ -22,18 +21,16 @@ final class VersionService {
     let appStoreOpenUrlString = "itms-apps://itunes.apple.com/app/apple-store/6480038044"
     
     func calVersion(now: String, store: String) -> UpdateType {
-        var nowVersion = now
-        var storeVersion = store
         
-        if (now.map{ $0 == "." }).count == 1 {
-            nowVersion += ".0"
-        }
-        if (store.map{ $0 == "." }).count == 1 {
-            nowVersion += ".0"
-        }
+        var currentComponents = now.split(separator: ".").compactMap { Int($0) }
+        var latestComponents = store.split(separator: ".").compactMap { Int($0) }
         
-        let currentComponents = nowVersion.split(separator: ".").compactMap { Int($0) }
-        let latestComponents = storeVersion.split(separator: ".").compactMap { Int($0) }
+        if currentComponents.count == 2 {
+            currentComponents.append(0)
+        }
+        if latestComponents.count == 2 {
+            latestComponents.append(0)
+        }
         
         let currentMajor = currentComponents[0]
         let currentMinor = currentComponents[1]
