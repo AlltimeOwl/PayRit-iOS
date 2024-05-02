@@ -1,4 +1,4 @@
-<img src="https://github.com/AlltimeOwl/Backend/assets/101318750/c27c1603-2ab5-4f3d-8c0e-791ac531e0bf" width="200" height="200">
+![appstore](https://github.com/AlltimeOwl/PayRit-iOS/assets/115560272/baa56c68-04b4-457d-858a-200f63a39a97)
 
 # Payrit
 ### 대학생, 사회 초년생들을 위한 쉬운 돈 거래 약속 앱
