@@ -6,12 +6,48 @@
 ## 소개
 [랜딩페이지 둘러보기👀](https://payrit.info)
 
+[구글 플레이스토어](https://play.google.com/store/apps/details?id=com.alltimeowl.payrit)
+
+[앱 스토어](https://apps.apple.com/kr/app/%ED%8E%98%EC%9D%B4%EB%A6%BF-payrit/id6480038044)
+
+[카카오톡 채널](https://pf.kakao.com/_djxmxiG)
+
 ## 🖥 서비스 화면
-|소셜 로그인|홈 화면|작성 시작 탭|
-|:-:|:-:|:-:|
-|<img src="https://github.com/AlltimeOwl/Backend/assets/39723465/2a9d34f0-7330-40d1-a89a-837fb323adcb">|<img src="https://github.com/AlltimeOwl/Backend/assets/39723465/505c63f6-fc19-482b-aa08-d8b6413ed0b1">|<img src="https://github.com/AlltimeOwl/Backend/assets/39723465/b1ba1bb3-7e94-42d7-b1a1-1a1001734ff1">
-|<b>거래 내용 작성</b>|<b>인적사항 작성</b>|<b>페이릿 상세화면</b>|
-|<img src="https://github.com/AlltimeOwl/Backend/assets/39723465/ee582927-8b86-4a78-9918-964b848e38d4">|<img src="https://github.com/AlltimeOwl/Backend/assets/39723465/749bd7b0-6d8d-4c14-bcc3-4420aa0047fe">|<img src="https://github.com/AlltimeOwl/Backend/assets/39723465/f6258b41-ec99-4630-b817-aefc005377f6">|
+
+<table align="center">
+  <tr>
+    <th><code>소셜 로그인</code></th>
+    <th><code>홈 화면</code></th>
+    <th><code>작성하기</code></th>
+    <th><code>마이페이지</code></th>
+  </tr>
+  <tr>
+    <td><img src="https://github.com/AlltimeOwl/PayRit-iOS/assets/115560272/ef2880bc-8ee3-4385-806a-3b52a76362d0" width="210" alt="소셜 로그인"></td>
+    <td><img src="https://github.com/AlltimeOwl/PayRit-iOS/assets/115560272/ea8d5310-2acf-486f-b29c-7944c7d39f86" width="210" alt="홈 화면"></td>
+    <td><img src="https://github.com/AlltimeOwl/PayRit-iOS/assets/115560272/4fa6bf9e-b166-4a58-a10a-942b1f903083" width="210" alt="작성하기"></td>
+    <td><img src="https://github.com/AlltimeOwl/PayRit-iOS/assets/115560272/28f4d945-8e18-4a5e-bac0-5902ac534449" width="210" alt="마이페이지"></td>
+  </tr>
+</table>
+
+<table align="center">
+  <tr>
+    <th><code>거래 내용 작성</code></th>
+    <th><code>인적사항 작성</code></th>
+    <th><code>페이릿 상세화면</code></th>
+    <th><code>카드 랜덤뽑기</code></th>
+  </tr>
+  <tr>
+    <td><img src="https://github.com/AlltimeOwl/PayRit-iOS/assets/115560272/47386818-5f40-4d4b-9f43-139554bf0af9" width="210" alt="거래 내용 작성"></td>
+    <td><img src="https://github.com/AlltimeOwl/Backend/assets/39723465/749bd7b0-6d8d-4c14-bcc3-4420aa0047fe" width="210" alt="인적사항 작성"></td>
+    <td><img src="https://github.com/AlltimeOwl/Backend/assets/39723465/f6258b41-ec99-4630-b817-aefc005377f6" width="210" alt="페이릿 상세화면"></td>
+    <td><img src="https://github.com/AlltimeOwl/PayRit-iOS/assets/115560272/17546012-6c52-4da1-b80b-968cb1ccf180" width="210" alt="카드 랜덤뽑기"></td>
+  </tr>
+</table>
+
+
+
+
+<br/><br/>
 
 ## 🛠 Tech Stacks
 
