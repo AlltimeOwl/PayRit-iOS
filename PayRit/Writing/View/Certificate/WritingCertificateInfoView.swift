@@ -36,9 +36,9 @@ struct WritingCertificateInfoView: View {
     @Namespace var bottomID
     var isFormValid: Bool {
         if calToggle {
-            return !money.isEmpty && onTapBorrowedDate && !interestRate.isEmpty
+            return !money.isEmpty && onTapBorrowedDate && onTapRedemptionDate && !interestRate.isEmpty
         } else {
-            return !money.isEmpty && onTapBorrowedDate
+            return !money.isEmpty && onTapBorrowedDate && onTapRedemptionDate
         }
     }
     var body: some View {

@@ -32,6 +32,12 @@ final class HomeStore {
     var isAddedPromise: Bool = false
     var isLoading: Bool = true
     
+//    var test: [Certificate] = [Certificate(paperId: 0, paperRole: .CREDITOR, transactionDate: "2024-04-20", repaymentStartDate: "2024-04-20", repaymentEndDate: "2024-06-20", amount: 500000, paperStatus: "COMPLETE_WRITING", peerName: "정주성", dueDate: 50, repaymentRate: 40.0, isWriter: true),
+//                               Certificate(paperId: 0, paperRole: .DEBTOR, transactionDate: "2024-03-10", repaymentStartDate: "2024-03-14", repaymentEndDate: "2024-05-24", amount: 2500000, paperStatus: "EXPIRED", peerName: "김성훈", dueDate: 24, repaymentRate: 10.0, isWriter: true),
+//                               Certificate(paperId: 0, paperRole: .CREDITOR, transactionDate: "2024-04-20", repaymentStartDate: "2024-04-20", repaymentEndDate: "2024-08-20", amount: 500000, paperStatus: "WAITING_AGREE", peerName: "신상원", dueDate: 0, repaymentRate: 0.0, isWriter: true)]
+//    
+//    var certificateDetail: CertificateDetail = CertificateDetail(paperId: 0, paperUrl: "", memberRole: "CREDITOR", paperFormInfo: PaperFormInfo(primeAmount: 500000, interest: 0, amount: 500000, remainingAmount: 200000, interestRate: 0.0, interestPaymentDate: 0, repaymentStartDate: "2024-04-20", repaymentEndDate: "2024-08-20", transactionDate: "2024-04-20", specialConditions: ""), repaymentRate: 40.0, creditorProfile: Creditor(name: "임대진", phoneNumber: "010-5009-7937", address: ""), debtorProfile: Debtor(name: "정주성", phoneNumber: "010-8113-7937", address: ""), dueDate: 50, memoListResponses: [Memo](), repaymentHistories: [Deducted](), modifyRequest: "")
+    
     func sortingCertificates() {
         switch sortingType {
         case .recent:

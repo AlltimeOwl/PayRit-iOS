@@ -104,13 +104,13 @@ struct PromiseCheckView: View {
             .scrollIndicators(.hidden)
             
             Button {
-                Analytics.logEvent("write_Promise_iOS", parameters: [
-                    "amount": String(promise.amount)
-                ])
                 writingStore.savePromise(promise: promise, contacts: contacts) { result in
                     if let result = result {
                         promiseId = result
                         isShowingKaKaoAlert.toggle()
+                        Analytics.logEvent("write_Promise_iOS", parameters: [
+                            "amount": String(promise.amount)
+                        ])
                     } else {
                         isShowingErrorAlert.toggle()
                     }
