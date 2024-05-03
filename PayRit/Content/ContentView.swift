@@ -62,13 +62,20 @@ struct ContentView: View {
                     }
 
             } else {
-                SignInView().onOpenURL(perform: { url in
+                SignInView()
+                    .onOpenURL(perform: { url in
                     if AuthApi.isKakaoTalkLoginUrl(url) {
                         _ = AuthController.handleOpenUrl(url: url)
                     }
                 })
                 .onAppear {
                     checkNewVersion()
+                }
+            }
+        }
+        .onChange(of: signInStore.isSignIn) {
+            if signInStore.isSignIn {
+                iamportStore.checkIMPAuth {
                 }
             }
         }

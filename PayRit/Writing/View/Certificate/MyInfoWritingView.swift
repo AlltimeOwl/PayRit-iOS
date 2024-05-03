@@ -50,9 +50,9 @@ struct MyInfoWritingView: View {
                             CustomTextField(foregroundStyle: .black, placeholder: "이름을 적어주세요", keyboardType: .default, text: $name)
                                 .onChange(of: name) {
                                     if newCertificate.memberRole == "CREDITOR" {
-                                        newCertificate.creditorProfile.name = mypageStore.userCertInfo?.certificationName ?? ""
+                                        newCertificate.creditorProfile.name = name
                                     } else if newCertificate.memberRole == "DEBTOR" {
-                                        newCertificate.debtorProfile.name = mypageStore.userCertInfo?.certificationName ?? ""
+                                        newCertificate.debtorProfile.name = name
                                     }
                                 }
                         }

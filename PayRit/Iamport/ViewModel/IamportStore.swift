@@ -39,8 +39,10 @@ public class IamportStore: ObservableObject, Then {
     
     /// 계정 본인인증 여부
     @Published var authResult: Bool = false
+    
     /// 차용증 승인시 본인인증 결과
     @Published var acceptAuthResult: Bool = false
+    
     /// 결제 시도후 결과
     @Published var paymentResult: Bool = false
     @Published var amount: Int = 0
@@ -49,6 +51,7 @@ public class IamportStore: ObservableObject, Then {
     
     /// 계정 인증 정보
     @Published var impAuth: Bool = UserDefaultsManager().getAuthState()
+    
     var iamportResponse: IamportResponse?
     
     init() {
@@ -237,17 +240,14 @@ public class IamportStore: ObservableObject, Then {
                         print("impUid : \(uid)")
                         print("impUid 전송 완료")
                         completion()
-                    } else if response.statusCode == 409 {
-                        self.isShowingDuplicateAlert.toggle()
-                        if let data = data {
-                            let responseData = String(data: data, encoding: .utf8)
-                            print("data: \(responseData ?? "No data")")
-                        }
                     } else {
+                        if response.statusCode == 409 {
+                            self.isShowingDuplicateAlert.toggle()
+                        }
                         print("Unexpected status code: \(response.statusCode)")
                         if let data = data {
                             let responseData = String(data: data, encoding: .utf8)
-                            print("data: \(responseData ?? "No data")")
+                            print("sendCertificateResult data: \(responseData ?? "No data")")
                         }
                     }
                 } else {
@@ -288,8 +288,7 @@ public class IamportStore: ObservableObject, Then {
                 completion()
             } else {
                 if let data = data {
-                    let responseData = String(data: data, encoding: .utf8)
-                    print("\(httpResponse.statusCode) data: \(responseData ?? "No data")")
+                    print(data.dataToString())
                 }
                 completion()
             }

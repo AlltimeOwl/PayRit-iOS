@@ -632,6 +632,9 @@ struct HomeView: View {
             }
         } cancleAction: {
         }
+        .primaryAlert(isPresented: $iamportStore.isShowingDuplicateAlert, title: "본인인증 실패", content: "이미 인증된 계정이 존재합니다.", primaryButtonTitle: nil, cancleButtonTitle: "확인") {
+        } cancleAction: {
+        }
     }
 }
 
