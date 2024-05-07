@@ -24,7 +24,6 @@ struct HomeView: View {
     @State private var isShowingRefuseAlert = false
     @State private var isShowingDeleteAlert = false
     @State private var isShoingModifyingAlert = false
-    @State private var isHiddenInfoBox: Bool = false
     @State private var rectangleOffset: CGSize = .zero
     @State var path = NavigationPath()
     @State var checkView: CertificateDetail?
@@ -40,13 +39,13 @@ struct HomeView: View {
             ZStack {
                 Color.payritBackground.ignoresSafeArea()
                 VStack {
-                    if !isHiddenInfoBox {
+                    if !homeStore.isHiddenInfoBox {
                         CarouselView(hasCompleted: homeStore.certificates.filter { $0.certificateStep == .complete }.isEmpty ? false : true)
                             .padding(.horizontal, 16)
                             .overlay(alignment: .topTrailing) {
                                 Button {
                                     withAnimation {
-                                        isHiddenInfoBox.toggle()
+                                        homeStore.isHiddenInfoBox.toggle()
                                     }
                                 } label: {
                                     Image(systemName: "xmark")

@@ -28,6 +28,7 @@ final class HomeStore {
     var isShowingPaymentSuccessAlert: Bool = false
     var isShowingAcceptFailAlert: Bool = false
     var isShowingAuthCompleteAlert: Bool = false
+    var isHiddenInfoBox: Bool = false
     var isAddedPromise: Bool = false
     var isLoading: Bool = true
     
