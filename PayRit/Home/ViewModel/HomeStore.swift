@@ -28,7 +28,6 @@ final class HomeStore {
     var isShowingPaymentSuccessAlert: Bool = false
     var isShowingAcceptFailAlert: Bool = false
     var isShowingAuthCompleteAlert: Bool = false
-    var isHiddenInfoBox: Bool = false
     var isAddedPromise: Bool = false
     var isLoading: Bool = true
     
@@ -799,7 +798,6 @@ final class HomeStore {
             
             if (200..<300).contains(httpResponse.statusCode) {
                 if let data = data {
-                    var data = data
                     do {
                         let decoder = JSONDecoder()
                         let promises = try decoder.decode(Promise.self, from: data)

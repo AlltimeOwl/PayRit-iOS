@@ -140,9 +140,7 @@ public class IamportStore: ObservableObject, Then {
             if (200..<300).contains(httpResponse.statusCode) {
                 if let data = data {
                     do {
-                        print(data)
                         let paymentData = try JSONDecoder().decode(PaymentData.self, from: data)
-                        print(paymentData)
                         let req = IamportPayment(pg: paymentData.PGCode ?? "kcp.IP05D", merchant_uid: paymentData.merchantUID, amount: String(paymentData.amount)).then {
                             $0.name = paymentData.name
                             $0.buyer_name = paymentData.buyerName
@@ -161,14 +159,13 @@ public class IamportStore: ObservableObject, Then {
                     let responseData = String(data: data, encoding: .utf8)
                     print("\(httpResponse.statusCode) data: \(responseData ?? "No data")")
                 }
-                print("HTTP status code: \(httpResponse.statusCode)")
                 completion(nil, nil)
             }
         }
         task.resume()
     }
     
-    // 결제 완료 후 콜백 함수 (예시)
+    // 결제 완료 후 콜백 함수
     func iamportCallback(type: AuthType, _ response: IamportResponse?, completion: @escaping (Bool?) -> Void) {
         print("------------------------------------------")
         print("iamportCallback 결과")
