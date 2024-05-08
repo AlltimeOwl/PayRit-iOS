@@ -799,7 +799,6 @@ final class HomeStore {
             
             if (200..<300).contains(httpResponse.statusCode) {
                 if let data = data {
-                    var data = data
                     do {
                         let decoder = JSONDecoder()
                         let promises = try decoder.decode(Promise.self, from: data)

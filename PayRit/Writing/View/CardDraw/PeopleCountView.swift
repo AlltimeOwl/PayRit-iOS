@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct PeopleCountView: View {
-    @State var number = 1
+    @State private var number = 1
+    @State private var keyBoardFocused: Bool = false
     var body: some View {
         ZStack {
             VStack {
@@ -25,9 +26,11 @@ struct PeopleCountView: View {
                         .foregroundStyle(.white)
                         .frame(height: 50)
                         .frame(maxWidth: .infinity)
-                        .background(Color.payritMint)
-                        .clipShape(.rect(cornerRadius: 12))
+                        .background(number < 2 ? Color.gray07 : Color.payritMint)
+                        .clipShape(.rect(cornerRadius: keyBoardFocused ? 0 : 12))
                 }
+                .disabled(number < 2)
+                .padding(.horizontal, keyBoardFocused ? -16 : 0)
             }
             HStack {
                 Spacer()
@@ -43,9 +46,11 @@ struct PeopleCountView: View {
                 .tint(.black)
                 .opacity(number == 1 ? 0.2 : 1)
                 
-                Text("\(number)")
+                TextField("", value: $number, formatter: NumberFormatter())
                     .font(.custom("SUIT-Bold", size: 64))
                     .frame(width: 200)
+                    .multilineTextAlignment(.center)
+                    .keyboardType(.decimalPad)
                 
                 Button {
                     number += 1
@@ -58,9 +63,18 @@ struct PeopleCountView: View {
                 Spacer()
             }
         }
+        .onTapGesture {
+            self.endTextEditing()
+        }
         .padding(.horizontal, 16)
         .navigationTitle("랜덤 결제하기")
         .navigationBarTitleDisplayMode(.inline)
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillChangeFrameNotification)) { _ in
+            keyBoardFocused = true
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
+            keyBoardFocused = false
+        }
     }
 }
 

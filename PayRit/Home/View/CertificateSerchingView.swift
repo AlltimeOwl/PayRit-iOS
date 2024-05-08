@@ -369,14 +369,13 @@ struct CertificateSerchingView: View {
             self.endTextEditing()
         }
         .onChange(of: searchWord) {
-            if Int(searchWord) ?? 0 >= 0 {
+            if let _ = Int(searchWord) {
                 filterPayritCount = homeStore.certificates.filter { String($0.amount).contains(searchWord) }.count
                 filterPromiseCount = promises.filter { String($0.amount).contains(searchWord) }.count
             } else {
                 filterPayritCount = homeStore.certificates.filter { $0.peerName.contains(searchWord) }.count
                 filterPromiseCount = promises.filter { $0.writerName.contains(searchWord) }.count
-            }
-        }
+            }        }
         .onAppear {
             interestFocused = true
         }

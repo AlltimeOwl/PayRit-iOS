@@ -49,10 +49,9 @@ struct HomeView: View {
                                     }
                                 } label: {
                                     Image(systemName: "xmark")
-                                        .resizable()
-                                        .frame(width: 14, height: 14)
+                                        .font(.system(size: 18))
                                         .foregroundStyle(.white)
-                                        .padding(2)
+                                        .padding(4)
                                 }
                                 .padding(.trailing, 32)
                                 .padding(.top, 16)
