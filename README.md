@@ -12,6 +12,13 @@
 
 [카카오톡 채널](https://pf.kakao.com/_djxmxiG)
 
+## 기술
+- SwiftUI
+- SwiftLint, MessageUI, PDFKit
+- KakaoSDK
+- FCM, Firebase Crashlytics, Firebase Analytics
+- RESTful API
+
 ## 🖥 서비스 화면
 
 <table align="center">
